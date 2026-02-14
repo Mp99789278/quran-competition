@@ -115,6 +115,11 @@
         font-size: 1.1rem;
       }
 
+      .info-box.warning {
+        background: linear-gradient(to bottom right, #fff4e6, #ffe4cc);
+        border-right-color: #ff9800;
+      }
+
       .form-group {
         margin-bottom: 28px;
       }
@@ -780,6 +785,14 @@
           </p>
         </div>
 
+        <div class="info-box warning">
+          <h3>⚠️ تنبيه مهم</h3>
+          <p>
+            <strong>الرجاء التسجيل لمدة 3-5 دقائق كحد أقصى</strong><br>
+            النظام يحفظ التسجيلات بشكل مباشر في قاعدة البيانات، والتسجيلات الطويلة قد تفشل في الحفظ.
+          </p>
+        </div>
+
         <button
           type="button"
           class="btn btn-primary"
@@ -959,6 +972,14 @@
           <p>سجّل تلاوتك لجزء عم. يمكنك اختيار التسجيل الصوتي أو الفيديو.</p>
         </div>
 
+        <div class="info-box warning">
+          <h3>⚠️ مهم جداً</h3>
+          <p>
+            <strong>التسجيل يجب أن يكون من 3-5 دقائق كحد أقصى</strong><br>
+            التسجيلات الطويلة قد تفشل في الحفظ بسبب حدود قاعدة البيانات المجانية.
+          </p>
+        </div>
+
         <!-- أيقونة الرسائل -->
         <div style="display: flex; gap: 15px; margin-bottom: 30px">
           <button
@@ -1112,7 +1133,6 @@
       // Import the functions you need from the SDKs you need
       import { initializeApp } from "https://www.gstatic.com/firebasejs/12.9.0/firebase-app.js";
       import { getDatabase, ref, set, get, push, onValue, remove, update } from 'https://www.gstatic.com/firebasejs/12.9.0/firebase-database.js';
-      import { getStorage, ref as storageRef, uploadBytes, getDownloadURL } from 'https://www.gstatic.com/firebasejs/12.9.0/firebase-storage.js';
 
       // Your web app's Firebase configuration
       const firebaseConfig = {
@@ -1128,11 +1148,9 @@
       // Initialize Firebase
       const app = initializeApp(firebaseConfig);
       const database = getDatabase(app);
-      const storage = getStorage(app);
 
       // Make Firebase accessible globally
       window.db = database;
-      window.storage = storage;
       window.dbRef = ref;
       window.dbSet = set;
       window.dbGet = get;
@@ -1140,14 +1158,10 @@
       window.dbOnValue = onValue;
       window.dbRemove = remove;
       window.dbUpdate = update;
-      window.storageRef = storageRef;
-      window.uploadBytes = uploadBytes;
-      window.getDownloadURL = getDownloadURL;
       window.firebaseInitialized = true;
 
       console.log("✅ Firebase initialized successfully!");
       console.log("📊 Database URL:", firebaseConfig.databaseURL);
-      console.log("💾 Storage Bucket:", firebaseConfig.storageBucket);
     </script>
 
     <script>
@@ -1638,6 +1652,14 @@
         const minutes = Math.floor(elapsed / 60).toString().padStart(2, "0");
         const seconds = (elapsed % 60).toString().padStart(2, "0");
         document.getElementById("recordTimer").textContent = `${minutes}:${seconds}`;
+        
+        // تحذير إذا تجاوز 5 دقائق
+        if (elapsed > 300) {
+          document.getElementById("recordTimer").style.color = "#dc2626";
+          if (elapsed === 301) {
+            alert("⚠️ تحذير: تجاوزت 5 دقائق! قد يفشل حفظ التسجيل.");
+          }
+        }
       }
 
       function stopRecording() {
@@ -1671,6 +1693,7 @@
         document.getElementById("recordBtnText").textContent = "🔴 بدء التسجيل";
         document.getElementById("recordTimer").classList.add("hidden");
         document.getElementById("recordTimer").textContent = "00:00";
+        document.getElementById("recordTimer").style.color = "var(--dark-green)";
         document.getElementById("recordingControls").classList.add("hidden");
         document.getElementById("recordingPreview").classList.add("hidden");
       }
@@ -1694,25 +1717,40 @@
         document.getElementById("recordingControls").classList.add("hidden");
       }
 
+      // تحويل Blob إلى Base64
+      function blobToBase64(blob) {
+        return new Promise((resolve, reject) => {
+          const reader = new FileReader();
+          reader.onloadend = () => resolve(reader.result);
+          reader.onerror = reject;
+          reader.readAsDataURL(blob);
+        });
+      }
+
       async function saveRecording() {
         showLoading();
         
-        const blob = new Blob(recordedChunks, {
-          type: recordingType === "video" ? "video/webm" : "audio/webm",
-        });
-
-        const recordingId = Date.now().toString();
-        const filename = `${currentUser.id}/${recordingId}.webm`;
-        const fileRef = window.storageRef(window.storage, filename);
-
         try {
-          await window.uploadBytes(fileRef, blob);
-          const downloadURL = await window.getDownloadURL(fileRef);
+          const blob = new Blob(recordedChunks, {
+            type: recordingType === "video" ? "video/webm" : "audio/webm",
+          });
 
+          // تحقق من حجم الملف (حد أقصى ~5MB)
+          const sizeInMB = blob.size / (1024 * 1024);
+          if (sizeInMB > 5) {
+            hideLoading();
+            alert("⚠️ التسجيل كبير جداً!\n\nحجم التسجيل: " + sizeInMB.toFixed(1) + " MB\nالحد الأقصى: 5 MB\n\nالرجاء تسجيل مقطع أقصر (3-5 دقائق)");
+            return;
+          }
+
+          // تحويل الـ blob لـ base64
+          const base64Data = await blobToBase64(blob);
+
+          const recordingId = Date.now().toString();
           const recording = {
             id: recordingId,
             type: recordingType,
-            data: downloadURL,
+            data: base64Data, // حفظ كـ base64 بدل URL
             timestamp: new Date().toISOString(),
           };
 
@@ -1739,13 +1777,15 @@
           document.getElementById("recordBtnText").textContent = "🔴 بدء التسجيل";
           document.getElementById("recordTimer").classList.add("hidden");
           document.getElementById("recordTimer").textContent = "00:00";
+          document.getElementById("recordTimer").style.color = "var(--dark-green)";
           document.getElementById("recordingControls").classList.add("hidden");
           document.getElementById("recordingPreview").classList.add("hidden");
           
           loadMyRecordings();
         } catch (error) {
           hideLoading();
-          alert("حدث خطأ أثناء حفظ التسجيل: " + error.message);
+          console.error("خطأ في الحفظ:", error);
+          alert("حدث خطأ أثناء حفظ التسجيل!\n\nالخطأ: " + error.message + "\n\nنصيحة: حاول تسجيل مقطع أقصر (3-5 دقائق فقط)");
         }
       }
 
