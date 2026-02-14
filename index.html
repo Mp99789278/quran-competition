@@ -865,6 +865,35 @@
         background: #10b981;
       }
 
+      /* Total Rating Badge */
+      .total-rating-badge {
+        background: linear-gradient(135deg, #fef3c7, #fde68a);
+        padding: 8px 12px;
+        border-radius: 8px;
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+        margin-bottom: 12px;
+        border: 2px solid #fbbf24;
+        box-shadow: 0 2px 8px rgba(251, 191, 36, 0.3);
+      }
+
+      .total-rating-badge .icon {
+        font-size: 1.2rem;
+      }
+
+      .total-rating-badge .text {
+        color: var(--dark-green);
+        font-weight: 700;
+        font-size: 0.9rem;
+      }
+
+      .total-rating-badge .value {
+        color: var(--dark-green);
+        font-weight: 900;
+        font-size: 1.1rem;
+      }
+
       @media (max-width: 768px) {
         h1 {
           font-size: 1.3rem;
@@ -1197,6 +1226,17 @@
         <h2 id="participantTitle" style="color: var(--dark-green); margin-bottom: 12px; text-align: center; font-size: 1.3rem;">
         </h2>
 
+        <!-- مجموع التقييمات الكلي -->
+        <div style="text-align: center; margin-bottom: 12px;">
+          <div class="total-rating-badge" id="totalRatingBadge">
+            <span class="icon">⭐</span>
+            <span class="text">المجموع الكلي:</span>
+            <span class="value" id="totalRatingValue">0</span>
+            <span class="text">/</span>
+            <span class="value" id="totalRatingMax">0</span>
+          </div>
+        </div>
+
         <!-- قسم معلومات التواصل -->
         <div class="contact-info-section">
           <div class="contact-info-header">
@@ -1418,7 +1458,44 @@
         document.getElementById("contactName").textContent = participant.name;
         document.getElementById("contactPassword").textContent = participant.password;
         
+        // حساب وعرض مجموع التقييمات
+        await calculateAndDisplayTotalRating();
+        
         await loadParticipantRecordings();
+      }
+
+      async function calculateAndDisplayTotalRating() {
+        const messagesSnapshot = await window.dbGet(window.dbRef(window.db, 'messages'));
+        
+        let totalRating = 0;
+        let ratedRecordingsCount = 0;
+        const ratedRecordingsSet = new Set();
+
+        if (messagesSnapshot.exists()) {
+          const messages = messagesSnapshot.val();
+          Object.values(messages).forEach(msg => {
+            if (msg.participantId === currentParticipant.id && 
+                msg.messageType === 'rating' && 
+                msg.rating && 
+                !ratedRecordingsSet.has(msg.recordingId)) {
+              totalRating += msg.rating;
+              ratedRecordingsSet.add(msg.recordingId);
+              ratedRecordingsCount++;
+            }
+          });
+        }
+
+        const maxPossibleRating = ratedRecordingsCount * 5;
+        
+        document.getElementById("totalRatingValue").textContent = totalRating.toFixed(1);
+        document.getElementById("totalRatingMax").textContent = maxPossibleRating;
+
+        const badge = document.getElementById("totalRatingBadge");
+        if (ratedRecordingsCount === 0) {
+          badge.style.display = 'none';
+        } else {
+          badge.style.display = 'inline-flex';
+        }
       }
 
       function backToParticipants() {
@@ -1573,10 +1650,13 @@
         let starsHtml = '';
         for (let i = 1; i <= 5; i++) {
           if (rating >= i) {
+            // نجمة كاملة
             starsHtml += '<span class="star filled">⭐</span>';
-          } else if (rating >= i - 0.5) {
+          } else if (rating > i - 1 && rating < i) {
+            // نصف نجمة (فقط إذا كان التقييم بين الرقمين)
             starsHtml += '<span class="star half">⭐</span>';
           } else {
+            // نجمة فارغة
             starsHtml += '<span class="star">⭐</span>';
           }
         }
@@ -2240,7 +2320,7 @@
           
           if (value >= starValue) {
             star.classList.add("filled");
-          } else if (value >= starValue - 0.5) {
+          } else if (value > starValue - 1 && value < starValue) {
             star.classList.add("half");
           }
         });
@@ -2350,11 +2430,35 @@
               return;
             }
 
+            // حذف التقييمات السابقة لنفس التسجيل
+            const messagesSnapshot = await window.dbGet(window.dbRef(window.db, 'messages'));
+            if (messagesSnapshot.exists()) {
+              const updates = {};
+              messagesSnapshot.forEach(child => {
+                const msg = child.val();
+                if (msg.recordingId === currentRecordingForMessage && 
+                    msg.participantId === currentParticipant.id && 
+                    msg.messageType === 'rating') {
+                  updates[`messages/${child.key}`] = null;
+                }
+              });
+
+              if (Object.keys(updates).length > 0) {
+                await window.dbUpdate(window.dbRef(window.db), updates);
+              }
+            }
+
             await sendMessage(currentParticipant.id, currentRecordingForMessage, `تقييمك: ${selectedRating} / 5 نجوم`, 'rating', null, selectedRating);
           }
 
           hideLoading();
           closeMessageModal();
+          
+          // تحديث مجموع التقييمات
+          if (messageType === 'rating') {
+            await calculateAndDisplayTotalRating();
+          }
+          
           alert("تم الإرسال! ✅");
         } catch (error) {
           hideLoading();
@@ -2448,6 +2552,10 @@
 
         hideLoading();
         closeConfirmDialog();
+        
+        // تحديث مجموع التقييمات
+        await calculateAndDisplayTotalRating();
+        
         loadParticipantRecordings();
 
         alert("تم الحذف! ✅");
