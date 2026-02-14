@@ -122,6 +122,27 @@
 
       .form-group {
         margin-bottom: 28px;
+        position: relative;
+      }
+
+      .password-toggle {
+        position: absolute;
+        left: 15px;
+        top: 50%;
+        transform: translateY(-50%);
+        cursor: pointer;
+        font-size: 1.3rem;
+        color: #666;
+        transition: color 0.3s ease;
+        user-select: none;
+      }
+
+      .password-toggle:hover {
+        color: var(--dark-green);
+      }
+
+      .password-input-wrapper {
+        position: relative;
       }
 
       label {
@@ -571,6 +592,81 @@
         border-top: 2px dashed var(--border-light);
       }
 
+      .message-type-selector {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 10px;
+        margin-bottom: 15px;
+      }
+
+      .message-type-btn {
+        padding: 12px;
+        border: 2px solid var(--border-light);
+        border-radius: 10px;
+        background: white;
+        cursor: pointer;
+        font-family: "Cairo", sans-serif;
+        font-size: 1rem;
+        font-weight: 600;
+        transition: all 0.3s ease;
+        color: var(--text-dark);
+      }
+
+      .message-type-btn:hover {
+        border-color: var(--primary-gold);
+      }
+
+      .message-type-btn.active {
+        background: linear-gradient(135deg, var(--primary-gold), var(--accent-gold));
+        border-color: var(--primary-gold);
+        color: var(--dark-green);
+      }
+
+      .voice-recorder-section {
+        background: linear-gradient(to bottom, #f0f9ff, white);
+        padding: 20px;
+        border-radius: 12px;
+        border: 2px solid var(--primary-gold);
+        margin-bottom: 15px;
+      }
+
+      .voice-controls {
+        display: grid;
+        gap: 10px;
+      }
+
+      .btn-voice-record {
+        background: #dc2626;
+        color: white;
+        padding: 12px;
+        border: none;
+        border-radius: 10px;
+        font-weight: 700;
+        cursor: pointer;
+        transition: all 0.3s ease;
+      }
+
+      .btn-voice-record:hover {
+        background: #b91c1c;
+      }
+
+      .btn-voice-record.recording {
+        background: #059669;
+      }
+
+      .voice-preview {
+        margin-top: 15px;
+        padding: 15px;
+        background: white;
+        border-radius: 10px;
+        border: 1px solid var(--border-light);
+      }
+
+      .voice-preview audio {
+        width: 100%;
+        margin-top: 10px;
+      }
+
       .comment-form {
         display: grid;
         gap: 15px;
@@ -841,12 +937,15 @@
 
           <div class="form-group">
             <label>كلمة المرور *</label>
-            <input
-              type="password"
-              id="password"
-              required
-              placeholder="اختر كلمة مرور بسيطة"
-            />
+            <div class="password-input-wrapper">
+              <input
+                type="password"
+                id="password"
+                required
+                placeholder="اختر كلمة مرور بسيطة"
+              />
+              <span class="password-toggle" onclick="togglePassword('password')">👁️</span>
+            </div>
           </div>
 
           <button type="submit" class="btn btn-primary">
@@ -893,12 +992,15 @@
 
           <div class="form-group">
             <label>كلمة المرور</label>
-            <input
-              type="password"
-              id="loginPassword"
-              required
-              placeholder="أدخل كلمة المرور"
-            />
+            <div class="password-input-wrapper">
+              <input
+                type="password"
+                id="loginPassword"
+                required
+                placeholder="أدخل كلمة المرور"
+              />
+              <span class="password-toggle" onclick="togglePassword('loginPassword')">👁️</span>
+            </div>
           </div>
 
           <button type="submit" class="btn btn-primary">دخول 🔓</button>
@@ -933,12 +1035,15 @@
         <form id="adminLoginForm">
           <div class="form-group">
             <label>كلمة مرور المدير</label>
-            <input
-              type="password"
-              id="adminPassword"
-              required
-              placeholder="أدخل كلمة المرور"
-            />
+            <div class="password-input-wrapper">
+              <input
+                type="password"
+                id="adminPassword"
+                required
+                placeholder="أدخل كلمة المرور"
+              />
+              <span class="password-toggle" onclick="togglePassword('adminPassword')">👁️</span>
+            </div>
           </div>
 
           <button type="submit" class="btn btn-primary">دخول</button>
@@ -1157,6 +1262,13 @@
       let timerInterval = null;
       let recordingStartTime = null;
       let previewStream = null;
+      
+      // متغيرات التسجيل الصوتي للمدير
+      let adminVoiceRecorder = null;
+      let adminVoiceChunks = [];
+      let adminVoiceTimer = null;
+      let adminVoiceStartTime = null;
+      let currentAdminRecording = { participantId: null, recordingId: null };
 
       window.onload = function () {
         // انتظار تحميل Firebase ثم تحميل الجلسة
@@ -1408,10 +1520,18 @@
           html += `
             <div class="message-item ${!msg.read ? "unread" : ""}">
               <div class="message-header">
-                <span style="color: var(--primary-gold); font-weight: 700;">✉️ رسالة من المدير</span>
+                <span style="color: var(--primary-gold); font-weight: 700;">✉️ رسالة من المدير ${msg.messageType === 'voice' ? '🎤' : ''}</span>
                 <span class="message-date">${new Date(msg.timestamp).toLocaleDateString("ar-SA")} - ${new Date(msg.timestamp).toLocaleTimeString("ar-SA", { hour: "2-digit", minute: "2-digit" })}</span>
               </div>
               <div class="message-content">${msg.message}</div>
+              ${msg.messageType === 'voice' && msg.voiceData ? `
+                <div class="message-recording">
+                  <p style="color: var(--dark-green); font-weight: 600; margin-bottom: 10px;">
+                    🎤 رسالة صوتية من المدير
+                  </p>
+                  <audio controls src="${msg.voiceData}"></audio>
+                </div>
+              ` : ''}
               ${recordingHtml}
             </div>
           `;
@@ -1529,6 +1649,19 @@
         currentUser = null;
         isAdmin = false;
         showHomePage();
+      }
+
+      function togglePassword(inputId) {
+        const input = document.getElementById(inputId);
+        const icon = event.target;
+        
+        if (input.type === "password") {
+          input.type = "text";
+          icon.textContent = "🙈";
+        } else {
+          input.type = "password";
+          icon.textContent = "👁️";
+        }
       }
 
       function selectRecordingType(type) {
@@ -1845,7 +1978,7 @@
         alert("تم حذف التسجيل بنجاح! ✅");
       }
 
-      async function sendMessage(participantId, recordingId, message) {
+      async function sendMessage(participantId, recordingId, message, messageType = 'text', voiceData = null) {
         const messagesRef = window.dbRef(window.db, 'messages');
         const newMessageRef = window.dbPush(messagesRef);
 
@@ -1853,9 +1986,14 @@
           participantId: participantId,
           recordingId: recordingId,
           message: message,
+          messageType: messageType,
           timestamp: new Date().toISOString(),
           read: false,
         };
+
+        if (messageType === 'voice' && voiceData) {
+          newMessage.voiceData = voiceData;
+        }
 
         await window.dbSet(newMessageRef, newMessage);
         return newMessage;
@@ -1924,7 +2062,17 @@
                       
                       <div class="admin-comment-section">
                         <h4 style="color: var(--dark-green); margin-bottom: 15px; font-weight: 700; font-size: 1.2rem;">💬 إرسال رسالة للمشارك</h4>
-                        <div class="comment-form">
+                        
+                        <div class="message-type-selector">
+                          <button class="message-type-btn active" onclick="selectMessageType('${participant.id}', '${rec.id}', 'text')">
+                            ✍️ رسالة نصية
+                          </button>
+                          <button class="message-type-btn" onclick="selectMessageType('${participant.id}', '${rec.id}', 'voice')">
+                            🎤 رسالة صوتية
+                          </button>
+                        </div>
+
+                        <div id="textMessage_${participant.id}_${rec.id}" class="comment-form">
                           <textarea id="comment_${participant.id}_${rec.id}" placeholder="اكتب رسالتك هنا...
 
 أمثلة:
@@ -1932,9 +2080,28 @@
 📝 يرجى الانتباه إلى أحكام التجويد في الآية الخامسة
 🎯 رائع جداً! استمر في الإتقان
 💡 هناك خطأ صغير في النطق، يرجى المراجعة"></textarea>
-                          <button class="btn-send-message" onclick="sendCommentToParticipant('${participant.id}', '${rec.id}')">
+                          <button class="btn-send-message" onclick="sendCommentToParticipant('${participant.id}', '${rec.id}', 'text')">
                             📤 إرسال الرسالة
                           </button>
+                        </div>
+
+                        <div id="voiceMessage_${participant.id}_${rec.id}" class="voice-recorder-section hidden">
+                          <div class="voice-controls">
+                            <button class="btn-voice-record" id="voiceBtn_${participant.id}_${rec.id}" onclick="startAdminVoiceRecording('${participant.id}', '${rec.id}')">
+                              🎤 ابدأ تسجيل صوتي
+                            </button>
+                            <div class="timer hidden" id="voiceTimer_${participant.id}_${rec.id}">00:00</div>
+                            <button class="btn btn-stop hidden" id="voiceStopBtn_${participant.id}_${rec.id}" onclick="stopAdminVoiceRecording('${participant.id}', '${rec.id}')">
+                              ⏹ إيقاف التسجيل
+                            </button>
+                          </div>
+                          <div id="voicePreview_${participant.id}_${rec.id}" class="voice-preview hidden">
+                            <p style="color: var(--dark-green); font-weight: 600; margin-bottom: 10px;">معاينة الرسالة الصوتية:</p>
+                            <audio id="voiceAudio_${participant.id}_${rec.id}" controls></audio>
+                            <button class="btn-send-message" style="margin-top: 15px;" onclick="sendCommentToParticipant('${participant.id}', '${rec.id}', 'voice')">
+                              📤 إرسال الرسالة الصوتية
+                            </button>
+                          </div>
                         </div>
                       </div>
                     </div>
@@ -1945,7 +2112,144 @@
           `).join("");
       }
 
-      async function sendCommentToParticipant(participantId, recordingId) {
+      async function sendCommentToParticipant(participantId, recordingId, messageType = 'text') {
+        if (messageType === 'text') {
+          const textarea = document.getElementById(`comment_${participantId}_${recordingId}`);
+          const message = textarea.value.trim();
+
+          if (!message) {
+            alert("الرجاء كتابة رسالة!");
+            return;
+          }
+
+          showLoading();
+          await sendMessage(participantId, recordingId, message, 'text', null);
+          hideLoading();
+
+          textarea.value = "";
+          alert("تم إرسال الرسالة بنجاح! ✅");
+        } else if (messageType === 'voice') {
+          if (!adminVoiceChunks || adminVoiceChunks.length === 0) {
+            alert("الرجاء تسجيل رسالة صوتية أولاً!");
+            return;
+          }
+
+          showLoading();
+          
+          try {
+            const blob = new Blob(adminVoiceChunks, { type: "audio/webm" });
+            const base64Data = await blobToBase64(blob);
+            
+            await sendMessage(participantId, recordingId, "رسالة صوتية من المدير 🎤", 'voice', base64Data);
+            
+            hideLoading();
+            
+            // إعادة تعيين التسجيل
+            adminVoiceChunks = [];
+            document.getElementById(`voicePreview_${participantId}_${recordingId}`).classList.add("hidden");
+            document.getElementById(`voiceBtn_${participantId}_${recordingId}`).textContent = "🎤 ابدأ تسجيل صوتي";
+            
+            alert("تم إرسال الرسالة الصوتية بنجاح! ✅");
+          } catch (error) {
+            hideLoading();
+            alert("حدث خطأ أثناء إرسال الرسالة الصوتية: " + error.message);
+          }
+        }
+      }
+
+      function selectMessageType(participantId, recordingId, type) {
+        // تحديث الأزرار
+        const textBtn = event.target.parentElement.children[0];
+        const voiceBtn = event.target.parentElement.children[1];
+        
+        textBtn.classList.remove("active");
+        voiceBtn.classList.remove("active");
+        
+        if (type === 'text') {
+          textBtn.classList.add("active");
+          document.getElementById(`textMessage_${participantId}_${recordingId}`).classList.remove("hidden");
+          document.getElementById(`voiceMessage_${participantId}_${recordingId}`).classList.add("hidden");
+        } else {
+          voiceBtn.classList.add("active");
+          document.getElementById(`textMessage_${participantId}_${recordingId}`).classList.add("hidden");
+          document.getElementById(`voiceMessage_${participantId}_${recordingId}`).classList.remove("hidden");
+        }
+      }
+
+      async function startAdminVoiceRecording(participantId, recordingId) {
+        try {
+          const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
+          
+          adminVoiceChunks = [];
+          adminVoiceRecorder = new MediaRecorder(stream);
+          currentAdminRecording = { participantId, recordingId };
+
+          adminVoiceRecorder.ondataavailable = function (e) {
+            if (e.data.size > 0) {
+              adminVoiceChunks.push(e.data);
+            }
+          };
+
+          adminVoiceRecorder.onstop = function () {
+            stream.getTracks().forEach(track => track.stop());
+            showAdminVoicePreview(participantId, recordingId);
+          };
+
+          adminVoiceRecorder.start();
+
+          // تحديث الواجهة
+          const btn = document.getElementById(`voiceBtn_${participantId}_${recordingId}`);
+          btn.classList.add("recording");
+          btn.textContent = "⏺ جاري التسجيل...";
+          
+          document.getElementById(`voiceTimer_${participantId}_${recordingId}`).classList.remove("hidden");
+          document.getElementById(`voiceStopBtn_${participantId}_${recordingId}`).classList.remove("hidden");
+
+          // بدء المؤقت
+          adminVoiceStartTime = Date.now();
+          adminVoiceTimer = setInterval(() => {
+            updateAdminVoiceTimer(participantId, recordingId);
+          }, 1000);
+
+        } catch (err) {
+          alert("خطأ في الوصول للمايكروفون: " + err.message);
+        }
+      }
+
+      function updateAdminVoiceTimer(participantId, recordingId) {
+        const elapsed = Math.floor((Date.now() - adminVoiceStartTime) / 1000);
+        const minutes = Math.floor(elapsed / 60).toString().padStart(2, "0");
+        const seconds = (elapsed % 60).toString().padStart(2, "0");
+        document.getElementById(`voiceTimer_${participantId}_${recordingId}`).textContent = `${minutes}:${seconds}`;
+      }
+
+      function stopAdminVoiceRecording(participantId, recordingId) {
+        if (adminVoiceRecorder && adminVoiceRecorder.state !== "inactive") {
+          adminVoiceRecorder.stop();
+          clearInterval(adminVoiceTimer);
+          
+          // إعادة تعيين الواجهة
+          const btn = document.getElementById(`voiceBtn_${participantId}_${recordingId}`);
+          btn.classList.remove("recording");
+          btn.textContent = "🎤 ابدأ تسجيل صوتي";
+          
+          document.getElementById(`voiceTimer_${participantId}_${recordingId}`).classList.add("hidden");
+          document.getElementById(`voiceTimer_${participantId}_${recordingId}`).textContent = "00:00";
+          document.getElementById(`voiceStopBtn_${participantId}_${recordingId}`).classList.add("hidden");
+        }
+      }
+
+      function showAdminVoicePreview(participantId, recordingId) {
+        const blob = new Blob(adminVoiceChunks, { type: "audio/webm" });
+        const url = URL.createObjectURL(blob);
+        
+        const audio = document.getElementById(`voiceAudio_${participantId}_${recordingId}`);
+        audio.src = url;
+        
+        document.getElementById(`voicePreview_${participantId}_${recordingId}`).classList.remove("hidden");
+      }
+
+      async function sendCommentToParticipant_OLD(participantId, recordingId) {
         const textarea = document.getElementById(`comment_${participantId}_${recordingId}`);
         const message = textarea.value.trim();
 
