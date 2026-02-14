@@ -785,14 +785,6 @@
           </p>
         </div>
 
-        <div class="info-box warning">
-          <h3>⚠️ تنبيه مهم</h3>
-          <p>
-            <strong>الرجاء التسجيل لمدة 3-5 دقائق كحد أقصى</strong><br>
-            النظام يحفظ التسجيلات بشكل مباشر في قاعدة البيانات، والتسجيلات الطويلة قد تفشل في الحفظ.
-          </p>
-        </div>
-
         <button
           type="button"
           class="btn btn-primary"
@@ -945,7 +937,7 @@
               type="password"
               id="adminPassword"
               required
-              placeholder="admin123"
+              placeholder="أدخل كلمة المرور"
             />
           </div>
 
@@ -970,14 +962,6 @@
         <div class="info-box">
           <h3>مرحباً <span id="welcomeName"></span>! 🌙</h3>
           <p>سجّل تلاوتك لجزء عم. يمكنك اختيار التسجيل الصوتي أو الفيديو.</p>
-        </div>
-
-        <div class="info-box warning">
-          <h3>⚠️ مهم جداً</h3>
-          <p>
-            <strong>التسجيل يجب أن يكون من 3-5 دقائق كحد أقصى</strong><br>
-            التسجيلات الطويلة قد تفشل في الحفظ بسبب حدود قاعدة البيانات المجانية.
-          </p>
         </div>
 
         <!-- أيقونة الرسائل -->
@@ -1526,12 +1510,12 @@
 
         const password = document.getElementById("adminPassword").value;
 
-        if (password === "admin123") {
+        if (password === "Qur@n2025#Admin$Ramadan") {
           isAdmin = true;
           saveSession();
           showAdminPage();
         } else {
-          document.getElementById("adminError").textContent = "كلمة المرور خاطئة! (المرور الافتراضي: admin123)";
+          document.getElementById("adminError").textContent = "كلمة المرور خاطئة!";
           document.getElementById("adminError").classList.remove("hidden");
           setTimeout(() => {
             document.getElementById("adminError").classList.add("hidden");
@@ -1652,14 +1636,6 @@
         const minutes = Math.floor(elapsed / 60).toString().padStart(2, "0");
         const seconds = (elapsed % 60).toString().padStart(2, "0");
         document.getElementById("recordTimer").textContent = `${minutes}:${seconds}`;
-        
-        // تحذير إذا تجاوز 5 دقائق
-        if (elapsed > 300) {
-          document.getElementById("recordTimer").style.color = "#dc2626";
-          if (elapsed === 301) {
-            alert("⚠️ تحذير: تجاوزت 5 دقائق! قد يفشل حفظ التسجيل.");
-          }
-        }
       }
 
       function stopRecording() {
@@ -1735,14 +1711,6 @@
             type: recordingType === "video" ? "video/webm" : "audio/webm",
           });
 
-          // تحقق من حجم الملف (حد أقصى ~5MB)
-          const sizeInMB = blob.size / (1024 * 1024);
-          if (sizeInMB > 5) {
-            hideLoading();
-            alert("⚠️ التسجيل كبير جداً!\n\nحجم التسجيل: " + sizeInMB.toFixed(1) + " MB\nالحد الأقصى: 5 MB\n\nالرجاء تسجيل مقطع أقصر (3-5 دقائق)");
-            return;
-          }
-
           // تحويل الـ blob لـ base64
           const base64Data = await blobToBase64(blob);
 
@@ -1785,7 +1753,7 @@
         } catch (error) {
           hideLoading();
           console.error("خطأ في الحفظ:", error);
-          alert("حدث خطأ أثناء حفظ التسجيل!\n\nالخطأ: " + error.message + "\n\nنصيحة: حاول تسجيل مقطع أقصر (3-5 دقائق فقط)");
+          alert("حدث خطأ أثناء حفظ التسجيل!\n\nالخطأ: " + error.message + "\n\nقد يكون السبب:\n- حجم التسجيل كبير جداً\n- مشكلة في الاتصال بالإنترنت\n\nحاول مرة أخرى أو استخدم جودة أقل.");
         }
       }
 
