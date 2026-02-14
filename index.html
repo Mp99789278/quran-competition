@@ -33,8 +33,9 @@
         font-family: "Cairo", sans-serif;
         background: linear-gradient(135deg, #0d4d3f 0%, #1a6b54 100%);
         min-height: 100vh;
-        padding: 15px 10px;
+        padding: 8px 8px;
         position: relative;
+        overflow-x: hidden;
       }
 
       .container {
@@ -44,20 +45,20 @@
 
       .header {
         text-align: center;
-        margin-bottom: 20px;
+        margin-bottom: 8px;
       }
 
       .logo {
-        width: 80px;
-        height: 80px;
-        margin: 0 auto 15px;
+        width: 50px;
+        height: 50px;
+        margin: 0 auto 8px;
         background: linear-gradient(135deg, var(--primary-gold), var(--accent-gold));
         border-radius: 50%;
         display: flex;
         align-items: center;
         justify-content: center;
-        box-shadow: 0 8px 30px rgba(0, 0, 0, 0.2);
-        border: 3px solid rgba(255, 255, 255, 0.5);
+        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+        border: 2px solid rgba(255, 255, 255, 0.5);
       }
 
       .logo img {
@@ -70,38 +71,38 @@
       h1 {
         font-family: "Amiri", serif;
         color: var(--white);
-        font-size: 2rem;
+        font-size: 1.4rem;
         font-weight: 700;
-        margin-bottom: 8px;
-        text-shadow: 0 2px 15px rgba(0, 0, 0, 0.3);
+        margin-bottom: 4px;
+        text-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
       }
 
       .subtitle {
         color: var(--primary-gold);
-        font-size: 1.1rem;
+        font-size: 0.9rem;
         font-weight: 600;
       }
 
       .card {
         background: var(--white);
-        border-radius: 16px;
-        padding: 25px 20px;
-        box-shadow: 0 8px 40px rgba(0, 0, 0, 0.15);
-        margin-bottom: 20px;
+        border-radius: 12px;
+        padding: 15px 12px;
+        box-shadow: 0 6px 25px rgba(0, 0, 0, 0.15);
+        margin-bottom: 8px;
       }
 
       .form-group {
-        margin-bottom: 20px;
+        margin-bottom: 12px;
         position: relative;
       }
 
       .password-toggle {
         position: absolute;
-        left: 15px;
+        left: 10px;
         top: 50%;
         transform: translateY(-50%);
         cursor: pointer;
-        font-size: 1.5rem;
+        font-size: 1.1rem;
         color: #666;
         transition: color 0.3s ease;
         user-select: none;
@@ -119,17 +120,17 @@
         display: block;
         color: var(--dark-green);
         font-weight: 700;
-        margin-bottom: 10px;
-        font-size: 1.1rem;
+        margin-bottom: 6px;
+        font-size: 0.95rem;
       }
 
       input[type="text"],
       input[type="password"] {
         width: 100%;
-        padding: 15px;
+        padding: 10px;
         border: 2px solid var(--border-light);
-        border-radius: 10px;
-        font-size: 1.1rem;
+        border-radius: 8px;
+        font-size: 0.95rem;
         font-family: "Cairo", sans-serif;
         transition: all 0.3s ease;
         background: var(--cream);
@@ -143,15 +144,15 @@
 
       .btn {
         width: 100%;
-        padding: 18px;
+        padding: 12px;
         border: none;
-        border-radius: 12px;
-        font-size: 1.2rem;
+        border-radius: 10px;
+        font-size: 1rem;
         font-weight: 700;
         font-family: "Cairo", sans-serif;
         cursor: pointer;
         transition: all 0.3s ease;
-        margin-bottom: 12px;
+        margin-bottom: 8px;
       }
 
       .btn-primary {
@@ -177,41 +178,41 @@
       }
 
       .big-icon-btn {
-        font-size: 2rem;
-        padding: 25px;
-        margin: 10px 0;
+        font-size: 1.3rem;
+        padding: 15px;
+        margin: 6px 0;
       }
 
       /* إحصائيات الاستاذة - تصميم محسّن */
       .stats-container {
         display: grid;
-        grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
-        gap: 12px;
-        margin-bottom: 20px;
+        grid-template-columns: repeat(auto-fit, minmax(100px, 1fr));
+        gap: 8px;
+        margin-bottom: 12px;
       }
 
       .stat-card {
         background: linear-gradient(135deg, var(--primary-gold), var(--accent-gold));
-        padding: 15px;
-        border-radius: 12px;
+        padding: 10px;
+        border-radius: 10px;
         text-align: center;
-        box-shadow: 0 4px 15px rgba(212, 175, 55, 0.3);
+        box-shadow: 0 3px 12px rgba(212, 175, 55, 0.3);
       }
 
       .stat-card .icon {
-        font-size: 2rem;
-        margin-bottom: 5px;
-      }
-
-      .stat-card .number {
-        font-size: 2rem;
-        font-weight: 900;
-        color: var(--dark-green);
+        font-size: 1.4rem;
         margin-bottom: 3px;
       }
 
+      .stat-card .number {
+        font-size: 1.5rem;
+        font-weight: 900;
+        color: var(--dark-green);
+        margin-bottom: 2px;
+      }
+
       .stat-card .label {
-        font-size: 0.9rem;
+        font-size: 0.75rem;
         color: var(--dark-green);
         font-weight: 600;
       }
@@ -219,15 +220,15 @@
       .record-type-grid {
         display: grid;
         grid-template-columns: 1fr 1fr;
-        gap: 15px;
-        margin: 20px 0;
+        gap: 10px;
+        margin: 12px 0;
       }
 
       .type-card {
         background: white;
-        border: 3px solid var(--border-light);
-        border-radius: 16px;
-        padding: 25px 15px;
+        border: 2px solid var(--border-light);
+        border-radius: 12px;
+        padding: 15px 10px;
         text-align: center;
         cursor: pointer;
         transition: all 0.3s ease;
@@ -235,7 +236,7 @@
 
       .type-card:hover {
         border-color: var(--primary-gold);
-        transform: translateY(-3px);
+        transform: translateY(-2px);
       }
 
       .type-card.selected {
@@ -244,33 +245,33 @@
       }
 
       .type-card .icon {
-        font-size: 3.5rem;
-        margin-bottom: 10px;
+        font-size: 2.5rem;
+        margin-bottom: 6px;
       }
 
       .type-card h3 {
-        font-size: 1.2rem;
+        font-size: 1rem;
         color: var(--dark-green);
       }
 
       .recording-controls {
-        margin-top: 20px;
+        margin-top: 12px;
       }
 
       .timer {
         text-align: center;
-        font-size: 2.5rem;
+        font-size: 1.8rem;
         font-weight: 700;
         color: var(--dark-green);
-        margin: 20px 0;
+        margin: 12px 0;
         font-family: "Courier New", monospace;
       }
 
       .live-preview {
-        margin: 20px 0;
-        padding: 15px;
+        margin: 12px 0;
+        padding: 10px;
         background: linear-gradient(135deg, #f0f9ff, #e0f2fe);
-        border-radius: 14px;
+        border-radius: 10px;
         border: 2px solid var(--primary-gold);
       }
 
@@ -281,55 +282,55 @@
 
       .live-preview video {
         width: 100%;
-        border-radius: 10px;
+        border-radius: 8px;
         background: #000;
       }
 
       .recording-preview {
-        margin: 20px 0;
-        padding: 20px;
+        margin: 12px 0;
+        padding: 12px;
         background: linear-gradient(to bottom, #fff9e6, white);
-        border-radius: 14px;
+        border-radius: 10px;
         border: 2px solid var(--primary-gold);
       }
 
       .recording-preview video,
       .recording-preview audio {
         width: 100%;
-        border-radius: 10px;
-        margin-top: 15px;
+        border-radius: 8px;
+        margin-top: 10px;
       }
 
       .recording-item {
         background: white;
-        padding: 20px;
-        border-radius: 12px;
+        padding: 12px;
+        border-radius: 10px;
         border: 2px solid var(--border-light);
-        margin-bottom: 15px;
+        margin-bottom: 10px;
         position: relative;
       }
 
       .recording-item video,
       .recording-item audio {
         width: 100%;
-        margin-top: 12px;
-        border-radius: 10px;
+        margin-top: 8px;
+        border-radius: 8px;
       }
 
       .recording-date {
         color: #666;
-        font-size: 0.95rem;
-        margin-bottom: 12px;
+        font-size: 0.8rem;
+        margin-bottom: 8px;
       }
 
       .three-dots {
         position: absolute;
-        top: 15px;
-        left: 15px;
-        font-size: 1.8rem;
+        top: 10px;
+        left: 10px;
+        font-size: 1.5rem;
         cursor: pointer;
         color: #666;
-        padding: 8px;
+        padding: 5px;
       }
 
       .three-dots:hover {
@@ -338,21 +339,21 @@
 
       .menu-popup {
         position: absolute;
-        top: 50px;
-        left: 15px;
+        top: 40px;
+        left: 10px;
         background: white;
         border: 2px solid var(--primary-gold);
-        border-radius: 10px;
-        box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
+        border-radius: 8px;
+        box-shadow: 0 3px 15px rgba(0, 0, 0, 0.2);
         z-index: 100;
-        min-width: 180px;
+        min-width: 150px;
       }
 
       .menu-item {
-        padding: 15px;
+        padding: 10px;
         border-bottom: 1px solid var(--border-light);
         cursor: pointer;
-        font-size: 1.05rem;
+        font-size: 0.9rem;
         transition: all 0.3s ease;
       }
 
@@ -370,19 +371,19 @@
 
       .logout-btn {
         position: fixed;
-        top: 15px;
-        left: 15px;
+        top: 10px;
+        left: 10px;
         background: rgba(255, 255, 255, 0.95);
         color: var(--dark-green);
-        padding: 12px 20px;
+        padding: 8px 14px;
         border: 2px solid var(--primary-gold);
-        border-radius: 20px;
+        border-radius: 15px;
         cursor: pointer;
         font-weight: 700;
-        font-size: 1rem;
+        font-size: 0.85rem;
         transition: all 0.3s ease;
         z-index: 1000;
-        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.15);
+        box-shadow: 0 3px 12px rgba(0, 0, 0, 0.15);
       }
 
       .logout-btn:hover {
@@ -392,19 +393,19 @@
 
       .back-btn {
         position: fixed;
-        top: 15px;
-        right: 15px;
+        top: 10px;
+        right: 10px;
         background: rgba(255, 255, 255, 0.95);
         color: var(--dark-green);
-        padding: 12px 20px;
+        padding: 8px 14px;
         border: 2px solid var(--primary-gold);
-        border-radius: 20px;
+        border-radius: 15px;
         cursor: pointer;
         font-weight: 700;
-        font-size: 1rem;
+        font-size: 0.85rem;
         transition: all 0.3s ease;
         z-index: 1000;
-        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.15);
+        box-shadow: 0 3px 12px rgba(0, 0, 0, 0.15);
       }
 
       .back-btn:hover {
@@ -419,26 +420,26 @@
       .error-message {
         background: #fee2e2;
         color: #991b1b;
-        padding: 15px;
-        border-radius: 10px;
-        margin-bottom: 15px;
-        font-size: 1.05rem;
+        padding: 10px;
+        border-radius: 8px;
+        margin-bottom: 10px;
+        font-size: 0.9rem;
         font-weight: 600;
       }
 
       /* تحسين بطاقات المشاركين */
       .participants-grid {
         display: grid;
-        grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
-        gap: 12px;
-        margin-top: 20px;
+        grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+        gap: 8px;
+        margin-top: 12px;
       }
 
       .participant-card {
         background: white;
-        padding: 20px 15px;
-        border-radius: 14px;
-        border: 3px solid var(--border-light);
+        padding: 12px 8px;
+        border-radius: 10px;
+        border: 2px solid var(--border-light);
         cursor: pointer;
         transition: all 0.3s ease;
         text-align: center;
@@ -447,60 +448,60 @@
 
       .participant-card:hover {
         border-color: var(--primary-gold);
-        transform: translateY(-3px);
-        box-shadow: 0 6px 20px rgba(0, 0, 0, 0.15);
+        transform: translateY(-2px);
+        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.15);
       }
 
       .participant-card .icon {
-        font-size: 3rem;
-        margin-bottom: 10px;
+        font-size: 2.2rem;
+        margin-bottom: 6px;
       }
 
       .participant-card h3 {
         color: var(--dark-green);
-        font-size: 1.15rem;
-        margin-bottom: 8px;
+        font-size: 0.95rem;
+        margin-bottom: 5px;
         word-break: break-word;
       }
 
       .participant-card .count {
         color: #666;
-        font-size: 0.95rem;
+        font-size: 0.8rem;
       }
 
       /* Badge للتسجيلات الجديدة */
       .new-recordings-badge {
         position: absolute;
-        top: -8px;
-        right: -8px;
+        top: -6px;
+        right: -6px;
         background: #dc2626;
         color: white;
         border-radius: 50%;
-        width: 32px;
-        height: 32px;
+        width: 24px;
+        height: 24px;
         display: flex;
         align-items: center;
         justify-content: center;
-        font-size: 0.95rem;
+        font-size: 0.8rem;
         font-weight: 700;
-        box-shadow: 0 2px 8px rgba(220, 38, 38, 0.4);
+        box-shadow: 0 2px 6px rgba(220, 38, 38, 0.4);
         border: 2px solid white;
       }
 
       .empty-state {
         text-align: center;
-        padding: 40px 20px;
+        padding: 25px 15px;
         color: #999;
       }
 
       .empty-state .icon {
-        font-size: 4rem;
-        margin-bottom: 15px;
+        font-size: 3rem;
+        margin-bottom: 10px;
         opacity: 0.5;
       }
 
       .empty-state p {
-        font-size: 1.1rem;
+        font-size: 0.95rem;
       }
 
       .loading-overlay {
@@ -517,13 +518,13 @@
       }
 
       .spinner {
-        border: 4px solid rgba(255, 255, 255, 0.3);
-        border-top: 4px solid var(--primary-gold);
+        border: 3px solid rgba(255, 255, 255, 0.3);
+        border-top: 3px solid var(--primary-gold);
         border-radius: 50%;
-        width: 50px;
-        height: 50px;
+        width: 40px;
+        height: 40px;
         animation: spin 1s linear infinite;
-        margin: 0 auto 15px;
+        margin: 0 auto 10px;
       }
 
       @keyframes spin {
@@ -537,7 +538,7 @@
       }
 
       .loading-spinner p {
-        font-size: 1.1rem;
+        font-size: 0.95rem;
         font-weight: 600;
       }
 
@@ -552,39 +553,39 @@
         align-items: center;
         justify-content: center;
         z-index: 2000;
-        padding: 20px;
+        padding: 15px;
       }
 
       .message-modal-content {
         background: white;
-        padding: 30px;
-        border-radius: 16px;
-        max-width: 500px;
+        padding: 20px;
+        border-radius: 12px;
+        max-width: 450px;
         width: 100%;
-        max-height: 85vh;
+        max-height: 80vh;
         overflow-y: auto;
       }
 
       .message-modal h3 {
         color: var(--dark-green);
-        font-size: 1.5rem;
-        margin-bottom: 20px;
+        font-size: 1.2rem;
+        margin-bottom: 12px;
       }
 
       .message-type-btns {
         display: grid;
         grid-template-columns: 1fr 1fr;
-        gap: 12px;
-        margin-bottom: 20px;
+        gap: 8px;
+        margin-bottom: 12px;
       }
 
       .message-type-btn {
-        padding: 15px;
+        padding: 10px;
         border: 2px solid var(--border-light);
-        border-radius: 10px;
+        border-radius: 8px;
         background: white;
         cursor: pointer;
-        font-size: 1.05rem;
+        font-size: 0.9rem;
         font-weight: 600;
         transition: all 0.3s ease;
       }
@@ -597,116 +598,116 @@
 
       .message-modal textarea {
         width: 100%;
-        padding: 15px;
+        padding: 12px;
         border: 2px solid var(--border-light);
-        border-radius: 10px;
+        border-radius: 8px;
         font-family: "Cairo", sans-serif;
-        font-size: 1.05rem;
-        min-height: 120px;
+        font-size: 0.95rem;
+        min-height: 100px;
         resize: vertical;
       }
 
       .voice-recorder {
         background: linear-gradient(to bottom, #f0f9ff, white);
-        padding: 20px;
-        border-radius: 10px;
+        padding: 15px;
+        border-radius: 8px;
         border: 2px solid var(--primary-gold);
       }
 
       .voice-recorder audio {
         width: 100%;
-        margin-top: 12px;
+        margin-top: 10px;
       }
 
       .modal-buttons {
         display: grid;
         grid-template-columns: 1fr 1fr;
-        gap: 12px;
-        margin-top: 20px;
+        gap: 8px;
+        margin-top: 12px;
       }
 
       .unread-badge {
         position: absolute;
-        top: -8px;
-        left: -8px;
+        top: -6px;
+        left: -6px;
         background: #dc2626;
         color: white;
         border-radius: 50%;
-        width: 30px;
-        height: 30px;
+        width: 24px;
+        height: 24px;
         display: flex;
         align-items: center;
         justify-content: center;
-        font-size: 0.95rem;
+        font-size: 0.8rem;
         font-weight: 700;
-        box-shadow: 0 2px 8px rgba(220, 38, 38, 0.4);
+        box-shadow: 0 2px 6px rgba(220, 38, 38, 0.4);
       }
 
       .message-item {
         background: linear-gradient(135deg, #fff9e6, white);
-        padding: 20px;
-        border-radius: 14px;
-        margin-bottom: 15px;
-        border-right: 4px solid var(--primary-gold);
+        padding: 12px;
+        border-radius: 10px;
+        margin-bottom: 10px;
+        border-right: 3px solid var(--primary-gold);
       }
 
       .message-item.unread {
         background: linear-gradient(135deg, #fff4d6, #fff9e6);
-        box-shadow: 0 4px 20px rgba(212, 175, 55, 0.2);
+        box-shadow: 0 3px 15px rgba(212, 175, 55, 0.2);
       }
 
       .message-header {
         display: flex;
         justify-content: space-between;
         align-items: center;
-        margin-bottom: 12px;
-        padding-bottom: 12px;
+        margin-bottom: 8px;
+        padding-bottom: 8px;
         border-bottom: 2px solid var(--border-light);
       }
 
       .message-content {
-        font-size: 1.1rem;
-        line-height: 1.7;
-        margin-bottom: 12px;
+        font-size: 0.95rem;
+        line-height: 1.6;
+        margin-bottom: 8px;
       }
 
       .message-recording {
         background: white;
-        padding: 15px;
-        border-radius: 10px;
-        margin-top: 12px;
+        padding: 10px;
+        border-radius: 8px;
+        margin-top: 8px;
         border: 1px solid var(--border-light);
       }
 
       .message-recording audio {
         width: 100%;
-        margin-top: 8px;
+        margin-top: 6px;
       }
 
       @media (max-width: 768px) {
         h1 {
-          font-size: 1.7rem;
+          font-size: 1.3rem;
         }
 
         .subtitle {
-          font-size: 1rem;
+          font-size: 0.85rem;
         }
 
         .card {
-          padding: 20px 15px;
+          padding: 12px 10px;
         }
 
         .btn {
-          font-size: 1.1rem;
-          padding: 15px;
+          font-size: 0.95rem;
+          padding: 10px;
         }
 
         .type-card .icon {
-          font-size: 3rem;
+          font-size: 2.2rem;
         }
 
         .timer {
-          font-size: 2rem;
+          font-size: 1.5rem;
         }
 
         .record-type-grid {
@@ -714,20 +715,25 @@
         }
 
         .participants-grid {
-          grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+          grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));
         }
 
         .logout-btn, .back-btn {
-          padding: 10px 16px;
-          font-size: 0.9rem;
+          padding: 6px 12px;
+          font-size: 0.75rem;
         }
 
         .stat-card .number {
-          font-size: 1.7rem;
+          font-size: 1.3rem;
         }
 
         .stat-card .icon {
-          font-size: 1.7rem;
+          font-size: 1.2rem;
+        }
+
+        .big-icon-btn {
+          font-size: 1.1rem;
+          padding: 12px;
         }
       }
 
@@ -742,34 +748,34 @@
         align-items: center;
         justify-content: center;
         z-index: 2500;
-        padding: 20px;
+        padding: 15px;
       }
 
       .confirm-content {
         background: white;
-        padding: 30px;
-        border-radius: 16px;
-        max-width: 450px;
+        padding: 20px;
+        border-radius: 12px;
+        max-width: 400px;
         width: 100%;
         text-align: center;
       }
 
       .confirm-content h3 {
         color: var(--dark-green);
-        font-size: 1.5rem;
-        margin-bottom: 15px;
+        font-size: 1.2rem;
+        margin-bottom: 12px;
       }
 
       .confirm-content p {
-        font-size: 1.1rem;
-        margin-bottom: 25px;
-        line-height: 1.6;
+        font-size: 0.95rem;
+        margin-bottom: 20px;
+        line-height: 1.5;
       }
 
       .confirm-buttons {
         display: grid;
         grid-template-columns: 1fr 1fr;
-        gap: 12px;
+        gap: 8px;
       }
 
       .btn-danger {
@@ -809,7 +815,7 @@
 
       <!-- صفحة التسجيل -->
       <div id="registerPage" class="card hidden">
-        <h2 style="color: var(--dark-green); margin-bottom: 25px; text-align: center; font-size: 1.7rem;">
+        <h2 style="color: var(--dark-green); margin-bottom: 15px; text-align: center; font-size: 1.3rem;">
           تسجيل جديد
         </h2>
 
@@ -835,7 +841,7 @@
 
       <!-- صفحة تسجيل الدخول -->
       <div id="loginPage" class="card hidden">
-        <h2 style="color: var(--dark-green); margin-bottom: 25px; text-align: center; font-size: 1.7rem;">
+        <h2 style="color: var(--dark-green); margin-bottom: 15px; text-align: center; font-size: 1.3rem;">
           تسجيل دخول
         </h2>
 
@@ -863,7 +869,7 @@
 
       <!-- صفحة دخول الاستاذة -->
       <div id="adminLoginPage" class="card hidden">
-        <h2 style="color: var(--dark-green); margin-bottom: 25px; text-align: center; font-size: 1.7rem;">
+        <h2 style="color: var(--dark-green); margin-bottom: 15px; text-align: center; font-size: 1.3rem;">
           دخول الاستاذة
         </h2>
 
@@ -888,11 +894,11 @@
       <div id="participantPage" class="card hidden">
         <button class="logout-btn" onclick="logout()">خروج</button>
 
-        <h2 style="color: var(--dark-green); margin-bottom: 10px; text-align: center; font-size: 1.7rem;">
+        <h2 style="color: var(--dark-green); margin-bottom: 8px; text-align: center; font-size: 1.3rem;">
           أهلاً <span id="participantName"></span> 🌙
         </h2>
 
-        <div style="display: flex; gap: 12px; margin: 20px 0;">
+        <div style="display: flex; gap: 8px; margin: 12px 0;">
           <button class="btn btn-secondary" onclick="showRecordingSection()" style="flex: 1;">
             🎤 تسجيل
           </button>
@@ -904,7 +910,7 @@
 
         <!-- قسم التسجيل -->
         <div id="recordingSection">
-          <h3 style="color: var(--dark-green); margin-bottom: 15px; font-size: 1.3rem; text-align: center;">
+          <h3 style="color: var(--dark-green); margin-bottom: 10px; font-size: 1.1rem; text-align: center;">
             اختر نوع التسجيل
           </h3>
 
@@ -936,11 +942,11 @@
           </div>
 
           <div id="recordingPreview" class="recording-preview hidden">
-            <h3 style="color: var(--dark-green); margin-bottom: 12px; font-size: 1.3rem;">
+            <h3 style="color: var(--dark-green); margin-bottom: 10px; font-size: 1.1rem;">
               المعاينة
             </h3>
             <div id="previewMedia"></div>
-            <button class="btn btn-primary" onclick="saveRecording()" style="margin-top: 15px;">
+            <button class="btn btn-primary" onclick="saveRecording()" style="margin-top: 12px;">
               💾 حفظ
             </button>
             <button class="btn btn-secondary" onclick="cancelRecording()">
@@ -948,8 +954,8 @@
             </button>
           </div>
 
-          <div style="margin-top: 30px;">
-            <h3 style="color: var(--dark-green); margin-bottom: 15px; font-size: 1.3rem;">
+          <div style="margin-top: 20px;">
+            <h3 style="color: var(--dark-green); margin-bottom: 10px; font-size: 1.1rem;">
               تسجيلاتي
             </h3>
             <div id="myRecordingsList"></div>
@@ -958,7 +964,7 @@
 
         <!-- قسم الرسائل -->
         <div id="messagesSection" class="hidden">
-          <h3 style="color: var(--dark-green); margin-bottom: 20px; font-size: 1.3rem;">
+          <h3 style="color: var(--dark-green); margin-bottom: 12px; font-size: 1.1rem;">
             📬 رسائل الاستاذة
           </h3>
           <div id="messagesList"></div>
@@ -969,7 +975,7 @@
       <div id="adminParticipantsPage" class="card hidden">
         <button class="logout-btn" onclick="logout()">خروج</button>
 
-        <h2 style="color: var(--dark-green); margin-bottom: 20px; text-align: center; font-size: 1.7rem;">
+        <h2 style="color: var(--dark-green); margin-bottom: 12px; text-align: center; font-size: 1.3rem;">
           إدارة المشاركين
         </h2>
 
@@ -1000,7 +1006,7 @@
         <button class="logout-btn" onclick="logout()">خروج</button>
         <button class="back-btn" onclick="backToParticipants()">← رجوع</button>
 
-        <h2 id="participantTitle" style="color: var(--dark-green); margin-bottom: 20px; text-align: center; font-size: 1.7rem;">
+        <h2 id="participantTitle" style="color: var(--dark-green); margin-bottom: 12px; text-align: center; font-size: 1.3rem;">
         </h2>
 
         <div id="adminRecordingsList"></div>
@@ -1294,17 +1300,17 @@
           html += `
             <div class="message-item ${!msg.read ? "unread" : ""}">
               <div class="message-header">
-                <span style="color: var(--primary-gold); font-weight: 700; font-size: 1.15rem;">
+                <span style="color: var(--primary-gold); font-weight: 700; font-size: 1rem;">
                   ✉️ رسالة من الاستاذة ${msg.messageType === 'voice' ? '🎤' : ''}
                 </span>
-                <span style="color: #666; font-size: 0.9rem;">
+                <span style="color: #666; font-size: 0.75rem;">
                   ${new Date(msg.timestamp).toLocaleDateString("ar-SA")}
                 </span>
               </div>
               <div class="message-content">${msg.message}</div>
               ${msg.messageType === 'voice' && msg.voiceData ? `
                 <div class="message-recording">
-                  <p style="color: var(--dark-green); font-weight: 600; margin-bottom: 8px; font-size: 1.05rem;">
+                  <p style="color: var(--dark-green); font-weight: 600; margin-bottom: 6px; font-size: 0.9rem;">
                     🎤 رسالة صوتية
                   </p>
                   <audio controls src="${msg.voiceData}"></audio>
@@ -1656,7 +1662,7 @@
           .map((rec, index) => `
             <div class="recording-item">
               <div class="three-dots" onclick="showRecordingMenu(event, '${rec.id}')">⋮</div>
-              <p style="color: var(--dark-green); font-weight: 700; font-size: 1.15rem; margin-bottom: 6px;">
+              <p style="color: var(--dark-green); font-weight: 700; font-size: 1rem; margin-bottom: 4px;">
                 التسجيل ${index + 1} - ${rec.type === "video" ? "🎥 فيديو" : "🎤 صوت"}
               </p>
               <p class="recording-date">
@@ -1832,7 +1838,7 @@
           .map((rec, index) => `
             <div class="recording-item">
               <div class="three-dots" onclick="showAdminRecordingMenu(event, '${rec.id}')">⋮</div>
-              <p style="color: var(--dark-green); font-weight: 700; font-size: 1.15rem; margin-bottom: 6px;">
+              <p style="color: var(--dark-green); font-weight: 700; font-size: 1rem; margin-bottom: 4px;">
                 التسجيل ${index + 1} - ${rec.type === "video" ? "🎥 فيديو" : "🎤 صوت"}
               </p>
               <p class="recording-date">
