@@ -33,7 +33,7 @@
         font-family: "Cairo", sans-serif;
         background: linear-gradient(135deg, #0d4d3f 0%, #1a6b54 100%);
         min-height: 100vh;
-        padding: 20px 15px;
+        padding: 15px 10px;
         position: relative;
       }
 
@@ -44,20 +44,20 @@
 
       .header {
         text-align: center;
-        margin-bottom: 30px;
+        margin-bottom: 20px;
       }
 
       .logo {
-        width: 120px;
-        height: 120px;
-        margin: 0 auto 20px;
+        width: 80px;
+        height: 80px;
+        margin: 0 auto 15px;
         background: linear-gradient(135deg, var(--primary-gold), var(--accent-gold));
         border-radius: 50%;
         display: flex;
         align-items: center;
         justify-content: center;
-        box-shadow: 0 10px 40px rgba(0, 0, 0, 0.2);
-        border: 4px solid rgba(255, 255, 255, 0.5);
+        box-shadow: 0 8px 30px rgba(0, 0, 0, 0.2);
+        border: 3px solid rgba(255, 255, 255, 0.5);
       }
 
       .logo img {
@@ -70,28 +70,28 @@
       h1 {
         font-family: "Amiri", serif;
         color: var(--white);
-        font-size: 2.5rem;
+        font-size: 2rem;
         font-weight: 700;
-        margin-bottom: 10px;
+        margin-bottom: 8px;
         text-shadow: 0 2px 15px rgba(0, 0, 0, 0.3);
       }
 
       .subtitle {
         color: var(--primary-gold);
-        font-size: 1.3rem;
+        font-size: 1.1rem;
         font-weight: 600;
       }
 
       .card {
         background: var(--white);
-        border-radius: 20px;
-        padding: 40px 30px;
-        box-shadow: 0 10px 50px rgba(0, 0, 0, 0.15);
-        margin-bottom: 30px;
+        border-radius: 16px;
+        padding: 25px 20px;
+        box-shadow: 0 8px 40px rgba(0, 0, 0, 0.15);
+        margin-bottom: 20px;
       }
 
       .form-group {
-        margin-bottom: 25px;
+        margin-bottom: 20px;
         position: relative;
       }
 
@@ -101,7 +101,7 @@
         top: 50%;
         transform: translateY(-50%);
         cursor: pointer;
-        font-size: 1.8rem;
+        font-size: 1.5rem;
         color: #666;
         transition: color 0.3s ease;
         user-select: none;
@@ -119,17 +119,17 @@
         display: block;
         color: var(--dark-green);
         font-weight: 700;
-        margin-bottom: 12px;
-        font-size: 1.3rem;
+        margin-bottom: 10px;
+        font-size: 1.1rem;
       }
 
       input[type="text"],
       input[type="password"] {
         width: 100%;
-        padding: 20px;
-        border: 3px solid var(--border-light);
-        border-radius: 12px;
-        font-size: 1.3rem;
+        padding: 15px;
+        border: 2px solid var(--border-light);
+        border-radius: 10px;
+        font-size: 1.1rem;
         font-family: "Cairo", sans-serif;
         transition: all 0.3s ease;
         background: var(--cream);
@@ -143,15 +143,15 @@
 
       .btn {
         width: 100%;
-        padding: 25px;
+        padding: 18px;
         border: none;
-        border-radius: 15px;
-        font-size: 1.5rem;
+        border-radius: 12px;
+        font-size: 1.2rem;
         font-weight: 700;
         font-family: "Cairo", sans-serif;
         cursor: pointer;
         transition: all 0.3s ease;
-        margin-bottom: 15px;
+        margin-bottom: 12px;
       }
 
       .btn-primary {
@@ -177,23 +177,57 @@
       }
 
       .big-icon-btn {
-        font-size: 3rem;
-        padding: 40px;
-        margin: 15px 0;
+        font-size: 2rem;
+        padding: 25px;
+        margin: 10px 0;
+      }
+
+      /* إحصائيات الاستاذة - تصميم محسّن */
+      .stats-container {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+        gap: 12px;
+        margin-bottom: 20px;
+      }
+
+      .stat-card {
+        background: linear-gradient(135deg, var(--primary-gold), var(--accent-gold));
+        padding: 15px;
+        border-radius: 12px;
+        text-align: center;
+        box-shadow: 0 4px 15px rgba(212, 175, 55, 0.3);
+      }
+
+      .stat-card .icon {
+        font-size: 2rem;
+        margin-bottom: 5px;
+      }
+
+      .stat-card .number {
+        font-size: 2rem;
+        font-weight: 900;
+        color: var(--dark-green);
+        margin-bottom: 3px;
+      }
+
+      .stat-card .label {
+        font-size: 0.9rem;
+        color: var(--dark-green);
+        font-weight: 600;
       }
 
       .record-type-grid {
         display: grid;
         grid-template-columns: 1fr 1fr;
-        gap: 20px;
-        margin: 30px 0;
+        gap: 15px;
+        margin: 20px 0;
       }
 
       .type-card {
         background: white;
-        border: 4px solid var(--border-light);
-        border-radius: 20px;
-        padding: 40px 20px;
+        border: 3px solid var(--border-light);
+        border-radius: 16px;
+        padding: 25px 15px;
         text-align: center;
         cursor: pointer;
         transition: all 0.3s ease;
@@ -201,7 +235,7 @@
 
       .type-card:hover {
         border-color: var(--primary-gold);
-        transform: translateY(-5px);
+        transform: translateY(-3px);
       }
 
       .type-card.selected {
@@ -210,34 +244,34 @@
       }
 
       .type-card .icon {
-        font-size: 5rem;
-        margin-bottom: 15px;
+        font-size: 3.5rem;
+        margin-bottom: 10px;
       }
 
       .type-card h3 {
-        font-size: 1.5rem;
+        font-size: 1.2rem;
         color: var(--dark-green);
       }
 
       .recording-controls {
-        margin-top: 30px;
+        margin-top: 20px;
       }
 
       .timer {
         text-align: center;
-        font-size: 3.5rem;
+        font-size: 2.5rem;
         font-weight: 700;
         color: var(--dark-green);
-        margin: 30px 0;
+        margin: 20px 0;
         font-family: "Courier New", monospace;
       }
 
       .live-preview {
-        margin: 30px 0;
-        padding: 20px;
+        margin: 20px 0;
+        padding: 15px;
         background: linear-gradient(135deg, #f0f9ff, #e0f2fe);
-        border-radius: 16px;
-        border: 3px solid var(--primary-gold);
+        border-radius: 14px;
+        border: 2px solid var(--primary-gold);
       }
 
       .live-preview.recording {
@@ -247,55 +281,55 @@
 
       .live-preview video {
         width: 100%;
-        border-radius: 12px;
+        border-radius: 10px;
         background: #000;
       }
 
       .recording-preview {
-        margin: 30px 0;
-        padding: 30px;
+        margin: 20px 0;
+        padding: 20px;
         background: linear-gradient(to bottom, #fff9e6, white);
-        border-radius: 16px;
-        border: 3px solid var(--primary-gold);
+        border-radius: 14px;
+        border: 2px solid var(--primary-gold);
       }
 
       .recording-preview video,
       .recording-preview audio {
         width: 100%;
-        border-radius: 12px;
-        margin-top: 20px;
+        border-radius: 10px;
+        margin-top: 15px;
       }
 
       .recording-item {
         background: white;
-        padding: 30px;
-        border-radius: 14px;
+        padding: 20px;
+        border-radius: 12px;
         border: 2px solid var(--border-light);
-        margin-bottom: 20px;
+        margin-bottom: 15px;
         position: relative;
       }
 
       .recording-item video,
       .recording-item audio {
         width: 100%;
-        margin-top: 15px;
-        border-radius: 12px;
+        margin-top: 12px;
+        border-radius: 10px;
       }
 
       .recording-date {
         color: #666;
-        font-size: 1.1rem;
-        margin-bottom: 15px;
+        font-size: 0.95rem;
+        margin-bottom: 12px;
       }
 
       .three-dots {
         position: absolute;
-        top: 20px;
-        left: 20px;
-        font-size: 2rem;
+        top: 15px;
+        left: 15px;
+        font-size: 1.8rem;
         cursor: pointer;
         color: #666;
-        padding: 10px;
+        padding: 8px;
       }
 
       .three-dots:hover {
@@ -304,21 +338,21 @@
 
       .menu-popup {
         position: absolute;
-        top: 60px;
-        left: 20px;
+        top: 50px;
+        left: 15px;
         background: white;
         border: 2px solid var(--primary-gold);
-        border-radius: 12px;
+        border-radius: 10px;
         box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
         z-index: 100;
-        min-width: 200px;
+        min-width: 180px;
       }
 
       .menu-item {
-        padding: 20px;
+        padding: 15px;
         border-bottom: 1px solid var(--border-light);
         cursor: pointer;
-        font-size: 1.2rem;
+        font-size: 1.05rem;
         transition: all 0.3s ease;
       }
 
@@ -336,16 +370,16 @@
 
       .logout-btn {
         position: fixed;
-        top: 20px;
-        left: 20px;
+        top: 15px;
+        left: 15px;
         background: rgba(255, 255, 255, 0.95);
         color: var(--dark-green);
-        padding: 15px 30px;
+        padding: 12px 20px;
         border: 2px solid var(--primary-gold);
-        border-radius: 25px;
+        border-radius: 20px;
         cursor: pointer;
         font-weight: 700;
-        font-size: 1.2rem;
+        font-size: 1rem;
         transition: all 0.3s ease;
         z-index: 1000;
         box-shadow: 0 4px 15px rgba(0, 0, 0, 0.15);
@@ -358,16 +392,16 @@
 
       .back-btn {
         position: fixed;
-        top: 20px;
-        right: 20px;
+        top: 15px;
+        right: 15px;
         background: rgba(255, 255, 255, 0.95);
         color: var(--dark-green);
-        padding: 15px 30px;
+        padding: 12px 20px;
         border: 2px solid var(--primary-gold);
-        border-radius: 25px;
+        border-radius: 20px;
         cursor: pointer;
         font-weight: 700;
-        font-size: 1.2rem;
+        font-size: 1rem;
         transition: all 0.3s ease;
         z-index: 1000;
         box-shadow: 0 4px 15px rgba(0, 0, 0, 0.15);
@@ -385,66 +419,88 @@
       .error-message {
         background: #fee2e2;
         color: #991b1b;
-        padding: 20px;
-        border-radius: 12px;
-        margin-bottom: 20px;
-        font-size: 1.2rem;
+        padding: 15px;
+        border-radius: 10px;
+        margin-bottom: 15px;
+        font-size: 1.05rem;
         font-weight: 600;
       }
 
+      /* تحسين بطاقات المشاركين */
       .participants-grid {
         display: grid;
-        grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
-        gap: 20px;
-        margin-top: 30px;
+        grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+        gap: 12px;
+        margin-top: 20px;
       }
 
       .participant-card {
         background: white;
-        padding: 30px;
-        border-radius: 16px;
+        padding: 20px 15px;
+        border-radius: 14px;
         border: 3px solid var(--border-light);
         cursor: pointer;
         transition: all 0.3s ease;
         text-align: center;
+        position: relative;
       }
 
       .participant-card:hover {
         border-color: var(--primary-gold);
-        transform: translateY(-5px);
-        box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
+        transform: translateY(-3px);
+        box-shadow: 0 6px 20px rgba(0, 0, 0, 0.15);
       }
 
       .participant-card .icon {
-        font-size: 4rem;
-        margin-bottom: 15px;
+        font-size: 3rem;
+        margin-bottom: 10px;
       }
 
       .participant-card h3 {
         color: var(--dark-green);
-        font-size: 1.5rem;
-        margin-bottom: 10px;
+        font-size: 1.15rem;
+        margin-bottom: 8px;
+        word-break: break-word;
       }
 
       .participant-card .count {
         color: #666;
-        font-size: 1.1rem;
+        font-size: 0.95rem;
+      }
+
+      /* Badge للتسجيلات الجديدة */
+      .new-recordings-badge {
+        position: absolute;
+        top: -8px;
+        right: -8px;
+        background: #dc2626;
+        color: white;
+        border-radius: 50%;
+        width: 32px;
+        height: 32px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 0.95rem;
+        font-weight: 700;
+        box-shadow: 0 2px 8px rgba(220, 38, 38, 0.4);
+        border: 2px solid white;
       }
 
       .empty-state {
         text-align: center;
-        padding: 60px 30px;
+        padding: 40px 20px;
         color: #999;
       }
 
       .empty-state .icon {
-        font-size: 5rem;
-        margin-bottom: 20px;
+        font-size: 4rem;
+        margin-bottom: 15px;
         opacity: 0.5;
       }
 
       .empty-state p {
-        font-size: 1.3rem;
+        font-size: 1.1rem;
       }
 
       .loading-overlay {
@@ -464,10 +520,10 @@
         border: 4px solid rgba(255, 255, 255, 0.3);
         border-top: 4px solid var(--primary-gold);
         border-radius: 50%;
-        width: 60px;
-        height: 60px;
+        width: 50px;
+        height: 50px;
         animation: spin 1s linear infinite;
-        margin: 0 auto 20px;
+        margin: 0 auto 15px;
       }
 
       @keyframes spin {
@@ -481,7 +537,7 @@
       }
 
       .loading-spinner p {
-        font-size: 1.3rem;
+        font-size: 1.1rem;
         font-weight: 600;
       }
 
@@ -501,34 +557,34 @@
 
       .message-modal-content {
         background: white;
-        padding: 40px;
-        border-radius: 20px;
-        max-width: 600px;
+        padding: 30px;
+        border-radius: 16px;
+        max-width: 500px;
         width: 100%;
-        max-height: 90vh;
+        max-height: 85vh;
         overflow-y: auto;
       }
 
       .message-modal h3 {
         color: var(--dark-green);
-        font-size: 1.8rem;
-        margin-bottom: 25px;
+        font-size: 1.5rem;
+        margin-bottom: 20px;
       }
 
       .message-type-btns {
         display: grid;
         grid-template-columns: 1fr 1fr;
-        gap: 15px;
-        margin-bottom: 25px;
+        gap: 12px;
+        margin-bottom: 20px;
       }
 
       .message-type-btn {
-        padding: 20px;
-        border: 3px solid var(--border-light);
-        border-radius: 12px;
+        padding: 15px;
+        border: 2px solid var(--border-light);
+        border-radius: 10px;
         background: white;
         cursor: pointer;
-        font-size: 1.2rem;
+        font-size: 1.05rem;
         font-weight: 600;
         transition: all 0.3s ease;
       }
@@ -541,57 +597,57 @@
 
       .message-modal textarea {
         width: 100%;
-        padding: 20px;
-        border: 3px solid var(--border-light);
-        border-radius: 12px;
+        padding: 15px;
+        border: 2px solid var(--border-light);
+        border-radius: 10px;
         font-family: "Cairo", sans-serif;
-        font-size: 1.2rem;
-        min-height: 150px;
+        font-size: 1.05rem;
+        min-height: 120px;
         resize: vertical;
       }
 
       .voice-recorder {
         background: linear-gradient(to bottom, #f0f9ff, white);
-        padding: 25px;
-        border-radius: 12px;
+        padding: 20px;
+        border-radius: 10px;
         border: 2px solid var(--primary-gold);
       }
 
       .voice-recorder audio {
         width: 100%;
-        margin-top: 15px;
+        margin-top: 12px;
       }
 
       .modal-buttons {
         display: grid;
         grid-template-columns: 1fr 1fr;
-        gap: 15px;
-        margin-top: 25px;
+        gap: 12px;
+        margin-top: 20px;
       }
 
       .unread-badge {
         position: absolute;
-        top: -10px;
-        left: -10px;
+        top: -8px;
+        left: -8px;
         background: #dc2626;
         color: white;
         border-radius: 50%;
-        width: 35px;
-        height: 35px;
+        width: 30px;
+        height: 30px;
         display: flex;
         align-items: center;
         justify-content: center;
-        font-size: 1.1rem;
+        font-size: 0.95rem;
         font-weight: 700;
         box-shadow: 0 2px 8px rgba(220, 38, 38, 0.4);
       }
 
       .message-item {
         background: linear-gradient(135deg, #fff9e6, white);
-        padding: 30px;
-        border-radius: 16px;
-        margin-bottom: 20px;
-        border-right: 5px solid var(--primary-gold);
+        padding: 20px;
+        border-radius: 14px;
+        margin-bottom: 15px;
+        border-right: 4px solid var(--primary-gold);
       }
 
       .message-item.unread {
@@ -603,54 +659,54 @@
         display: flex;
         justify-content: space-between;
         align-items: center;
-        margin-bottom: 15px;
-        padding-bottom: 15px;
+        margin-bottom: 12px;
+        padding-bottom: 12px;
         border-bottom: 2px solid var(--border-light);
       }
 
       .message-content {
-        font-size: 1.3rem;
-        line-height: 1.8;
-        margin-bottom: 15px;
+        font-size: 1.1rem;
+        line-height: 1.7;
+        margin-bottom: 12px;
       }
 
       .message-recording {
         background: white;
-        padding: 20px;
-        border-radius: 12px;
-        margin-top: 15px;
+        padding: 15px;
+        border-radius: 10px;
+        margin-top: 12px;
         border: 1px solid var(--border-light);
       }
 
       .message-recording audio {
         width: 100%;
-        margin-top: 10px;
+        margin-top: 8px;
       }
 
       @media (max-width: 768px) {
         h1 {
-          font-size: 2rem;
+          font-size: 1.7rem;
         }
 
         .subtitle {
-          font-size: 1.1rem;
+          font-size: 1rem;
         }
 
         .card {
-          padding: 30px 20px;
+          padding: 20px 15px;
         }
 
         .btn {
-          font-size: 1.3rem;
-          padding: 20px;
+          font-size: 1.1rem;
+          padding: 15px;
         }
 
         .type-card .icon {
-          font-size: 4rem;
+          font-size: 3rem;
         }
 
         .timer {
-          font-size: 2.5rem;
+          font-size: 2rem;
         }
 
         .record-type-grid {
@@ -658,12 +714,20 @@
         }
 
         .participants-grid {
-          grid-template-columns: 1fr;
+          grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
         }
 
         .logout-btn, .back-btn {
-          padding: 12px 20px;
-          font-size: 1rem;
+          padding: 10px 16px;
+          font-size: 0.9rem;
+        }
+
+        .stat-card .number {
+          font-size: 1.7rem;
+        }
+
+        .stat-card .icon {
+          font-size: 1.7rem;
         }
       }
 
@@ -683,29 +747,29 @@
 
       .confirm-content {
         background: white;
-        padding: 40px;
-        border-radius: 20px;
-        max-width: 500px;
+        padding: 30px;
+        border-radius: 16px;
+        max-width: 450px;
         width: 100%;
         text-align: center;
       }
 
       .confirm-content h3 {
         color: var(--dark-green);
-        font-size: 1.8rem;
-        margin-bottom: 20px;
+        font-size: 1.5rem;
+        margin-bottom: 15px;
       }
 
       .confirm-content p {
-        font-size: 1.3rem;
-        margin-bottom: 30px;
+        font-size: 1.1rem;
+        margin-bottom: 25px;
         line-height: 1.6;
       }
 
       .confirm-buttons {
         display: grid;
         grid-template-columns: 1fr 1fr;
-        gap: 15px;
+        gap: 12px;
       }
 
       .btn-danger {
@@ -738,14 +802,14 @@
           🔑 دخول
         </button>
 
-        <button class="btn btn-secondary" onclick="showAdminLogin()" style="margin-top: 30px;">
+        <button class="btn btn-secondary" onclick="showAdminLogin()" style="margin-top: 20px;">
           👩‍🏫 دخول الاستاذة
         </button>
       </div>
 
       <!-- صفحة التسجيل -->
       <div id="registerPage" class="card hidden">
-        <h2 style="color: var(--dark-green); margin-bottom: 30px; text-align: center; font-size: 2rem;">
+        <h2 style="color: var(--dark-green); margin-bottom: 25px; text-align: center; font-size: 1.7rem;">
           تسجيل جديد
         </h2>
 
@@ -771,7 +835,7 @@
 
       <!-- صفحة تسجيل الدخول -->
       <div id="loginPage" class="card hidden">
-        <h2 style="color: var(--dark-green); margin-bottom: 30px; text-align: center; font-size: 2rem;">
+        <h2 style="color: var(--dark-green); margin-bottom: 25px; text-align: center; font-size: 1.7rem;">
           تسجيل دخول
         </h2>
 
@@ -799,7 +863,7 @@
 
       <!-- صفحة دخول الاستاذة -->
       <div id="adminLoginPage" class="card hidden">
-        <h2 style="color: var(--dark-green); margin-bottom: 30px; text-align: center; font-size: 2rem;">
+        <h2 style="color: var(--dark-green); margin-bottom: 25px; text-align: center; font-size: 1.7rem;">
           دخول الاستاذة
         </h2>
 
@@ -824,11 +888,11 @@
       <div id="participantPage" class="card hidden">
         <button class="logout-btn" onclick="logout()">خروج</button>
 
-        <h2 style="color: var(--dark-green); margin-bottom: 10px; text-align: center; font-size: 2rem;">
+        <h2 style="color: var(--dark-green); margin-bottom: 10px; text-align: center; font-size: 1.7rem;">
           أهلاً <span id="participantName"></span> 🌙
         </h2>
 
-        <div style="display: flex; gap: 15px; margin: 30px 0;">
+        <div style="display: flex; gap: 12px; margin: 20px 0;">
           <button class="btn btn-secondary" onclick="showRecordingSection()" style="flex: 1;">
             🎤 تسجيل
           </button>
@@ -840,7 +904,7 @@
 
         <!-- قسم التسجيل -->
         <div id="recordingSection">
-          <h3 style="color: var(--dark-green); margin-bottom: 20px; font-size: 1.6rem; text-align: center;">
+          <h3 style="color: var(--dark-green); margin-bottom: 15px; font-size: 1.3rem; text-align: center;">
             اختر نوع التسجيل
           </h3>
 
@@ -872,11 +936,11 @@
           </div>
 
           <div id="recordingPreview" class="recording-preview hidden">
-            <h3 style="color: var(--dark-green); margin-bottom: 15px; font-size: 1.5rem;">
+            <h3 style="color: var(--dark-green); margin-bottom: 12px; font-size: 1.3rem;">
               المعاينة
             </h3>
             <div id="previewMedia"></div>
-            <button class="btn btn-primary" onclick="saveRecording()" style="margin-top: 20px;">
+            <button class="btn btn-primary" onclick="saveRecording()" style="margin-top: 15px;">
               💾 حفظ
             </button>
             <button class="btn btn-secondary" onclick="cancelRecording()">
@@ -884,8 +948,8 @@
             </button>
           </div>
 
-          <div style="margin-top: 40px;">
-            <h3 style="color: var(--dark-green); margin-bottom: 20px; font-size: 1.6rem;">
+          <div style="margin-top: 30px;">
+            <h3 style="color: var(--dark-green); margin-bottom: 15px; font-size: 1.3rem;">
               تسجيلاتي
             </h3>
             <div id="myRecordingsList"></div>
@@ -894,20 +958,39 @@
 
         <!-- قسم الرسائل -->
         <div id="messagesSection" class="hidden">
-          <h3 style="color: var(--dark-green); margin-bottom: 25px; font-size: 1.6rem;">
+          <h3 style="color: var(--dark-green); margin-bottom: 20px; font-size: 1.3rem;">
             📬 رسائل الاستاذة
           </h3>
           <div id="messagesList"></div>
         </div>
       </div>
 
-      <!-- صفحة المشاركين (للاستاذة) -->
+      <!-- صفحة المشاركين (للاستاذة) - محسّنة -->
       <div id="adminParticipantsPage" class="card hidden">
         <button class="logout-btn" onclick="logout()">خروج</button>
 
-        <h2 style="color: var(--dark-green); margin-bottom: 30px; text-align: center; font-size: 2rem;">
-          المشاركون
+        <h2 style="color: var(--dark-green); margin-bottom: 20px; text-align: center; font-size: 1.7rem;">
+          إدارة المشاركين
         </h2>
+
+        <!-- الإحصائيات -->
+        <div class="stats-container">
+          <div class="stat-card">
+            <div class="icon">👥</div>
+            <div class="number" id="totalParticipants">0</div>
+            <div class="label">مشارك</div>
+          </div>
+          <div class="stat-card">
+            <div class="icon">🎙️</div>
+            <div class="number" id="totalRecordings">0</div>
+            <div class="label">تسجيل كلي</div>
+          </div>
+          <div class="stat-card">
+            <div class="icon">🆕</div>
+            <div class="number" id="newRecordings">0</div>
+            <div class="label">جديد</div>
+          </div>
+        </div>
 
         <div id="participantsList" class="participants-grid"></div>
       </div>
@@ -917,7 +1000,7 @@
         <button class="logout-btn" onclick="logout()">خروج</button>
         <button class="back-btn" onclick="backToParticipants()">← رجوع</button>
 
-        <h2 id="participantTitle" style="color: var(--dark-green); margin-bottom: 30px; text-align: center; font-size: 2rem;">
+        <h2 id="participantTitle" style="color: var(--dark-green); margin-bottom: 20px; text-align: center; font-size: 1.7rem;">
         </h2>
 
         <div id="adminRecordingsList"></div>
@@ -966,12 +1049,14 @@
       let adminVoiceChunks = [];
       let adminVoiceTimer = null;
       let currentRecordingForMessage = null;
+      let viewedRecordings = new Set();
 
       window.onload = function () {
         const checkFirebase = setInterval(() => {
           if (window.firebaseInitialized && window.db) {
             clearInterval(checkFirebase);
             loadCurrentSession();
+            loadViewedRecordings();
           }
         }, 100);
 
@@ -983,6 +1068,26 @@
           }
         }, 5000);
       };
+
+      function loadViewedRecordings() {
+        const stored = localStorage.getItem('viewedRecordings');
+        if (stored) {
+          viewedRecordings = new Set(JSON.parse(stored));
+        }
+      }
+
+      function saveViewedRecordings() {
+        localStorage.setItem('viewedRecordings', JSON.stringify([...viewedRecordings]));
+      }
+
+      function markRecordingAsViewed(participantId, recordingId) {
+        viewedRecordings.add(`${participantId}_${recordingId}`);
+        saveViewedRecordings();
+      }
+
+      function isRecordingViewed(participantId, recordingId) {
+        return viewedRecordings.has(`${participantId}_${recordingId}`);
+      }
 
       function showLoading() {
         const existing = document.getElementById('loadingOverlay');
@@ -1072,18 +1177,18 @@
         updateUnreadBadge();
       }
 
-      function showAdminParticipantsPage() {
+      async function showAdminParticipantsPage() {
         hideAllPages();
         document.getElementById("adminParticipantsPage").classList.remove("hidden");
-        loadParticipants();
+        await loadParticipants();
       }
 
-      function showAdminRecordingsPage(participant) {
+      async function showAdminRecordingsPage(participant) {
         hideAllPages();
         currentParticipant = participant;
         document.getElementById("adminRecordingsPage").classList.remove("hidden");
         document.getElementById("participantTitle").textContent = "تسجيلات: " + participant.name;
-        loadParticipantRecordings();
+        await loadParticipantRecordings();
       }
 
       function backToParticipants() {
@@ -1189,17 +1294,17 @@
           html += `
             <div class="message-item ${!msg.read ? "unread" : ""}">
               <div class="message-header">
-                <span style="color: var(--primary-gold); font-weight: 700; font-size: 1.3rem;">
+                <span style="color: var(--primary-gold); font-weight: 700; font-size: 1.15rem;">
                   ✉️ رسالة من الاستاذة ${msg.messageType === 'voice' ? '🎤' : ''}
                 </span>
-                <span style="color: #666; font-size: 1rem;">
+                <span style="color: #666; font-size: 0.9rem;">
                   ${new Date(msg.timestamp).toLocaleDateString("ar-SA")}
                 </span>
               </div>
               <div class="message-content">${msg.message}</div>
               ${msg.messageType === 'voice' && msg.voiceData ? `
                 <div class="message-recording">
-                  <p style="color: var(--dark-green); font-weight: 600; margin-bottom: 10px; font-size: 1.2rem;">
+                  <p style="color: var(--dark-green); font-weight: 600; margin-bottom: 8px; font-size: 1.05rem;">
                     🎤 رسالة صوتية
                   </p>
                   <audio controls src="${msg.voiceData}"></audio>
@@ -1551,7 +1656,7 @@
           .map((rec, index) => `
             <div class="recording-item">
               <div class="three-dots" onclick="showRecordingMenu(event, '${rec.id}')">⋮</div>
-              <p style="color: var(--dark-green); font-weight: 700; font-size: 1.3rem; margin-bottom: 8px;">
+              <p style="color: var(--dark-green); font-weight: 700; font-size: 1.15rem; margin-bottom: 6px;">
                 التسجيل ${index + 1} - ${rec.type === "video" ? "🎥 فيديو" : "🎤 صوت"}
               </p>
               <p class="recording-date">
@@ -1568,7 +1673,6 @@
       function showRecordingMenu(e, recordingId) {
         e.stopPropagation();
         
-        // إزالة أي قائمة موجودة
         const existingMenu = document.querySelector(".menu-popup");
         if (existingMenu) existingMenu.remove();
 
@@ -1582,7 +1686,6 @@
 
         e.target.parentElement.appendChild(menu);
 
-        // إغلاق القائمة عند الضغط خارجها
         setTimeout(() => {
           document.addEventListener("click", function closeMenu(e) {
             if (!menu.contains(e.target)) {
@@ -1657,6 +1760,7 @@
 
         if (!snapshot.exists()) {
           listDiv.innerHTML = '<div class="empty-state"><div class="icon">👥</div><p>لا يوجد مشاركون</p></div>';
+          updateAdminStats(0, 0, 0);
           return;
         }
 
@@ -1668,20 +1772,50 @@
 
         if (participants.length === 0) {
           listDiv.innerHTML = '<div class="empty-state"><div class="icon">👥</div><p>لا يوجد مشاركون</p></div>';
+          updateAdminStats(0, 0, 0);
           return;
         }
 
+        // حساب الإحصائيات
+        let totalRecordings = 0;
+        let newRecordings = 0;
+
+        participants.forEach(p => {
+          const recordingsCount = (p.recordings || []).length;
+          totalRecordings += recordingsCount;
+          
+          // حساب التسجيلات الجديدة لهذا المشارك
+          (p.recordings || []).forEach(rec => {
+            if (!isRecordingViewed(p.id, rec.id)) {
+              newRecordings++;
+            }
+          });
+        });
+
+        updateAdminStats(participants.length, totalRecordings, newRecordings);
+
+        // عرض المشاركين
         listDiv.innerHTML = participants
-          .map(p => `
-            <div class="participant-card" onclick='showAdminRecordingsPage(${JSON.stringify(p)})'>
-              <div class="icon">👤</div>
-              <h3>${p.name}</h3>
-              <p class="count">${(p.recordings || []).length} تسجيل</p>
-            </div>
-          `).join("");
+          .map(p => {
+            const newCount = (p.recordings || []).filter(rec => !isRecordingViewed(p.id, rec.id)).length;
+            return `
+              <div class="participant-card" onclick='showAdminRecordingsPage(${JSON.stringify(p).replace(/'/g, "&#39;")})'>
+                ${newCount > 0 ? `<div class="new-recordings-badge">${newCount}</div>` : ''}
+                <div class="icon">👤</div>
+                <h3>${p.name}</h3>
+                <p class="count">${(p.recordings || []).length} تسجيل</p>
+              </div>
+            `;
+          }).join("");
       }
 
-      function loadParticipantRecordings() {
+      function updateAdminStats(participants, recordings, newRecs) {
+        document.getElementById("totalParticipants").textContent = participants;
+        document.getElementById("totalRecordings").textContent = recordings;
+        document.getElementById("newRecordings").textContent = newRecs;
+      }
+
+      async function loadParticipantRecordings() {
         const listDiv = document.getElementById("adminRecordingsList");
 
         if (!currentParticipant.recordings || currentParticipant.recordings.length === 0) {
@@ -1689,11 +1823,16 @@
           return;
         }
 
+        // تحديد جميع التسجيلات كمشاهدة
+        currentParticipant.recordings.forEach(rec => {
+          markRecordingAsViewed(currentParticipant.id, rec.id);
+        });
+
         listDiv.innerHTML = currentParticipant.recordings
           .map((rec, index) => `
             <div class="recording-item">
               <div class="three-dots" onclick="showAdminRecordingMenu(event, '${rec.id}')">⋮</div>
-              <p style="color: var(--dark-green); font-weight: 700; font-size: 1.3rem; margin-bottom: 8px;">
+              <p style="color: var(--dark-green); font-weight: 700; font-size: 1.15rem; margin-bottom: 6px;">
                 التسجيل ${index + 1} - ${rec.type === "video" ? "🎥 فيديو" : "🎤 صوت"}
               </p>
               <p class="recording-date">
@@ -1965,7 +2104,6 @@
 
         currentParticipant.recordings = recordings;
 
-        // تحديث البيانات المحلية
         const snapshot = await window.dbGet(window.dbRef(window.db, 'participants/' + currentParticipant.id));
         if (snapshot.exists()) {
           currentParticipant = { id: currentParticipant.id, ...snapshot.val() };
