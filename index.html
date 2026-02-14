@@ -183,7 +183,6 @@
         margin: 6px 0;
       }
 
-      /* إحصائيات الاستاذة - تصميم محسّن */
       .stats-container {
         display: grid;
         grid-template-columns: repeat(auto-fit, minmax(100px, 1fr));
@@ -427,7 +426,6 @@
         font-weight: 600;
       }
 
-      /* تحسين بطاقات المشاركين */
       .participants-grid {
         display: grid;
         grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
@@ -469,7 +467,6 @@
         font-size: 0.8rem;
       }
 
-      /* Badge للتسجيلات الجديدة */
       .new-recordings-badge {
         position: absolute;
         top: -6px;
@@ -574,7 +571,7 @@
 
       .message-type-btns {
         display: grid;
-        grid-template-columns: 1fr 1fr;
+        grid-template-columns: 1fr 1fr 1fr;
         gap: 8px;
         margin-bottom: 12px;
       }
@@ -585,7 +582,7 @@
         border-radius: 8px;
         background: white;
         cursor: pointer;
-        font-size: 0.9rem;
+        font-size: 0.85rem;
         font-weight: 600;
         transition: all 0.3s ease;
       }
@@ -684,6 +681,190 @@
         margin-top: 6px;
       }
 
+      /* Star Rating Styles */
+      .rating-container {
+        background: linear-gradient(to bottom, #fff9e6, white);
+        padding: 15px;
+        border-radius: 8px;
+        border: 2px solid var(--primary-gold);
+        text-align: center;
+      }
+
+      .stars-display {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        gap: 8px;
+        margin: 15px 0;
+        font-size: 2.5rem;
+      }
+
+      .star {
+        cursor: pointer;
+        transition: all 0.2s ease;
+        color: #d1d5db;
+      }
+
+      .star:hover {
+        transform: scale(1.2);
+      }
+
+      .star.filled {
+        color: #fbbf24;
+      }
+
+      .star.half {
+        background: linear-gradient(90deg, #fbbf24 50%, #d1d5db 50%);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        background-clip: text;
+      }
+
+      .rating-value {
+        font-size: 1.5rem;
+        font-weight: 700;
+        color: var(--dark-green);
+        margin-top: 10px;
+      }
+
+      .rating-buttons {
+        display: grid;
+        grid-template-columns: repeat(5, 1fr);
+        gap: 6px;
+        margin-top: 12px;
+      }
+
+      .rating-btn {
+        padding: 8px;
+        border: 2px solid var(--border-light);
+        border-radius: 6px;
+        background: white;
+        cursor: pointer;
+        font-size: 0.85rem;
+        font-weight: 600;
+        transition: all 0.3s ease;
+      }
+
+      .rating-btn:hover {
+        background: var(--cream);
+        border-color: var(--primary-gold);
+      }
+
+      .rating-btn.active {
+        background: linear-gradient(135deg, var(--primary-gold), var(--accent-gold));
+        border-color: var(--primary-gold);
+        color: var(--dark-green);
+      }
+
+      .message-rating {
+        background: linear-gradient(135deg, #fef3c7, #fde68a);
+        padding: 12px;
+        border-radius: 8px;
+        margin-top: 8px;
+        text-align: center;
+        border: 2px solid #fbbf24;
+      }
+
+      .message-stars {
+        font-size: 2rem;
+        margin: 8px 0;
+      }
+
+      .message-stars .star {
+        cursor: default;
+      }
+
+      /* Contact Info Styles */
+      .contact-info-section {
+        background: linear-gradient(135deg, #dbeafe, #e0f2fe);
+        padding: 12px;
+        border-radius: 10px;
+        margin-bottom: 15px;
+        border: 2px solid var(--primary-gold);
+      }
+
+      .contact-info-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 10px;
+      }
+
+      .contact-info-title {
+        color: var(--dark-green);
+        font-weight: 700;
+        font-size: 1rem;
+      }
+
+      .toggle-contact-btn {
+        background: var(--primary-gold);
+        color: var(--dark-green);
+        padding: 6px 12px;
+        border: none;
+        border-radius: 6px;
+        cursor: pointer;
+        font-size: 0.85rem;
+        font-weight: 600;
+        transition: all 0.3s ease;
+      }
+
+      .toggle-contact-btn:hover {
+        background: var(--accent-gold);
+        transform: scale(1.05);
+      }
+
+      .contact-info-content {
+        margin-top: 10px;
+      }
+
+      .info-row {
+        background: white;
+        padding: 10px;
+        border-radius: 8px;
+        margin-bottom: 8px;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        border: 1px solid var(--border-light);
+      }
+
+      .info-label {
+        color: #666;
+        font-size: 0.85rem;
+        margin-bottom: 4px;
+      }
+
+      .info-value {
+        color: var(--dark-green);
+        font-size: 1rem;
+        font-weight: 700;
+        word-break: break-all;
+      }
+
+      .copy-btn {
+        background: var(--dark-green);
+        color: white;
+        border: none;
+        padding: 8px 12px;
+        border-radius: 6px;
+        cursor: pointer;
+        font-size: 0.85rem;
+        font-weight: 600;
+        transition: all 0.3s ease;
+        display: flex;
+        align-items: center;
+        gap: 4px;
+      }
+
+      .copy-btn:hover {
+        background: var(--medium-green);
+        transform: scale(1.05);
+      }
+
+      .copy-btn.copied {
+        background: #10b981;
+      }
+
       @media (max-width: 768px) {
         h1 {
           font-size: 1.3rem;
@@ -734,6 +915,14 @@
         .big-icon-btn {
           font-size: 1.1rem;
           padding: 12px;
+        }
+
+        .message-type-btns {
+          grid-template-columns: 1fr;
+        }
+
+        .stars-display {
+          font-size: 2rem;
         }
       }
 
@@ -971,7 +1160,7 @@
         </div>
       </div>
 
-      <!-- صفحة المشاركين (للاستاذة) - محسّنة -->
+      <!-- صفحة المشاركين (للاستاذة) -->
       <div id="adminParticipantsPage" class="card hidden">
         <button class="logout-btn" onclick="logout()">خروج</button>
 
@@ -979,7 +1168,6 @@
           إدارة المشاركين
         </h2>
 
-        <!-- الإحصائيات -->
         <div class="stats-container">
           <div class="stat-card">
             <div class="icon">👥</div>
@@ -1008,6 +1196,36 @@
 
         <h2 id="participantTitle" style="color: var(--dark-green); margin-bottom: 12px; text-align: center; font-size: 1.3rem;">
         </h2>
+
+        <!-- قسم معلومات التواصل -->
+        <div class="contact-info-section">
+          <div class="contact-info-header">
+            <span class="contact-info-title">📞 معلومات التواصل</span>
+            <button class="toggle-contact-btn" onclick="toggleContactInfo()">
+              <span id="contactToggleText">عرض</span>
+            </button>
+          </div>
+          <div id="contactInfoContent" class="contact-info-content hidden">
+            <div class="info-row">
+              <div>
+                <div class="info-label">الاسم</div>
+                <div class="info-value" id="contactName">-</div>
+              </div>
+              <button class="copy-btn" onclick="copyToClipboard('name')">
+                📋 نسخ
+              </button>
+            </div>
+            <div class="info-row">
+              <div>
+                <div class="info-label">كلمة المرور</div>
+                <div class="info-value" id="contactPassword">-</div>
+              </div>
+              <button class="copy-btn" onclick="copyToClipboard('password')">
+                📋 نسخ
+              </button>
+            </div>
+          </div>
+        </div>
 
         <div id="adminRecordingsList"></div>
       </div>
@@ -1056,6 +1274,7 @@
       let adminVoiceTimer = null;
       let currentRecordingForMessage = null;
       let viewedRecordings = new Set();
+      let selectedRating = 0;
 
       window.onload = function () {
         const checkFirebase = setInterval(() => {
@@ -1194,11 +1413,21 @@
         currentParticipant = participant;
         document.getElementById("adminRecordingsPage").classList.remove("hidden");
         document.getElementById("participantTitle").textContent = "تسجيلات: " + participant.name;
+        
+        // تحديث معلومات التواصل
+        document.getElementById("contactName").textContent = participant.name;
+        document.getElementById("contactPassword").textContent = participant.password;
+        
         await loadParticipantRecordings();
       }
 
       function backToParticipants() {
         currentParticipant = null;
+        // إخفاء معلومات التواصل عند الرجوع
+        const contactContent = document.getElementById("contactInfoContent");
+        if (!contactContent.classList.contains("hidden")) {
+          toggleContactInfo();
+        }
         showAdminParticipantsPage();
       }
 
@@ -1297,11 +1526,15 @@
 
         let html = '';
         for (const msg of messages) {
+          let typeIcon = '✉️';
+          if (msg.messageType === 'voice') typeIcon = '🎤';
+          if (msg.messageType === 'rating') typeIcon = '⭐';
+
           html += `
             <div class="message-item ${!msg.read ? "unread" : ""}">
               <div class="message-header">
                 <span style="color: var(--primary-gold); font-weight: 700; font-size: 1rem;">
-                  ✉️ رسالة من الاستاذة ${msg.messageType === 'voice' ? '🎤' : ''}
+                  ${typeIcon} رسالة من الاستاذة
                 </span>
                 <span style="color: #666; font-size: 0.75rem;">
                   ${new Date(msg.timestamp).toLocaleDateString("ar-SA")}
@@ -1316,11 +1549,38 @@
                   <audio controls src="${msg.voiceData}"></audio>
                 </div>
               ` : ''}
+              ${msg.messageType === 'rating' && msg.rating ? `
+                <div class="message-rating">
+                  <p style="color: var(--dark-green); font-weight: 700; margin-bottom: 6px; font-size: 1rem;">
+                    تقييمك
+                  </p>
+                  <div class="message-stars">
+                    ${generateStarsDisplay(msg.rating)}
+                  </div>
+                  <p style="color: var(--dark-green); font-weight: 700; font-size: 1.3rem; margin-top: 6px;">
+                    ${msg.rating} / 5
+                  </p>
+                </div>
+              ` : ''}
             </div>
           `;
         }
 
         listDiv.innerHTML = html;
+      }
+
+      function generateStarsDisplay(rating) {
+        let starsHtml = '';
+        for (let i = 1; i <= 5; i++) {
+          if (rating >= i) {
+            starsHtml += '<span class="star filled">⭐</span>';
+          } else if (rating >= i - 0.5) {
+            starsHtml += '<span class="star half">⭐</span>';
+          } else {
+            starsHtml += '<span class="star">⭐</span>';
+          }
+        }
+        return starsHtml;
       }
 
       document.getElementById("registerForm").onsubmit = async function (e) {
@@ -1782,7 +2042,6 @@
           return;
         }
 
-        // حساب الإحصائيات
         let totalRecordings = 0;
         let newRecordings = 0;
 
@@ -1790,7 +2049,6 @@
           const recordingsCount = (p.recordings || []).length;
           totalRecordings += recordingsCount;
           
-          // حساب التسجيلات الجديدة لهذا المشارك
           (p.recordings || []).forEach(rec => {
             if (!isRecordingViewed(p.id, rec.id)) {
               newRecordings++;
@@ -1800,7 +2058,6 @@
 
         updateAdminStats(participants.length, totalRecordings, newRecordings);
 
-        // عرض المشاركين
         listDiv.innerHTML = participants
           .map(p => {
             const newCount = (p.recordings || []).filter(rec => !isRecordingViewed(p.id, rec.id)).length;
@@ -1829,7 +2086,6 @@
           return;
         }
 
-        // تحديد جميع التسجيلات كمشاهدة
         currentParticipant.recordings.forEach(rec => {
           markRecordingAsViewed(currentParticipant.id, rec.id);
         });
@@ -1867,6 +2123,9 @@
           <div class="menu-item" onclick="openMessageModal('${recordingId}', 'voice')">
             🎤 رسالة صوتية
           </div>
+          <div class="menu-item" onclick="openMessageModal('${recordingId}', 'rating')">
+            ⭐ تقييم
+          </div>
           <div class="menu-item danger" onclick="confirmDeleteRecordingAdmin('${recordingId}')">
             🗑️ حذف التسجيل
           </div>
@@ -1886,6 +2145,7 @@
 
       function openMessageModal(recordingId, type) {
         currentRecordingForMessage = recordingId;
+        selectedRating = 0;
         
         const modal = document.createElement("div");
         modal.className = "message-modal";
@@ -1902,13 +2162,16 @@
               <button class="message-type-btn ${type === 'voice' ? 'active' : ''}" onclick="switchMessageType('voice')">
                 🎤 صوتية
               </button>
+              <button class="message-type-btn ${type === 'rating' ? 'active' : ''}" onclick="switchMessageType('rating')">
+                ⭐ تقييم
+              </button>
             </div>
 
-            <div id="textMessageDiv" class="${type === 'voice' ? 'hidden' : ''}">
+            <div id="textMessageDiv" class="${type !== 'text' ? 'hidden' : ''}">
               <textarea id="messageText" placeholder="اكتب رسالتك هنا..."></textarea>
             </div>
 
-            <div id="voiceMessageDiv" class="voice-recorder ${type === 'text' ? 'hidden' : ''}">
+            <div id="voiceMessageDiv" class="voice-recorder ${type !== 'voice' ? 'hidden' : ''}">
               <button class="btn btn-primary" id="voiceRecordBtn" onclick="startAdminVoice()">
                 🎤 ابدأ التسجيل
               </button>
@@ -1918,6 +2181,23 @@
               </button>
               <div id="voicePreviewDiv" class="hidden">
                 <audio id="voicePreview" controls></audio>
+              </div>
+            </div>
+
+            <div id="ratingMessageDiv" class="rating-container ${type !== 'rating' ? 'hidden' : ''}">
+              <p style="color: var(--dark-green); font-weight: 700; font-size: 1.1rem; margin-bottom: 10px;">
+                اختر التقييم
+              </p>
+              <div class="stars-display" id="starsDisplay">
+                ${[1, 2, 3, 4, 5].map(i => 
+                  `<span class="star" onclick="setRating(${i})" data-value="${i}">⭐</span>`
+                ).join('')}
+              </div>
+              <div class="rating-value" id="ratingValue">0 / 5</div>
+              <div class="rating-buttons">
+                ${[0.5, 1, 1.5, 2, 2.5, 3, 3.5, 4, 4.5, 5].map(val => 
+                  `<button class="rating-btn" onclick="setRating(${val})">${val}</button>`
+                ).join('')}
               </div>
             </div>
 
@@ -1935,13 +2215,43 @@
         document.querySelectorAll(".message-type-btn").forEach(btn => btn.classList.remove("active"));
         event.target.classList.add("active");
 
+        document.getElementById("textMessageDiv").classList.add("hidden");
+        document.getElementById("voiceMessageDiv").classList.add("hidden");
+        document.getElementById("ratingMessageDiv").classList.add("hidden");
+
         if (type === 'text') {
           document.getElementById("textMessageDiv").classList.remove("hidden");
-          document.getElementById("voiceMessageDiv").classList.add("hidden");
-        } else {
-          document.getElementById("textMessageDiv").classList.add("hidden");
+        } else if (type === 'voice') {
           document.getElementById("voiceMessageDiv").classList.remove("hidden");
+        } else if (type === 'rating') {
+          document.getElementById("ratingMessageDiv").classList.remove("hidden");
         }
+      }
+
+      function setRating(value) {
+        selectedRating = value;
+        document.getElementById("ratingValue").textContent = `${value} / 5`;
+
+        // تحديث النجوم
+        const stars = document.querySelectorAll("#starsDisplay .star");
+        stars.forEach((star, index) => {
+          const starValue = index + 1;
+          star.classList.remove("filled", "half");
+          
+          if (value >= starValue) {
+            star.classList.add("filled");
+          } else if (value >= starValue - 0.5) {
+            star.classList.add("half");
+          }
+        });
+
+        // تحديث الأزرار
+        document.querySelectorAll(".rating-btn").forEach(btn => {
+          btn.classList.remove("active");
+          if (parseFloat(btn.textContent) === value) {
+            btn.classList.add("active");
+          }
+        });
       }
 
       async function startAdminVoice() {
@@ -2000,7 +2310,15 @@
 
       async function sendMessageToParticipant() {
         const activeBtn = document.querySelector(".message-type-btn.active");
-        const messageType = activeBtn.textContent.includes("نصية") ? 'text' : 'voice';
+        let messageType = 'text';
+        
+        if (activeBtn.textContent.includes("نصية")) {
+          messageType = 'text';
+        } else if (activeBtn.textContent.includes("صوتية")) {
+          messageType = 'voice';
+        } else if (activeBtn.textContent.includes("تقييم")) {
+          messageType = 'rating';
+        }
 
         showLoading();
 
@@ -2013,8 +2331,8 @@
               return;
             }
 
-            await sendMessage(currentParticipant.id, currentRecordingForMessage, messageText, 'text', null);
-          } else {
+            await sendMessage(currentParticipant.id, currentRecordingForMessage, messageText, 'text', null, null);
+          } else if (messageType === 'voice') {
             if (!adminVoiceChunks || adminVoiceChunks.length === 0) {
               hideLoading();
               alert("الرجاء تسجيل رسالة صوتية!");
@@ -2024,7 +2342,15 @@
             const blob = new Blob(adminVoiceChunks, { type: "audio/webm" });
             const base64Data = await blobToBase64(blob);
             
-            await sendMessage(currentParticipant.id, currentRecordingForMessage, "رسالة صوتية من الاستاذة 🎤", 'voice', base64Data);
+            await sendMessage(currentParticipant.id, currentRecordingForMessage, "رسالة صوتية من الاستاذة 🎤", 'voice', base64Data, null);
+          } else if (messageType === 'rating') {
+            if (selectedRating === 0) {
+              hideLoading();
+              alert("الرجاء اختيار تقييم!");
+              return;
+            }
+
+            await sendMessage(currentParticipant.id, currentRecordingForMessage, `تقييمك: ${selectedRating} / 5 نجوم`, 'rating', null, selectedRating);
           }
 
           hideLoading();
@@ -2036,7 +2362,7 @@
         }
       }
 
-      async function sendMessage(participantId, recordingId, message, messageType, voiceData) {
+      async function sendMessage(participantId, recordingId, message, messageType, voiceData, rating) {
         const messagesRef = window.dbRef(window.db, 'messages');
         const newMessageRef = window.dbPush(messagesRef);
 
@@ -2053,6 +2379,10 @@
           newMessage.voiceData = voiceData;
         }
 
+        if (messageType === 'rating' && rating) {
+          newMessage.rating = rating;
+        }
+
         await window.dbSet(newMessageRef, newMessage);
         return newMessage;
       }
@@ -2066,6 +2396,7 @@
           adminVoiceRecorder.stop();
         }
         clearInterval(adminVoiceTimer);
+        selectedRating = 0;
       }
 
       function confirmDeleteRecordingAdmin(recordingId) {
@@ -2120,6 +2451,48 @@
         loadParticipantRecordings();
 
         alert("تم الحذف! ✅");
+      }
+
+      // دالة عرض/إخفاء معلومات التواصل
+      function toggleContactInfo() {
+        const content = document.getElementById("contactInfoContent");
+        const toggleText = document.getElementById("contactToggleText");
+        
+        if (content.classList.contains("hidden")) {
+          content.classList.remove("hidden");
+          toggleText.textContent = "إخفاء";
+        } else {
+          content.classList.add("hidden");
+          toggleText.textContent = "عرض";
+        }
+      }
+
+      // دالة نسخ النص
+      async function copyToClipboard(type) {
+        let textToCopy = '';
+        let buttonElement = event.target.closest('.copy-btn');
+        
+        if (type === 'name') {
+          textToCopy = currentParticipant.name;
+        } else if (type === 'password') {
+          textToCopy = currentParticipant.password;
+        }
+
+        try {
+          await navigator.clipboard.writeText(textToCopy);
+          
+          // تغيير شكل الزر مؤقتاً
+          const originalHTML = buttonElement.innerHTML;
+          buttonElement.innerHTML = '✅ تم النسخ';
+          buttonElement.classList.add('copied');
+          
+          setTimeout(() => {
+            buttonElement.innerHTML = originalHTML;
+            buttonElement.classList.remove('copied');
+          }, 2000);
+        } catch (err) {
+          alert('فشل النسخ: ' + err);
+        }
       }
     </script>
   </body>
