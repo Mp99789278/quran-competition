@@ -906,13 +906,13 @@
             border-top: 2px solid var(--border-light);
           "
         >
-          <p style="color: #666; margin-bottom: 15px; font-size: 1.05rem;">هل أنت المدير؟</p>
+          <p style="color: #666; margin-bottom: 15px; font-size: 1.05rem;">هل أنت الاستاذة؟</p>
           <button
             type="button"
             class="btn btn-secondary"
             onclick="showAdminLogin()"
           >
-            دخول المدير
+            دخول الاستاذة
           </button>
         </div>
       </div>
@@ -1017,7 +1017,7 @@
         </div>
       </div>
 
-      <!-- صفحة تسجيل الدخول للمدير -->
+      <!-- صفحة تسجيل الدخول للاستاذة -->
       <div id="adminLoginPage" class="card hidden">
         <h2
           style="
@@ -1027,14 +1027,14 @@
             font-size: 2rem;
           "
         >
-          دخول المدير
+          دخول الاستاذة
         </h2>
 
         <div id="adminError" class="error-message hidden"></div>
 
         <form id="adminLoginForm">
           <div class="form-group">
-            <label>كلمة مرور المدير</label>
+            <label>كلمة مرور الاستاذة</label>
             <div class="password-input-wrapper">
               <input
                 type="password"
@@ -1177,13 +1177,13 @@
         <!-- قسم الرسائل -->
         <div id="messagesSection" class="hidden">
           <h3 style="color: var(--dark-green); margin-bottom: 25px; font-size: 1.5rem;">
-            📬 رسائل المدير
+            📬 رسائل الاستاذة
           </h3>
           <div id="messagesList"></div>
         </div>
       </div>
 
-      <!-- صفحة المدير -->
+      <!-- صفحة الاستاذة -->
       <div id="adminPage" class="card hidden">
         <button class="logout-btn" onclick="logout()">تسجيل خروج</button>
 
@@ -1195,7 +1195,7 @@
             font-size: 2rem;
           "
         >
-          لوحة تحكم المدير
+          لوحة تحكم الاستاذة
         </h2>
 
         <div class="admin-stats">
@@ -1263,7 +1263,7 @@
       let recordingStartTime = null;
       let previewStream = null;
       
-      // متغيرات التسجيل الصوتي للمدير
+      // متغيرات التسجيل الصوتي للاستاذة
       let adminVoiceRecorder = null;
       let adminVoiceChunks = [];
       let adminVoiceTimer = null;
@@ -1520,14 +1520,14 @@
           html += `
             <div class="message-item ${!msg.read ? "unread" : ""}">
               <div class="message-header">
-                <span style="color: var(--primary-gold); font-weight: 700;">✉️ رسالة من المدير ${msg.messageType === 'voice' ? '🎤' : ''}</span>
+                <span style="color: var(--primary-gold); font-weight: 700;">✉️ رسالة من الاستاذة ${msg.messageType === 'voice' ? '🎤' : ''}</span>
                 <span class="message-date">${new Date(msg.timestamp).toLocaleDateString("ar-SA")} - ${new Date(msg.timestamp).toLocaleTimeString("ar-SA", { hour: "2-digit", minute: "2-digit" })}</span>
               </div>
               <div class="message-content">${msg.message}</div>
               ${msg.messageType === 'voice' && msg.voiceData ? `
                 <div class="message-recording">
                   <p style="color: var(--dark-green); font-weight: 600; margin-bottom: 10px;">
-                    🎤 رسالة صوتية من المدير
+                    🎤 رسالة صوتية من الاستاذة
                   </p>
                   <audio controls src="${msg.voiceData}"></audio>
                 </div>
@@ -2140,7 +2140,7 @@
             const blob = new Blob(adminVoiceChunks, { type: "audio/webm" });
             const base64Data = await blobToBase64(blob);
             
-            await sendMessage(participantId, recordingId, "رسالة صوتية من المدير 🎤", 'voice', base64Data);
+            await sendMessage(participantId, recordingId, "رسالة صوتية من الاستاذة 🎤", 'voice', base64Data);
             
             hideLoading();
             
