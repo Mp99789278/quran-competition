@@ -1,1417 +1,1654 @@
 <!DOCTYPE html>
 <html lang="ar" dir="rtl">
-<head>
-<meta charset="UTF-8"/>
-<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0"/>
-<title>مسابقة حفظ جزء عم 🌙</title>
-<link href="https://fonts.googleapis.com/css2?family=Scheherazade+New:wght@400;700&family=Tajawal:wght@400;500;700;900&display=swap" rel="stylesheet"/>
-<style>
-*{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent}
-:root{
-  --g:#0e4d3a;--g2:#176049;--g3:#1e7a5c;
-  --gold:#c8982a;--gold2:#e8b84b;--gold3:#fde68a;
-  --cream:#fdf8ee;--cream2:#f7f0dc;
-  --ink:#1a1a1a;--muted:#7a8a90;--border:#e2d9c8;
-  --red:#e74c3c;--white:#fff;
-  --sh:0 4px 20px rgba(0,0,0,0.10);
-  --sh2:0 8px 32px rgba(0,0,0,0.15);
-}
-html,body{min-height:100vh;background:var(--cream);}
-body{font-family:'Tajawal',sans-serif;color:var(--ink);overflow-x:hidden;}
-
-/* ── TOPBAR ── */
-#topbar{
-  position:sticky;top:0;z-index:200;
-  background:linear-gradient(135deg,var(--g),var(--g2));
-  height:58px;display:flex;align-items:center;
-  padding:0 14px;gap:10px;
-  box-shadow:0 2px 16px rgba(14,77,58,.4);
-}
-.tb-logo{
-  width:38px;height:38px;border-radius:50%;overflow:hidden;
-  background:linear-gradient(135deg,var(--gold),var(--gold2));
-  display:flex;align-items:center;justify-content:center;
-  font-size:1.3rem;flex-shrink:0;
-  border:2px solid rgba(255,255,255,.3);
-}
-.tb-logo img{width:100%;height:100%;object-fit:cover;}
-.tb-info{flex:1;min-width:0;}
-.tb-title{color:#fff;font-family:'Scheherazade New',serif;font-size:1rem;font-weight:700;line-height:1.2;}
-.tb-sub{color:var(--gold3);font-size:0.7rem;}
-#tbActions{display:flex;gap:6px;align-items:center;flex-shrink:0;}
-.tb-btn{
-  background:rgba(255,255,255,.15);color:#fff;
-  border:1.5px solid rgba(255,255,255,.25);
-  padding:7px 12px;border-radius:20px;
-  font-size:0.82rem;font-weight:700;cursor:pointer;
-  font-family:'Tajawal',sans-serif;
-  transition:background .2s;white-space:nowrap;
-}
-.tb-btn:hover{background:rgba(255,255,255,.25);}
-.tb-btn.gold{background:linear-gradient(135deg,var(--gold),var(--gold2));color:var(--g);border-color:transparent;}
-
-/* ── MAIN ── */
-#main{max-width:520px;margin:0 auto;padding:16px 12px 60px;}
-
-/* ── PAGES ── */
-.pg{display:none;}
-.pg.on{display:block;}
-
-/* ── CARDS ── */
-.card{background:var(--white);border-radius:16px;border:1.5px solid var(--border);padding:18px 16px;box-shadow:var(--sh);margin-bottom:12px;}
-.card-title{font-size:1.1rem;font-weight:700;color:var(--g);margin-bottom:16px;display:flex;align-items:center;gap:8px;}
-
-/* ── HERO ── */
-.hero{text-align:center;padding:24px 8px 20px;}
-.hero-icon{font-size:3.8rem;display:block;animation:float 3.5s ease-in-out infinite;}
-@keyframes float{0%,100%{transform:translateY(0)}50%{transform:translateY(-10px)}}
-.hero h1{font-family:'Scheherazade New',serif;font-size:1.8rem;color:var(--g);margin:8px 0 4px;}
-.hero p{color:var(--muted);font-size:0.9rem;}
-.hero-badge{
-  display:inline-flex;align-items:center;gap:6px;margin:10px auto 22px;
-  background:linear-gradient(135deg,#fef9ec,#fdf0c0);
-  border:1.5px solid var(--gold);border-radius:20px;
-  padding:5px 16px;color:var(--gold);font-weight:700;font-size:0.82rem;
-}
-
-/* ── HOME CARDS ── */
-.home-btn{
-  display:flex;align-items:center;gap:14px;
-  background:var(--white);border:2px solid var(--border);
-  border-radius:16px;padding:16px 18px;margin-bottom:10px;
-  cursor:pointer;transition:all .22s;text-align:right;width:100%;
-  box-shadow:0 2px 8px rgba(0,0,0,.05);
-}
-.home-btn:hover,.home-btn:active{border-color:var(--g);box-shadow:var(--sh);transform:translateY(-2px);}
-.home-btn .hb-icon{
-  width:50px;height:50px;border-radius:14px;
-  background:linear-gradient(135deg,var(--cream),var(--cream2));
-  display:flex;align-items:center;justify-content:center;
-  font-size:1.6rem;flex-shrink:0;
-}
-.home-btn .hb-info{flex:1;}
-.home-btn .hb-title{font-weight:700;font-size:1rem;color:var(--g);}
-.home-btn .hb-desc{font-size:0.78rem;color:var(--muted);margin-top:2px;}
-.home-btn .hb-arr{color:var(--muted);font-size:1rem;}
-.home-btn.dashed{border-style:dashed;}
-
-/* ── FORMS ── */
-.f-group{margin-bottom:14px;}
-.f-label{display:block;font-weight:700;font-size:0.92rem;color:var(--g);margin-bottom:7px;}
-.f-input{
-  width:100%;padding:13px 14px;font-size:1rem;
-  font-family:'Tajawal',sans-serif;
-  border:2px solid var(--border);border-radius:12px;
-  background:var(--cream);color:var(--ink);
-  transition:all .2s;
-}
-.f-input:focus{outline:none;border-color:var(--gold);background:#fff;box-shadow:0 0 0 4px rgba(200,152,42,.12);}
-.pw-wrap{position:relative;}
-.pw-eye{position:absolute;left:12px;top:50%;transform:translateY(-50%);font-size:1.1rem;cursor:pointer;color:var(--muted);}
-.err-box{background:#fef2f2;color:#991b1b;padding:11px 14px;border-radius:10px;margin-bottom:12px;font-size:0.88rem;font-weight:600;border:1.5px solid #fecaca;display:none;}
-.err-box.on{display:block;}
-.back-lnk{display:flex;align-items:center;gap:5px;color:var(--muted);font-size:0.88rem;cursor:pointer;margin-top:12px;background:none;border:none;font-family:'Tajawal',sans-serif;font-weight:600;}
-
-/* ── BUTTONS ── */
-.btn{
-  width:100%;padding:14px;border:none;border-radius:13px;
-  font-size:1rem;font-weight:700;font-family:'Tajawal',sans-serif;
-  cursor:pointer;transition:all .22s;display:flex;
-  align-items:center;justify-content:center;gap:8px;margin-bottom:8px;
-}
-.btn-gold{background:linear-gradient(135deg,var(--gold),var(--gold2));color:var(--g);box-shadow:0 4px 14px rgba(200,152,42,.35);}
-.btn-gold:hover{transform:translateY(-2px);box-shadow:0 6px 20px rgba(200,152,42,.45);}
-.btn-dark{background:linear-gradient(135deg,var(--g),var(--g2));color:#fff;box-shadow:0 4px 14px rgba(14,77,58,.3);}
-.btn-dark:hover{transform:translateY(-2px);}
-.btn-ghost{background:var(--cream2);color:var(--g);border:2px solid var(--border);}
-.btn-red{background:linear-gradient(135deg,#c0392b,var(--red));color:#fff;}
-.btn-sm{padding:9px 14px;font-size:0.85rem;border-radius:10px;width:auto;margin-bottom:0;}
-
-/* ── REMEMBER ME ── */
-.remember-row{display:flex;align-items:center;gap:10px;background:var(--cream2);padding:12px;border-radius:11px;margin-bottom:14px;cursor:pointer;}
-.remember-row input[type=checkbox]{width:20px;height:20px;cursor:pointer;accent-color:var(--g);flex-shrink:0;}
-.remember-row label{cursor:pointer;font-size:0.9rem;font-weight:600;color:var(--g);}
-
-/* ── SAVED CREDS BANNER ── */
-.saved-banner{background:linear-gradient(135deg,#e6f7f0,#d0ece5);border:2px solid var(--g3);border-radius:14px;padding:14px 16px;margin-bottom:14px;display:none;}
-.saved-banner .sb-name{font-weight:700;color:var(--g);font-size:1rem;margin-bottom:10px;}
-.saved-banner .sb-hint{font-size:0.8rem;color:var(--muted);margin-top:6px;text-align:center;}
-
-/* ── WELCOME BANNER ── */
-.welcome{
-  background:linear-gradient(135deg,var(--g),var(--g2));
-  border-radius:16px;padding:16px 18px;
-  display:flex;align-items:center;gap:12px;
-  margin-bottom:16px;box-shadow:var(--sh2);
-}
-.welcome-av{width:46px;height:46px;border-radius:50%;background:linear-gradient(135deg,var(--gold),var(--gold2));display:flex;align-items:center;justify-content:center;font-size:1.4rem;flex-shrink:0;border:2px solid rgba(255,255,255,.3);}
-.welcome-name{color:#fff;font-weight:700;font-size:1rem;}
-.welcome-sub{color:rgba(255,255,255,.65);font-size:0.78rem;margin-top:2px;}
-
-/* ── TABS ── */
-.tabs{display:flex;gap:5px;background:var(--cream2);padding:5px;border-radius:14px;margin-bottom:16px;}
-.tab{flex:1;padding:10px;text-align:center;border-radius:10px;font-weight:700;font-size:0.88rem;cursor:pointer;color:var(--muted);border:none;background:none;font-family:'Tajawal',sans-serif;transition:all .22s;position:relative;}
-.tab.on{background:#fff;color:var(--g);box-shadow:0 2px 8px rgba(0,0,0,.08);}
-.tab-dot{position:absolute;top:-3px;right:-3px;width:14px;height:14px;background:var(--red);color:#fff;border-radius:50%;font-size:0.6rem;font-weight:900;display:flex;align-items:center;justify-content:center;border:2px solid var(--cream2);}
-
-/* ── TYPE GRID ── */
-.type-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:14px;}
-.type-card{background:#fff;border:2.5px solid var(--border);border-radius:14px;padding:18px 10px;text-align:center;cursor:pointer;transition:all .22s;}
-.type-card.on{border-color:var(--gold);background:linear-gradient(135deg,#fdf8ee,#fff);box-shadow:0 2px 12px rgba(200,152,42,.2);}
-.type-icon{font-size:2.2rem;display:block;margin-bottom:6px;}
-.type-lbl{font-weight:700;font-size:0.9rem;color:var(--g);}
-
-/* ── LIVE BOX ── */
-.live-box{border-radius:14px;overflow:hidden;border:2.5px solid var(--gold);background:#000;margin-bottom:12px;display:none;position:relative;}
-.live-box.on{display:block;}
-.live-box video{width:100%;display:block;max-height:220px;object-fit:cover;}
-.live-box.rec{border-color:var(--red);animation:recPulse 1.2s infinite;}
-@keyframes recPulse{0%,100%{box-shadow:0 0 0 0 rgba(231,76,60,.5)}50%{box-shadow:0 0 0 8px rgba(231,76,60,0)}}
-.rec-badge{position:absolute;top:8px;right:8px;background:var(--red);color:#fff;border-radius:20px;padding:4px 10px;font-size:0.75rem;font-weight:700;display:none;align-items:center;gap:5px;}
-.rec-badge.on{display:flex;}
-.rec-dot-anim{width:7px;height:7px;background:#fff;border-radius:50%;animation:blink 1s infinite;}
-@keyframes blink{0%,100%{opacity:1}50%{opacity:0}}
-
-/* ── TIMER ── */
-.big-timer{text-align:center;font-size:2.4rem;font-weight:900;color:var(--g);letter-spacing:3px;display:none;margin:6px 0;}
-.big-timer.on{display:block;}
-
-/* ── PREVIEW BOX ── */
-.prev-box{background:linear-gradient(135deg,var(--cream),#fff);border:2px solid var(--gold);border-radius:14px;padding:16px;margin-bottom:14px;display:none;}
-.prev-box.on{display:block;}
-.prev-box audio,.prev-box video{width:100%;border-radius:10px;margin-top:8px;}
-.prev-btns{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:12px;}
-
-/* ── RECORDING CARD ── */
-.rec-card{background:#fff;border:1.5px solid var(--border);border-radius:16px;margin-bottom:14px;overflow:hidden;box-shadow:0 2px 8px rgba(0,0,0,.05);}
-.rec-card-top{padding:12px 14px 8px;display:flex;align-items:center;justify-content:space-between;}
-.rec-num{background:linear-gradient(135deg,var(--g),var(--g2));color:#fff;border-radius:8px;padding:4px 12px;font-size:0.78rem;font-weight:700;}
-.rec-type{background:var(--cream2);color:var(--g);border-radius:8px;padding:4px 12px;font-size:0.78rem;font-weight:700;border:1px solid var(--border);}
-.rec-date{padding:0 14px 8px;color:var(--muted);font-size:0.75rem;}
-.rec-media{padding:0 14px 12px;}
-.rec-media audio,.rec-media video{width:100%;border-radius:10px;}
-.rec-del-btn{display:flex;align-items:center;justify-content:center;gap:6px;padding:10px;background:none;border:none;border-top:1px solid var(--border);color:var(--muted);font-size:0.82rem;font-weight:700;cursor:pointer;font-family:'Tajawal',sans-serif;width:100%;transition:all .2s;}
-.rec-del-btn:hover{background:#fef2f2;color:var(--red);}
-
-/* ── MESSAGES SECTION (under recording) ── */
-.msgs-area{border-top:2px dashed var(--border);background:linear-gradient(135deg,#fdf8ee,#fff);}
-.msgs-area-title{padding:10px 14px 6px;font-size:0.8rem;font-weight:700;color:var(--gold);display:flex;align-items:center;gap:5px;}
-.msg-item{margin:0 10px 8px;background:#fff;border-radius:12px;padding:10px 12px;border:1.5px solid var(--border);border-right:3px solid var(--gold);}
-.msg-item.new-msg{border-right-color:var(--red);background:linear-gradient(135deg,#fff5f5,#fff);}
-.msg-meta{display:flex;justify-content:space-between;align-items:center;margin-bottom:5px;}
-.msg-label{font-size:0.75rem;font-weight:700;color:var(--gold);}
-.msg-label.red{color:var(--red);}
-.msg-date{font-size:0.7rem;color:var(--muted);}
-.msg-body{font-size:0.88rem;color:var(--ink);line-height:1.5;}
-.msg-audio{margin-top:7px;}
-.msg-audio audio{width:100%;border-radius:8px;}
-.msg-rating-box{background:linear-gradient(135deg,#fef9ec,#fdf0c0);border:1.5px solid var(--gold);border-radius:10px;padding:10px;text-align:center;margin-top:7px;}
-.msg-stars{font-size:1.3rem;}
-.msg-score{font-size:1.1rem;font-weight:900;color:var(--g);margin-top:3px;}
-.new-indicator{display:inline-block;width:8px;height:8px;background:var(--red);border-radius:50%;margin-left:4px;}
-
-/* ── ADMIN STATS ── */
-.stats{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-bottom:14px;}
-.stat{background:linear-gradient(135deg,var(--g),var(--g2));border-radius:14px;padding:12px 8px;text-align:center;box-shadow:0 4px 14px rgba(14,77,58,.25);}
-.stat-n{font-size:1.6rem;font-weight:900;color:var(--gold3);}
-.stat-l{font-size:0.7rem;color:rgba(255,255,255,.7);font-weight:600;}
-
-.part-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(105px,1fr));gap:8px;}
-.part-card{background:#fff;border:2px solid var(--border);border-radius:14px;padding:14px 8px;text-align:center;cursor:pointer;transition:all .22s;position:relative;box-shadow:0 2px 6px rgba(0,0,0,.04);}
-.part-card:hover,.part-card:active{border-color:var(--gold);transform:translateY(-3px);box-shadow:var(--sh);}
-.part-card-icon{font-size:2rem;margin-bottom:5px;}
-.part-card-name{color:var(--g);font-size:0.85rem;font-weight:700;word-break:break-word;margin-bottom:2px;}
-.part-card-count{color:var(--muted);font-size:0.72rem;}
-.new-bubble{position:absolute;top:-6px;right:-6px;background:var(--red);color:#fff;border-radius:50%;width:22px;height:22px;display:flex;align-items:center;justify-content:center;font-size:0.7rem;font-weight:900;border:2px solid #fff;box-shadow:0 2px 6px rgba(231,76,60,.4);}
-
-/* ── TOTAL BADGE ── */
-.total-badge{background:linear-gradient(135deg,#fef9ec,#fdf0c0);border:2px solid var(--gold);border-radius:12px;padding:10px 16px;display:none;align-items:center;gap:8px;margin-bottom:12px;font-weight:700;color:var(--g);font-size:0.9rem;box-shadow:0 2px 8px rgba(200,152,42,.2);}
-.total-badge.on{display:flex;}
-.total-num{font-size:1.2rem;font-weight:900;}
-
-/* ── CONTACT CARD ── */
-.contact-card{background:linear-gradient(135deg,#e6f7f0,#d4ede7);border:2px solid rgba(14,77,58,.2);border-radius:14px;padding:14px;margin-bottom:12px;}
-.contact-head{display:flex;justify-content:space-between;align-items:center;}
-.contact-body{margin-top:12px;}
-.info-row{background:#fff;border-radius:10px;padding:10px 12px;display:flex;align-items:center;justify-content:space-between;margin-bottom:7px;border:1px solid var(--border);}
-.info-row:last-child{margin-bottom:0;}
-.info-lbl{font-size:0.75rem;color:var(--muted);margin-bottom:2px;}
-.info-val{font-weight:700;color:var(--g);font-size:0.95rem;word-break:break-all;}
-.copy-btn{background:var(--g);color:#fff;border:none;padding:8px 12px;border-radius:8px;cursor:pointer;font-size:0.78rem;font-weight:700;font-family:'Tajawal',sans-serif;transition:all .2s;flex-shrink:0;}
-.copy-btn:hover{background:var(--g2);}
-.copy-btn.ok{background:#10b981;}
-
-/* ── SEND ACTIONS (under each rec for admin) ── */
-.rec-actions{display:flex;border-top:1px solid var(--border);}
-.rec-act-btn{flex:1;padding:10px 4px;text-align:center;font-size:0.78rem;font-weight:700;cursor:pointer;color:var(--g);border:none;background:none;font-family:'Tajawal',sans-serif;transition:all .2s;line-height:1.4;}
-.rec-act-btn:not(:last-child){border-left:1px solid var(--border);}
-.rec-act-btn:hover,.rec-act-btn:active{background:var(--cream);}
-.rec-act-btn.danger{color:var(--red);}
-.rec-act-btn.danger:hover{background:#fef2f2;}
-
-/* ── BOTTOM SHEET ── */
-.sheet-bg{position:fixed;inset:0;background:rgba(0,0,0,.6);z-index:600;display:flex;align-items:flex-end;justify-content:center;backdrop-filter:blur(3px);}
-.sheet{background:#fff;border-radius:22px 22px 0 0;width:100%;max-width:520px;padding:18px 16px 36px;max-height:88vh;overflow-y:auto;animation:sheetUp .3s cubic-bezier(.34,1.3,.64,1);}
-@keyframes sheetUp{from{transform:translateY(100%)}to{transform:translateY(0)}}
-.sheet-handle{width:38px;height:4px;background:var(--border);border-radius:2px;margin:0 auto 16px;}
-.sheet-title{font-weight:700;font-size:1.05rem;color:var(--g);margin-bottom:14px;}
-.s-tabs{display:flex;gap:6px;margin-bottom:14px;}
-.s-tab{flex:1;padding:9px;border:2px solid var(--border);border-radius:10px;background:#fff;font-size:0.82rem;font-weight:700;cursor:pointer;color:var(--muted);font-family:'Tajawal',sans-serif;transition:all .2s;}
-.s-tab.on{background:linear-gradient(135deg,var(--gold),var(--gold2));color:var(--g);border-color:transparent;}
-.s-textarea{width:100%;padding:12px;border:2px solid var(--border);border-radius:12px;font-family:'Tajawal',sans-serif;font-size:0.95rem;min-height:100px;resize:vertical;background:var(--cream);}
-.s-textarea:focus{outline:none;border-color:var(--gold);}
-.voice-box{background:var(--cream);border:2px solid var(--gold);border-radius:12px;padding:14px;}
-.rating-box{background:var(--cream);border:2px solid var(--gold);border-radius:12px;padding:16px;text-align:center;}
-.stars-row{display:flex;justify-content:center;gap:5px;font-size:2.4rem;margin:10px 0;}
-.star{cursor:pointer;transition:transform .15s;user-select:none;display:inline-block;}
-.star:hover{transform:scale(1.2);}
-.rat-val{font-size:1.4rem;font-weight:900;color:var(--g);margin-bottom:10px;}
-.rat-grid{display:grid;grid-template-columns:repeat(5,1fr);gap:5px;}
-.rat-btn{padding:7px;border:2px solid var(--border);border-radius:7px;background:#fff;cursor:pointer;font-size:0.8rem;font-weight:700;font-family:'Tajawal',sans-serif;transition:all .2s;}
-.rat-btn.on,.rat-btn:hover{background:linear-gradient(135deg,var(--gold),var(--gold2));border-color:transparent;color:var(--g);}
-.sheet-btns{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:14px;}
-.voice-timer{font-size:1.5rem;font-weight:900;color:var(--g);text-align:center;display:none;margin:6px 0;}
-.voice-timer.on{display:block;}
-
-/* ── CONFIRM ── */
-.confirm-bg{position:fixed;inset:0;background:rgba(0,0,0,.65);z-index:700;display:flex;align-items:center;justify-content:center;padding:16px;backdrop-filter:blur(3px);}
-.confirm-box{background:#fff;border-radius:20px;padding:24px 20px;max-width:340px;width:100%;text-align:center;animation:popIn .25s cubic-bezier(.34,1.5,.64,1);}
-@keyframes popIn{from{transform:scale(.8);opacity:0}to{transform:scale(1);opacity:1}}
-.confirm-em{font-size:2.8rem;margin-bottom:10px;}
-.confirm-ttl{font-size:1.05rem;font-weight:700;color:var(--ink);margin-bottom:6px;}
-.confirm-desc{font-size:0.85rem;color:var(--muted);margin-bottom:18px;line-height:1.5;}
-.confirm-btns{display:grid;grid-template-columns:1fr 1fr;gap:8px;}
-
-/* ── LOADER ── */
-.loader-bg{position:fixed;inset:0;background:rgba(0,0,0,.6);z-index:9000;display:flex;align-items:center;justify-content:center;backdrop-filter:blur(3px);}
-.loader-box{background:#fff;border-radius:18px;padding:26px 30px;text-align:center;box-shadow:var(--sh2);}
-.loader-spin{width:42px;height:42px;border:4px solid var(--cream2);border-top-color:var(--gold);border-radius:50%;animation:spin .8s linear infinite;margin:0 auto 10px;}
-@keyframes spin{to{transform:rotate(360deg)}}
-.loader-txt{font-weight:700;color:var(--g);font-size:0.88rem;}
-
-/* ── EMPTY ── */
-.empty{text-align:center;padding:30px 16px;color:var(--muted);}
-.empty .ei{font-size:2.8rem;opacity:.4;margin-bottom:8px;}
-
-/* ── TOAST ── */
-.toast{position:fixed;bottom:28px;left:50%;transform:translateX(-50%);background:var(--g);color:#fff;padding:10px 22px;border-radius:30px;font-weight:700;font-size:0.88rem;z-index:9999;box-shadow:var(--sh2);animation:sheetUp .3s;pointer-events:none;}
-
-/* ═══════════════════════════════
-   🎓 SPOTLIGHT TUTORIAL — REBUILT
-═══════════════════════════════ */
-#tutBg{
-  position:fixed;inset:0;z-index:5000;
-  /* starts hidden */
-  display:none;
-}
-#tutBg.on{display:block;}
-
-/* SVG mask layer */
-#tutSvg{position:absolute;inset:0;width:100%;height:100%;pointer-events:none;}
-
-/* card */
-#tutCard{
-  position:fixed;
-  background:var(--g);
-  border-radius:18px;padding:16px 18px 14px;
-  width:calc(100vw - 28px);max-width:300px;
-  box-shadow:0 16px 48px rgba(0,0,0,.4),0 0 0 1.5px rgba(200,152,42,.5);
-  color:#fff;
-  z-index:5001;
-  /* hide until positioned */
-  opacity:0;pointer-events:none;
-  transition:opacity .25s;
-}
-#tutCard.visible{opacity:1;pointer-events:all;}
-
-/* arrow */
-#tutCard::after{
-  content:'';position:absolute;
-  width:13px;height:13px;
-  background:var(--g);
-  transform:rotate(45deg);
-}
-#tutCard.arr-down::after{bottom:-6px;right:24px;box-shadow:2px 2px 3px rgba(0,0,0,.15);}
-#tutCard.arr-up::after{top:-6px;right:24px;box-shadow:-1px -1px 0 rgba(200,152,42,.3);}
-#tutCard.arr-none::after{display:none;}
-
-.tut-num{font-size:0.68rem;font-weight:700;color:var(--gold3);margin-bottom:4px;letter-spacing:.5px;}
-.tut-ttl{font-size:1rem;font-weight:700;color:#fff;margin-bottom:6px;}
-.tut-desc{font-size:0.82rem;line-height:1.6;color:rgba(255,255,255,.85);}
-.tut-tip{background:rgba(200,152,42,.2);border:1px solid rgba(200,152,42,.4);border-radius:8px;padding:8px 10px;margin-top:8px;font-size:0.78rem;color:var(--gold3);font-weight:600;line-height:1.4;}
-.tut-foot{display:flex;align-items:center;justify-content:space-between;margin-top:13px;padding-top:10px;border-top:1px solid rgba(255,255,255,.15);}
-.tut-dots{display:flex;gap:4px;align-items:center;}
-.tut-dot{width:6px;height:6px;border-radius:3px;background:rgba(255,255,255,.25);transition:all .28s;}
-.tut-dot.on{width:16px;background:var(--gold2);}
-.tut-actions{display:flex;gap:6px;align-items:center;}
-.tut-skip-btn{background:none;border:none;color:rgba(255,255,255,.45);font-size:0.76rem;cursor:pointer;font-family:'Tajawal',sans-serif;padding:4px;}
-.tut-prev-btn{background:rgba(255,255,255,.1);color:#fff;border:none;border-radius:8px;padding:7px 10px;font-size:0.8rem;font-weight:700;cursor:pointer;font-family:'Tajawal',sans-serif;}
-.tut-next-btn{background:linear-gradient(135deg,var(--gold),var(--gold2));color:var(--g);border:none;border-radius:8px;padding:7px 14px;font-size:0.82rem;font-weight:700;cursor:pointer;font-family:'Tajawal',sans-serif;}
-
-/* pulse ring around highlighted element */
-#tutRing{
-  position:fixed;
-  border:2.5px solid rgba(200,152,42,.9);
-  border-radius:14px;
-  pointer-events:none;
-  z-index:5002;
-  display:none;
-  animation:ringPulse 1.4s infinite;
-}
-@keyframes ringPulse{
-  0%,100%{box-shadow:0 0 0 0 rgba(200,152,42,.6)}
-  50%{box-shadow:0 0 0 10px rgba(200,152,42,0)}
-}
-
-/* ── REG TUTORIAL (inline, simpler) ── */
-.reg-tut{background:linear-gradient(135deg,var(--g),var(--g2));border-radius:14px;padding:14px 16px;margin-bottom:16px;color:#fff;display:none;}
-.reg-tut.on{display:block;}
-.rt-step{font-size:0.68rem;font-weight:700;color:var(--gold3);margin-bottom:4px;}
-.rt-title{font-size:0.95rem;font-weight:700;margin-bottom:5px;}
-.rt-desc{font-size:0.82rem;line-height:1.5;color:rgba(255,255,255,.85);}
-.rt-foot{display:flex;align-items:center;justify-content:space-between;margin-top:10px;}
-.rt-dots{display:flex;gap:4px;}
-.rt-dot{width:6px;height:6px;border-radius:50%;background:rgba(255,255,255,.25);}
-.rt-dot.on{background:var(--gold2);}
-.rt-btns{display:flex;gap:6px;}
-.rt-prev{background:rgba(255,255,255,.15);border:none;color:#fff;padding:6px 10px;border-radius:8px;font-size:0.8rem;font-weight:700;cursor:pointer;font-family:'Tajawal',sans-serif;}
-.rt-next{background:linear-gradient(135deg,var(--gold),var(--gold2));border:none;color:var(--g);padding:6px 12px;border-radius:8px;font-size:0.8rem;font-weight:700;cursor:pointer;font-family:'Tajawal',sans-serif;}
-
-@media(max-width:400px){
-  .hero h1{font-size:1.5rem;}
-  .big-timer{font-size:2rem;}
-  .stat-n{font-size:1.3rem;}
-}
-</style>
-</head>
-<body>
-
-<!-- TOPBAR -->
-<div id="topbar">
-  <div class="tb-logo">
-    <img src="360_F_498618110_CmzpqAOH4xxhBFqXKEx5cOwYhvHpnmDH.jpg" alt="" onerror="this.style.display='none';this.parentElement.textContent='🌙'"/>
-  </div>
-  <div class="tb-info">
-    <div class="tb-title">مسابقة جزء عم</div>
-    <div class="tb-sub">رمضان المبارك 1446 ✨</div>
-  </div>
-  <div id="tbActions"></div>
-</div>
-
-<div id="main">
-
-<!-- ══ الرئيسية ══ -->
-<div class="pg on" id="pg-home">
-  <div class="hero">
-    <span class="hero-icon">🌙</span>
-    <h1>مسابقة حفظ جزء عم</h1>
-    <p>سجّلي حفظك وأرسليه للاستاذة مباشرة</p>
-    <div class="hero-badge">⭐ رمضان المبارك 1446 ⭐</div>
-  </div>
-  <button class="home-btn" onclick="go('pg-register')">
-    <div class="hb-icon">🆕</div>
-    <div class="hb-info"><div class="hb-title">تسجيل جديد</div><div class="hb-desc">إنشاء حساب جديد — للمرة الأولى</div></div>
-    <div class="hb-arr">◀</div>
-  </button>
-  <button class="home-btn" onclick="go('pg-login')">
-    <div class="hb-icon">🔑</div>
-    <div class="hb-info"><div class="hb-title">دخول</div><div class="hb-desc">لديكِ حساب؟ ادخلي من هنا</div></div>
-    <div class="hb-arr">◀</div>
-  </button>
-  <button class="home-btn dashed" onclick="go('pg-admin-login')">
-    <div class="hb-icon">👩‍🏫</div>
-    <div class="hb-info"><div class="hb-title">دخول الاستاذة</div><div class="hb-desc">لوحة المتابعة والتقييم</div></div>
-    <div class="hb-arr">◀</div>
-  </button>
-</div>
-
-<!-- ══ تسجيل جديد ══ -->
-<div class="pg" id="pg-register">
-  <!-- توتوريال التسجيل inline -->
-  <div class="reg-tut on" id="regTut">
-    <div class="rt-step" id="rtStep">خطوة 1 من 3</div>
-    <div class="rt-title" id="rtTitle"></div>
-    <div class="rt-desc" id="rtDesc"></div>
-    <div class="rt-foot">
-      <div class="rt-dots" id="rtDots"></div>
-      <div class="rt-btns">
-        <button class="rt-prev" id="rtPrev" onclick="rtPrevStep()" style="display:none;">◀</button>
-        <button class="rt-next" id="rtNext" onclick="rtNextStep()">التالي ▶</button>
-      </div>
-    </div>
-  </div>
-  <div class="card">
-    <div class="card-title">📝 تسجيل جديد</div>
-    <form id="regForm">
-      <div class="f-group" id="rg-name">
-        <label class="f-label" for="regName">الاسم الكامل</label>
-        <input class="f-input" type="text" id="regName" placeholder="اكتبي اسمك الكامل" required/>
-      </div>
-      <div class="f-group" id="rg-pass">
-        <label class="f-label" for="regPass">كلمة المرور</label>
-        <div class="pw-wrap">
-          <input class="f-input" type="password" id="regPass" placeholder="رقم سهل تحفظينه" style="padding-left:42px" required/>
-          <span class="pw-eye" onclick="togglePw('regPass',this)">👁️</span>
-        </div>
-        <p style="font-size:0.76rem;color:var(--muted);margin-top:5px;">💡 مثال: رقم هاتفك أو تاريخ ميلادك</p>
-      </div>
-      <button type="submit" class="btn btn-gold">أنشئي حسابي ✨</button>
-    </form>
-    <button class="back-lnk" onclick="go('pg-home')">◀ رجوع</button>
-  </div>
-</div>
-
-<!-- ══ الدخول ══ -->
-<div class="pg" id="pg-login">
-  <!-- بيانات محفوظة -->
-  <div class="saved-banner" id="savedBanner">
-    <div class="sb-name" id="savedName">مرحباً!</div>
-    <button class="btn btn-dark" onclick="autoLogin()">🚀 دخول مباشر بدون كلمة مرور</button>
-    <div class="sb-hint">أو ادخلي بحساب آخر أدناه</div>
-  </div>
-  <div class="card">
-    <div class="card-title">🔑 تسجيل دخول</div>
-    <div class="err-box" id="loginErr"></div>
-    <form id="loginForm">
-      <div class="f-group">
-        <label class="f-label" for="loginName">الاسم</label>
-        <input class="f-input" type="text" id="loginName" placeholder="اسمك" required/>
-      </div>
-      <div class="f-group">
-        <label class="f-label" for="loginPass">كلمة المرور</label>
-        <div class="pw-wrap">
-          <input class="f-input" type="password" id="loginPass" placeholder="كلمة المرور" style="padding-left:42px" required/>
-          <span class="pw-eye" onclick="togglePw('loginPass',this)">👁️</span>
-        </div>
-      </div>
-      <div class="remember-row" onclick="document.getElementById('remMe').click()">
-        <input type="checkbox" id="remMe" checked onclick="event.stopPropagation()"/>
-        <label for="remMe">💾 احفظ بياناتي للمرة القادمة</label>
-      </div>
-      <button type="submit" class="btn btn-gold">دخول 🔓</button>
-    </form>
-    <button class="back-lnk" onclick="go('pg-home')">◀ رجوع</button>
-  </div>
-</div>
-
-<!-- ══ دخول الاستاذة ══ -->
-<div class="pg" id="pg-admin-login">
-  <div class="card">
-    <div class="card-title">👩‍🏫 دخول الاستاذة</div>
-    <div class="err-box" id="adminErr"></div>
-    <form id="adminForm">
-      <div class="f-group">
-        <label class="f-label">كلمة المرور</label>
-        <div class="pw-wrap">
-          <input class="f-input" type="password" id="adminPass" placeholder="كلمة المرور" style="padding-left:42px" required/>
-          <span class="pw-eye" onclick="togglePw('adminPass',this)">👁️</span>
-        </div>
-      </div>
-      <button type="submit" class="btn btn-gold">دخول</button>
-    </form>
-    <button class="back-lnk" onclick="go('pg-home')">◀ رجوع</button>
-  </div>
-</div>
-
-<!-- ══ صفحة المشارك ══ -->
-<div class="pg" id="pg-part">
-  <div class="welcome" id="welcomeBanner">
-    <div class="welcome-av">🌸</div>
-    <div>
-      <div class="welcome-name" id="welcomeName"></div>
-      <div class="welcome-sub">أهلاً بك في مسابقة جزء عم 🌙</div>
-    </div>
-  </div>
-  <div class="tabs" id="partTabs">
-    <button class="tab on" id="tab-rec" onclick="switchTab('rec')">🎤 تسجيل</button>
-    <button class="tab" id="tab-msg" onclick="switchTab('msg')" style="position:relative;">
-      📬 رسائلي
-      <span id="unreadDot" class="tab-dot" style="display:none;"></span>
-    </button>
-  </div>
-
-  <!-- قسم التسجيل -->
-  <div id="secRec">
-    <div class="card" style="padding-bottom:10px;">
-      <div class="card-title" style="margin-bottom:10px;">اختاري نوع التسجيل</div>
-      <div class="type-grid" id="typeGrid">
-        <div class="type-card on" id="tc-audio" onclick="selType('audio')">
-          <span class="type-icon">🎤</span>
-          <span class="type-lbl">تسجيل صوتي</span>
-        </div>
-        <div class="type-card" id="tc-video" onclick="selType('video')">
-          <span class="type-icon">🎥</span>
-          <span class="type-lbl">تسجيل فيديو</span>
-        </div>
-      </div>
-      <div class="live-box" id="liveBox">
-        <video id="liveVid" autoplay muted playsinline></video>
-        <div class="rec-badge" id="recBadge"><span class="rec-dot-anim"></span> جاري التسجيل</div>
-      </div>
-      <div class="big-timer" id="bigTimer">00:00</div>
-      <button class="btn btn-gold" id="startBtn" onclick="startRec()">🔴 ابدأ التسجيل</button>
-      <button class="btn btn-red" id="stopBtn" onclick="stopRec()" style="display:none;">⏹ إيقاف التسجيل</button>
-    </div>
-    <div class="prev-box" id="prevBox">
-      <div style="font-weight:700;color:var(--g);font-size:0.95rem;">🎧 معاينة التسجيل</div>
-      <div id="prevMedia"></div>
-      <div class="prev-btns">
-        <button class="btn btn-gold" onclick="saveRec()">💾 حفظ وإرسال</button>
-        <button class="btn btn-ghost" onclick="cancelRec()">🔄 سجّلي مجدداً</button>
-      </div>
-    </div>
-    <div style="margin-top:16px;">
-      <div style="font-weight:700;font-size:1rem;color:var(--g);margin-bottom:12px;">📁 تسجيلاتي ورسائل الاستاذة</div>
-      <div id="myRecsList"></div>
-    </div>
-  </div>
-
-  <!-- قسم الرسائل الكلي -->
-  <div id="secMsg" style="display:none;">
-    <div style="font-weight:700;font-size:1rem;color:var(--g);margin-bottom:12px;">📬 كل رسائل الاستاذة</div>
-    <div id="allMsgsList"></div>
-  </div>
-</div>
-
-<!-- ══ الاستاذة - المشاركون ══ -->
-<div class="pg" id="pg-admin">
-  <div class="stats">
-    <div class="stat"><div class="stat-n" id="stN">0</div><div class="stat-l">👥 مشارك</div></div>
-    <div class="stat"><div class="stat-n" id="stR">0</div><div class="stat-l">🎙️ تسجيل</div></div>
-    <div class="stat"><div class="stat-n" id="stNew">0</div><div class="stat-l">🆕 جديد</div></div>
-  </div>
-  <div class="part-grid" id="partGrid"></div>
-</div>
-
-<!-- ══ الاستاذة - تسجيلات مشارك ══ -->
-<div class="pg" id="pg-admin-recs">
-  <div style="text-align:center;margin-bottom:10px;">
-    <div class="total-badge" id="totalBadge">
-      ⭐ المجموع الكلي: <span class="total-num" id="totalVal">0</span> / <span class="total-num" id="totalMax">0</span>
-    </div>
-  </div>
-  <div class="contact-card">
-    <div class="contact-head">
-      <span style="font-weight:700;color:var(--g);font-size:0.9rem;">📞 معلومات التواصل</span>
-      <button class="btn-sm btn btn-dark" onclick="toggleContact()" id="contactTogBtn" style="margin-bottom:0;padding:7px 14px;">عرض</button>
-    </div>
-    <div class="contact-body" id="contactBody" style="display:none;">
-      <div class="info-row"><div><div class="info-lbl">الاسم</div><div class="info-val" id="cName"></div></div><button class="copy-btn" onclick="copyIt('name',this)">📋 نسخ</button></div>
-      <div class="info-row"><div><div class="info-lbl">كلمة المرور</div><div class="info-val" id="cPass"></div></div><button class="copy-btn" onclick="copyIt('pass',this)">📋 نسخ</button></div>
-    </div>
-  </div>
-  <div id="adminRecsList"></div>
-</div>
-
-</div><!-- /main -->
-
-<!-- ══ SPOTLIGHT TUTORIAL ══ -->
-<div id="tutBg">
-  <svg id="tutSvg"></svg>
-  <div id="tutCard">
-    <div class="tut-num" id="tutNum">خطوة 1 من 4</div>
-    <div class="tut-ttl" id="tutTtl"></div>
-    <div class="tut-desc" id="tutDesc"></div>
-    <div class="tut-tip" id="tutTip" style="display:none;"></div>
-    <div class="tut-foot">
-      <div class="tut-dots" id="tutDots"></div>
-      <div class="tut-actions">
-        <button class="tut-prev-btn" id="tutPrev" onclick="tPrev()" style="display:none;">◀</button>
-        <button class="tut-skip-btn" onclick="tSkip()">تخطي</button>
-        <button class="tut-next-btn" id="tutNext" onclick="tNext()">التالي ▶</button>
-      </div>
-    </div>
-  </div>
-  <div id="tutRing"></div>
-</div>
-
-<!-- Firebase -->
-<script type="module">
-import{initializeApp}from"https://www.gstatic.com/firebasejs/12.9.0/firebase-app.js";
-import{getDatabase,ref,set,get,push,update}from"https://www.gstatic.com/firebasejs/12.9.0/firebase-database.js";
-const app=initializeApp({apiKey:"AIzaSyAfhQL5spF3KcrbngSzunLaHT_7cieHkUk",authDomain:"opject-e223d.firebaseapp.com",databaseURL:"https://opject-e223d-default-rtdb.firebaseio.com/",projectId:"opject-e223d",storageBucket:"opject-e223d.firebasestorage.app",messagingSenderId:"607939195786",appId:"1:607939195786:web:c264710387d50fc2990e73"});
-const db=getDatabase(app);
-window.DB=db;window.R=ref;window.S=set;window.G=get;window.P=push;window.U=update;window.FB=true;
-</script>
-
-<script>
-// ══════════ STATE ══════════
-let user=null,isAdmin=false,curPart=null;
-let mr=null,mrC=[],mrType='audio',mrTimer=null,mrStart=null,previewStream=null;
-let avr=null,avrC=[],avrTimer=null;
-let curRecMsg=null,selRat=0;
-let viewed=new Set();
-
-// ══════════ BOOT ══════════
-window.onload=function(){
-  const ck=setInterval(()=>{
-    if(window.FB&&window.DB){
-      clearInterval(ck);
-      loadViewed();
-      bootSession();
-    }
-  },80);
-  setTimeout(()=>{clearInterval(ck);if(!window.DB){alert('خطأ في الاتصال - حدّثي الصفحة');go('pg-home');}},7000);
-};
-
-// ══════════ SESSION + AUTO-LOGIN ══════════
-function loadViewed(){const s=localStorage.getItem('vr');if(s)viewed=new Set(JSON.parse(s));}
-function saveViewed(){localStorage.setItem('vr',JSON.stringify([...viewed]));}
-function markV(p,r){viewed.add(p+'_'+r);saveViewed();}
-function isV(p,r){return viewed.has(p+'_'+r);}
-
-function saveCreds(n,p){localStorage.setItem('uc',JSON.stringify({n,p}));}
-function loadCreds(){const s=localStorage.getItem('uc');return s?JSON.parse(s):null;}
-function clearCreds(){localStorage.removeItem('uc');}
-
-async function bootSession(){
-  const sess=localStorage.getItem('sess');
-  if(sess){
-    const d=JSON.parse(sess);
-    if(d.a){isAdmin=true;goAdmin();return;}
-    showLoader();
-    try{
-      const snap=await window.G(window.R(window.DB,'participants/'+d.u));
-      hideLoader();
-      if(snap.exists()){user={id:d.u,...snap.val()};goPart();return;}
-    }catch(e){hideLoader();}
-    localStorage.removeItem('sess');
-  }
-  // try saved creds
-  const creds=loadCreds();
-  if(creds){
-    showLoader();
-    try{
-      const snap=await window.G(window.R(window.DB,'participants'));
-      hideLoader();
-      if(snap.exists()){
-        let f=null,fi=null;
-        Object.entries(snap.val()).forEach(([id,p])=>{if(p.name===creds.n&&p.password===creds.p){f=p;fi=id;}});
-        if(f){user={id:fi,...f};localStorage.setItem('sess',JSON.stringify({u:fi}));goPart();return;}
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>مسابقة حفظ جزء عم - رمضان المبارك</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Amiri:wght@400;700&family=Cairo:wght@400;600;700;900&display=swap" rel="stylesheet" />
+    <style>
+      * { margin: 0; padding: 0; box-sizing: border-box; }
+      :root {
+        --primary-gold: #d4af37;
+        --dark-green: #0d4d3f;
+        --medium-green: #1a6b54;
+        --light-green: #e8f5e9;
+        --cream: #fefdf8;
+        --white: #ffffff;
+        --text-dark: #2c2c2c;
+        --border-light: #e0dfd5;
+        --accent-gold: #f0c850;
       }
-    }catch(e){hideLoader();}
-  }
-  go('pg-home');
-}
-
-async function autoLogin(){
-  const creds=loadCreds();if(!creds)return;
-  showLoader();
-  try{
-    const snap=await window.G(window.R(window.DB,'participants'));
-    hideLoader();
-    if(snap.exists()){
-      let f=null,fi=null;
-      Object.entries(snap.val()).forEach(([id,p])=>{if(p.name===creds.n&&p.password===creds.p){f=p;fi=id;}});
-      if(f){user={id:fi,...f};localStorage.setItem('sess',JSON.stringify({u:fi}));goPart();return;}
-    }
-    hideLoader();showErr('loginErr','البيانات المحفوظة لم تعمل');clearCreds();
-    document.getElementById('savedBanner').style.display='none';
-  }catch(e){hideLoader();showErr('loginErr','خطأ في الاتصال');}
-}
-
-// ══════════ NAVIGATION ══════════
-function go(id){
-  document.querySelectorAll('.pg').forEach(p=>p.classList.remove('on'));
-  document.getElementById(id).classList.add('on');
-  updateTopbar();
-  window.scrollTo({top:0,behavior:'smooth'});
-  if(id==='pg-login') checkSavedBanner();
-  if(id==='pg-register') initRegTut();
-}
-
-function updateTopbar(){
-  const el=document.getElementById('tbActions');
-  el.innerHTML='';
-  if(user||isAdmin){
-    const b=mkBtn('خروج',logout,'tb-btn');el.appendChild(b);
-  }
-  if(isAdmin){
-    const h=mkBtn('❓ مساعدة',()=>startTut('admin'),'tb-btn gold');el.appendChild(h);
-  }
-  const cur=document.querySelector('.pg.on');
-  if(cur&&cur.id==='pg-admin-recs'){
-    const bk=mkBtn('◀ رجوع',backToAdmin,'tb-btn');el.insertBefore(bk,el.firstChild);
-  }
-}
-function mkBtn(txt,fn,cls){const b=document.createElement('button');b.className=cls;b.textContent=txt;b.onclick=fn;return b;}
-
-function goPart(){
-  go('pg-part');
-  document.getElementById('welcomeName').textContent=user.name;
-  switchTab('rec');
-  loadMyRecs();
-  refreshBadge();
-  if(!localStorage.getItem('tut_p_'+user.id)){
-    localStorage.setItem('tut_p_'+user.id,'1');
-    setTimeout(()=>startTut('participant'),700);
-  }
-}
-
-async function goAdmin(){
-  go('pg-admin');
-  await loadParts();
-  if(!localStorage.getItem('tut_admin')){
-    localStorage.setItem('tut_admin','1');
-    setTimeout(()=>startTut('admin'),700);
-  }
-}
-
-async function goAdminRecs(p){
-  curPart=p;go('pg-admin-recs');
-  document.getElementById('cName').textContent=p.name;
-  document.getElementById('cPass').textContent=p.password;
-  document.getElementById('contactBody').style.display='none';
-  document.getElementById('contactTogBtn').textContent='عرض';
-  await calcTotal();
-  await loadAdminRecs();
-}
-
-function backToAdmin(){curPart=null;goAdmin();}
-function logout(){
-  stopPreview();localStorage.removeItem('sess');
-  user=null;isAdmin=false;curPart=null;go('pg-home');
-}
-
-// ══════════ TABS ══════════
-function switchTab(t){
-  document.getElementById('tab-rec').classList.toggle('on',t==='rec');
-  document.getElementById('tab-msg').classList.toggle('on',t==='msg');
-  document.getElementById('secRec').style.display=t==='rec'?'block':'none';
-  document.getElementById('secMsg').style.display=t==='msg'?'block':'none';
-  if(t==='rec'&&mrType==='video'&&!previewStream)startPreview();
-  if(t==='msg'){stopPreview();loadAllMsgs();markRead();}
-}
-
-// ══════════ SAVED BANNER ══════════
-function checkSavedBanner(){
-  const c=loadCreds();
-  const b=document.getElementById('savedBanner');
-  if(c){b.style.display='block';document.getElementById('savedName').textContent='مرحباً '+c.n+' 👋 بياناتك محفوظة!';}
-  else b.style.display='none';
-}
-
-// ══════════ FORMS ══════════
-function togglePw(id,el){const i=document.getElementById(id);i.type=i.type==='password'?'text':'password';el.textContent=i.type==='password'?'👁️':'🙈';}
-function showErr(id,msg){const e=document.getElementById(id);e.textContent=msg;e.classList.add('on');setTimeout(()=>e.classList.remove('on'),3000);}
-
-document.getElementById('regForm').onsubmit=async function(e){
-  e.preventDefault();
-  const n=document.getElementById('regName').value.trim();
-  const p=document.getElementById('regPass').value.trim();
-  if(!n||!p)return;
-  showLoader();
-  try{
-    const snap=await window.G(window.R(window.DB,'participants'));
-    if(snap.exists()&&Object.values(snap.val()).some(x=>x.name===n)){hideLoader();alert('هذا الاسم مسجل مسبقاً!');return;}
-    const id=Date.now().toString();
-    const obj={name:n,password:p,registeredAt:new Date().toISOString(),recordings:[]};
-    await window.S(window.R(window.DB,'participants/'+id),obj);
-    user={id,...obj};
-    saveCreds(n,p);
-    localStorage.setItem('sess',JSON.stringify({u:id}));
-    hideLoader();goPart();
-  }catch(err){hideLoader();alert('خطأ: '+err.message);}
-};
-
-document.getElementById('loginForm').onsubmit=async function(e){
-  e.preventDefault();
-  const n=document.getElementById('loginName').value;
-  const p=document.getElementById('loginPass').value;
-  showLoader();
-  const snap=await window.G(window.R(window.DB,'participants'));
-  hideLoader();
-  if(snap.exists()){
-    let f=null,fi=null;
-    Object.entries(snap.val()).forEach(([id,px])=>{if(px.name===n&&px.password===p){f=px;fi=id;}});
-    if(f){
-      user={id:fi,...f};
-      if(document.getElementById('remMe').checked) saveCreds(n,p);
-      localStorage.setItem('sess',JSON.stringify({u:fi}));
-      goPart();return;
-    }
-  }
-  showErr('loginErr','الاسم أو كلمة المرور خاطئة!');
-};
-
-document.getElementById('adminForm').onsubmit=function(e){
-  e.preventDefault();
-  if(document.getElementById('adminPass').value==='Qur@n2025#Admin$Ramadan'){
-    isAdmin=true;localStorage.setItem('sess',JSON.stringify({a:true}));goAdmin();
-  }else showErr('adminErr','كلمة المرور خاطئة!');
-};
-
-// ══════════ RECORDING ══════════
-function selType(t){
-  mrType=t;
-  document.getElementById('tc-audio').classList.toggle('on',t==='audio');
-  document.getElementById('tc-video').classList.toggle('on',t==='video');
-  if(t==='video')startPreview();else stopPreview();
-}
-async function startPreview(){
-  try{
-    if(previewStream)return;
-    const s=await navigator.mediaDevices.getUserMedia({video:true,audio:false});
-    previewStream=s;
-    document.getElementById('liveVid').srcObject=s;
-    document.getElementById('liveBox').classList.add('on');
-  }catch(e){alert('خطأ في الكاميرا: '+e.message);}
-}
-function stopPreview(){
-  if(!previewStream)return;
-  previewStream.getTracks().forEach(t=>t.stop());previewStream=null;
-  const v=document.getElementById('liveVid');if(v.srcObject)v.srcObject=null;
-  document.getElementById('liveBox').classList.remove('on','rec');
-  document.getElementById('recBadge').classList.remove('on');
-}
-async function startRec(){
-  try{
-    let s;
-    if(mrType==='video'){
-      if(previewStream){const a=await navigator.mediaDevices.getUserMedia({audio:true});s=new MediaStream([...previewStream.getVideoTracks(),...a.getAudioTracks()]);}
-      else{s=await navigator.mediaDevices.getUserMedia({video:true,audio:true});previewStream=s;document.getElementById('liveVid').srcObject=s;document.getElementById('liveBox').classList.add('on');}
-    }else s=await navigator.mediaDevices.getUserMedia({audio:true});
-    mrC=[];mr=new MediaRecorder(s);
-    mr.ondataavailable=e=>{if(e.data.size>0)mrC.push(e.data);};
-    mr.onstop=()=>{if(mrType==='audio')s.getTracks().forEach(t=>t.stop());showPrev();};
-    mr.start();
-    document.getElementById('startBtn').style.display='none';
-    document.getElementById('stopBtn').style.display='flex';
-    document.getElementById('bigTimer').classList.add('on');
-    if(mrType==='video'){document.getElementById('liveBox').classList.add('rec');document.getElementById('recBadge').classList.add('on');}
-    mrStart=Date.now();
-    mrTimer=setInterval(()=>{
-      const sec=Math.floor((Date.now()-mrStart)/1000);
-      document.getElementById('bigTimer').textContent=pad(Math.floor(sec/60))+':'+pad(sec%60);
-    },1000);
-  }catch(e){alert('خطأ: '+e.message);}
-}
-function stopRec(){
-  if(mr&&mr.state!=='inactive'){mr.stop();clearInterval(mrTimer);}
-  document.getElementById('liveBox').classList.remove('rec');
-  document.getElementById('recBadge').classList.remove('on');
-  document.getElementById('stopBtn').style.display='none';
-  document.getElementById('bigTimer').classList.remove('on');
-}
-function cancelRec(){
-  mrC=[];
-  document.getElementById('prevBox').classList.remove('on');
-  document.getElementById('startBtn').style.display='flex';
-  document.getElementById('bigTimer').textContent='00:00';
-}
-function showPrev(){
-  const blob=new Blob(mrC,{type:mrType==='video'?'video/webm':'audio/webm'});
-  const url=URL.createObjectURL(blob);
-  document.getElementById('prevMedia').innerHTML=mrType==='video'
-    ?`<video controls src="${url}"></video>`
-    :`<audio controls src="${url}"></audio>`;
-  document.getElementById('prevBox').classList.add('on');
-  document.getElementById('startBtn').style.display='flex';
-}
-async function saveRec(){
-  showLoader();
-  try{
-    const blob=new Blob(mrC,{type:mrType==='video'?'video/webm':'audio/webm'});
-    const d=await toB64(blob);
-    const id=Date.now().toString();
-    const rec={id,type:mrType,data:d,timestamp:new Date().toISOString()};
-    const recs=[...(user.recordings||[]),rec];
-    await window.U(window.R(window.DB),{[`participants/${user.id}/recordings`]:recs});
-    user.recordings=recs;
-    hideLoader();
-    document.getElementById('prevBox').classList.remove('on');
-    mrC=[];document.getElementById('bigTimer').textContent='00:00';
-    loadMyRecs();
-    toast('تم الحفظ وإرساله! ✅');
-  }catch(e){hideLoader();alert('خطأ: '+e.message);}
-}
-
-// ══════════ MY RECS + MESSAGES COMBINED ══════════
-async function loadMyRecs(){
-  const div=document.getElementById('myRecsList');
-  if(!user.recordings||!user.recordings.length){
-    div.innerHTML='<div class="empty"><div class="ei">🎙️</div><p>لم تسجّلي بعد<br>ابدأي أول تسجيل الآن!</p></div>';
-    return;
-  }
-  // جلب الرسائل
-  const snap=await window.G(window.R(window.DB,'messages'));
-  const mMap={};
-  if(snap.exists()){
-    snap.forEach(c=>{
-      const m=c.val();
-      if(m.participantId===user.id){
-        if(!mMap[m.recordingId])mMap[m.recordingId]=[];
-        mMap[m.recordingId].push({id:c.key,...m});
+      body {
+        font-family: "Cairo", sans-serif;
+        background: linear-gradient(135deg, #0d4d3f 0%, #1a6b54 100%);
+        min-height: 100vh;
+        padding: 8px;
+        position: relative;
+        overflow-x: hidden;
       }
-    });
-  }
-  let html='';
-  user.recordings.forEach((rec,i)=>{
-    const msgs=mMap[rec.id]||[];
-    const hasNew=msgs.some(m=>!m.read);
-    html+=`<div class="rec-card">
-      <div class="rec-card-top">
-        <span class="rec-num">${hasNew?'🔔 ':''}تسجيل ${i+1}</span>
-        <span class="rec-type">${rec.type==='video'?'🎥 فيديو':'🎤 صوت'}</span>
+      .container { max-width: 900px; margin: 0 auto; }
+      .header { text-align: center; margin-bottom: 8px; }
+      .logo {
+        width: 50px; height: 50px; margin: 0 auto 8px;
+        background: linear-gradient(135deg, var(--primary-gold), var(--accent-gold));
+        border-radius: 50%; display: flex; align-items: center; justify-content: center;
+        box-shadow: 0 4px 15px rgba(0,0,0,0.2); border: 2px solid rgba(255,255,255,0.5);
+      }
+      .logo img { width: 100%; height: 100%; object-fit: cover; border-radius: 50%; }
+      h1 { font-family: "Amiri", serif; color: var(--white); font-size: 1.4rem; font-weight: 700; margin-bottom: 4px; text-shadow: 0 2px 10px rgba(0,0,0,0.3); }
+      .subtitle { color: var(--primary-gold); font-size: 0.9rem; font-weight: 600; }
+      .card { background: var(--white); border-radius: 12px; padding: 15px 12px; box-shadow: 0 6px 25px rgba(0,0,0,0.15); margin-bottom: 8px; }
+      .form-group { margin-bottom: 12px; position: relative; }
+      .password-toggle { position: absolute; left: 10px; top: 50%; transform: translateY(-50%); cursor: pointer; font-size: 1.1rem; color: #666; transition: color 0.3s ease; user-select: none; }
+      .password-input-wrapper { position: relative; }
+      label { display: block; color: var(--dark-green); font-weight: 700; margin-bottom: 6px; font-size: 0.95rem; }
+      input[type="text"], input[type="password"] { width: 100%; padding: 10px; border: 2px solid var(--border-light); border-radius: 8px; font-size: 0.95rem; font-family: "Cairo", sans-serif; transition: all 0.3s ease; background: var(--cream); }
+      input:focus { outline: none; border-color: var(--primary-gold); background: var(--white); }
+      .btn { width: 100%; padding: 12px; border: none; border-radius: 10px; font-size: 1rem; font-weight: 700; font-family: "Cairo", sans-serif; cursor: pointer; transition: all 0.3s ease; margin-bottom: 8px; }
+      .btn-primary { background: linear-gradient(135deg, var(--primary-gold), var(--accent-gold)); color: var(--dark-green); box-shadow: 0 4px 15px rgba(212,175,55,0.4); }
+      .btn-primary:hover { transform: translateY(-2px); box-shadow: 0 6px 20px rgba(212,175,55,0.5); }
+      .btn-secondary { background: var(--dark-green); color: var(--white); box-shadow: 0 4px 15px rgba(13,77,63,0.3); }
+      .btn-secondary:hover { background: var(--medium-green); transform: translateY(-2px); }
+      .btn-danger { background: #dc2626; color: white; }
+      .btn-danger:hover { background: #b91c1c; }
+      .big-icon-btn { font-size: 1.3rem; padding: 15px; margin: 6px 0; }
+      .stats-container { display: grid; grid-template-columns: repeat(auto-fit, minmax(100px, 1fr)); gap: 8px; margin-bottom: 12px; }
+      .stat-card { background: linear-gradient(135deg, var(--primary-gold), var(--accent-gold)); padding: 10px; border-radius: 10px; text-align: center; box-shadow: 0 3px 12px rgba(212,175,55,0.3); }
+      .stat-card .icon { font-size: 1.4rem; margin-bottom: 3px; }
+      .stat-card .number { font-size: 1.5rem; font-weight: 900; color: var(--dark-green); margin-bottom: 2px; }
+      .stat-card .label { font-size: 0.75rem; color: var(--dark-green); font-weight: 600; }
+      .record-type-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin: 12px 0; }
+      .type-card { background: white; border: 2px solid var(--border-light); border-radius: 12px; padding: 15px 10px; text-align: center; cursor: pointer; transition: all 0.3s ease; }
+      .type-card:hover { border-color: var(--primary-gold); transform: translateY(-2px); }
+      .type-card.selected { border-color: var(--primary-gold); background: linear-gradient(to bottom, #fff9e6, white); }
+      .type-card .icon { font-size: 2.5rem; margin-bottom: 6px; }
+      .type-card h3 { font-size: 1rem; color: var(--dark-green); }
+      .recording-controls { margin-top: 12px; }
+      .timer { text-align: center; font-size: 1.8rem; font-weight: 700; color: var(--dark-green); margin: 12px 0; font-family: "Courier New", monospace; }
+      .live-preview { margin: 12px 0; padding: 10px; background: linear-gradient(135deg, #f0f9ff, #e0f2fe); border-radius: 10px; border: 2px solid var(--primary-gold); }
+      .live-preview.recording { background: linear-gradient(135deg, #fef3c7, #fde68a); border-color: #dc2626; }
+      .live-preview video { width: 100%; border-radius: 8px; background: #000; }
+      .recording-preview { margin: 12px 0; padding: 12px; background: linear-gradient(to bottom, #fff9e6, white); border-radius: 10px; border: 2px solid var(--primary-gold); }
+      .recording-preview video, .recording-preview audio { width: 100%; border-radius: 8px; margin-top: 10px; }
+      .recording-item { background: white; padding: 12px; border-radius: 10px; border: 2px solid var(--border-light); margin-bottom: 10px; position: relative; }
+      .recording-item video, .recording-item audio { width: 100%; margin-top: 8px; border-radius: 8px; }
+      .recording-date { color: #666; font-size: 0.8rem; margin-bottom: 8px; }
+      .three-dots { position: absolute; top: 10px; left: 10px; font-size: 1.5rem; cursor: pointer; color: #666; padding: 5px; }
+      .three-dots:hover { color: var(--dark-green); }
+      .menu-popup { position: absolute; top: 40px; left: 10px; background: white; border: 2px solid var(--primary-gold); border-radius: 8px; box-shadow: 0 3px 15px rgba(0,0,0,0.2); z-index: 100; min-width: 160px; }
+      .menu-item { padding: 10px; border-bottom: 1px solid var(--border-light); cursor: pointer; font-size: 0.9rem; transition: all 0.3s ease; }
+      .menu-item:last-child { border-bottom: none; }
+      .menu-item:hover { background: var(--cream); }
+      .menu-item.danger { color: #dc2626; }
+      .logout-btn { position: fixed; top: 10px; left: 10px; background: rgba(255,255,255,0.95); color: var(--dark-green); padding: 8px 14px; border: 2px solid var(--primary-gold); border-radius: 15px; cursor: pointer; font-weight: 700; font-size: 0.85rem; transition: all 0.3s ease; z-index: 1000; box-shadow: 0 3px 12px rgba(0,0,0,0.15); }
+      .logout-btn:hover { background: var(--primary-gold); color: var(--white); }
+      .back-btn { position: fixed; top: 10px; right: 10px; background: rgba(255,255,255,0.95); color: var(--dark-green); padding: 8px 14px; border: 2px solid var(--primary-gold); border-radius: 15px; cursor: pointer; font-weight: 700; font-size: 0.85rem; transition: all 0.3s ease; z-index: 1000; box-shadow: 0 3px 12px rgba(0,0,0,0.15); }
+      .back-btn:hover { background: var(--primary-gold); color: var(--white); }
+      .hidden { display: none !important; }
+      .error-message { background: #fee2e2; color: #991b1b; padding: 10px; border-radius: 8px; margin-bottom: 10px; font-size: 0.9rem; font-weight: 600; }
+      .participants-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(120px, 1fr)); gap: 8px; margin-top: 12px; }
+      .participant-card { background: white; padding: 12px 8px; border-radius: 10px; border: 2px solid var(--border-light); cursor: pointer; transition: all 0.3s ease; text-align: center; position: relative; }
+      .participant-card:hover { border-color: var(--primary-gold); transform: translateY(-2px); box-shadow: 0 4px 15px rgba(0,0,0,0.15); }
+      .participant-card .icon { font-size: 2.2rem; margin-bottom: 6px; }
+      .participant-card h3 { color: var(--dark-green); font-size: 0.95rem; margin-bottom: 5px; word-break: break-word; }
+      .participant-card .count { color: #666; font-size: 0.8rem; }
+      .new-recordings-badge { position: absolute; top: -6px; right: -6px; background: #dc2626; color: white; border-radius: 50%; width: 24px; height: 24px; display: flex; align-items: center; justify-content: center; font-size: 0.8rem; font-weight: 700; box-shadow: 0 2px 6px rgba(220,38,38,0.4); border: 2px solid white; }
+      .empty-state { text-align: center; padding: 25px 15px; color: #999; }
+      .empty-state .icon { font-size: 3rem; margin-bottom: 10px; opacity: 0.5; }
+      .empty-state p { font-size: 0.95rem; }
+      .loading-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.7); display: flex; align-items: center; justify-content: center; z-index: 3000; }
+      .spinner { border: 3px solid rgba(255,255,255,0.3); border-top: 3px solid var(--primary-gold); border-radius: 50%; width: 40px; height: 40px; animation: spin 1s linear infinite; margin: 0 auto 10px; }
+      @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
+      .loading-spinner { text-align: center; color: white; }
+      .loading-spinner p { font-size: 0.95rem; font-weight: 600; }
+      .message-modal { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.7); display: flex; align-items: center; justify-content: center; z-index: 2000; padding: 15px; }
+      .message-modal-content { background: white; padding: 20px; border-radius: 12px; max-width: 450px; width: 100%; max-height: 80vh; overflow-y: auto; }
+      .message-modal h3 { color: var(--dark-green); font-size: 1.2rem; margin-bottom: 12px; }
+      .message-type-btns { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 8px; margin-bottom: 12px; }
+      .message-type-btn { padding: 10px; border: 2px solid var(--border-light); border-radius: 8px; background: white; cursor: pointer; font-size: 0.85rem; font-weight: 600; transition: all 0.3s ease; }
+      .message-type-btn.active { background: linear-gradient(135deg, var(--primary-gold), var(--accent-gold)); border-color: var(--primary-gold); color: var(--dark-green); }
+      .message-modal textarea { width: 100%; padding: 12px; border: 2px solid var(--border-light); border-radius: 8px; font-family: "Cairo", sans-serif; font-size: 0.95rem; min-height: 100px; resize: vertical; }
+      .voice-recorder { background: linear-gradient(to bottom, #f0f9ff, white); padding: 15px; border-radius: 8px; border: 2px solid var(--primary-gold); }
+      .voice-recorder audio { width: 100%; margin-top: 10px; }
+      .modal-buttons { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-top: 12px; }
+      .unread-badge { position: absolute; top: -6px; left: -6px; background: #dc2626; color: white; border-radius: 50%; width: 24px; height: 24px; display: flex; align-items: center; justify-content: center; font-size: 0.8rem; font-weight: 700; box-shadow: 0 2px 6px rgba(220,38,38,0.4); }
+
+      /* رسائل المشارك */
+      .message-item { background: linear-gradient(135deg, #fff9e6, white); padding: 12px; border-radius: 10px; margin-bottom: 10px; border-right: 3px solid var(--primary-gold); }
+      .message-item.unread { background: linear-gradient(135deg, #fff4d6, #fff9e6); box-shadow: 0 3px 15px rgba(212,175,55,0.2); }
+      .message-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px; padding-bottom: 8px; border-bottom: 2px solid var(--border-light); }
+      .message-content { font-size: 0.95rem; line-height: 1.6; margin-bottom: 8px; }
+      .message-recording { background: white; padding: 10px; border-radius: 8px; margin-top: 8px; border: 1px solid var(--border-light); }
+      .message-recording audio { width: 100%; margin-top: 6px; }
+
+      /* التسجيل المرتبط */
+      .linked-recording { background: linear-gradient(135deg, #e8f5e9, #f0fff4); padding: 12px; border-radius: 8px; margin-top: 10px; border: 2px solid #4caf50; }
+      .linked-recording p { color: var(--dark-green); font-weight: 700; margin-bottom: 8px; font-size: 0.9rem; }
+      .linked-recording audio, .linked-recording video { width: 100%; border-radius: 6px; }
+
+      /* التقييم */
+      .rating-container { background: linear-gradient(to bottom, #fff9e6, white); padding: 15px; border-radius: 8px; border: 2px solid var(--primary-gold); text-align: center; }
+      .stars-display { display: flex; justify-content: center; align-items: center; gap: 8px; margin: 15px 0; font-size: 2.5rem; }
+      .star { cursor: pointer; transition: all 0.2s ease; color: #d1d5db; }
+      .star:hover { transform: scale(1.2); }
+      .star.filled { color: #fbbf24; }
+      .rating-value { font-size: 1.5rem; font-weight: 700; color: var(--dark-green); margin-top: 10px; }
+      .rating-buttons { display: grid; grid-template-columns: repeat(5, 1fr); gap: 6px; margin-top: 12px; }
+      .rating-btn { padding: 8px; border: 2px solid var(--border-light); border-radius: 6px; background: white; cursor: pointer; font-size: 0.85rem; font-weight: 600; transition: all 0.3s ease; }
+      .rating-btn:hover { background: var(--cream); border-color: var(--primary-gold); }
+      .rating-btn.active { background: linear-gradient(135deg, var(--primary-gold), var(--accent-gold)); border-color: var(--primary-gold); color: var(--dark-green); }
+      .message-rating { background: linear-gradient(135deg, #fef3c7, #fde68a); padding: 12px; border-radius: 8px; margin-top: 8px; text-align: center; border: 2px solid #fbbf24; }
+      .message-stars { font-size: 2rem; margin: 8px 0; }
+      .message-stars .star { cursor: default; }
+
+      /* معلومات التواصل */
+      .contact-info-section { background: linear-gradient(135deg, #dbeafe, #e0f2fe); padding: 12px; border-radius: 10px; margin-bottom: 15px; border: 2px solid var(--primary-gold); }
+      .contact-info-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px; }
+      .contact-info-title { color: var(--dark-green); font-weight: 700; font-size: 1rem; }
+      .toggle-contact-btn { background: var(--primary-gold); color: var(--dark-green); padding: 6px 12px; border: none; border-radius: 6px; cursor: pointer; font-size: 0.85rem; font-weight: 600; transition: all 0.3s ease; }
+      .toggle-contact-btn:hover { background: var(--accent-gold); transform: scale(1.05); }
+      .contact-info-content { margin-top: 10px; }
+      .info-row { background: white; padding: 10px; border-radius: 8px; margin-bottom: 8px; display: flex; justify-content: space-between; align-items: center; border: 1px solid var(--border-light); }
+      .info-label { color: #666; font-size: 0.85rem; margin-bottom: 4px; }
+      .info-value { color: var(--dark-green); font-size: 1rem; font-weight: 700; word-break: break-all; }
+      .copy-btn { background: var(--dark-green); color: white; border: none; padding: 8px 12px; border-radius: 6px; cursor: pointer; font-size: 0.85rem; font-weight: 600; transition: all 0.3s ease; display: flex; align-items: center; gap: 4px; }
+      .copy-btn:hover { background: var(--medium-green); transform: scale(1.05); }
+      .copy-btn.copied { background: #10b981; }
+
+      /* شارة المجموع الكلي */
+      .total-rating-badge { background: linear-gradient(135deg, #fef3c7, #fde68a); padding: 8px 12px; border-radius: 8px; display: inline-flex; align-items: center; gap: 6px; margin-bottom: 12px; border: 2px solid #fbbf24; box-shadow: 0 2px 8px rgba(251,191,36,0.3); }
+      .total-rating-badge .icon { font-size: 1.2rem; }
+      .total-rating-badge .text { color: var(--dark-green); font-weight: 700; font-size: 0.9rem; }
+      .total-rating-badge .value { color: var(--dark-green); font-weight: 900; font-size: 1.1rem; }
+
+      /* الإعلانات العامة */
+      .broadcast-banner { background: linear-gradient(135deg, #fef3c7, #fde68a); padding: 14px; border-radius: 12px; margin-bottom: 12px; border: 2px solid #fbbf24; position: relative; box-shadow: 0 3px 12px rgba(251,191,36,0.3); }
+      .broadcast-banner .broadcast-icon { font-size: 1.5rem; margin-bottom: 6px; }
+      .broadcast-banner .broadcast-title { color: var(--dark-green); font-weight: 700; font-size: 1rem; margin-bottom: 6px; }
+      .broadcast-banner .broadcast-text { color: var(--text-dark); font-size: 0.95rem; line-height: 1.6; }
+      .broadcast-banner audio { width: 100%; margin-top: 8px; border-radius: 6px; }
+      .broadcast-delete-btn { position: absolute; top: 8px; left: 8px; background: #dc2626; color: white; border: none; border-radius: 50%; width: 28px; height: 28px; cursor: pointer; font-size: 0.8rem; display: flex; align-items: center; justify-content: center; transition: all 0.3s ease; }
+      .broadcast-delete-btn:hover { background: #b91c1c; transform: scale(1.1); }
+
+      /* صفحة الإعلانات للأستاذة */
+      .admin-broadcast-form { background: linear-gradient(to bottom, #f0fff4, white); padding: 15px; border-radius: 12px; border: 2px solid #4caf50; margin-bottom: 15px; }
+      .admin-broadcast-form h3 { color: var(--dark-green); font-size: 1.1rem; margin-bottom: 12px; }
+      .admin-broadcast-form textarea { width: 100%; padding: 12px; border: 2px solid var(--border-light); border-radius: 8px; font-family: "Cairo", sans-serif; font-size: 0.95rem; min-height: 80px; resize: vertical; margin-bottom: 8px; }
+      .broadcasts-list .broadcast-banner .broadcast-date { color: #888; font-size: 0.78rem; margin-top: 4px; }
+
+      /* حذف الرسائل للأستاذة */
+      .admin-msg-item { background: white; padding: 12px; border-radius: 10px; border: 2px solid var(--border-light); margin-bottom: 10px; position: relative; }
+      .admin-msg-item .msg-delete-btn { position: absolute; top: 8px; left: 8px; background: #dc2626; color: white; border: none; border-radius: 6px; padding: 4px 8px; cursor: pointer; font-size: 0.8rem; font-weight: 600; transition: all 0.3s ease; }
+      .admin-msg-item .msg-delete-btn:hover { background: #b91c1c; }
+
+      /* شارة الإعلانات */
+      .broadcast-new-badge { background: #dc2626; color: white; border-radius: 12px; padding: 2px 8px; font-size: 0.75rem; font-weight: 700; margin-right: 6px; }
+
+      .confirm-dialog { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.7); display: flex; align-items: center; justify-content: center; z-index: 2500; padding: 15px; }
+      .confirm-content { background: white; padding: 20px; border-radius: 12px; max-width: 400px; width: 100%; text-align: center; }
+      .confirm-content h3 { color: var(--dark-green); font-size: 1.2rem; margin-bottom: 12px; }
+      .confirm-content p { font-size: 0.95rem; margin-bottom: 20px; line-height: 1.5; }
+      .confirm-buttons { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+
+      @media (max-width: 768px) {
+        h1 { font-size: 1.3rem; }
+        .subtitle { font-size: 0.85rem; }
+        .card { padding: 12px 10px; }
+        .btn { font-size: 0.95rem; padding: 10px; }
+        .type-card .icon { font-size: 2.2rem; }
+        .timer { font-size: 1.5rem; }
+        .record-type-grid { grid-template-columns: 1fr; }
+        .participants-grid { grid-template-columns: repeat(auto-fill, minmax(100px, 1fr)); }
+        .logout-btn, .back-btn { padding: 6px 12px; font-size: 0.75rem; }
+        .stat-card .number { font-size: 1.3rem; }
+        .message-type-btns { grid-template-columns: 1fr; }
+        .stars-display { font-size: 2rem; }
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <div class="header">
+        <div class="logo">
+          <img src="360_F_498618110_CmzpqAOH4xxhBFqXKEx5cOwYhvHpnmDH.jpg" alt="شعار رمضان" onerror="this.style.display='none'" />
+        </div>
+        <h1>مسابقة حفظ جزء عم</h1>
+        <p class="subtitle">رمضان المبارك 1446</p>
       </div>
-      <div class="rec-date">📅 ${fmtDate(rec.timestamp)}</div>
-      <div class="rec-media">
-        ${rec.type==='video'?`<video controls src="${rec.data}"></video>`:`<audio controls src="${rec.data}"></audio>`}
-      </div>`;
-    if(msgs.length){
-      msgs.sort((a,b)=>new Date(a.timestamp)-new Date(b.timestamp));
-      html+=`<div class="msgs-area">
-        <div class="msgs-area-title">💬 رسائل الاستاذة على هذا التسجيل</div>`;
-      msgs.forEach(m=>{
-        html+=`<div class="msg-item${!m.read?' new-msg':''}">
-          <div class="msg-meta">
-            <span class="msg-label${!m.read?' red':''}">${m.messageType==='voice'?'🎤 صوتية':m.messageType==='rating'?'⭐ تقييم':'✉️ رسالة'}${!m.read?'<span class="new-indicator"></span>':''}</span>
-            <span class="msg-date">${fmtDate(m.timestamp)}</span>
+
+      <!-- الصفحة الرئيسية -->
+      <div id="homePage" class="card">
+        <button class="btn btn-primary big-icon-btn" onclick="showRegisterPage()">🆕 تسجيل جديد</button>
+        <button class="btn btn-secondary big-icon-btn" onclick="showLoginPage()">🔑 دخول</button>
+        <button class="btn btn-secondary" onclick="showAdminLogin()" style="margin-top: 20px;">👩‍🏫 دخول الاستاذة</button>
+      </div>
+
+      <!-- صفحة التسجيل -->
+      <div id="registerPage" class="card hidden">
+        <h2 style="color:var(--dark-green);margin-bottom:15px;text-align:center;font-size:1.3rem;">تسجيل جديد</h2>
+        <form id="registerForm">
+          <div class="form-group">
+            <label>الاسم</label>
+            <input type="text" id="participantName" required placeholder="اكتب اسمك" />
           </div>
-          <div class="msg-body">${m.message}</div>
-          ${m.messageType==='voice'&&m.voiceData?`<div class="msg-audio"><audio controls src="${m.voiceData}"></audio></div>`:''}
-          ${m.messageType==='rating'&&m.rating?`<div class="msg-rating-box"><div class="msg-stars">${starsHtml(m.rating)}</div><div class="msg-score">${m.rating} / 5</div></div>`:''}
-        </div>`;
-      });
-      html+='</div>';
-    }
-    html+=`<button class="rec-del-btn" onclick="confirmDel('${rec.id}',false)">🗑️ حذف هذا التسجيل</button>
-    </div>`;
-  });
-  div.innerHTML=html;
-}
-
-// ══════════ ALL MESSAGES TAB ══════════
-async function loadAllMsgs(){
-  const div=document.getElementById('allMsgsList');
-  const snap=await window.G(window.R(window.DB,'messages'));
-  if(!snap.exists()){div.innerHTML='<div class="empty"><div class="ei">📭</div><p>لا رسائل</p></div>';return;}
-  const msgs=[];
-  snap.forEach(c=>{const m=c.val();if(m.participantId===user.id)msgs.push({id:c.key,...m});});
-  if(!msgs.length){div.innerHTML='<div class="empty"><div class="ei">📭</div><p>لا رسائل بعد</p></div>';return;}
-  msgs.sort((a,b)=>new Date(b.timestamp)-new Date(a.timestamp));
-  div.innerHTML=msgs.map(m=>`
-    <div class="msg-item${!m.read?' new-msg':''}" style="margin-bottom:10px;">
-      <div class="msg-meta">
-        <span class="msg-label${!m.read?' red':''}">${m.messageType==='voice'?'🎤 صوتية':m.messageType==='rating'?'⭐ تقييم':'✉️ رسالة'}</span>
-        <span class="msg-date">${fmtDate(m.timestamp)}</span>
+          <div class="form-group">
+            <label>كلمة المرور</label>
+            <div class="password-input-wrapper">
+              <input type="password" id="password" required placeholder="اختر كلمة مرور" />
+              <span class="password-toggle" onclick="togglePassword('password')">👁️</span>
+            </div>
+          </div>
+          <button type="submit" class="btn btn-primary">تسجيل 🌟</button>
+        </form>
+        <button class="btn btn-secondary" onclick="showHomePage()">رجوع</button>
       </div>
-      <div class="msg-body">${m.message}</div>
-      ${m.messageType==='voice'&&m.voiceData?`<div class="msg-audio"><audio controls src="${m.voiceData}"></audio></div>`:''}
-      ${m.messageType==='rating'&&m.rating?`<div class="msg-rating-box"><div class="msg-stars">${starsHtml(m.rating)}</div><div class="msg-score">${m.rating} / 5</div></div>`:''}
-    </div>`).join('');
-}
 
-async function refreshBadge(){
-  const snap=await window.G(window.R(window.DB,'messages'));
-  let c=0;
-  if(snap.exists())snap.forEach(x=>{const m=x.val();if(m.participantId===user.id&&!m.read)c++;});
-  const d=document.getElementById('unreadDot');
-  if(c>0){d.textContent=c;d.style.display='flex';}else d.style.display='none';
-}
-async function markRead(){
-  const snap=await window.G(window.R(window.DB,'messages'));
-  if(!snap.exists())return;
-  const upd={};
-  snap.forEach(c=>{const m=c.val();if(m.participantId===user.id&&!m.read)upd[`messages/${c.key}/read`]=true;});
-  if(Object.keys(upd).length)await window.U(window.R(window.DB),upd);
-  refreshBadge();
-  setTimeout(loadMyRecs,500);
-}
-
-// ══════════ ADMIN ══════════
-async function loadParts(){
-  showLoader();
-  const snap=await window.G(window.R(window.DB,'participants'));
-  hideLoader();
-  const grid=document.getElementById('partGrid');
-  if(!snap.exists()){grid.innerHTML='<div class="empty" style="grid-column:1/-1"><div class="ei">👥</div><p>لا مشاركون بعد</p></div>';stSt(0,0,0);return;}
-  let parts=[],tr=0,nr=0;
-  snap.forEach(c=>parts.push({id:c.key,...c.val()}));
-  parts.forEach(p=>{const r=p.recordings||[];tr+=r.length;r.forEach(rc=>{if(!isV(p.id,rc.id))nr++;});});
-  stSt(parts.length,tr,nr);
-  grid.innerHTML=parts.map(p=>{
-    const nc=(p.recordings||[]).filter(r=>!isV(p.id,r.id)).length;
-    return `<div class="part-card" onclick='goAdminRecs(${JSON.stringify(p)})'>
-      ${nc?`<div class="new-bubble">${nc}</div>`:''}
-      <div class="part-card-icon">👤</div>
-      <div class="part-card-name">${p.name}</div>
-      <div class="part-card-count">${(p.recordings||[]).length} تسجيل</div>
-    </div>`;
-  }).join('');
-}
-function stSt(p,r,n){document.getElementById('stN').textContent=p;document.getElementById('stR').textContent=r;document.getElementById('stNew').textContent=n;}
-
-async function loadAdminRecs(){
-  const div=document.getElementById('adminRecsList');
-  if(!curPart.recordings||!curPart.recordings.length){div.innerHTML='<div class="empty"><div class="ei">🎙️</div><p>لا تسجيلات</p></div>';return;}
-  const snap=await window.G(window.R(window.DB,'messages'));
-  const mMap={};
-  if(snap.exists()){snap.forEach(c=>{const m=c.val();if(m.participantId===curPart.id){if(!mMap[m.recordingId])mMap[m.recordingId]=[];mMap[m.recordingId].push({id:c.key,...m});}});}
-  curPart.recordings.forEach(r=>markV(curPart.id,r.id));
-  div.innerHTML=curPart.recordings.map((rec,i)=>{
-    const msgs=(mMap[rec.id]||[]).sort((a,b)=>new Date(a.timestamp)-new Date(b.timestamp));
-    return `<div class="rec-card">
-      <div class="rec-card-top">
-        <span class="rec-num">تسجيل ${i+1}</span>
-        <span class="rec-type">${rec.type==='video'?'🎥 فيديو':'🎤 صوت'}</span>
+      <!-- صفحة تسجيل الدخول -->
+      <div id="loginPage" class="card hidden">
+        <h2 style="color:var(--dark-green);margin-bottom:15px;text-align:center;font-size:1.3rem;">تسجيل دخول</h2>
+        <div id="loginError" class="error-message hidden"></div>
+        <form id="loginForm">
+          <div class="form-group">
+            <label>الاسم</label>
+            <input type="text" id="loginName" required placeholder="اسمك" />
+          </div>
+          <div class="form-group">
+            <label>كلمة المرور</label>
+            <div class="password-input-wrapper">
+              <input type="password" id="loginPassword" required placeholder="كلمة المرور" />
+              <span class="password-toggle" onclick="togglePassword('loginPassword')">👁️</span>
+            </div>
+          </div>
+          <button type="submit" class="btn btn-primary">دخول 🔓</button>
+        </form>
+        <button class="btn btn-secondary" onclick="showHomePage()">رجوع</button>
       </div>
-      <div class="rec-date">📅 ${fmtDate(rec.timestamp)}</div>
-      <div class="rec-media">
-        ${rec.type==='video'?`<video controls src="${rec.data}"></video>`:`<audio controls src="${rec.data}"></audio>`}
+
+      <!-- صفحة دخول الاستاذة -->
+      <div id="adminLoginPage" class="card hidden">
+        <h2 style="color:var(--dark-green);margin-bottom:15px;text-align:center;font-size:1.3rem;">دخول الاستاذة</h2>
+        <div id="adminError" class="error-message hidden"></div>
+        <form id="adminLoginForm">
+          <div class="form-group">
+            <label>كلمة المرور</label>
+            <div class="password-input-wrapper">
+              <input type="password" id="adminPassword" required placeholder="كلمة المرور" />
+              <span class="password-toggle" onclick="togglePassword('adminPassword')">👁️</span>
+            </div>
+          </div>
+          <button type="submit" class="btn btn-primary">دخول</button>
+        </form>
+        <button class="btn btn-secondary" onclick="showHomePage()">رجوع</button>
       </div>
-      ${msgs.length?`<div class="msgs-area">
-        <div class="msgs-area-title">💬 رسائل مرسلة</div>
-        ${msgs.map(m=>`<div class="msg-item">
-          <div class="msg-meta"><span class="msg-label">${m.messageType==='voice'?'🎤':m.messageType==='rating'?'⭐':'✉️'}</span><span class="msg-date">${fmtDate(m.timestamp)}</span></div>
-          <div class="msg-body">${m.message}</div>
-          ${m.messageType==='voice'&&m.voiceData?`<div class="msg-audio"><audio controls src="${m.voiceData}"></audio></div>`:''}
-          ${m.messageType==='rating'&&m.rating?`<div class="msg-rating-box"><div class="msg-stars">${starsHtml(m.rating)}</div><div class="msg-score">${m.rating}/5</div></div>`:''}
-        </div>`).join('')}
-      </div>`:''}
-      <div class="rec-actions">
-        <button class="rec-act-btn" onclick="openSheet('${rec.id}','text')">✍️ رسالة</button>
-        <button class="rec-act-btn" onclick="openSheet('${rec.id}','voice')">🎤 صوتية</button>
-        <button class="rec-act-btn" onclick="openSheet('${rec.id}','rating')">⭐ تقييم</button>
-        <button class="rec-act-btn danger" onclick="confirmDel('${rec.id}',true)">🗑️</button>
+
+      <!-- صفحة المشارك -->
+      <div id="participantPage" class="card hidden">
+        <button class="logout-btn" onclick="logout()">خروج</button>
+        <h2 style="color:var(--dark-green);margin-bottom:8px;text-align:center;font-size:1.3rem;">
+          أهلاً <span id="participantDisplayName"></span> 🌙
+        </h2>
+        <div style="display:flex;gap:8px;margin:12px 0;">
+          <button class="btn btn-secondary" onclick="showRecordingSection()" style="flex:1;">🎤 تسجيل</button>
+          <button class="btn btn-secondary" onclick="showMessagesSection()" style="flex:1;position:relative;">
+            📬 رسائل
+            <span id="unreadBadge" class="unread-badge hidden"></span>
+          </button>
+        </div>
+
+        <!-- قسم التسجيل -->
+        <div id="recordingSection">
+          <h3 style="color:var(--dark-green);margin-bottom:10px;font-size:1.1rem;text-align:center;">اختر نوع التسجيل</h3>
+          <div class="record-type-grid">
+            <div class="type-card selected" onclick="selectType('audio')">
+              <div class="icon">🎤</div><h3>صوت</h3>
+            </div>
+            <div class="type-card" onclick="selectType('video')">
+              <div class="icon">🎥</div><h3>فيديو</h3>
+            </div>
+          </div>
+          <div id="livePreview" class="live-preview hidden">
+            <video id="liveVideo" autoplay muted playsinline></video>
+          </div>
+          <div class="recording-controls">
+            <button class="btn btn-primary big-icon-btn" id="recordBtn" onclick="startRecording()">🔴 ابدأ التسجيل</button>
+            <div class="timer hidden" id="timer">00:00</div>
+            <button class="btn btn-danger big-icon-btn hidden" id="stopBtn" onclick="stopRecording()">⏹ إيقاف</button>
+          </div>
+          <div id="recordingPreview" class="recording-preview hidden">
+            <h3 style="color:var(--dark-green);margin-bottom:10px;font-size:1.1rem;">المعاينة</h3>
+            <div id="previewMedia"></div>
+            <button class="btn btn-primary" onclick="saveRecording()" style="margin-top:12px;">💾 حفظ</button>
+            <button class="btn btn-secondary" onclick="cancelRecording()">🔄 إلغاء</button>
+          </div>
+          <div style="margin-top:20px;">
+            <h3 style="color:var(--dark-green);margin-bottom:10px;font-size:1.1rem;">تسجيلاتي</h3>
+            <div id="myRecordingsList"></div>
+          </div>
+        </div>
+
+        <!-- قسم الرسائل -->
+        <div id="messagesSection" class="hidden">
+          <h3 style="color:var(--dark-green);margin-bottom:12px;font-size:1.1rem;">📬 رسائل الاستاذة</h3>
+          <!-- الإعلانات العامة -->
+          <div id="participantBroadcasts"></div>
+          <div id="messagesList"></div>
+        </div>
       </div>
-    </div>`;
-  }).join('');
-}
 
-async function calcTotal(){
-  const snap=await window.G(window.R(window.DB,'messages'));
-  let tot=0,cnt=0;const rs=new Set();
-  if(snap.exists())snap.forEach(c=>{const m=c.val();if(m.participantId===curPart.id&&m.messageType==='rating'&&m.rating&&!rs.has(m.recordingId)){tot+=m.rating;rs.add(m.recordingId);cnt++;}});
-  const b=document.getElementById('totalBadge');
-  if(!cnt){b.classList.remove('on');return;}
-  b.classList.add('on');
-  document.getElementById('totalVal').textContent=tot.toFixed(1);
-  document.getElementById('totalMax').textContent=cnt*5;
-}
+      <!-- صفحة المشاركين (للاستاذة) -->
+      <div id="adminParticipantsPage" class="card hidden">
+        <button class="logout-btn" onclick="logout()">خروج</button>
+        <h2 style="color:var(--dark-green);margin-bottom:12px;text-align:center;font-size:1.3rem;">إدارة المشاركين</h2>
 
-function toggleContact(){
-  const b=document.getElementById('contactBody'),t=document.getElementById('contactTogBtn');
-  if(b.style.display==='none'){b.style.display='block';t.textContent='إخفاء';}
-  else{b.style.display='none';t.textContent='عرض';}
-}
-async function copyIt(tp,btn){
-  const txt=tp==='name'?curPart.name:curPart.password;
-  try{await navigator.clipboard.writeText(txt);const o=btn.innerHTML;btn.innerHTML='✅ تم';btn.classList.add('ok');setTimeout(()=>{btn.innerHTML=o;btn.classList.remove('ok');},2000);}
-  catch(e){alert('فشل النسخ');}
-}
+        <div class="stats-container">
+          <div class="stat-card">
+            <div class="icon">👥</div>
+            <div class="number" id="totalParticipants">0</div>
+            <div class="label">مشارك</div>
+          </div>
+          <div class="stat-card">
+            <div class="icon">🎙️</div>
+            <div class="number" id="totalRecordings">0</div>
+            <div class="label">تسجيل كلي</div>
+          </div>
+          <div class="stat-card">
+            <div class="icon">🆕</div>
+            <div class="number" id="newRecordings">0</div>
+            <div class="label">جديد</div>
+          </div>
+        </div>
 
-// ══════════ SEND MSG SHEET ══════════
-function openSheet(recId,type){
-  curRecMsg=recId;selRat=0;
-  const el=document.createElement('div');
-  el.className='sheet-bg';el.id='sht';
-  el.innerHTML=`<div class="sheet">
-    <div class="sheet-handle"></div>
-    <div class="sheet-title">📨 إرسال رسالة</div>
-    <div class="s-tabs">
-      <button class="s-tab ${type==='text'?'on':''}" onclick="stab('text',this)">✍️ نصية</button>
-      <button class="s-tab ${type==='voice'?'on':''}" onclick="stab('voice',this)">🎤 صوتية</button>
-      <button class="s-tab ${type==='rating'?'on':''}" onclick="stab('rating',this)">⭐ تقييم</button>
+        <!-- زر الإعلان العام -->
+        <button class="btn btn-primary" onclick="showBroadcastModal()" style="margin-bottom:10px;">
+          📢 إرسال إعلان عام لجميع المشاركين
+        </button>
+
+        <!-- قائمة الإعلانات للحذف -->
+        <div id="adminBroadcastsList" style="margin-bottom:12px;"></div>
+
+        <div id="participantsList" class="participants-grid"></div>
+      </div>
+
+      <!-- صفحة تسجيلات مشارك معين (للاستاذة) -->
+      <div id="adminRecordingsPage" class="card hidden">
+        <button class="logout-btn" onclick="logout()">خروج</button>
+        <button class="back-btn" onclick="backToParticipants()">← رجوع</button>
+
+        <h2 id="participantTitle" style="color:var(--dark-green);margin-bottom:12px;text-align:center;font-size:1.3rem;"></h2>
+
+        <!-- مجموع التقييمات -->
+        <div style="text-align:center;margin-bottom:12px;">
+          <div class="total-rating-badge" id="totalRatingBadge">
+            <span class="icon">⭐</span>
+            <span class="text">المجموع الكلي:</span>
+            <span class="value" id="totalRatingValue">0</span>
+            <span class="text">/</span>
+            <span class="value" id="totalRatingMax">0</span>
+          </div>
+        </div>
+
+        <!-- حذف الحساب -->
+        <div style="text-align:center;margin-bottom:12px;">
+          <button class="btn btn-danger" onclick="confirmDeleteAccount()" style="width:auto;padding:10px 20px;font-size:0.9rem;">
+            🗑️ حذف حساب هذا المشارك نهائياً
+          </button>
+        </div>
+
+        <!-- معلومات التواصل -->
+        <div class="contact-info-section">
+          <div class="contact-info-header">
+            <span class="contact-info-title">📞 معلومات التواصل</span>
+            <button class="toggle-contact-btn" onclick="toggleContactInfo()">
+              <span id="contactToggleText">عرض</span>
+            </button>
+          </div>
+          <div id="contactInfoContent" class="contact-info-content hidden">
+            <div class="info-row">
+              <div>
+                <div class="info-label">الاسم</div>
+                <div class="info-value" id="contactName">-</div>
+              </div>
+              <button class="copy-btn" onclick="copyToClipboard('name')">📋 نسخ</button>
+            </div>
+            <div class="info-row">
+              <div>
+                <div class="info-label">كلمة المرور</div>
+                <div class="info-value" id="contactPassword">-</div>
+              </div>
+              <button class="copy-btn" onclick="copyToClipboard('password')">📋 نسخ</button>
+            </div>
+          </div>
+        </div>
+
+        <!-- رسائل الأستاذة السابقة -->
+        <div id="adminSentMessages" style="margin-bottom:12px;"></div>
+
+        <div id="adminRecordingsList"></div>
+      </div>
     </div>
-    <div id="st-text" class="${type!=='text'?'hidden':''}">
-      <textarea class="s-textarea" id="sTxt" placeholder="اكتبي رسالتك..."></textarea>
-    </div>
-    <div id="st-voice" class="voice-box ${type!=='voice'?'hidden':''}">
-      <button class="btn btn-gold btn-mb" id="vrStart" onclick="startAVR()">🎤 ابدأي التسجيل</button>
-      <div class="voice-timer" id="vrTimer">00:00</div>
-      <button class="btn btn-red btn-mb" id="vrStop" onclick="stopAVR()" style="display:none;">⏹ إيقاف</button>
-      <div id="vrPrev" style="display:none;"><audio id="vrAudio" controls style="width:100%;border-radius:8px;margin-top:8px;"></audio></div>
-    </div>
-    <div id="st-rating" class="rating-box ${type!=='rating'?'hidden':''}">
-      <p style="font-weight:700;color:var(--g);margin-bottom:4px;">اختاري التقييم</p>
-      <div class="stars-row" id="sStars">${[1,2,3,4,5].map(i=>`<span class="star" onclick="setRat(${i})" data-v="${i}">☆</span>`).join('')}</div>
-      <div class="rat-val" id="ratVal">0 / 5</div>
-      <div class="rat-grid">${[0.5,1,1.5,2,2.5,3,3.5,4,4.5,5].map(v=>`<button class="rat-btn" onclick="setRat(${v})">${v}</button>`).join('')}</div>
-    </div>
-    <div class="sheet-btns">
-      <button class="btn btn-gold" onclick="sendMsg()">إرسال ✅</button>
-      <button class="btn btn-ghost" onclick="closeSheet()">إلغاء</button>
-    </div>
-  </div>`;
-  document.body.appendChild(el);
-  el.addEventListener('click',e=>{if(e.target===el)closeSheet();});
-}
-function stab(t,btn){
-  document.querySelectorAll('.s-tab').forEach(b=>b.classList.remove('on'));
-  btn.classList.add('on');
-  ['text','voice','rating'].forEach(id=>{const el=document.getElementById('st-'+id);if(el)el.className=el.className.replace(' hidden','')+(id!==t?' hidden':'');});
-}
-function setRat(v){
-  selRat=v;
-  document.getElementById('ratVal').textContent=v+' / 5';
-  document.querySelectorAll('#sStars .star').forEach((s,i)=>{s.textContent=v>=i+1?'⭐':'☆';});
-  document.querySelectorAll('.rat-btn').forEach(b=>{b.classList.toggle('on',parseFloat(b.textContent)===v);});
-}
-async function startAVR(){
-  try{
-    const s=await navigator.mediaDevices.getUserMedia({audio:true});
-    avrC=[];avr=new MediaRecorder(s);
-    avr.ondataavailable=e=>{if(e.data.size>0)avrC.push(e.data);};
-    avr.onstop=()=>{
-      s.getTracks().forEach(t=>t.stop());
-      const blob=new Blob(avrC,{type:'audio/webm'});
-      document.getElementById('vrAudio').src=URL.createObjectURL(blob);
-      document.getElementById('vrPrev').style.display='block';
-    };
-    avr.start();
-    document.getElementById('vrStart').style.display='none';
-    document.getElementById('vrStop').style.display='flex';
-    document.getElementById('vrTimer').classList.add('on');
-    const t0=Date.now();
-    avrTimer=setInterval(()=>{const s2=Math.floor((Date.now()-t0)/1000);document.getElementById('vrTimer').textContent=pad(Math.floor(s2/60))+':'+pad(s2%60);},1000);
-  }catch(e){alert('خطأ: '+e.message);}
-}
-function stopAVR(){
-  if(avr&&avr.state!=='inactive'){avr.stop();clearInterval(avrTimer);}
-  document.getElementById('vrStart').style.display='flex';
-  document.getElementById('vrStop').style.display='none';
-  document.getElementById('vrTimer').classList.remove('on');
-}
-function closeSheet(){
-  document.getElementById('sht')?.remove();
-  avrC=[];if(avr&&avr.state!=='inactive')avr.stop();clearInterval(avrTimer);selRat=0;
-}
-async function sendMsg(){
-  const at=document.querySelector('.s-tab.on');
-  let type='text';
-  if(at.textContent.includes('صوتية'))type='voice';
-  else if(at.textContent.includes('تقييم'))type='rating';
-  showLoader();
-  try{
-    if(type==='text'){
-      const t=document.getElementById('sTxt').value.trim();
-      if(!t){hideLoader();alert('اكتبي رسالة!');return;}
-      await doSend(curPart.id,curRecMsg,t,'text',null,null);
-    }else if(type==='voice'){
-      if(!avrC.length){hideLoader();alert('سجّلي رسالة صوتية!');return;}
-      const d=await toB64(new Blob(avrC,{type:'audio/webm'}));
-      await doSend(curPart.id,curRecMsg,'🎤 رسالة صوتية','voice',d,null);
-    }else{
-      if(!selRat){hideLoader();alert('اختاري تقييماً!');return;}
-      const snap=await window.G(window.R(window.DB,'messages'));
-      if(snap.exists()){const upd={};snap.forEach(c=>{const m=c.val();if(m.recordingId===curRecMsg&&m.participantId===curPart.id&&m.messageType==='rating')upd['messages/'+c.key]=null;});if(Object.keys(upd).length)await window.U(window.R(window.DB),upd);}
-      await doSend(curPart.id,curRecMsg,`⭐ تقييمك: ${selRat} / 5 نجوم`,'rating',null,selRat);
-    }
-    hideLoader();closeSheet();await calcTotal();await loadAdminRecs();toast('تم الإرسال! ✅');
-  }catch(e){hideLoader();alert('خطأ: '+e.message);}
-}
-async function doSend(pid,rid,msg,type,voice,rating){
-  const r=window.P(window.R(window.DB,'messages'));
-  const obj={participantId:pid,recordingId:rid,message:msg,messageType:type,timestamp:new Date().toISOString(),read:false};
-  if(voice)obj.voiceData=voice;if(rating)obj.rating=rating;
-  await window.S(r,obj);
-}
 
-// ══════════ DELETE ══════════
-function confirmDel(recId,adminMode){
-  const el=document.createElement('div');
-  el.className='confirm-bg';
-  el.innerHTML=`<div class="confirm-box">
-    <div class="confirm-em">🗑️</div>
-    <div class="confirm-ttl">تأكيد الحذف</div>
-    <div class="confirm-desc">هل أنتِ متأكدة؟ لن يمكن الاسترجاع.</div>
-    <div class="confirm-btns">
-      <button class="btn btn-red" onclick="doDel('${recId}',${adminMode})">حذف</button>
-      <button class="btn btn-ghost" onclick="this.closest('.confirm-bg').remove()">إلغاء</button>
-    </div>
-  </div>`;
-  document.body.appendChild(el);
-  el.addEventListener('click',e=>{if(e.target===el)el.remove();});
-}
-async function doDel(recId,adminMode){
-  showLoader();
-  const src=adminMode?curPart:user;
-  const pid=adminMode?curPart.id:user.id;
-  const recs=(src.recordings||[]).filter(r=>r.id!==recId);
-  await window.U(window.R(window.DB),{[`participants/${pid}/recordings`]:recs});
-  const snap=await window.G(window.R(window.DB,'messages'));
-  if(snap.exists()){const upd={};snap.forEach(c=>{if(c.val().recordingId===recId)upd['messages/'+c.key]=null;});if(Object.keys(upd).length)await window.U(window.R(window.DB),upd);}
-  if(adminMode){curPart.recordings=recs;await calcTotal();await loadAdminRecs();}
-  else{user.recordings=recs;loadMyRecs();refreshBadge();}
-  hideLoader();document.querySelector('.confirm-bg')?.remove();toast('تم الحذف ✅');
-}
+    <!-- Firebase -->
+    <script type="module">
+      import { initializeApp } from "https://www.gstatic.com/firebasejs/12.9.0/firebase-app.js";
+      import { getDatabase, ref, set, get, push, update, remove } from 'https://www.gstatic.com/firebasejs/12.9.0/firebase-database.js';
+      const firebaseConfig = {
+        apiKey: "AIzaSyAfhQL5spF3KcrbngSzunLaHT_7cieHkUk",
+        authDomain: "opject-e223d.firebaseapp.com",
+        databaseURL: "https://opject-e223d-default-rtdb.firebaseio.com/",
+        projectId: "opject-e223d",
+        storageBucket: "opject-e223d.firebasestorage.app",
+        messagingSenderId: "607939195786",
+        appId: "1:607939195786:web:c264710387d50fc2990e73"
+      };
+      const app = initializeApp(firebaseConfig);
+      const database = getDatabase(app);
+      window.db = database;
+      window.dbRef = ref;
+      window.dbSet = set;
+      window.dbGet = get;
+      window.dbPush = push;
+      window.dbUpdate = update;
+      window.dbRemove = remove;
+      window.firebaseInitialized = true;
+    </script>
 
-// ══════════ HELPERS ══════════
-function toB64(blob){return new Promise((res,rej)=>{const fr=new FileReader();fr.onloadend=()=>res(fr.result);fr.onerror=rej;fr.readAsDataURL(blob);});}
-function pad(n){return String(n).padStart(2,'0');}
-function fmtDate(ts){return new Date(ts).toLocaleDateString('ar-SA');}
-function starsHtml(r){let h='';for(let i=1;i<=5;i++)h+=r>=i?'⭐':(r>i-1?'🌟':'☆');return h;}
-function showLoader(){if(!document.getElementById('ldr')){const d=document.createElement('div');d.className='loader-bg';d.id='ldr';d.innerHTML='<div class="loader-box"><div class="loader-spin"></div><div class="loader-txt">جاري التحميل...</div></div>';document.body.appendChild(d);}}
-function hideLoader(){document.getElementById('ldr')?.remove();}
-function toast(msg){const t=document.createElement('div');t.className='toast';t.textContent=msg;document.body.appendChild(t);setTimeout(()=>t.remove(),2600);}
+    <script>
+      let currentUser = null;
+      let isAdmin = false;
+      let mediaRecorder = null;
+      let recordedChunks = [];
+      let recordingType = "audio";
+      let timerInterval = null;
+      let recordingStartTime = null;
+      let previewStream = null;
+      let currentParticipant = null;
+      let adminVoiceRecorder = null;
+      let adminVoiceChunks = [];
+      let adminVoiceTimer = null;
+      let currentRecordingForMessage = null;
+      let viewedRecordings = new Set();
+      let selectedRating = 0;
 
-// ══════════════════════════════════════════════
-// 🎓 SPOTLIGHT TUTORIAL — CLEAN REBUILD
-// ══════════════════════════════════════════════
-let tSteps=[],tIdx=0;
+      // ====== تحويل base64 إلى Blob URL لتشغيل أفضل ======
+      function dataUriToObjectUrl(dataUri) {
+        try {
+          if (!dataUri || !dataUri.startsWith('data:')) return dataUri;
+          const [header, base64] = dataUri.split(',');
+          const mimeMatch = header.match(/:(.*?);/);
+          const mimeType = mimeMatch ? mimeMatch[1] : 'audio/webm';
+          const binary = atob(base64);
+          const array = new Uint8Array(binary.length);
+          for (let i = 0; i < binary.length; i++) {
+            array[i] = binary.charCodeAt(i);
+          }
+          const blob = new Blob([array], { type: mimeType });
+          return URL.createObjectURL(blob);
+        } catch(e) {
+          return dataUri;
+        }
+      }
 
-const TUT_PART=[
-  {sel:'#welcomeBanner',ttl:'هذا بانر الترحيب 👋',desc:'اسمك يظهر هنا في كل مرة تدخلين. أهلاً بك في المسابقة!',tip:null},
-  {sel:'#partTabs',ttl:'التبويبات 📂',desc:'"تسجيل" لإرسال حفظك ورؤية ردود الاستاذة مباشرة تحته، و"رسائلي" لكل الرسائل.',tip:'🔔 النقطة الحمراء = رسالة جديدة من الاستاذة'},
-  {sel:'#typeGrid',ttl:'اختاري نوع التسجيل 🎤',desc:'صوت فقط أو فيديو — أنتِ تختارين!',tip:null},
-  {sel:'#startBtn',ttl:'ابدأي التسجيل! 🔴',desc:'اضغطي هنا لبدء التسجيل، ثم "إيقاف" عند الانتهاء، ثم "حفظ وإرسال".',tip:'💡 ستظهر معاينة قبل الإرسال'},
-];
+      function createMediaElement(data, type, extra = '') {
+        const url = dataUriToObjectUrl(data);
+        if (type === 'video') {
+          return `<video controls src="${url}" ${extra}></video>`;
+        } else {
+          return `<audio controls src="${url}" ${extra}></audio>`;
+        }
+      }
 
-const TUT_ADMIN=[
-  {sel:null,ttl:'مرحباً في لوحة الإدارة 👩‍🏫',desc:'من هنا تتابعين كل المشاركين وتسجيلاتهم وتردّين عليهم بسهولة.',tip:null},
-  {sel:'#stNew',ttl:'عداد التسجيلات الجديدة 🆕',desc:'هذا الرقم يخبرك بتسجيلات لم تشاهديها بعد.',tip:null},
-  {sel:'#partGrid',ttl:'قائمة المشاركين 👥',desc:'اضغطي على اسم أي مشارك لتري تسجيلاتها وترسلي رسائلك.',tip:'🔴 الرقم الأحمر = تسجيلات جديدة لم تُشاهَد'},
-];
+      window.onload = function() {
+        const checkFirebase = setInterval(() => {
+          if (window.firebaseInitialized && window.db) {
+            clearInterval(checkFirebase);
+            loadCurrentSession();
+            loadViewedRecordings();
+          }
+        }, 100);
+        setTimeout(() => {
+          clearInterval(checkFirebase);
+          if (!window.db) {
+            alert("خطأ في الاتصال. الرجاء تحديث الصفحة.");
+            showHomePage();
+          }
+        }, 5000);
+      };
 
-function startTut(mode){
-  tSteps=mode==='participant'?TUT_PART:TUT_ADMIN;
-  tIdx=0;
-  document.getElementById('tutBg').classList.add('on');
-  renderTutStep();
-}
+      function loadViewedRecordings() {
+        const stored = localStorage.getItem('viewedRecordings');
+        if (stored) viewedRecordings = new Set(JSON.parse(stored));
+      }
+      function saveViewedRecordings() {
+        localStorage.setItem('viewedRecordings', JSON.stringify([...viewedRecordings]));
+      }
+      function markRecordingAsViewed(participantId, recordingId) {
+        viewedRecordings.add(`${participantId}_${recordingId}`);
+        saveViewedRecordings();
+      }
+      function isRecordingViewed(participantId, recordingId) {
+        return viewedRecordings.has(`${participantId}_${recordingId}`);
+      }
 
-function renderTutStep(){
-  const s=tSteps[tIdx],total=tSteps.length;
-  const card=document.getElementById('tutCard');
+      function showLoading() {
+        if (document.getElementById('loadingOverlay')) return;
+        const overlay = document.createElement('div');
+        overlay.className = 'loading-overlay';
+        overlay.id = 'loadingOverlay';
+        overlay.innerHTML = `<div class="loading-spinner"><div class="spinner"></div><p>جاري التحميل...</p></div>`;
+        document.body.appendChild(overlay);
+      }
+      function hideLoading() {
+        const overlay = document.getElementById('loadingOverlay');
+        if (overlay) overlay.remove();
+      }
 
-  // fill content
-  document.getElementById('tutNum').textContent=`خطوة ${tIdx+1} من ${total}`;
-  document.getElementById('tutTtl').textContent=s.ttl;
-  document.getElementById('tutDesc').textContent=s.desc;
-  const tip=document.getElementById('tutTip');
-  if(s.tip){tip.textContent=s.tip;tip.style.display='block';}else tip.style.display='none';
+      async function loadCurrentSession() {
+        const session = localStorage.getItem("currentSession");
+        if (session) {
+          const data = JSON.parse(session);
+          if (data.isAdmin) {
+            isAdmin = true;
+            showAdminParticipantsPage();
+          } else {
+            showLoading();
+            try {
+              const snapshot = await window.dbGet(window.dbRef(window.db, 'participants/' + data.userId));
+              hideLoading();
+              if (snapshot.exists()) {
+                currentUser = { id: data.userId, ...snapshot.val() };
+                showParticipantPage();
+              } else {
+                localStorage.removeItem("currentSession");
+                showHomePage();
+              }
+            } catch (error) {
+              hideLoading();
+              localStorage.removeItem("currentSession");
+              showHomePage();
+            }
+          }
+        } else {
+          showHomePage();
+        }
+      }
 
-  // dots
-  document.getElementById('tutDots').innerHTML=tSteps.map((_,i)=>`<div class="tut-dot${i===tIdx?' on':''}"></div>`).join('');
+      function saveSession() {
+        const session = isAdmin ? { isAdmin: true } : { isAdmin: false, userId: currentUser.id };
+        localStorage.setItem("currentSession", JSON.stringify(session));
+      }
 
-  // btns
-  document.getElementById('tutPrev').style.display=tIdx>0?'block':'none';
-  document.getElementById('tutNext').textContent=tIdx===total-1?'✅ فهمت!':'التالي ▶';
+      function showHomePage() { hideAllPages(); document.getElementById("homePage").classList.remove("hidden"); }
+      function showRegisterPage() { hideAllPages(); document.getElementById("registerPage").classList.remove("hidden"); }
+      function showLoginPage() { hideAllPages(); document.getElementById("loginPage").classList.remove("hidden"); }
+      function showAdminLogin() { hideAllPages(); document.getElementById("adminLoginPage").classList.remove("hidden"); }
 
-  // hide card while positioning
-  card.classList.remove('visible','arr-up','arr-down','arr-none');
+      function showParticipantPage() {
+        hideAllPages();
+        document.getElementById("participantPage").classList.remove("hidden");
+        document.getElementById("participantDisplayName").textContent = currentUser.name;
+        showRecordingSection();
+        loadMyRecordings();
+        updateUnreadBadge();
+      }
 
-  // position
-  if(!s.sel){
-    posCenter();return;
-  }
-  const el=document.querySelector(s.sel);
-  if(!el){posCenter();return;}
+      async function showAdminParticipantsPage() {
+        hideAllPages();
+        document.getElementById("adminParticipantsPage").classList.remove("hidden");
+        await loadParticipants();
+        await loadAdminBroadcasts();
+      }
 
-  el.scrollIntoView({behavior:'smooth',block:'center'});
-  setTimeout(()=>posOnEl(el),200);
-}
+      async function showAdminRecordingsPage(participant) {
+        hideAllPages();
+        currentParticipant = participant;
+        document.getElementById("adminRecordingsPage").classList.remove("hidden");
+        document.getElementById("participantTitle").textContent = "تسجيلات: " + participant.name;
+        document.getElementById("contactName").textContent = participant.name;
+        document.getElementById("contactPassword").textContent = participant.password;
+        await calculateAndDisplayTotalRating();
+        await loadParticipantRecordings();
+        await loadAdminSentMessages();
+      }
 
-function posCenter(){
-  const card=document.getElementById('tutCard');
-  const ring=document.getElementById('tutRing');
-  const svg=document.getElementById('tutSvg');
-  ring.style.display='none';
-  svg.innerHTML=`<rect width="100%" height="100%" fill="rgba(10,18,26,0.82)"/>`;
-  const vw=window.innerWidth,vh=window.innerHeight;
-  const cw=Math.min(300,vw-28);
-  card.style.cssText=`width:${cw}px;left:${(vw-cw)/2}px;top:${(vh-200)/2}px;`;
-  card.classList.add('arr-none','visible');
-  // draw dark mask on SVG - no cutout
-  drawSvgMask(null);
-}
+      async function calculateAndDisplayTotalRating() {
+        const messagesSnapshot = await window.dbGet(window.dbRef(window.db, 'messages'));
+        let totalRating = 0;
+        let ratedRecordingsCount = 0;
+        const ratedRecordingsSet = new Set();
+        if (messagesSnapshot.exists()) {
+          const messages = messagesSnapshot.val();
+          Object.values(messages).forEach(msg => {
+            if (msg.participantId === currentParticipant.id && msg.messageType === 'rating' && msg.rating && !ratedRecordingsSet.has(msg.recordingId)) {
+              totalRating += msg.rating;
+              ratedRecordingsSet.add(msg.recordingId);
+              ratedRecordingsCount++;
+            }
+          });
+        }
+        const maxPossibleRating = ratedRecordingsCount * 5;
+        document.getElementById("totalRatingValue").textContent = totalRating.toFixed(1);
+        document.getElementById("totalRatingMax").textContent = maxPossibleRating;
+        const badge = document.getElementById("totalRatingBadge");
+        badge.style.display = ratedRecordingsCount === 0 ? 'none' : 'inline-flex';
+      }
 
-function posOnEl(el){
-  const card=document.getElementById('tutCard');
-  const ring=document.getElementById('tutRing');
-  const r=el.getBoundingClientRect();
-  const pad=10;
-  const vw=window.innerWidth,vh=window.innerHeight;
-  // draw SVG mask with cutout
-  drawSvgMask({x:r.left-pad,y:r.top-pad,w:r.width+pad*2,h:r.height+pad*2});
-  // ring
-  ring.style.cssText=`display:block;left:${r.left-pad}px;top:${r.top-pad}px;width:${r.width+pad*2}px;height:${r.height+pad*2}px;`;
-  // card width
-  const cw=Math.min(300,vw-28);
-  card.style.width=cw+'px';
-  // position: prefer below, fallback above
-  const spaceBelow=vh-r.bottom-pad;
-  const spaceAbove=r.top-pad;
-  let ct,cl,arrow;
-  if(spaceBelow>=170){
-    ct=r.bottom+pad+14;arrow='arr-up';
-  }else{
-    ct=r.top-pad-14-190;arrow='arr-down';
-  }
-  cl=Math.max(14,Math.min(r.left+(r.width-cw)/2,vw-cw-14));
-  ct=Math.max(64,Math.min(ct,vh-200));
-  card.style.left=cl+'px';
-  card.style.top=ct+'px';
-  card.classList.add(arrow,'visible');
-}
+      // ====== تحميل الرسائل المرسلة من الأستاذة لمشارك معين ======
+      async function loadAdminSentMessages() {
+        const div = document.getElementById("adminSentMessages");
+        const snapshot = await window.dbGet(window.dbRef(window.db, 'messages'));
+        if (!snapshot.exists()) { div.innerHTML = ''; return; }
 
-function drawSvgMask(cut){
-  const svg=document.getElementById('tutSvg');
-  if(!cut){
-    svg.innerHTML=`<rect width="100%" height="100%" fill="rgba(10,18,26,0.82)"/>`;
-    return;
-  }
-  svg.innerHTML=`
-    <defs>
-      <mask id="cm">
-        <rect width="100%" height="100%" fill="white"/>
-        <rect x="${cut.x}" y="${cut.y}" width="${cut.w}" height="${cut.h}" rx="12" fill="black"/>
-      </mask>
-    </defs>
-    <rect width="100%" height="100%" fill="rgba(10,18,26,0.82)" mask="url(#cm)"/>
-    <rect x="${cut.x}" y="${cut.y}" width="${cut.w}" height="${cut.h}" rx="12"
-          fill="none" stroke="rgba(200,152,42,0.9)" stroke-width="2.5"/>`;
-}
+        const messages = [];
+        snapshot.forEach(child => {
+          const msg = child.val();
+          if (msg.participantId === currentParticipant.id) {
+            messages.push({ id: child.key, ...msg });
+          }
+        });
 
-function tNext(){if(tIdx<tSteps.length-1){tIdx++;renderTutStep();}else tSkip();}
-function tPrev(){if(tIdx>0){tIdx--;renderTutStep();}}
-function tSkip(){
-  const bg=document.getElementById('tutBg');
-  bg.classList.remove('on');
-  // clean up
-  document.getElementById('tutSvg').innerHTML='';
-  document.getElementById('tutRing').style.display='none';
-  document.getElementById('tutCard').classList.remove('visible','arr-up','arr-down','arr-none');
-}
+        if (messages.length === 0) { div.innerHTML = ''; return; }
+        messages.sort((a, b) => new Date(b.timestamp) - new Date(a.timestamp));
 
-// ══════════ REGISTER TUTORIAL (inline) ══════════
-const RT=[
-  {ttl:'👋 أهلاً! دعينا نساعدك',desc:'التسجيل سهل جداً — خطوتان فقط! اقرئي هذا الشرح أولاً ثم ابدأي.'},
-  {ttl:'📝 الخطوة الأولى: الاسم',desc:'اكتبي اسمك كاملاً كما تعرفينه، مثلاً: "فاطمة أحمد". هذا هو الاسم الذي ستدخلين به في كل مرة.',target:'rg-name'},
-  {ttl:'🔐 الخطوة الثانية: كلمة المرور',desc:'اختاري رقماً سهلاً تحفظينه، مثل رقم هاتفك أو تاريخ ميلادك. اكتبيه في مكان آمن!',target:'rg-pass'},
-];
-let rtIdx=0;
+        let html = `<h3 style="color:var(--dark-green);margin-bottom:10px;font-size:1rem;">📨 رسائلك المرسلة لهذا المشارك</h3>`;
+        for (const msg of messages) {
+          let typeIcon = '✉️';
+          if (msg.messageType === 'voice') typeIcon = '🎤';
+          if (msg.messageType === 'rating') typeIcon = '⭐';
+          html += `
+            <div class="admin-msg-item">
+              <button class="msg-delete-btn" onclick="deleteMessage('${msg.id}')">🗑️ حذف</button>
+              <p style="color:var(--dark-green);font-weight:700;font-size:0.9rem;margin-bottom:4px;margin-left:55px;">${typeIcon} ${msg.message}</p>
+              <p style="color:#888;font-size:0.78rem;">${new Date(msg.timestamp).toLocaleString("ar-SA")}</p>
+              ${msg.messageType === 'voice' && msg.voiceData ? `
+                <div style="margin-top:8px;">
+                  ${createMediaElement(msg.voiceData, 'audio')}
+                </div>` : ''}
+              ${msg.messageType === 'rating' && msg.rating ? `
+                <div style="margin-top:6px;color:var(--dark-green);font-weight:700;">
+                  التقييم: ${msg.rating} / 5 ⭐
+                </div>` : ''}
+            </div>`;
+        }
+        div.innerHTML = html;
+      }
 
-function initRegTut(){
-  rtIdx=0;
-  if(localStorage.getItem('rt_done')) return; // سبق وشاهدت
-  document.getElementById('regTut').classList.add('on');
-  renderRT();
-}
-function renderRT(){
-  const s=RT[rtIdx];
-  document.getElementById('rtStep').textContent=`خطوة ${rtIdx+1} من ${RT.length}`;
-  document.getElementById('rtTitle').textContent=s.ttl;
-  document.getElementById('rtDesc').textContent=s.desc;
-  // dots
-  document.getElementById('rtDots').innerHTML=RT.map((_,i)=>`<div class="rt-dot${i===rtIdx?' on':''}"></div>`).join('');
-  document.getElementById('rtPrev').style.display=rtIdx>0?'block':'none';
-  document.getElementById('rtNext').textContent=rtIdx===RT.length-1?'✅ ابدأي التسجيل':'التالي ▶';
-  // highlight target field
-  document.querySelectorAll('.f-group').forEach(g=>g.style.outline='none');
-  if(s.target){const t=document.getElementById(s.target);if(t)t.style.outline='3px solid rgba(200,152,42,0.6)';}
-}
-function rtNextStep(){
-  if(rtIdx<RT.length-1){rtIdx++;renderRT();}
-  else{
-    document.getElementById('regTut').classList.remove('on');
-    document.querySelectorAll('.f-group').forEach(g=>g.style.outline='none');
-    localStorage.setItem('rt_done','1');
-    document.getElementById('regName').focus();
-  }
-}
-function rtPrevStep(){if(rtIdx>0){rtIdx--;renderRT();}}
-</script>
-</body>
+      // ====== حذف رسالة ======
+      async function deleteMessage(msgId) {
+        if (!confirm("هل تريد حذف هذه الرسالة؟")) return;
+        showLoading();
+        try {
+          await window.dbRemove(window.dbRef(window.db, 'messages/' + msgId));
+          hideLoading();
+          await loadAdminSentMessages();
+          await calculateAndDisplayTotalRating();
+          alert("تم الحذف ✅");
+        } catch(e) {
+          hideLoading();
+          alert("خطأ: " + e.message);
+        }
+      }
+
+      // ====== حذف حساب المشارك نهائياً ======
+      function confirmDeleteAccount() {
+        const dialog = document.createElement("div");
+        dialog.className = "confirm-dialog";
+        dialog.id = "deleteAccountDialog";
+        dialog.innerHTML = `
+          <div class="confirm-content">
+            <h3>⚠️ حذف الحساب نهائياً</h3>
+            <p>هل أنت متأكد من حذف حساب <strong>${currentParticipant.name}</strong>؟<br>
+            سيتم حذف جميع تسجيلاته ورسائله نهائياً<br>ولن يمكن استرجاعها.</p>
+            <div class="confirm-buttons">
+              <button class="btn btn-danger" onclick="deleteParticipantAccount()">حذف نهائي</button>
+              <button class="btn btn-secondary" onclick="closeConfirmDialog()">إلغاء</button>
+            </div>
+          </div>`;
+        document.body.appendChild(dialog);
+      }
+
+      async function deleteParticipantAccount() {
+        showLoading();
+        try {
+          // حذف التسجيلات والرسائل
+          await window.dbRemove(window.dbRef(window.db, 'participants/' + currentParticipant.id));
+          const messagesSnapshot = await window.dbGet(window.dbRef(window.db, 'messages'));
+          if (messagesSnapshot.exists()) {
+            const updates = {};
+            messagesSnapshot.forEach(child => {
+              if (child.val().participantId === currentParticipant.id) {
+                updates[`messages/${child.key}`] = null;
+              }
+            });
+            if (Object.keys(updates).length > 0) {
+              await window.dbUpdate(window.dbRef(window.db), updates);
+            }
+          }
+          hideLoading();
+          closeConfirmDialog();
+          alert(`تم حذف حساب ${currentParticipant.name} نهائياً ✅`);
+          currentParticipant = null;
+          showAdminParticipantsPage();
+        } catch(e) {
+          hideLoading();
+          alert("خطأ: " + e.message);
+        }
+      }
+
+      // ====== الإعلانات العامة ======
+      function showBroadcastModal() {
+        const modal = document.createElement("div");
+        modal.className = "message-modal";
+        modal.id = "broadcastModal";
+        modal.innerHTML = `
+          <div class="message-modal-content">
+            <h3>📢 إعلان عام لجميع المشاركين</h3>
+            <div class="message-type-btns" style="grid-template-columns:1fr 1fr;">
+              <button class="message-type-btn active" onclick="switchBroadcastType('text', this)">✍️ نصي</button>
+              <button class="message-type-btn" onclick="switchBroadcastType('voice', this)">🎤 صوتي</button>
+            </div>
+            <div id="broadcastTextDiv">
+              <textarea id="broadcastText" placeholder="اكتب الإعلان هنا..."></textarea>
+            </div>
+            <div id="broadcastVoiceDiv" class="voice-recorder hidden">
+              <button class="btn btn-primary" id="bVoiceRecordBtn" onclick="startBroadcastVoice()">🎤 ابدأ التسجيل</button>
+              <div class="timer hidden" id="bVoiceTimer">00:00</div>
+              <button class="btn btn-danger hidden" id="bVoiceStopBtn" onclick="stopBroadcastVoice()">⏹ إيقاف</button>
+              <div id="bVoicePreviewDiv" class="hidden">
+                <audio id="bVoicePreview" controls></audio>
+              </div>
+            </div>
+            <div class="modal-buttons">
+              <button class="btn btn-primary" onclick="sendBroadcast()">📢 إرسال للجميع</button>
+              <button class="btn btn-secondary" onclick="closeBroadcastModal()">إلغاء</button>
+            </div>
+          </div>`;
+        document.body.appendChild(modal);
+      }
+
+      let broadcastVoiceRecorder = null;
+      let broadcastVoiceChunks = [];
+      let broadcastVoiceTimerInterval = null;
+
+      function switchBroadcastType(type, btn) {
+        document.querySelectorAll("#broadcastModal .message-type-btn").forEach(b => b.classList.remove("active"));
+        btn.classList.add("active");
+        document.getElementById("broadcastTextDiv").classList.toggle("hidden", type !== 'text');
+        document.getElementById("broadcastVoiceDiv").classList.toggle("hidden", type !== 'voice');
+      }
+
+      async function startBroadcastVoice() {
+        try {
+          const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
+          broadcastVoiceChunks = [];
+          broadcastVoiceRecorder = new MediaRecorder(stream);
+          broadcastVoiceRecorder.ondataavailable = e => { if (e.data.size > 0) broadcastVoiceChunks.push(e.data); };
+          broadcastVoiceRecorder.onstop = () => {
+            stream.getTracks().forEach(t => t.stop());
+            const blob = new Blob(broadcastVoiceChunks, { type: "audio/webm" });
+            const url = dataUriToObjectUrl ? URL.createObjectURL(blob) : URL.createObjectURL(blob);
+            document.getElementById("bVoicePreview").src = url;
+            document.getElementById("bVoicePreviewDiv").classList.remove("hidden");
+          };
+          broadcastVoiceRecorder.start();
+          document.getElementById("bVoiceRecordBtn").classList.add("hidden");
+          document.getElementById("bVoiceStopBtn").classList.remove("hidden");
+          document.getElementById("bVoiceTimer").classList.remove("hidden");
+          const startTime = Date.now();
+          broadcastVoiceTimerInterval = setInterval(() => {
+            const elapsed = Math.floor((Date.now() - startTime) / 1000);
+            const m = Math.floor(elapsed/60).toString().padStart(2,"0");
+            const s = (elapsed%60).toString().padStart(2,"0");
+            document.getElementById("bVoiceTimer").textContent = `${m}:${s}`;
+          }, 1000);
+        } catch(err) { alert("خطأ في المايكروفون: " + err.message); }
+      }
+
+      function stopBroadcastVoice() {
+        if (broadcastVoiceRecorder && broadcastVoiceRecorder.state !== "inactive") {
+          broadcastVoiceRecorder.stop();
+          clearInterval(broadcastVoiceTimerInterval);
+          document.getElementById("bVoiceRecordBtn").classList.remove("hidden");
+          document.getElementById("bVoiceStopBtn").classList.add("hidden");
+          document.getElementById("bVoiceTimer").classList.add("hidden");
+        }
+      }
+
+      async function sendBroadcast() {
+        const activeBtn = document.querySelector("#broadcastModal .message-type-btn.active");
+        const isVoice = activeBtn && activeBtn.textContent.includes("صوتي");
+
+        showLoading();
+        try {
+          const broadcastData = {
+            timestamp: new Date().toISOString(),
+            type: isVoice ? 'voice' : 'text'
+          };
+
+          if (isVoice) {
+            if (!broadcastVoiceChunks || broadcastVoiceChunks.length === 0) {
+              hideLoading();
+              alert("الرجاء تسجيل رسالة صوتية!");
+              return;
+            }
+            const blob = new Blob(broadcastVoiceChunks, { type: "audio/webm" });
+            broadcastData.message = "رسالة صوتية من الاستاذة 📢";
+            broadcastData.voiceData = await blobToBase64(blob);
+          } else {
+            const text = document.getElementById("broadcastText").value.trim();
+            if (!text) { hideLoading(); alert("الرجاء كتابة الإعلان!"); return; }
+            broadcastData.message = text;
+          }
+
+          const broadcastRef = window.dbPush(window.dbRef(window.db, 'broadcasts'));
+          await window.dbSet(broadcastRef, broadcastData);
+          hideLoading();
+          closeBroadcastModal();
+          await loadAdminBroadcasts();
+          alert("تم إرسال الإعلان لجميع المشاركين ✅");
+        } catch(e) {
+          hideLoading();
+          alert("خطأ: " + e.message);
+        }
+      }
+
+      async function loadAdminBroadcasts() {
+        const div = document.getElementById("adminBroadcastsList");
+        const snapshot = await window.dbGet(window.dbRef(window.db, 'broadcasts'));
+        if (!snapshot.exists()) { div.innerHTML = ''; return; }
+
+        const broadcasts = [];
+        snapshot.forEach(child => broadcasts.push({ id: child.key, ...child.val() }));
+        if (broadcasts.length === 0) { div.innerHTML = ''; return; }
+
+        broadcasts.sort((a, b) => new Date(b.timestamp) - new Date(a.timestamp));
+
+        let html = `<h3 style="color:var(--dark-green);margin-bottom:8px;font-size:1rem;">📢 الإعلانات العامة الحالية</h3>`;
+        for (const b of broadcasts) {
+          html += `
+            <div class="broadcast-banner" style="position:relative;">
+              <button class="broadcast-delete-btn" onclick="deleteBroadcast('${b.id}')" title="حذف الإعلان">🗑️</button>
+              <div class="broadcast-icon">📢</div>
+              <div class="broadcast-title">إعلان عام</div>
+              <div class="broadcast-text">${b.message}</div>
+              ${b.type === 'voice' && b.voiceData ? createMediaElement(b.voiceData, 'audio') : ''}
+              <div class="broadcasts-list"><div class="broadcast-date" style="color:#888;font-size:0.78rem;margin-top:6px;">${new Date(b.timestamp).toLocaleString("ar-SA")}</div></div>
+            </div>`;
+        }
+        div.innerHTML = html;
+      }
+
+      async function deleteBroadcast(broadcastId) {
+        if (!confirm("هل تريد حذف هذا الإعلان؟")) return;
+        showLoading();
+        try {
+          await window.dbRemove(window.dbRef(window.db, 'broadcasts/' + broadcastId));
+          hideLoading();
+          await loadAdminBroadcasts();
+        } catch(e) {
+          hideLoading();
+          alert("خطأ: " + e.message);
+        }
+      }
+
+      function closeBroadcastModal() {
+        const modal = document.getElementById("broadcastModal");
+        if (modal) modal.remove();
+        broadcastVoiceChunks = [];
+        if (broadcastVoiceRecorder && broadcastVoiceRecorder.state !== "inactive") broadcastVoiceRecorder.stop();
+        clearInterval(broadcastVoiceTimerInterval);
+      }
+
+      // ====== تحميل الإعلانات للمشارك ======
+      async function loadParticipantBroadcasts() {
+        const div = document.getElementById("participantBroadcasts");
+        try {
+          const snapshot = await window.dbGet(window.dbRef(window.db, 'broadcasts'));
+          if (!snapshot.exists()) { div.innerHTML = ''; return; }
+
+          const broadcasts = [];
+          snapshot.forEach(child => broadcasts.push({ id: child.key, ...child.val() }));
+          if (broadcasts.length === 0) { div.innerHTML = ''; return; }
+
+          broadcasts.sort((a, b) => new Date(b.timestamp) - new Date(a.timestamp));
+
+          let html = '';
+          for (const b of broadcasts) {
+            html += `
+              <div class="broadcast-banner">
+                <div class="broadcast-icon">📢</div>
+                <div class="broadcast-title">إعلان من الاستاذة</div>
+                <div class="broadcast-text">${b.message}</div>
+                ${b.type === 'voice' && b.voiceData ? createMediaElement(b.voiceData, 'audio') : ''}
+                <div style="color:#888;font-size:0.78rem;margin-top:6px;">${new Date(b.timestamp).toLocaleString("ar-SA")}</div>
+              </div>`;
+          }
+          div.innerHTML = html;
+        } catch(e) {
+          div.innerHTML = '';
+        }
+      }
+
+      function backToParticipants() {
+        currentParticipant = null;
+        const contactContent = document.getElementById("contactInfoContent");
+        if (!contactContent.classList.contains("hidden")) toggleContactInfo();
+        showAdminParticipantsPage();
+      }
+
+      function hideAllPages() {
+        ["homePage","registerPage","loginPage","adminLoginPage","participantPage","adminParticipantsPage","adminRecordingsPage"].forEach(id => {
+          document.getElementById(id).classList.add("hidden");
+        });
+      }
+
+      function showRecordingSection() {
+        document.getElementById("recordingSection").classList.remove("hidden");
+        document.getElementById("messagesSection").classList.add("hidden");
+        if (recordingType === "video" && !previewStream) startVideoPreview();
+      }
+
+      async function showMessagesSection() {
+        document.getElementById("recordingSection").classList.add("hidden");
+        document.getElementById("messagesSection").classList.remove("hidden");
+        stopVideoPreview();
+        await loadParticipantBroadcasts();
+        await loadMessages();
+        await markMessagesAsRead();
+      }
+
+      async function updateUnreadBadge() {
+        const snapshot = await window.dbGet(window.dbRef(window.db, 'messages'));
+        let unreadCount = 0;
+        if (snapshot.exists()) {
+          snapshot.forEach(child => {
+            const msg = child.val();
+            if (msg.participantId === currentUser.id && !msg.read) unreadCount++;
+          });
+        }
+        const badge = document.getElementById("unreadBadge");
+        if (unreadCount > 0) { badge.textContent = unreadCount; badge.classList.remove("hidden"); }
+        else { badge.classList.add("hidden"); }
+      }
+
+      async function markMessagesAsRead() {
+        const snapshot = await window.dbGet(window.dbRef(window.db, 'messages'));
+        if (snapshot.exists()) {
+          const updates = {};
+          snapshot.forEach(child => {
+            const msg = child.val();
+            if (msg.participantId === currentUser.id && !msg.read) {
+              updates[`messages/${child.key}/read`] = true;
+            }
+          });
+          if (Object.keys(updates).length > 0) await window.dbUpdate(window.dbRef(window.db), updates);
+        }
+        updateUnreadBadge();
+      }
+
+      async function loadMessages() {
+        const snapshot = await window.dbGet(window.dbRef(window.db, 'messages'));
+        const listDiv = document.getElementById("messagesList");
+        if (!snapshot.exists()) {
+          listDiv.innerHTML = '<div class="empty-state"><div class="icon">📭</div><p>لا توجد رسائل</p></div>';
+          return;
+        }
+        const messages = [];
+        snapshot.forEach(child => {
+          const msg = child.val();
+          if (msg.participantId === currentUser.id) messages.push({ id: child.key, ...msg });
+        });
+        if (messages.length === 0) {
+          listDiv.innerHTML = '<div class="empty-state"><div class="icon">📭</div><p>لا توجد رسائل</p></div>';
+          return;
+        }
+        messages.sort((a, b) => new Date(b.timestamp) - new Date(a.timestamp));
+
+        // جلب تسجيلات المشارك لعرضها مع الرسالة
+        const participantSnapshot = await window.dbGet(window.dbRef(window.db, 'participants/' + currentUser.id));
+        let myRecordings = [];
+        if (participantSnapshot.exists()) {
+          myRecordings = participantSnapshot.val().recordings || [];
+        }
+
+        let html = '';
+        for (const msg of messages) {
+          let typeIcon = '✉️';
+          if (msg.messageType === 'voice') typeIcon = '🎤';
+          if (msg.messageType === 'rating') typeIcon = '⭐';
+
+          // ابحث عن التسجيل المرتبط
+          const linkedRec = myRecordings.find(r => r.id === msg.recordingId);
+          let linkedHtml = '';
+          if (linkedRec) {
+            linkedHtml = `
+              <div class="linked-recording">
+                <p>🔗 التسجيل الذي ردّت عليه الاستاذة:</p>
+                ${createMediaElement(linkedRec.data, linkedRec.type)}
+              </div>`;
+          }
+
+          html += `
+            <div class="message-item ${!msg.read ? "unread" : ""}">
+              <div class="message-header">
+                <span style="color:var(--primary-gold);font-weight:700;font-size:1rem;">${typeIcon} رسالة من الاستاذة</span>
+                <span style="color:#666;font-size:0.75rem;">${new Date(msg.timestamp).toLocaleDateString("ar-SA")}</span>
+              </div>
+              <div class="message-content">${msg.message}</div>
+              ${msg.messageType === 'voice' && msg.voiceData ? `
+                <div class="message-recording">
+                  <p style="color:var(--dark-green);font-weight:600;margin-bottom:6px;font-size:0.9rem;">🎤 رسالة صوتية</p>
+                  ${createMediaElement(msg.voiceData, 'audio')}
+                </div>` : ''}
+              ${msg.messageType === 'rating' && msg.rating ? `
+                <div class="message-rating">
+                  <p style="color:var(--dark-green);font-weight:700;margin-bottom:6px;font-size:1rem;">تقييمك</p>
+                  <div class="message-stars">${generateStarsDisplay(msg.rating)}</div>
+                  <p style="color:var(--dark-green);font-weight:700;font-size:1.3rem;margin-top:6px;">${msg.rating} / 5</p>
+                </div>` : ''}
+              ${linkedHtml}
+            </div>`;
+        }
+        listDiv.innerHTML = html;
+      }
+
+      function generateStarsDisplay(rating) {
+        let html = '';
+        for (let i = 1; i <= 5; i++) {
+          if (rating >= i) html += '<span class="star filled">⭐</span>';
+          else if (rating > i-1 && rating < i) html += '<span class="star half">⭐</span>';
+          else html += '<span class="star">⭐</span>';
+        }
+        return html;
+      }
+
+      document.getElementById("registerForm").onsubmit = async function(e) {
+        e.preventDefault();
+        const name = document.getElementById("participantName").value.trim();
+        const password = document.getElementById("password").value;
+        if (!name || !password) { alert("الرجاء ملء جميع الحقول!"); return; }
+        showLoading();
+        try {
+          const snapshot = await window.dbGet(window.dbRef(window.db, 'participants'));
+          if (snapshot.exists()) {
+            const exists = Object.values(snapshot.val()).some(p => p.name === name);
+            if (exists) { hideLoading(); alert("هذا الاسم مسجل مسبقاً!"); return; }
+          }
+          const participantId = Date.now().toString();
+          const participant = { name, password, registeredAt: new Date().toISOString(), recordings: [] };
+          await window.dbSet(window.dbRef(window.db, 'participants/' + participantId), participant);
+          currentUser = { id: participantId, ...participant };
+          saveSession();
+          hideLoading();
+          showParticipantPage();
+        } catch (error) {
+          hideLoading();
+          alert("حدث خطأ: " + error.message);
+        }
+      };
+
+      document.getElementById("loginForm").onsubmit = async function(e) {
+        e.preventDefault();
+        const name = document.getElementById("loginName").value;
+        const password = document.getElementById("loginPassword").value;
+        showLoading();
+        const snapshot = await window.dbGet(window.dbRef(window.db, 'participants'));
+        hideLoading();
+        if (snapshot.exists()) {
+          let foundUser = null, foundId = null;
+          Object.entries(snapshot.val()).forEach(([id, p]) => {
+            if (p.name === name && p.password === password) { foundUser = p; foundId = id; }
+          });
+          if (foundUser) {
+            currentUser = { id: foundId, ...foundUser };
+            saveSession();
+            showParticipantPage();
+            return;
+          }
+        }
+        const err = document.getElementById("loginError");
+        err.textContent = "الاسم أو كلمة المرور خاطئة!";
+        err.classList.remove("hidden");
+        setTimeout(() => err.classList.add("hidden"), 3000);
+      };
+
+      document.getElementById("adminLoginForm").onsubmit = function(e) {
+        e.preventDefault();
+        const password = document.getElementById("adminPassword").value;
+        if (password === "Qur@n2025#Admin$Ramadan") {
+          isAdmin = true;
+          saveSession();
+          showAdminParticipantsPage();
+        } else {
+          const err = document.getElementById("adminError");
+          err.textContent = "كلمة المرور خاطئة!";
+          err.classList.remove("hidden");
+          setTimeout(() => err.classList.add("hidden"), 3000);
+        }
+      };
+
+      function logout() {
+        stopVideoPreview();
+        localStorage.removeItem("currentSession");
+        currentUser = null;
+        isAdmin = false;
+        currentParticipant = null;
+        showHomePage();
+      }
+
+      function togglePassword(inputId) {
+        const input = document.getElementById(inputId);
+        const icon = event.target;
+        if (input.type === "password") { input.type = "text"; icon.textContent = "🙈"; }
+        else { input.type = "password"; icon.textContent = "👁️"; }
+      }
+
+      function selectType(type) {
+        recordingType = type;
+        document.querySelectorAll(".type-card").forEach(el => el.classList.remove("selected"));
+        event.target.closest(".type-card").classList.add("selected");
+        if (type === "video") startVideoPreview();
+        else stopVideoPreview();
+      }
+
+      async function startVideoPreview() {
+        try {
+          if (previewStream) return;
+          const stream = await navigator.mediaDevices.getUserMedia({ video: true, audio: false });
+          previewStream = stream;
+          const liveVideo = document.getElementById("liveVideo");
+          liveVideo.srcObject = stream;
+          document.getElementById("livePreview").classList.remove("hidden");
+        } catch(err) { alert("خطأ في الكاميرا: " + err.message); }
+      }
+
+      function stopVideoPreview() {
+        if (previewStream) {
+          previewStream.getTracks().forEach(track => track.stop());
+          previewStream = null;
+          const liveVideo = document.getElementById("liveVideo");
+          if (liveVideo.srcObject) liveVideo.srcObject = null;
+          document.getElementById("livePreview").classList.add("hidden");
+        }
+      }
+
+      async function startRecording() {
+        try {
+          let stream;
+          if (recordingType === "video") {
+            if (previewStream) {
+              const audioStream = await navigator.mediaDevices.getUserMedia({ audio: true });
+              stream = new MediaStream([...previewStream.getVideoTracks(), ...audioStream.getAudioTracks()]);
+            } else {
+              stream = await navigator.mediaDevices.getUserMedia({ video: true, audio: true });
+              previewStream = stream;
+              const liveVideo = document.getElementById("liveVideo");
+              liveVideo.srcObject = stream;
+              document.getElementById("livePreview").classList.remove("hidden");
+            }
+          } else {
+            stream = await navigator.mediaDevices.getUserMedia({ audio: true });
+          }
+          recordedChunks = [];
+          mediaRecorder = new MediaRecorder(stream);
+          mediaRecorder.ondataavailable = e => { if (e.data.size > 0) recordedChunks.push(e.data); };
+          mediaRecorder.onstop = () => { if (recordingType === "audio") stream.getTracks().forEach(t => t.stop()); showPreview(); };
+          mediaRecorder.start();
+          document.getElementById("recordBtn").classList.add("hidden");
+          document.getElementById("stopBtn").classList.remove("hidden");
+          document.getElementById("timer").classList.remove("hidden");
+          if (recordingType === "video") document.getElementById("livePreview").classList.add("recording");
+          recordingStartTime = Date.now();
+          timerInterval = setInterval(updateTimer, 1000);
+        } catch(err) { alert("خطأ: " + err.message); }
+      }
+
+      function updateTimer() {
+        const elapsed = Math.floor((Date.now() - recordingStartTime) / 1000);
+        const m = Math.floor(elapsed/60).toString().padStart(2,"0");
+        const s = (elapsed%60).toString().padStart(2,"0");
+        document.getElementById("timer").textContent = `${m}:${s}`;
+      }
+
+      function stopRecording() {
+        if (mediaRecorder && mediaRecorder.state !== "inactive") {
+          mediaRecorder.stop();
+          clearInterval(timerInterval);
+        }
+      }
+
+      function cancelRecording() {
+        if (mediaRecorder && mediaRecorder.state !== "inactive") mediaRecorder.stop();
+        document.getElementById("livePreview").classList.remove("recording");
+        clearInterval(timerInterval);
+        recordedChunks = [];
+        document.getElementById("recordBtn").classList.remove("hidden");
+        document.getElementById("stopBtn").classList.add("hidden");
+        document.getElementById("timer").classList.add("hidden");
+        document.getElementById("timer").textContent = "00:00";
+        document.getElementById("recordingPreview").classList.add("hidden");
+      }
+
+      function showPreview() {
+        const blob = new Blob(recordedChunks, { type: recordingType === "video" ? "video/webm" : "audio/webm" });
+        const url = URL.createObjectURL(blob);
+        const previewDiv = document.getElementById("previewMedia");
+        previewDiv.innerHTML = recordingType === "video"
+          ? `<video controls src="${url}"></video>`
+          : `<audio controls src="${url}"></audio>`;
+        document.getElementById("recordingPreview").classList.remove("hidden");
+      }
+
+      function blobToBase64(blob) {
+        return new Promise((resolve, reject) => {
+          const reader = new FileReader();
+          reader.onloadend = () => resolve(reader.result);
+          reader.onerror = reject;
+          reader.readAsDataURL(blob);
+        });
+      }
+
+      async function saveRecording() {
+        showLoading();
+        try {
+          const blob = new Blob(recordedChunks, { type: recordingType === "video" ? "video/webm" : "audio/webm" });
+          const base64Data = await blobToBase64(blob);
+          const recordingId = Date.now().toString();
+          const recording = { id: recordingId, type: recordingType, data: base64Data, timestamp: new Date().toISOString() };
+          const recordings = currentUser.recordings || [];
+          recordings.push(recording);
+          await window.dbUpdate(window.dbRef(window.db), { [`participants/${currentUser.id}/recordings`]: recordings });
+          currentUser.recordings = recordings;
+          hideLoading();
+          alert("تم الحفظ بنجاح! ✅");
+          document.getElementById("livePreview").classList.remove("recording");
+          clearInterval(timerInterval);
+          recordedChunks = [];
+          document.getElementById("recordBtn").classList.remove("hidden");
+          document.getElementById("stopBtn").classList.add("hidden");
+          document.getElementById("timer").classList.add("hidden");
+          document.getElementById("timer").textContent = "00:00";
+          document.getElementById("recordingPreview").classList.add("hidden");
+          loadMyRecordings();
+        } catch(error) {
+          hideLoading();
+          alert("خطأ في الحفظ: " + error.message);
+        }
+      }
+
+      function loadMyRecordings() {
+        const listDiv = document.getElementById("myRecordingsList");
+        if (!currentUser.recordings || currentUser.recordings.length === 0) {
+          listDiv.innerHTML = '<div class="empty-state"><div class="icon">🎙️</div><p>لا توجد تسجيلات</p></div>';
+          return;
+        }
+        listDiv.innerHTML = currentUser.recordings.map((rec, index) => `
+          <div class="recording-item">
+            <div class="three-dots" onclick="showRecordingMenu(event, '${rec.id}')">⋮</div>
+            <p style="color:var(--dark-green);font-weight:700;font-size:1rem;margin-bottom:4px;">
+              التسجيل ${index+1} - ${rec.type === "video" ? "🎥 فيديو" : "🎤 صوت"}
+            </p>
+            <p class="recording-date">${new Date(rec.timestamp).toLocaleDateString("ar-SA")}</p>
+            ${createMediaElement(rec.data, rec.type)}
+          </div>`).join("");
+      }
+
+      function showRecordingMenu(e, recordingId) {
+        e.stopPropagation();
+        const existingMenu = document.querySelector(".menu-popup");
+        if (existingMenu) existingMenu.remove();
+        const menu = document.createElement("div");
+        menu.className = "menu-popup";
+        menu.innerHTML = `<div class="menu-item danger" onclick="confirmDeleteRecording('${recordingId}')">🗑️ حذف التسجيل</div>`;
+        e.target.parentElement.appendChild(menu);
+        setTimeout(() => {
+          document.addEventListener("click", function closeMenu(e) {
+            if (!menu.contains(e.target)) { menu.remove(); document.removeEventListener("click", closeMenu); }
+          });
+        }, 10);
+      }
+
+      function confirmDeleteRecording(recordingId) {
+        const dialog = document.createElement("div");
+        dialog.className = "confirm-dialog";
+        dialog.innerHTML = `
+          <div class="confirm-content">
+            <h3>⚠️ تأكيد الحذف</h3>
+            <p>هل تريد حذف هذا التسجيل؟<br>لن يمكن استرجاعه.</p>
+            <div class="confirm-buttons">
+              <button class="btn btn-danger" onclick="deleteRecording('${recordingId}')">حذف</button>
+              <button class="btn btn-secondary" onclick="closeConfirmDialog()">إلغاء</button>
+            </div>
+          </div>`;
+        document.body.appendChild(dialog);
+      }
+
+      function closeConfirmDialog() {
+        document.querySelectorAll(".confirm-dialog").forEach(d => d.remove());
+      }
+
+      async function deleteRecording(recordingId) {
+        showLoading();
+        const recordings = currentUser.recordings.filter(r => r.id !== recordingId);
+        await window.dbUpdate(window.dbRef(window.db), { [`participants/${currentUser.id}/recordings`]: recordings });
+        const messagesSnapshot = await window.dbGet(window.dbRef(window.db, 'messages'));
+        if (messagesSnapshot.exists()) {
+          const updates = {};
+          messagesSnapshot.forEach(child => { if (child.val().recordingId === recordingId) updates[`messages/${child.key}`] = null; });
+          if (Object.keys(updates).length > 0) await window.dbUpdate(window.dbRef(window.db), updates);
+        }
+        currentUser.recordings = recordings;
+        hideLoading();
+        closeConfirmDialog();
+        loadMyRecordings();
+        updateUnreadBadge();
+        alert("تم الحذف! ✅");
+      }
+
+      async function loadParticipants() {
+        showLoading();
+        const snapshot = await window.dbGet(window.dbRef(window.db, 'participants'));
+        hideLoading();
+        const listDiv = document.getElementById("participantsList");
+        if (!snapshot.exists()) {
+          listDiv.innerHTML = '<div class="empty-state"><div class="icon">👥</div><p>لا يوجد مشاركون</p></div>';
+          updateAdminStats(0, 0, 0);
+          return;
+        }
+        let participants = [];
+        snapshot.forEach(child => participants.push({ id: child.key, ...child.val() }));
+        if (participants.length === 0) {
+          listDiv.innerHTML = '<div class="empty-state"><div class="icon">👥</div><p>لا يوجد مشاركون</p></div>';
+          updateAdminStats(0, 0, 0);
+          return;
+        }
+        let totalRecordings = 0, newRecordings = 0;
+        participants.forEach(p => {
+          const count = (p.recordings || []).length;
+          totalRecordings += count;
+          (p.recordings || []).forEach(rec => { if (!isRecordingViewed(p.id, rec.id)) newRecordings++; });
+        });
+        updateAdminStats(participants.length, totalRecordings, newRecordings);
+        listDiv.innerHTML = participants.map(p => {
+          const newCount = (p.recordings || []).filter(rec => !isRecordingViewed(p.id, rec.id)).length;
+          return `
+            <div class="participant-card" onclick='showAdminRecordingsPage(${JSON.stringify(p).replace(/'/g, "&#39;")})'>
+              ${newCount > 0 ? `<div class="new-recordings-badge">${newCount}</div>` : ''}
+              <div class="icon">👤</div>
+              <h3>${p.name}</h3>
+              <p class="count">${(p.recordings || []).length} تسجيل</p>
+            </div>`;
+        }).join("");
+      }
+
+      function updateAdminStats(participants, recordings, newRecs) {
+        document.getElementById("totalParticipants").textContent = participants;
+        document.getElementById("totalRecordings").textContent = recordings;
+        document.getElementById("newRecordings").textContent = newRecs;
+      }
+
+      async function loadParticipantRecordings() {
+        const listDiv = document.getElementById("adminRecordingsList");
+        if (!currentParticipant.recordings || currentParticipant.recordings.length === 0) {
+          listDiv.innerHTML = '<div class="empty-state"><div class="icon">🎙️</div><p>لا توجد تسجيلات</p></div>';
+          return;
+        }
+        currentParticipant.recordings.forEach(rec => markRecordingAsViewed(currentParticipant.id, rec.id));
+
+        listDiv.innerHTML = currentParticipant.recordings.map((rec, index) => `
+          <div class="recording-item">
+            <div class="three-dots" onclick="showAdminRecordingMenu(event, '${rec.id}')">⋮</div>
+            <p style="color:var(--dark-green);font-weight:700;font-size:1rem;margin-bottom:4px;">
+              التسجيل ${index+1} - ${rec.type === "video" ? "🎥 فيديو" : "🎤 صوت"}
+            </p>
+            <p class="recording-date">${new Date(rec.timestamp).toLocaleDateString("ar-SA")}</p>
+            ${createMediaElement(rec.data, rec.type)}
+          </div>`).join("");
+      }
+
+      function showAdminRecordingMenu(e, recordingId) {
+        e.stopPropagation();
+        const existingMenu = document.querySelector(".menu-popup");
+        if (existingMenu) existingMenu.remove();
+        const menu = document.createElement("div");
+        menu.className = "menu-popup";
+        menu.innerHTML = `
+          <div class="menu-item" onclick="openMessageModal('${recordingId}', 'text')">✍️ رسالة نصية</div>
+          <div class="menu-item" onclick="openMessageModal('${recordingId}', 'voice')">🎤 رسالة صوتية</div>
+          <div class="menu-item" onclick="openMessageModal('${recordingId}', 'rating')">⭐ تقييم</div>
+          <div class="menu-item danger" onclick="confirmDeleteRecordingAdmin('${recordingId}')">🗑️ حذف التسجيل</div>`;
+        e.target.parentElement.appendChild(menu);
+        setTimeout(() => {
+          document.addEventListener("click", function closeMenu(e) {
+            if (!menu.contains(e.target)) { menu.remove(); document.removeEventListener("click", closeMenu); }
+          });
+        }, 10);
+      }
+
+      function openMessageModal(recordingId, type) {
+        currentRecordingForMessage = recordingId;
+        selectedRating = 0;
+        const modal = document.createElement("div");
+        modal.className = "message-modal";
+        modal.id = "messageModal";
+        modal.innerHTML = `
+          <div class="message-modal-content">
+            <h3>إرسال رسالة للمشارك</h3>
+            <div class="message-type-btns">
+              <button class="message-type-btn ${type==='text'?'active':''}" onclick="switchMessageType('text')">✍️ نصية</button>
+              <button class="message-type-btn ${type==='voice'?'active':''}" onclick="switchMessageType('voice')">🎤 صوتية</button>
+              <button class="message-type-btn ${type==='rating'?'active':''}" onclick="switchMessageType('rating')">⭐ تقييم</button>
+            </div>
+            <div id="textMessageDiv" class="${type!=='text'?'hidden':''}">
+              <textarea id="messageText" placeholder="اكتب رسالتك هنا..."></textarea>
+            </div>
+            <div id="voiceMessageDiv" class="voice-recorder ${type!=='voice'?'hidden':''}">
+              <button class="btn btn-primary" id="voiceRecordBtn" onclick="startAdminVoice()">🎤 ابدأ التسجيل</button>
+              <div class="timer hidden" id="voiceTimer">00:00</div>
+              <button class="btn btn-danger hidden" id="voiceStopBtn" onclick="stopAdminVoice()">⏹ إيقاف</button>
+              <div id="voicePreviewDiv" class="hidden">
+                <audio id="voicePreview" controls></audio>
+              </div>
+            </div>
+            <div id="ratingMessageDiv" class="rating-container ${type!=='rating'?'hidden':''}">
+              <p style="color:var(--dark-green);font-weight:700;font-size:1.1rem;margin-bottom:10px;">اختر التقييم</p>
+              <div class="stars-display" id="starsDisplay">
+                ${[1,2,3,4,5].map(i => `<span class="star" onclick="setRating(${i})" data-value="${i}">⭐</span>`).join('')}
+              </div>
+              <div class="rating-value" id="ratingValue">0 / 5</div>
+              <div class="rating-buttons">
+                ${[0.5,1,1.5,2,2.5,3,3.5,4,4.5,5].map(val => `<button class="rating-btn" onclick="setRating(${val})">${val}</button>`).join('')}
+              </div>
+            </div>
+            <div class="modal-buttons">
+              <button class="btn btn-primary" onclick="sendMessageToParticipant()">إرسال</button>
+              <button class="btn btn-secondary" onclick="closeMessageModal()">إلغاء</button>
+            </div>
+          </div>`;
+        document.body.appendChild(modal);
+      }
+
+      function switchMessageType(type) {
+        document.querySelectorAll(".message-type-btn").forEach(btn => btn.classList.remove("active"));
+        event.target.classList.add("active");
+        document.getElementById("textMessageDiv").classList.add("hidden");
+        document.getElementById("voiceMessageDiv").classList.add("hidden");
+        document.getElementById("ratingMessageDiv").classList.add("hidden");
+        if (type === 'text') document.getElementById("textMessageDiv").classList.remove("hidden");
+        else if (type === 'voice') document.getElementById("voiceMessageDiv").classList.remove("hidden");
+        else if (type === 'rating') document.getElementById("ratingMessageDiv").classList.remove("hidden");
+      }
+
+      function setRating(value) {
+        selectedRating = value;
+        document.getElementById("ratingValue").textContent = `${value} / 5`;
+        document.querySelectorAll("#starsDisplay .star").forEach((star, index) => {
+          const starValue = index + 1;
+          star.classList.remove("filled", "half");
+          if (value >= starValue) star.classList.add("filled");
+          else if (value > starValue-1 && value < starValue) star.classList.add("half");
+        });
+        document.querySelectorAll(".rating-btn").forEach(btn => {
+          btn.classList.remove("active");
+          if (parseFloat(btn.textContent) === value) btn.classList.add("active");
+        });
+      }
+
+      async function startAdminVoice() {
+        try {
+          const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
+          adminVoiceChunks = [];
+          adminVoiceRecorder = new MediaRecorder(stream);
+          adminVoiceRecorder.ondataavailable = e => { if (e.data.size > 0) adminVoiceChunks.push(e.data); };
+          adminVoiceRecorder.onstop = () => {
+            stream.getTracks().forEach(t => t.stop());
+            const blob = new Blob(adminVoiceChunks, { type: "audio/webm" });
+            const url = URL.createObjectURL(blob);
+            document.getElementById("voicePreview").src = url;
+            document.getElementById("voicePreviewDiv").classList.remove("hidden");
+          };
+          adminVoiceRecorder.start();
+          document.getElementById("voiceRecordBtn").classList.add("hidden");
+          document.getElementById("voiceStopBtn").classList.remove("hidden");
+          document.getElementById("voiceTimer").classList.remove("hidden");
+          const startTime = Date.now();
+          adminVoiceTimer = setInterval(() => {
+            const elapsed = Math.floor((Date.now() - startTime) / 1000);
+            const m = Math.floor(elapsed/60).toString().padStart(2,"0");
+            const s = (elapsed%60).toString().padStart(2,"0");
+            document.getElementById("voiceTimer").textContent = `${m}:${s}`;
+          }, 1000);
+        } catch(err) { alert("خطأ في المايكروفون: " + err.message); }
+      }
+
+      function stopAdminVoice() {
+        if (adminVoiceRecorder && adminVoiceRecorder.state !== "inactive") {
+          adminVoiceRecorder.stop();
+          clearInterval(adminVoiceTimer);
+          document.getElementById("voiceRecordBtn").classList.remove("hidden");
+          document.getElementById("voiceStopBtn").classList.add("hidden");
+          document.getElementById("voiceTimer").classList.add("hidden");
+          document.getElementById("voiceTimer").textContent = "00:00";
+        }
+      }
+
+      async function sendMessageToParticipant() {
+        const activeBtn = document.querySelector(".message-type-btn.active");
+        let messageType = 'text';
+        if (activeBtn.textContent.includes("نصية")) messageType = 'text';
+        else if (activeBtn.textContent.includes("صوتية")) messageType = 'voice';
+        else if (activeBtn.textContent.includes("تقييم")) messageType = 'rating';
+
+        showLoading();
+        try {
+          if (messageType === 'text') {
+            const messageText = document.getElementById("messageText").value.trim();
+            if (!messageText) { hideLoading(); alert("الرجاء كتابة رسالة!"); return; }
+            await sendMessage(currentParticipant.id, currentRecordingForMessage, messageText, 'text', null, null);
+          } else if (messageType === 'voice') {
+            if (!adminVoiceChunks || adminVoiceChunks.length === 0) { hideLoading(); alert("الرجاء تسجيل رسالة صوتية!"); return; }
+            const blob = new Blob(adminVoiceChunks, { type: "audio/webm" });
+            const base64Data = await blobToBase64(blob);
+            await sendMessage(currentParticipant.id, currentRecordingForMessage, "رسالة صوتية من الاستاذة 🎤", 'voice', base64Data, null);
+          } else if (messageType === 'rating') {
+            if (selectedRating === 0) { hideLoading(); alert("الرجاء اختيار تقييم!"); return; }
+            const messagesSnapshot = await window.dbGet(window.dbRef(window.db, 'messages'));
+            if (messagesSnapshot.exists()) {
+              const updates = {};
+              messagesSnapshot.forEach(child => {
+                const msg = child.val();
+                if (msg.recordingId === currentRecordingForMessage && msg.participantId === currentParticipant.id && msg.messageType === 'rating') {
+                  updates[`messages/${child.key}`] = null;
+                }
+              });
+              if (Object.keys(updates).length > 0) await window.dbUpdate(window.dbRef(window.db), updates);
+            }
+            await sendMessage(currentParticipant.id, currentRecordingForMessage, `تقييمك: ${selectedRating} / 5 نجوم`, 'rating', null, selectedRating);
+          }
+          hideLoading();
+          closeMessageModal();
+          if (messageType === 'rating') await calculateAndDisplayTotalRating();
+          await loadAdminSentMessages();
+          alert("تم الإرسال! ✅");
+        } catch(error) {
+          hideLoading();
+          alert("خطأ في الإرسال: " + error.message);
+        }
+      }
+
+      async function sendMessage(participantId, recordingId, message, messageType, voiceData, rating) {
+        const newMessageRef = window.dbPush(window.dbRef(window.db, 'messages'));
+        const newMessage = { participantId, recordingId, message, messageType, timestamp: new Date().toISOString(), read: false };
+        if (messageType === 'voice' && voiceData) newMessage.voiceData = voiceData;
+        if (messageType === 'rating' && rating) newMessage.rating = rating;
+        await window.dbSet(newMessageRef, newMessage);
+        return newMessage;
+      }
+
+      function closeMessageModal() {
+        const modal = document.getElementById("messageModal");
+        if (modal) modal.remove();
+        adminVoiceChunks = [];
+        if (adminVoiceRecorder && adminVoiceRecorder.state !== "inactive") adminVoiceRecorder.stop();
+        clearInterval(adminVoiceTimer);
+        selectedRating = 0;
+      }
+
+      function confirmDeleteRecordingAdmin(recordingId) {
+        const dialog = document.createElement("div");
+        dialog.className = "confirm-dialog";
+        dialog.innerHTML = `
+          <div class="confirm-content">
+            <h3>⚠️ تأكيد الحذف</h3>
+            <p>هل تريد حذف هذا التسجيل؟<br>لن يمكن استرجاعه.</p>
+            <div class="confirm-buttons">
+              <button class="btn btn-danger" onclick="deleteRecordingAdmin('${recordingId}')">حذف</button>
+              <button class="btn btn-secondary" onclick="closeConfirmDialog()">إلغاء</button>
+            </div>
+          </div>`;
+        document.body.appendChild(dialog);
+      }
+
+      async function deleteRecordingAdmin(recordingId) {
+        showLoading();
+        const recordings = currentParticipant.recordings.filter(r => r.id !== recordingId);
+        await window.dbUpdate(window.dbRef(window.db), { [`participants/${currentParticipant.id}/recordings`]: recordings });
+        const messagesSnapshot = await window.dbGet(window.dbRef(window.db, 'messages'));
+        if (messagesSnapshot.exists()) {
+          const updates = {};
+          messagesSnapshot.forEach(child => { if (child.val().recordingId === recordingId) updates[`messages/${child.key}`] = null; });
+          if (Object.keys(updates).length > 0) await window.dbUpdate(window.dbRef(window.db), updates);
+        }
+        currentParticipant.recordings = recordings;
+        const snapshot = await window.dbGet(window.dbRef(window.db, 'participants/' + currentParticipant.id));
+        if (snapshot.exists()) currentParticipant = { id: currentParticipant.id, ...snapshot.val() };
+        hideLoading();
+        closeConfirmDialog();
+        await calculateAndDisplayTotalRating();
+        await loadAdminSentMessages();
+        loadParticipantRecordings();
+        alert("تم الحذف! ✅");
+      }
+
+      function toggleContactInfo() {
+        const content = document.getElementById("contactInfoContent");
+        const toggleText = document.getElementById("contactToggleText");
+        if (content.classList.contains("hidden")) { content.classList.remove("hidden"); toggleText.textContent = "إخفاء"; }
+        else { content.classList.add("hidden"); toggleText.textContent = "عرض"; }
+      }
+
+      async function copyToClipboard(type) {
+        let textToCopy = type === 'name' ? currentParticipant.name : currentParticipant.password;
+        let buttonElement = event.target.closest('.copy-btn');
+        try {
+          await navigator.clipboard.writeText(textToCopy);
+          const originalHTML = buttonElement.innerHTML;
+          buttonElement.innerHTML = '✅ تم النسخ';
+          buttonElement.classList.add('copied');
+          setTimeout(() => { buttonElement.innerHTML = originalHTML; buttonElement.classList.remove('copied'); }, 2000);
+        } catch(err) { alert('فشل النسخ: ' + err); }
+      }
+    </script>
+  </body>
 </html>
