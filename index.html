@@ -563,8 +563,9 @@ body::before{
 .tut-overlay{
   position:fixed;inset:0;z-index:8000;
   pointer-events:none;
+  display:none;
 }
-.tut-overlay.active{pointer-events:all;}
+.tut-overlay.active{pointer-events:all;display:block;}
 
 /* الطبقة المعتمة مع ثقب */
 .tut-mask{
@@ -723,17 +724,31 @@ body::before{
 <div class="page" id="pg-register">
   <div class="form-card">
     <div class="form-title">📝 تسجيل جديد</div>
+    <!-- توتوريال التسجيل -->
+    <div id="regTutBanner" style="background:linear-gradient(135deg,#e8f5f0,#d4edea);border:2px solid var(--gold);border-radius:12px;padding:12px 14px;margin-bottom:16px;display:none;">
+      <div style="display:flex;align-items:center;gap:8px;margin-bottom:6px;">
+        <span style="font-size:1.2rem;">💡</span>
+        <span style="font-weight:700;color:var(--emerald);font-size:0.9rem;" id="regTutTitle">خطوة 1</span>
+        <span style="margin-right:auto;font-size:0.75rem;color:var(--muted);" id="regTutCounter">1/3</span>
+      </div>
+      <p style="font-size:0.85rem;color:var(--emerald);line-height:1.5;" id="regTutDesc"></p>
+      <div style="display:flex;gap:6px;margin-top:8px;">
+        <button onclick="regTutPrev()" id="regTutPrevBtn" style="display:none;background:rgba(14,77,58,0.1);border:none;color:var(--emerald);padding:5px 10px;border-radius:7px;cursor:pointer;font-family:'Tajawal',sans-serif;font-weight:700;font-size:0.8rem;">◀ السابق</button>
+        <button onclick="regTutNext()" id="regTutNextBtn" style="background:linear-gradient(135deg,var(--gold),var(--gold2));border:none;color:var(--emerald);padding:5px 12px;border-radius:7px;cursor:pointer;font-family:'Tajawal',sans-serif;font-weight:700;font-size:0.8rem;margin-right:auto;">فهمت ▶</button>
+      </div>
+    </div>
     <form id="regForm">
-      <div class="form-group">
+      <div class="form-group" id="regNameGroup">
         <label class="form-label">الاسم الكامل</label>
         <input class="form-input" type="text" id="regName" placeholder="اكتبي اسمك الكامل" required/>
       </div>
-      <div class="form-group">
+      <div class="form-group" id="regPassGroup">
         <label class="form-label">كلمة المرور</label>
         <div class="input-wrap">
-          <input class="form-input" type="password" id="regPass" placeholder="اختاري كلمة مرور" style="padding-left:40px" required/>
+          <input class="form-input" type="password" id="regPass" placeholder="اختاري كلمة مرور سهلة" style="padding-left:40px" required/>
           <span class="pass-toggle" onclick="togglePass('regPass',this)">👁️</span>
         </div>
+        <p style="font-size:0.78rem;color:var(--muted);margin-top:5px;">💡 مثال: اسمك + رقم هاتفك الأخير</p>
       </div>
       <button type="submit" class="btn btn-gold">تسجيل ✨</button>
     </form>
@@ -745,6 +760,18 @@ body::before{
 <div class="page" id="pg-login">
   <div class="form-card">
     <div class="form-title">🔑 تسجيل دخول</div>
+    <!-- بيانات محفوظة -->
+    <div id="savedCredsBanner" style="display:none;background:linear-gradient(135deg,#e8f5f0,#d4edea);border:2px solid var(--emerald);border-radius:12px;padding:12px 14px;margin-bottom:14px;">
+      <div style="display:flex;align-items:center;gap:8px;margin-bottom:8px;">
+        <span>✅</span>
+        <span style="font-weight:700;color:var(--emerald);font-size:0.9rem;">بياناتك محفوظة!</span>
+      </div>
+      <p style="font-size:0.82rem;color:var(--emerald);margin-bottom:10px;" id="savedCredsName">مرحباً ...</p>
+      <button onclick="autoLogin()" class="btn btn-dark" style="margin-bottom:6px;">🚀 دخول تلقائي</button>
+      <button onclick="clearSavedCreds()" style="background:none;border:none;color:var(--muted);font-size:0.78rem;cursor:pointer;font-family:'Tajawal',sans-serif;width:100%;text-align:center;padding:4px;">
+        🔄 دخول بحساب آخر
+      </button>
+    </div>
     <div class="error-box" id="loginErr"></div>
     <form id="loginForm">
       <div class="form-group">
@@ -757,6 +784,13 @@ body::before{
           <input class="form-input" type="password" id="loginPass" placeholder="كلمة المرور" style="padding-left:40px" required/>
           <span class="pass-toggle" onclick="togglePass('loginPass',this)">👁️</span>
         </div>
+      </div>
+      <!-- حفظ تلقائي -->
+      <div style="display:flex;align-items:center;gap:8px;margin-bottom:14px;background:var(--cream2);padding:10px;border-radius:10px;">
+        <input type="checkbox" id="rememberMe" style="width:18px;height:18px;cursor:pointer;accent-color:var(--emerald);" checked/>
+        <label for="rememberMe" style="cursor:pointer;font-size:0.88rem;font-weight:600;color:var(--emerald);">
+          💾 احفظ بياناتي (لا تطلبها مرة ثانية)
+        </label>
       </div>
       <button type="submit" class="btn btn-gold">دخول 🔓</button>
     </form>
@@ -929,17 +963,37 @@ window.onload=function(){
 // ════════════ SESSION ════════════
 function loadSession(){
   const s=localStorage.getItem('sess');
-  if(!s){goPage('pg-home');return;}
-  const d=JSON.parse(s);
-  if(d.isAdmin){isAdmin=true;goAdminPage();}
-  else{
-    showLoader();
-    window.dbGet(window.dbRef(window.db,'participants/'+d.uid)).then(snap=>{
-      hideLoader();
-      if(snap.exists()){user={id:d.uid,...snap.val()};goParticipantPage();}
-      else{localStorage.removeItem('sess');goPage('pg-home');}
-    }).catch(()=>{hideLoader();localStorage.removeItem('sess');goPage('pg-home');});
+  if(s){
+    const d=JSON.parse(s);
+    if(d.isAdmin){isAdmin=true;goAdminPage();}
+    else{
+      showLoader();
+      window.dbGet(window.dbRef(window.db,'participants/'+d.uid)).then(snap=>{
+        hideLoader();
+        if(snap.exists()){user={id:d.uid,...snap.val()};goParticipantPage();}
+        else{localStorage.removeItem('sess');tryAutoLoginFromCreds();}
+      }).catch(()=>{hideLoader();localStorage.removeItem('sess');tryAutoLoginFromCreds();});
+    }
+  }else{
+    tryAutoLoginFromCreds();
   }
+}
+
+async function tryAutoLoginFromCreds(){
+  const creds=loadSavedCreds();
+  if(!creds){goPage('pg-home');return;}
+  // حاول دخول تلقائي بالبيانات المحفوظة
+  showLoader();
+  try{
+    const snap=await window.dbGet(window.dbRef(window.db,'participants'));
+    hideLoader();
+    if(snap.exists()){
+      let found=null,fid=null;
+      Object.entries(snap.val()).forEach(([id,p])=>{if(p.name===creds.name&&p.password===creds.pass){found=p;fid=id;}});
+      if(found){user={id:fid,...found};saveSession();goParticipantPage();return;}
+    }
+  }catch(e){hideLoader();}
+  goPage('pg-home');
 }
 function saveSession(){
   localStorage.setItem('sess',JSON.stringify(isAdmin?{isAdmin:true}:{isAdmin:false,uid:user.id}));
@@ -951,6 +1005,18 @@ function goPage(id){
   document.getElementById(id).classList.add('active');
   updateTopbar();
   window.scrollTo(0,0);
+  // إجراءات خاصة بكل صفحة
+  if(id==='pg-login') checkSavedCreds();
+  if(id==='pg-register'){
+    regTutIdx=0;
+    if(!localStorage.getItem('reg_tut_shown')){
+      localStorage.setItem('reg_tut_shown','1');
+      setTimeout(()=>showRegTut(),300);
+    }
+  }
+  if(id==='pg-login'){
+    checkSavedCreds();
+  }
 }
 
 function updateTopbar(){
@@ -1051,7 +1117,9 @@ document.getElementById('regForm').onsubmit=async function(e){
     const id=Date.now().toString();
     const p={name,password:pass,registeredAt:new Date().toISOString(),recordings:[]};
     await window.dbSet(window.dbRef(window.db,'participants/'+id),p);
-    user={id,...p};saveSession();hideLoader();goParticipantPage();
+    user={id,...p};
+    saveCreds(name,pass); // حفظ تلقائي بعد التسجيل
+    saveSession();hideLoader();goParticipantPage();
   }catch(err){hideLoader();alert("خطأ: "+err.message);}
 };
 
@@ -1059,13 +1127,19 @@ document.getElementById('loginForm').onsubmit=async function(e){
   e.preventDefault();
   const name=document.getElementById('loginName').value;
   const pass=document.getElementById('loginPass').value;
+  const remember=document.getElementById('rememberMe').checked;
   showLoader();
   const snap=await window.dbGet(window.dbRef(window.db,'participants'));
   hideLoader();
   if(snap.exists()){
     let found=null,fid=null;
     Object.entries(snap.val()).forEach(([id,p])=>{if(p.name===name&&p.password===pass){found=p;fid=id;}});
-    if(found){user={id:fid,...found};saveSession();goParticipantPage();return;}
+    if(found){
+      user={id:fid,...found};
+      // حفظ البيانات إذا اختار المستخدم ذلك
+      if(remember) saveCreds(name,pass);
+      saveSession();goParticipantPage();return;
+    }
   }
   showErr('loginErr','الاسم أو كلمة المرور خاطئة!');
 };
@@ -1518,6 +1592,94 @@ async function copyInfo(type,btn){
   }catch(e){alert('فشل النسخ');}
 }
 
+// ════════════ REGISTER TUTORIAL ════════════
+const REG_TUT=[
+  {
+    title:'👋 أهلاً! سنساعدك خطوة بخطوة',
+    desc:'التسجيل سهل جداً — خطوتين بس وتخلص! اقرئي الشرح أدناه قبل ما تبدئي.',
+    highlight:null
+  },
+  {
+    title:'📝 اكتبي اسمك الكامل',
+    desc:'اكتبي اسمك كما تعرفينه — مثلاً: "فاطمة أحمد". هذا الاسم ستستخدمينه للدخول كل مرة.',
+    target:'#regNameGroup'
+  },
+  {
+    title:'🔐 اختاري كلمة مرور سهلة',
+    desc:'اختاري رقم تحفظينه مثل رقم هاتفك أو تاريخ ميلادك. اكتبيه في مكان آمن.',
+    target:'#regPassGroup'
+  }
+];
+let regTutIdx=0;
+
+function showRegTut(){
+  document.getElementById('regTutBanner').style.display='block';
+  renderRegTut();
+}
+function renderRegTut(){
+  const s=REG_TUT[regTutIdx];
+  document.getElementById('regTutTitle').textContent=s.title;
+  document.getElementById('regTutDesc').textContent=s.desc;
+  document.getElementById('regTutCounter').textContent=`${regTutIdx+1}/${REG_TUT.length}`;
+  document.getElementById('regTutPrevBtn').style.display=regTutIdx>0?'block':'none';
+  const nextBtn=document.getElementById('regTutNextBtn');
+  nextBtn.textContent=regTutIdx===REG_TUT.length-1?'✅ ابدأ التسجيل!':'فهمت ▶';
+  // highlight target field
+  document.querySelectorAll('.form-group').forEach(g=>{
+    g.style.boxShadow='none';g.style.borderRadius='';g.style.transition='';
+  });
+  if(s.target){
+    const el=document.querySelector(s.target);
+    if(el){el.style.boxShadow='0 0 0 3px rgba(200,152,42,0.5)';el.style.borderRadius='12px';el.style.transition='box-shadow .3s';}
+  }
+}
+function regTutNext(){
+  if(regTutIdx<REG_TUT.length-1){regTutIdx++;renderRegTut();}
+  else{document.getElementById('regTutBanner').style.display='none';document.querySelectorAll('.form-group').forEach(g=>g.style.boxShadow='none');document.getElementById('regName').focus();}
+}
+function regTutPrev(){if(regTutIdx>0){regTutIdx--;renderRegTut();}}
+
+// ════════════ SAVED CREDENTIALS ════════════
+function saveCreds(name,pass){
+  localStorage.setItem('savedCreds',JSON.stringify({name,pass,savedAt:new Date().toISOString()}));
+}
+function loadSavedCreds(){
+  const s=localStorage.getItem('savedCreds');
+  return s?JSON.parse(s):null;
+}
+function clearSavedCreds(){
+  localStorage.removeItem('savedCreds');
+  document.getElementById('savedCredsBanner').style.display='none';
+  document.getElementById('loginName').value='';
+  document.getElementById('loginPass').value='';
+}
+async function autoLogin(){
+  const creds=loadSavedCreds();
+  if(!creds)return;
+  showLoader();
+  const snap=await window.dbGet(window.dbRef(window.db,'participants'));
+  hideLoader();
+  if(snap.exists()){
+    let found=null,fid=null;
+    Object.entries(snap.val()).forEach(([id,p])=>{if(p.name===creds.name&&p.password===creds.pass){found=p;fid=id;}});
+    if(found){user={id:fid,...found};saveSession();goParticipantPage();return;}
+  }
+  showErr('loginErr','البيانات المحفوظة لم تعد تعمل. الرجاء الدخول يدوياً.');
+  clearSavedCreds();
+}
+function checkSavedCreds(){
+  const creds=loadSavedCreds();
+  const banner=document.getElementById('savedCredsBanner');
+  if(creds){
+    banner.style.display='block';
+    document.getElementById('savedCredsName').textContent=`مرحباً ${creds.name}! 👋`;
+    document.getElementById('loginName').value=creds.name;
+    document.getElementById('loginPass').value=creds.pass;
+  }else{
+    banner.style.display='none';
+  }
+}
+
 // ════════════ VIEWED ════════════
 function loadViewed(){const s=localStorage.getItem('vr');if(s)viewedSet=new Set(JSON.parse(s));}
 function saveViewed(){localStorage.setItem('vr',JSON.stringify([...viewedSet]));}
@@ -1625,12 +1787,13 @@ function startTutorial(mode){
   if(mode==='participant')tutSteps=STEPS_PARTICIPANT;
   else if(mode==='admin')tutSteps=STEPS_ADMIN;
   else if(mode==='admin-rec'){
-    // تأكد وجود تسجيل
     const fc=document.querySelector('#adminRecsList .rec-card');
     if(!fc){showToast('لا توجد تسجيلات لعرض الشرح');return;}
     tutSteps=STEPS_ADMIN_REC;
   }
-  document.getElementById('tutOverlay').classList.add('active');
+  const ov=document.getElementById('tutOverlay');
+  ov.style.display='block';
+  ov.classList.add('active');
   renderTutStep();
 }
 
@@ -1766,10 +1929,14 @@ function tutNext(){
 }
 function tutPrev(){if(tutIdx>0){tutIdx--;renderTutStep();}}
 function tutSkip(){
-  document.getElementById('tutOverlay').classList.remove('active');
+  const ov=document.getElementById('tutOverlay');
+  ov.classList.remove('active');
+  ov.style.display='none';
   document.getElementById('tutMaskSvg').innerHTML='';
   document.getElementById('tutPulse').style.display='none';
-  document.getElementById('tutCard').style.transform='';
+  const card=document.getElementById('tutCard');
+  card.style.transform='';
+  card.style.animation='none';
 }
 </script>
 </body>
