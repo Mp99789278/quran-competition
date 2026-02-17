@@ -6,1003 +6,402 @@
     <title>مسابقة حفظ جزء عم - رمضان المبارك</title>
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link
-      href="https://fonts.googleapis.com/css2?family=Amiri:wght@400;700&family=Cairo:wght@400;600;700;900&display=swap"
-      rel="stylesheet"
-    />
+    <link href="https://fonts.googleapis.com/css2?family=Amiri:wght@400;700&family=Cairo:wght@400;600;700;900&display=swap" rel="stylesheet"/>
     <style>
-      * {
-        margin: 0;
-        padding: 0;
-        box-sizing: border-box;
-      }
+      * { margin: 0; padding: 0; box-sizing: border-box; }
 
       :root {
-        --primary-gold: #d4af37;
-        --dark-green: #0d4d3f;
-        --medium-green: #1a6b54;
-        --light-green: #e8f5e9;
+        --gold: #d4af37;
+        --gold-light: #f0c850;
+        --green-dark: #0d4d3f;
+        --green-med: #1a6b54;
+        --green-light: #e8f5e9;
         --cream: #fefdf8;
         --white: #ffffff;
-        --text-dark: #2c2c2c;
-        --border-light: #e0dfd5;
-        --accent-gold: #f0c850;
+        --text: #2c2c2c;
+        --border: #e0dfd5;
+        --red: #dc2626;
       }
 
       body {
         font-family: "Cairo", sans-serif;
         background: linear-gradient(135deg, #0d4d3f 0%, #1a6b54 100%);
         min-height: 100vh;
-        padding: 8px 8px;
-        position: relative;
+        padding: 8px;
         overflow-x: hidden;
       }
 
-      .container {
-        max-width: 900px;
-        margin: 0 auto;
-      }
+      .container { max-width: 900px; margin: 0 auto; }
 
-      .header {
-        text-align: center;
-        margin-bottom: 8px;
-      }
-
+      /* Header */
+      .header { text-align: center; margin-bottom: 10px; }
       .logo {
-        width: 50px;
-        height: 50px;
-        margin: 0 auto 8px;
-        background: linear-gradient(135deg, var(--primary-gold), var(--accent-gold));
-        border-radius: 50%;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
-        border: 2px solid rgba(255, 255, 255, 0.5);
+        width: 55px; height: 55px; margin: 0 auto 8px;
+        background: linear-gradient(135deg, var(--gold), var(--gold-light));
+        border-radius: 50%; display: flex; align-items: center; justify-content: center;
+        box-shadow: 0 4px 15px rgba(0,0,0,0.2); border: 2px solid rgba(255,255,255,0.5);
       }
-
-      .logo img {
-        width: 100%;
-        height: 100%;
-        object-fit: cover;
-        border-radius: 50%;
-      }
-
+      .logo img { width: 100%; height: 100%; object-fit: cover; border-radius: 50%; }
       h1 {
-        font-family: "Amiri", serif;
-        color: var(--white);
-        font-size: 1.4rem;
-        font-weight: 700;
-        margin-bottom: 4px;
-        text-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
+        font-family: "Amiri", serif; color: var(--white);
+        font-size: 1.4rem; font-weight: 700; margin-bottom: 4px;
+        text-shadow: 0 2px 10px rgba(0,0,0,0.3);
       }
+      .subtitle { color: var(--gold); font-size: 0.9rem; font-weight: 600; }
 
-      .subtitle {
-        color: var(--primary-gold);
-        font-size: 0.9rem;
-        font-weight: 600;
-      }
-
+      /* Card */
       .card {
-        background: var(--white);
-        border-radius: 12px;
-        padding: 15px 12px;
-        box-shadow: 0 6px 25px rgba(0, 0, 0, 0.15);
-        margin-bottom: 8px;
+        background: var(--white); border-radius: 14px; padding: 16px 14px;
+        box-shadow: 0 6px 25px rgba(0,0,0,0.15); margin-bottom: 10px;
       }
 
-      .form-group {
-        margin-bottom: 12px;
-        position: relative;
+      /* Forms */
+      .form-group { margin-bottom: 14px; position: relative; }
+      label { display: block; color: var(--green-dark); font-weight: 700; margin-bottom: 6px; font-size: 0.95rem; }
+      input[type="text"], input[type="password"] {
+        width: 100%; padding: 11px 12px; border: 2px solid var(--border);
+        border-radius: 10px; font-size: 0.95rem; font-family: "Cairo", sans-serif;
+        transition: all 0.3s; background: var(--cream);
       }
-
+      input:focus { outline: none; border-color: var(--gold); background: var(--white); box-shadow: 0 0 0 3px rgba(212,175,55,0.15); }
+      .password-input-wrapper { position: relative; }
       .password-toggle {
-        position: absolute;
-        left: 10px;
-        top: 50%;
-        transform: translateY(-50%);
-        cursor: pointer;
-        font-size: 1.1rem;
-        color: #666;
-        transition: color 0.3s ease;
-        user-select: none;
+        position: absolute; left: 10px; top: 50%; transform: translateY(-50%);
+        cursor: pointer; font-size: 1.1rem; color: #666; user-select: none;
       }
 
-      .password-toggle:hover {
-        color: var(--dark-green);
-      }
-
-      .password-input-wrapper {
-        position: relative;
-      }
-
-      label {
-        display: block;
-        color: var(--dark-green);
-        font-weight: 700;
-        margin-bottom: 6px;
-        font-size: 0.95rem;
-      }
-
-      input[type="text"],
-      input[type="password"] {
-        width: 100%;
-        padding: 10px;
-        border: 2px solid var(--border-light);
-        border-radius: 8px;
-        font-size: 0.95rem;
-        font-family: "Cairo", sans-serif;
-        transition: all 0.3s ease;
-        background: var(--cream);
-      }
-
-      input:focus {
-        outline: none;
-        border-color: var(--primary-gold);
-        background: var(--white);
-      }
-
+      /* Buttons */
       .btn {
-        width: 100%;
-        padding: 12px;
-        border: none;
-        border-radius: 10px;
-        font-size: 1rem;
-        font-weight: 700;
-        font-family: "Cairo", sans-serif;
-        cursor: pointer;
-        transition: all 0.3s ease;
-        margin-bottom: 8px;
+        width: 100%; padding: 12px; border: none; border-radius: 10px;
+        font-size: 1rem; font-weight: 700; font-family: "Cairo", sans-serif;
+        cursor: pointer; transition: all 0.3s; margin-bottom: 8px;
       }
-
       .btn-primary {
-        background: linear-gradient(135deg, var(--primary-gold), var(--accent-gold));
-        color: var(--dark-green);
-        box-shadow: 0 4px 15px rgba(212, 175, 55, 0.4);
+        background: linear-gradient(135deg, var(--gold), var(--gold-light));
+        color: var(--green-dark); box-shadow: 0 4px 15px rgba(212,175,55,0.4);
+      }
+      .btn-primary:hover { transform: translateY(-2px); box-shadow: 0 6px 20px rgba(212,175,55,0.5); }
+      .btn-secondary { background: var(--green-dark); color: var(--white); }
+      .btn-secondary:hover { background: var(--green-med); transform: translateY(-2px); }
+      .btn-danger { background: var(--red); color: white; }
+      .btn-danger:hover { background: #b91c1c; }
+      .big-btn { font-size: 1.2rem; padding: 15px; }
+
+      .hidden { display: none !important; }
+
+      /* Error */
+      .error-msg {
+        background: #fee2e2; color: #991b1b; padding: 10px 14px;
+        border-radius: 8px; margin-bottom: 10px; font-size: 0.9rem; font-weight: 600;
       }
 
-      .btn-primary:hover {
-        transform: translateY(-2px);
-        box-shadow: 0 6px 20px rgba(212, 175, 55, 0.5);
+      /* Logout / Back */
+      .logout-btn, .back-btn {
+        position: fixed; top: 10px; background: rgba(255,255,255,0.95);
+        color: var(--green-dark); padding: 8px 14px; border: 2px solid var(--gold);
+        border-radius: 15px; cursor: pointer; font-weight: 700; font-size: 0.85rem;
+        transition: all 0.3s; z-index: 1000; box-shadow: 0 3px 12px rgba(0,0,0,0.15);
       }
+      .logout-btn { left: 10px; }
+      .back-btn { right: 10px; }
+      .logout-btn:hover, .back-btn:hover { background: var(--gold); color: white; }
 
-      .btn-secondary {
-        background: var(--dark-green);
-        color: var(--white);
-        box-shadow: 0 4px 15px rgba(13, 77, 63, 0.3);
-      }
-
-      .btn-secondary:hover {
-        background: var(--medium-green);
-        transform: translateY(-2px);
-      }
-
-      .big-icon-btn {
-        font-size: 1.3rem;
-        padding: 15px;
-        margin: 6px 0;
-      }
-
-      .stats-container {
-        display: grid;
-        grid-template-columns: repeat(auto-fit, minmax(100px, 1fr));
-        gap: 8px;
-        margin-bottom: 12px;
-      }
-
+      /* Stats */
+      .stats-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; margin-bottom: 14px; }
       .stat-card {
-        background: linear-gradient(135deg, var(--primary-gold), var(--accent-gold));
-        padding: 10px;
-        border-radius: 10px;
-        text-align: center;
-        box-shadow: 0 3px 12px rgba(212, 175, 55, 0.3);
+        background: linear-gradient(135deg, var(--gold), var(--gold-light));
+        padding: 10px; border-radius: 10px; text-align: center;
+        box-shadow: 0 3px 12px rgba(212,175,55,0.3);
       }
+      .stat-card .s-icon { font-size: 1.4rem; margin-bottom: 2px; }
+      .stat-card .s-num { font-size: 1.5rem; font-weight: 900; color: var(--green-dark); }
+      .stat-card .s-label { font-size: 0.7rem; color: var(--green-dark); font-weight: 600; }
 
-      .stat-card .icon {
-        font-size: 1.4rem;
-        margin-bottom: 3px;
-      }
-
-      .stat-card .number {
-        font-size: 1.5rem;
-        font-weight: 900;
-        color: var(--dark-green);
-        margin-bottom: 2px;
-      }
-
-      .stat-card .label {
-        font-size: 0.75rem;
-        color: var(--dark-green);
-        font-weight: 600;
-      }
-
-      .record-type-grid {
-        display: grid;
-        grid-template-columns: 1fr 1fr;
-        gap: 10px;
-        margin: 12px 0;
-      }
-
+      /* Type cards */
+      .type-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin: 12px 0; }
       .type-card {
-        background: white;
-        border: 2px solid var(--border-light);
-        border-radius: 12px;
-        padding: 15px 10px;
-        text-align: center;
-        cursor: pointer;
-        transition: all 0.3s ease;
+        background: white; border: 2px solid var(--border); border-radius: 12px;
+        padding: 16px 10px; text-align: center; cursor: pointer; transition: all 0.3s;
       }
+      .type-card:hover { border-color: var(--gold); transform: translateY(-2px); }
+      .type-card.selected { border-color: var(--gold); background: linear-gradient(to bottom,#fff9e6,white); }
+      .type-card .tc-icon { font-size: 2.5rem; margin-bottom: 6px; }
+      .type-card h3 { font-size: 1rem; color: var(--green-dark); }
 
-      .type-card:hover {
-        border-color: var(--primary-gold);
-        transform: translateY(-2px);
-      }
-
-      .type-card.selected {
-        border-color: var(--primary-gold);
-        background: linear-gradient(to bottom, #fff9e6, white);
-      }
-
-      .type-card .icon {
-        font-size: 2.5rem;
-        margin-bottom: 6px;
-      }
-
-      .type-card h3 {
-        font-size: 1rem;
-        color: var(--dark-green);
-      }
-
-      .recording-controls {
-        margin-top: 12px;
-      }
-
+      /* Timer */
       .timer {
-        text-align: center;
-        font-size: 1.8rem;
-        font-weight: 700;
-        color: var(--dark-green);
-        margin: 12px 0;
-        font-family: "Courier New", monospace;
+        text-align: center; font-size: 1.8rem; font-weight: 700;
+        color: var(--green-dark); margin: 12px 0; font-family: "Courier New", monospace;
       }
 
+      /* Live preview */
       .live-preview {
-        margin: 12px 0;
-        padding: 10px;
-        background: linear-gradient(135deg, #f0f9ff, #e0f2fe);
-        border-radius: 10px;
-        border: 2px solid var(--primary-gold);
+        margin: 12px 0; padding: 10px; border-radius: 10px;
+        border: 2px solid var(--gold); background: linear-gradient(135deg, #f0f9ff, #e0f2fe);
       }
+      .live-preview.recording { background: linear-gradient(135deg,#fef3c7,#fde68a); border-color: var(--red); }
+      .live-preview video { width: 100%; border-radius: 8px; background: #000; }
 
-      .live-preview.recording {
-        background: linear-gradient(135deg, #fef3c7, #fde68a);
-        border-color: #dc2626;
+      /* Recording preview */
+      .rec-preview { margin: 12px 0; padding: 12px; background: linear-gradient(to bottom,#fff9e6,white); border-radius: 10px; border: 2px solid var(--gold); }
+      .rec-preview video, .rec-preview audio { width: 100%; border-radius: 8px; margin-top: 10px; }
+
+      /* Recording item */
+      .rec-item {
+        background: white; padding: 12px; border-radius: 10px;
+        border: 2px solid var(--border); margin-bottom: 10px; position: relative;
       }
+      .rec-item video, .rec-item audio { width: 100%; margin-top: 8px; border-radius: 8px; }
+      .rec-date { color: #666; font-size: 0.8rem; margin-bottom: 8px; }
 
-      .live-preview video {
-        width: 100%;
-        border-radius: 8px;
-        background: #000;
+      /* Messages attached to recording */
+      .rec-messages { margin-top: 10px; }
+      .rec-msg-header {
+        display: flex; align-items: center; gap: 6px; margin-bottom: 8px;
+        padding-top: 10px; border-top: 2px dashed var(--border);
       }
-
-      .recording-preview {
-        margin: 12px 0;
-        padding: 12px;
-        background: linear-gradient(to bottom, #fff9e6, white);
-        border-radius: 10px;
-        border: 2px solid var(--primary-gold);
+      .rec-msg-header span { color: var(--green-dark); font-weight: 700; font-size: 0.9rem; }
+      .attached-msg {
+        background: linear-gradient(135deg,#fff9e6,white);
+        border: 1.5px solid var(--gold); border-radius: 8px;
+        padding: 10px; margin-bottom: 6px; position: relative;
       }
-
-      .recording-preview video,
-      .recording-preview audio {
-        width: 100%;
-        border-radius: 8px;
-        margin-top: 10px;
-      }
-
-      .recording-item {
-        background: white;
-        padding: 12px;
-        border-radius: 10px;
-        border: 2px solid var(--border-light);
-        margin-bottom: 10px;
-        position: relative;
-      }
-
-      .recording-item video,
-      .recording-item audio {
-        width: 100%;
-        margin-top: 8px;
-        border-radius: 8px;
-      }
-
-      .recording-date {
-        color: #666;
-        font-size: 0.8rem;
-        margin-bottom: 8px;
-      }
-
-      .three-dots {
-        position: absolute;
-        top: 10px;
-        left: 10px;
-        font-size: 1.5rem;
-        cursor: pointer;
-        color: #666;
-        padding: 5px;
-      }
-
-      .three-dots:hover {
-        color: var(--dark-green);
-      }
-
-      .menu-popup {
-        position: absolute;
-        top: 40px;
-        left: 10px;
-        background: white;
-        border: 2px solid var(--primary-gold);
-        border-radius: 8px;
-        box-shadow: 0 3px 15px rgba(0, 0, 0, 0.2);
-        z-index: 100;
-        min-width: 150px;
-      }
-
-      .menu-item {
-        padding: 10px;
-        border-bottom: 1px solid var(--border-light);
-        cursor: pointer;
-        font-size: 0.9rem;
-        transition: all 0.3s ease;
-      }
-
-      .menu-item:last-child {
-        border-bottom: none;
-      }
-
-      .menu-item:hover {
-        background: var(--cream);
-      }
-
-      .menu-item.danger {
-        color: #dc2626;
-      }
-
-      .logout-btn {
-        position: fixed;
-        top: 10px;
-        left: 10px;
-        background: rgba(255, 255, 255, 0.95);
-        color: var(--dark-green);
-        padding: 8px 14px;
-        border: 2px solid var(--primary-gold);
-        border-radius: 15px;
-        cursor: pointer;
-        font-weight: 700;
-        font-size: 0.85rem;
-        transition: all 0.3s ease;
-        z-index: 1000;
-        box-shadow: 0 3px 12px rgba(0, 0, 0, 0.15);
-      }
-
-      .logout-btn:hover {
-        background: var(--primary-gold);
-        color: var(--white);
-      }
-
-      .back-btn {
-        position: fixed;
-        top: 10px;
-        right: 10px;
-        background: rgba(255, 255, 255, 0.95);
-        color: var(--dark-green);
-        padding: 8px 14px;
-        border: 2px solid var(--primary-gold);
-        border-radius: 15px;
-        cursor: pointer;
-        font-weight: 700;
-        font-size: 0.85rem;
-        transition: all 0.3s ease;
-        z-index: 1000;
-        box-shadow: 0 3px 12px rgba(0, 0, 0, 0.15);
-      }
-
-      .back-btn:hover {
-        background: var(--primary-gold);
-        color: var(--white);
-      }
-
-      .hidden {
-        display: none !important;
-      }
-
-      .error-message {
-        background: #fee2e2;
-        color: #991b1b;
-        padding: 10px;
-        border-radius: 8px;
-        margin-bottom: 10px;
-        font-size: 0.9rem;
-        font-weight: 600;
-      }
-
-      .participants-grid {
-        display: grid;
-        grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
-        gap: 8px;
-        margin-top: 12px;
-      }
-
-      .participant-card {
-        background: white;
-        padding: 12px 8px;
-        border-radius: 10px;
-        border: 2px solid var(--border-light);
-        cursor: pointer;
-        transition: all 0.3s ease;
-        text-align: center;
-        position: relative;
-      }
-
-      .participant-card:hover {
-        border-color: var(--primary-gold);
-        transform: translateY(-2px);
-        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.15);
-      }
-
-      .participant-card .icon {
-        font-size: 2.2rem;
-        margin-bottom: 6px;
-      }
-
-      .participant-card h3 {
-        color: var(--dark-green);
-        font-size: 0.95rem;
-        margin-bottom: 5px;
-        word-break: break-word;
-      }
-
-      .participant-card .count {
-        color: #666;
-        font-size: 0.8rem;
-      }
-
-      .new-recordings-badge {
-        position: absolute;
-        top: -6px;
-        right: -6px;
-        background: #dc2626;
-        color: white;
-        border-radius: 50%;
-        width: 24px;
-        height: 24px;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        font-size: 0.8rem;
-        font-weight: 700;
-        box-shadow: 0 2px 6px rgba(220, 38, 38, 0.4);
-        border: 2px solid white;
-      }
-
-      .empty-state {
-        text-align: center;
-        padding: 25px 15px;
-        color: #999;
-      }
-
-      .empty-state .icon {
-        font-size: 3rem;
-        margin-bottom: 10px;
-        opacity: 0.5;
-      }
-
-      .empty-state p {
-        font-size: 0.95rem;
-      }
-
-      .loading-overlay {
-        position: fixed;
-        top: 0;
-        left: 0;
-        width: 100%;
-        height: 100%;
-        background: rgba(0, 0, 0, 0.7);
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        z-index: 3000;
-      }
-
-      .spinner {
-        border: 3px solid rgba(255, 255, 255, 0.3);
-        border-top: 3px solid var(--primary-gold);
-        border-radius: 50%;
-        width: 40px;
-        height: 40px;
-        animation: spin 1s linear infinite;
-        margin: 0 auto 10px;
-      }
-
-      @keyframes spin {
-        0% { transform: rotate(0deg); }
-        100% { transform: rotate(360deg); }
-      }
-
-      .loading-spinner {
-        text-align: center;
-        color: white;
-      }
-
-      .loading-spinner p {
-        font-size: 0.95rem;
-        font-weight: 600;
-      }
-
-      .message-modal {
-        position: fixed;
-        top: 0;
-        left: 0;
-        width: 100%;
-        height: 100%;
-        background: rgba(0, 0, 0, 0.7);
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        z-index: 2000;
-        padding: 15px;
-      }
-
-      .message-modal-content {
-        background: white;
-        padding: 20px;
-        border-radius: 12px;
-        max-width: 450px;
-        width: 100%;
-        max-height: 80vh;
-        overflow-y: auto;
-      }
-
-      .message-modal h3 {
-        color: var(--dark-green);
-        font-size: 1.2rem;
-        margin-bottom: 12px;
-      }
-
-      .message-type-btns {
-        display: grid;
-        grid-template-columns: 1fr 1fr 1fr;
-        gap: 8px;
-        margin-bottom: 12px;
-      }
-
-      .message-type-btn {
-        padding: 10px;
-        border: 2px solid var(--border-light);
-        border-radius: 8px;
-        background: white;
-        cursor: pointer;
-        font-size: 0.85rem;
-        font-weight: 600;
-        transition: all 0.3s ease;
-      }
-
-      .message-type-btn.active {
-        background: linear-gradient(135deg, var(--primary-gold), var(--accent-gold));
-        border-color: var(--primary-gold);
-        color: var(--dark-green);
-      }
-
-      .message-modal textarea {
-        width: 100%;
-        padding: 12px;
-        border: 2px solid var(--border-light);
-        border-radius: 8px;
-        font-family: "Cairo", sans-serif;
-        font-size: 0.95rem;
-        min-height: 100px;
-        resize: vertical;
-      }
-
-      .voice-recorder {
-        background: linear-gradient(to bottom, #f0f9ff, white);
-        padding: 15px;
-        border-radius: 8px;
-        border: 2px solid var(--primary-gold);
-      }
-
-      .voice-recorder audio {
-        width: 100%;
-        margin-top: 10px;
-      }
-
-      .modal-buttons {
-        display: grid;
-        grid-template-columns: 1fr 1fr;
-        gap: 8px;
-        margin-top: 12px;
-      }
-
-      .unread-badge {
-        position: absolute;
-        top: -6px;
-        left: -6px;
-        background: #dc2626;
-        color: white;
-        border-radius: 50%;
-        width: 24px;
-        height: 24px;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        font-size: 0.8rem;
-        font-weight: 700;
-        box-shadow: 0 2px 6px rgba(220, 38, 38, 0.4);
-      }
-
-      .message-item {
-        background: linear-gradient(135deg, #fff9e6, white);
-        padding: 12px;
-        border-radius: 10px;
-        margin-bottom: 10px;
-        border-right: 3px solid var(--primary-gold);
-      }
-
-      .message-item.unread {
-        background: linear-gradient(135deg, #fff4d6, #fff9e6);
-        box-shadow: 0 3px 15px rgba(212, 175, 55, 0.2);
-      }
-
-      .message-header {
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        margin-bottom: 8px;
-        padding-bottom: 8px;
-        border-bottom: 2px solid var(--border-light);
-      }
-
-      .message-content {
-        font-size: 0.95rem;
-        line-height: 1.6;
-        margin-bottom: 8px;
-      }
-
-      .message-recording {
-        background: white;
-        padding: 10px;
-        border-radius: 8px;
-        margin-top: 8px;
-        border: 1px solid var(--border-light);
-      }
-
-      .message-recording audio {
-        width: 100%;
+      .attached-msg.unread { box-shadow: 0 2px 10px rgba(212,175,55,0.3); }
+      .attached-msg .msg-type { font-size: 0.8rem; color: #888; margin-bottom: 4px; }
+      .attached-msg .msg-body { font-size: 0.95rem; color: var(--text); line-height: 1.5; }
+      .attached-msg audio { width: 100%; margin-top: 6px; border-radius: 6px; }
+      .rating-display {
+        background: linear-gradient(135deg,#fef3c7,#fde68a);
+        padding: 10px; border-radius: 8px; text-align: center; border: 1.5px solid #fbbf24;
         margin-top: 6px;
       }
-
-      /* Star Rating Styles */
-      .rating-container {
-        background: linear-gradient(to bottom, #fff9e6, white);
-        padding: 15px;
-        border-radius: 8px;
-        border: 2px solid var(--primary-gold);
-        text-align: center;
+      .rating-stars { font-size: 1.5rem; }
+      .rating-num { font-size: 1.3rem; font-weight: 900; color: var(--green-dark); }
+      .new-badge-msg {
+        position: absolute; top: -6px; right: -6px; background: var(--red);
+        color: white; border-radius: 50%; width: 18px; height: 18px;
+        display: flex; align-items: center; justify-content: center;
+        font-size: 0.7rem; font-weight: 700; border: 2px solid white;
       }
 
-      .stars-display {
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        gap: 8px;
-        margin: 15px 0;
-        font-size: 2.5rem;
+      /* Three dots */
+      .three-dots {
+        position: absolute; top: 10px; left: 10px;
+        font-size: 1.5rem; cursor: pointer; color: #666; padding: 5px;
+        line-height: 1; border-radius: 6px; transition: all 0.2s;
+      }
+      .three-dots:hover { color: var(--green-dark); background: #f5f5f5; }
+
+      /* Menu popup */
+      .menu-popup {
+        position: absolute; top: 40px; left: 10px;
+        background: white; border: 2px solid var(--gold); border-radius: 10px;
+        box-shadow: 0 3px 15px rgba(0,0,0,0.2); z-index: 100; min-width: 160px; overflow: hidden;
+      }
+      .menu-item {
+        padding: 11px 14px; border-bottom: 1px solid var(--border);
+        cursor: pointer; font-size: 0.9rem; transition: all 0.2s;
+      }
+      .menu-item:last-child { border-bottom: none; }
+      .menu-item:hover { background: var(--cream); }
+      .menu-item.danger { color: var(--red); }
+
+      /* Participants grid */
+      .participants-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(120px, 1fr)); gap: 8px; margin-top: 12px; }
+      .participant-card {
+        background: white; padding: 12px 8px; border-radius: 12px;
+        border: 2px solid var(--border); cursor: pointer; transition: all 0.3s;
+        text-align: center; position: relative;
+      }
+      .participant-card:hover { border-color: var(--gold); transform: translateY(-2px); box-shadow: 0 4px 15px rgba(0,0,0,0.15); }
+      .participant-card .p-icon { font-size: 2.2rem; margin-bottom: 6px; }
+      .participant-card h3 { color: var(--green-dark); font-size: 0.95rem; margin-bottom: 4px; word-break: break-word; }
+      .participant-card .p-count { color: #666; font-size: 0.8rem; }
+      .new-rec-badge {
+        position: absolute; top: -6px; right: -6px; background: var(--red);
+        color: white; border-radius: 50%; width: 24px; height: 24px;
+        display: flex; align-items: center; justify-content: center;
+        font-size: 0.8rem; font-weight: 700; box-shadow: 0 2px 6px rgba(220,38,38,0.4); border: 2px solid white;
       }
 
-      .star {
-        cursor: pointer;
-        transition: all 0.2s ease;
-        color: #d1d5db;
-      }
+      /* Empty state */
+      .empty-state { text-align: center; padding: 25px 15px; color: #999; }
+      .empty-state .e-icon { font-size: 3rem; margin-bottom: 10px; opacity: 0.5; }
 
-      .star:hover {
-        transform: scale(1.2);
+      /* Loading */
+      .loading-overlay {
+        position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+        background: rgba(0,0,0,0.7); display: flex; align-items: center;
+        justify-content: center; z-index: 3000;
       }
+      .spinner { border: 3px solid rgba(255,255,255,0.3); border-top: 3px solid var(--gold); border-radius: 50%; width: 40px; height: 40px; animation: spin 1s linear infinite; margin: 0 auto 10px; }
+      @keyframes spin { to { transform: rotate(360deg); } }
+      .loading-text { text-align: center; color: white; font-size: 0.95rem; font-weight: 600; }
 
-      .star.filled {
-        color: #fbbf24;
+      /* Confirm dialog */
+      .confirm-overlay {
+        position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+        background: rgba(0,0,0,0.7); display: flex; align-items: center;
+        justify-content: center; z-index: 2500; padding: 15px;
       }
+      .confirm-box { background: white; padding: 22px; border-radius: 14px; max-width: 380px; width: 100%; text-align: center; }
+      .confirm-box h3 { color: var(--green-dark); font-size: 1.2rem; margin-bottom: 10px; }
+      .confirm-box p { font-size: 0.95rem; margin-bottom: 18px; line-height: 1.5; color: #555; }
+      .confirm-btns { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
 
-      .star.half {
-        background: linear-gradient(90deg, #fbbf24 50%, #d1d5db 50%);
-        -webkit-background-clip: text;
-        -webkit-text-fill-color: transparent;
-        background-clip: text;
+      /* Message modal */
+      .msg-modal-overlay {
+        position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+        background: rgba(0,0,0,0.7); display: flex; align-items: center;
+        justify-content: center; z-index: 2000; padding: 15px;
       }
-
-      .rating-value {
-        font-size: 1.5rem;
-        font-weight: 700;
-        color: var(--dark-green);
-        margin-top: 10px;
+      .msg-modal-box {
+        background: white; padding: 20px; border-radius: 14px;
+        max-width: 450px; width: 100%; max-height: 80vh; overflow-y: auto;
       }
-
-      .rating-buttons {
-        display: grid;
-        grid-template-columns: repeat(5, 1fr);
-        gap: 6px;
-        margin-top: 12px;
+      .msg-modal-box h3 { color: var(--green-dark); font-size: 1.1rem; margin-bottom: 14px; }
+      .msg-type-btns { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 8px; margin-bottom: 14px; }
+      .msg-type-btn {
+        padding: 10px; border: 2px solid var(--border); border-radius: 8px;
+        background: white; cursor: pointer; font-size: 0.85rem; font-weight: 600;
+        transition: all 0.3s; font-family: "Cairo", sans-serif;
       }
-
-      .rating-btn {
-        padding: 8px;
-        border: 2px solid var(--border-light);
-        border-radius: 6px;
-        background: white;
-        cursor: pointer;
-        font-size: 0.85rem;
-        font-weight: 600;
-        transition: all 0.3s ease;
+      .msg-type-btn.active { background: linear-gradient(135deg, var(--gold), var(--gold-light)); border-color: var(--gold); color: var(--green-dark); }
+      .msg-modal-box textarea {
+        width: 100%; padding: 12px; border: 2px solid var(--border); border-radius: 8px;
+        font-family: "Cairo", sans-serif; font-size: 0.95rem; min-height: 100px; resize: vertical;
       }
+      .voice-box { background: linear-gradient(to bottom,#f0f9ff,white); padding: 15px; border-radius: 8px; border: 2px solid var(--gold); }
+      .voice-box audio { width: 100%; margin-top: 10px; }
+      .modal-btns { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-top: 12px; }
 
-      .rating-btn:hover {
-        background: var(--cream);
-        border-color: var(--primary-gold);
+      /* Rating */
+      .rating-box { background: linear-gradient(to bottom,#fff9e6,white); padding: 15px; border-radius: 8px; border: 2px solid var(--gold); text-align: center; }
+      .stars-row { display: flex; justify-content: center; gap: 8px; margin: 12px 0; font-size: 2.5rem; }
+      .star { cursor: pointer; transition: all 0.2s; color: #d1d5db; }
+      .star:hover { transform: scale(1.2); }
+      .star.filled { color: #fbbf24; }
+      .rating-val { font-size: 1.5rem; font-weight: 700; color: var(--green-dark); margin-top: 8px; }
+      .rating-btns-grid { display: grid; grid-template-columns: repeat(5,1fr); gap: 6px; margin-top: 12px; }
+      .r-btn {
+        padding: 8px; border: 2px solid var(--border); border-radius: 6px;
+        background: white; cursor: pointer; font-size: 0.85rem; font-weight: 600;
+        transition: all 0.3s; font-family: "Cairo", sans-serif;
       }
+      .r-btn:hover { border-color: var(--gold); }
+      .r-btn.active { background: linear-gradient(135deg, var(--gold), var(--gold-light)); border-color: var(--gold); color: var(--green-dark); }
 
-      .rating-btn.active {
-        background: linear-gradient(135deg, var(--primary-gold), var(--accent-gold));
-        border-color: var(--primary-gold);
-        color: var(--dark-green);
+      /* Contact info */
+      .contact-section {
+        background: linear-gradient(135deg,#dbeafe,#e0f2fe);
+        padding: 12px; border-radius: 10px; margin-bottom: 14px; border: 2px solid var(--gold);
       }
-
-      .message-rating {
-        background: linear-gradient(135deg, #fef3c7, #fde68a);
-        padding: 12px;
-        border-radius: 8px;
-        margin-top: 8px;
-        text-align: center;
-        border: 2px solid #fbbf24;
-      }
-
-      .message-stars {
-        font-size: 2rem;
-        margin: 8px 0;
-      }
-
-      .message-stars .star {
-        cursor: default;
-      }
-
-      /* Contact Info Styles */
-      .contact-info-section {
-        background: linear-gradient(135deg, #dbeafe, #e0f2fe);
-        padding: 12px;
-        border-radius: 10px;
-        margin-bottom: 15px;
-        border: 2px solid var(--primary-gold);
-      }
-
-      .contact-info-header {
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        margin-bottom: 10px;
-      }
-
-      .contact-info-title {
-        color: var(--dark-green);
-        font-weight: 700;
-        font-size: 1rem;
-      }
-
+      .contact-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px; }
+      .contact-title { color: var(--green-dark); font-weight: 700; font-size: 1rem; }
       .toggle-contact-btn {
-        background: var(--primary-gold);
-        color: var(--dark-green);
-        padding: 6px 12px;
-        border: none;
-        border-radius: 6px;
-        cursor: pointer;
-        font-size: 0.85rem;
-        font-weight: 600;
-        transition: all 0.3s ease;
+        background: var(--gold); color: var(--green-dark); padding: 6px 12px;
+        border: none; border-radius: 6px; cursor: pointer; font-size: 0.85rem; font-weight: 600;
+        transition: all 0.3s; font-family: "Cairo", sans-serif;
       }
-
-      .toggle-contact-btn:hover {
-        background: var(--accent-gold);
-        transform: scale(1.05);
-      }
-
-      .contact-info-content {
-        margin-top: 10px;
-      }
-
       .info-row {
-        background: white;
-        padding: 10px;
-        border-radius: 8px;
-        margin-bottom: 8px;
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        border: 1px solid var(--border-light);
+        background: white; padding: 10px; border-radius: 8px; margin-bottom: 8px;
+        display: flex; justify-content: space-between; align-items: center;
+        border: 1px solid var(--border);
       }
-
-      .info-label {
-        color: #666;
-        font-size: 0.85rem;
-        margin-bottom: 4px;
-      }
-
-      .info-value {
-        color: var(--dark-green);
-        font-size: 1rem;
-        font-weight: 700;
-        word-break: break-all;
-      }
-
+      .info-label { color: #666; font-size: 0.8rem; margin-bottom: 3px; }
+      .info-val { color: var(--green-dark); font-size: 1rem; font-weight: 700; word-break: break-all; }
       .copy-btn {
-        background: var(--dark-green);
-        color: white;
-        border: none;
-        padding: 8px 12px;
-        border-radius: 6px;
-        cursor: pointer;
-        font-size: 0.85rem;
-        font-weight: 600;
-        transition: all 0.3s ease;
-        display: flex;
-        align-items: center;
-        gap: 4px;
+        background: var(--green-dark); color: white; border: none; padding: 8px 12px;
+        border-radius: 6px; cursor: pointer; font-size: 0.8rem; font-weight: 600;
+        transition: all 0.3s; font-family: "Cairo", sans-serif;
+      }
+      .copy-btn:hover { background: var(--green-med); }
+      .copy-btn.copied { background: #10b981; }
+
+      /* Total rating badge */
+      .total-rating {
+        background: linear-gradient(135deg,#fef3c7,#fde68a);
+        padding: 8px 14px; border-radius: 8px; display: inline-flex;
+        align-items: center; gap: 6px; margin-bottom: 12px;
+        border: 2px solid #fbbf24; box-shadow: 0 2px 8px rgba(251,191,36,0.3);
+      }
+      .total-rating span { color: var(--green-dark); font-weight: 700; }
+
+      /* Unread badge */
+      .unread-badge {
+        position: absolute; top: -6px; left: -6px; background: var(--red);
+        color: white; border-radius: 50%; width: 22px; height: 22px;
+        display: flex; align-items: center; justify-content: center;
+        font-size: 0.75rem; font-weight: 700; box-shadow: 0 2px 6px rgba(220,38,38,0.4);
       }
 
-      .copy-btn:hover {
-        background: var(--medium-green);
-        transform: scale(1.05);
+      /* Nav tabs */
+      .nav-tabs { display: flex; gap: 8px; margin: 12px 0; }
+      .nav-tab {
+        flex: 1; padding: 10px; border: 2px solid var(--border); border-radius: 10px;
+        background: white; cursor: pointer; font-weight: 700; font-size: 0.95rem;
+        color: var(--green-dark); transition: all 0.3s; text-align: center; position: relative;
+        font-family: "Cairo", sans-serif;
       }
+      .nav-tab.active { background: linear-gradient(135deg, var(--green-dark), var(--green-med)); color: white; border-color: var(--green-dark); }
+      .nav-tab:hover:not(.active) { border-color: var(--gold); }
 
-      .copy-btn.copied {
-        background: #10b981;
+      /* ========== TUTORIAL STYLES ========== */
+      .tutorial-overlay {
+        position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+        background: rgba(0,0,0,0.85); z-index: 9999;
+        display: flex; align-items: center; justify-content: center; padding: 15px;
       }
-
-      /* Total Rating Badge */
-      .total-rating-badge {
-        background: linear-gradient(135deg, #fef3c7, #fde68a);
-        padding: 8px 12px;
-        border-radius: 8px;
-        display: inline-flex;
-        align-items: center;
-        gap: 6px;
-        margin-bottom: 12px;
-        border: 2px solid #fbbf24;
-        box-shadow: 0 2px 8px rgba(251, 191, 36, 0.3);
+      .tutorial-box {
+        background: white; border-radius: 16px; max-width: 400px; width: 100%;
+        overflow: hidden; box-shadow: 0 20px 60px rgba(0,0,0,0.5);
+        animation: slideUp 0.4s ease;
       }
-
-      .total-rating-badge .icon {
-        font-size: 1.2rem;
+      @keyframes slideUp { from { transform: translateY(30px); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
+      .tutorial-header {
+        background: linear-gradient(135deg, var(--green-dark), var(--green-med));
+        padding: 16px 20px; display: flex; justify-content: space-between; align-items: center;
       }
-
-      .total-rating-badge .text {
-        color: var(--dark-green);
-        font-weight: 700;
-        font-size: 0.9rem;
+      .tutorial-header h3 { color: white; font-size: 1.1rem; font-weight: 700; }
+      .tutorial-step-indicator { color: rgba(255,255,255,0.8); font-size: 0.85rem; }
+      .tutorial-content { padding: 20px; }
+      .tutorial-icon { font-size: 3rem; text-align: center; margin-bottom: 12px; }
+      .tutorial-title { font-size: 1.2rem; font-weight: 700; color: var(--green-dark); text-align: center; margin-bottom: 8px; }
+      .tutorial-desc { font-size: 0.95rem; color: #555; text-align: center; line-height: 1.7; margin-bottom: 16px; }
+      .tutorial-highlight {
+        background: linear-gradient(135deg,#fff9e6,#fef3c7);
+        border: 2px solid var(--gold); border-radius: 10px; padding: 12px; margin-bottom: 16px;
       }
-
-      .total-rating-badge .value {
-        color: var(--dark-green);
-        font-weight: 900;
-        font-size: 1.1rem;
+      .tutorial-highlight p { font-size: 0.9rem; color: var(--green-dark); font-weight: 600; text-align: center; }
+      .tutorial-footer { padding: 0 20px 20px; }
+      .tutorial-dots { display: flex; justify-content: center; gap: 8px; margin-bottom: 14px; }
+      .t-dot { width: 8px; height: 8px; border-radius: 50%; background: #e0e0e0; transition: all 0.3s; }
+      .t-dot.active { background: var(--green-dark); width: 20px; border-radius: 4px; }
+      .tutorial-btns { display: grid; grid-template-columns: auto 1fr; gap: 8px; }
+      .tutorial-btns.first { grid-template-columns: 1fr; }
+      .t-skip-btn {
+        padding: 10px 16px; border: 2px solid var(--border); border-radius: 8px;
+        background: white; cursor: pointer; font-weight: 600; font-size: 0.9rem;
+        color: #666; transition: all 0.3s; font-family: "Cairo", sans-serif;
       }
-
-      @media (max-width: 768px) {
-        h1 {
-          font-size: 1.3rem;
-        }
-
-        .subtitle {
-          font-size: 0.85rem;
-        }
-
-        .card {
-          padding: 12px 10px;
-        }
-
-        .btn {
-          font-size: 0.95rem;
-          padding: 10px;
-        }
-
-        .type-card .icon {
-          font-size: 2.2rem;
-        }
-
-        .timer {
-          font-size: 1.5rem;
-        }
-
-        .record-type-grid {
-          grid-template-columns: 1fr;
-        }
-
-        .participants-grid {
-          grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));
-        }
-
-        .logout-btn, .back-btn {
-          padding: 6px 12px;
-          font-size: 0.75rem;
-        }
-
-        .stat-card .number {
-          font-size: 1.3rem;
-        }
-
-        .stat-card .icon {
-          font-size: 1.2rem;
-        }
-
-        .big-icon-btn {
-          font-size: 1.1rem;
-          padding: 12px;
-        }
-
-        .message-type-btns {
-          grid-template-columns: 1fr;
-        }
-
-        .stars-display {
-          font-size: 2rem;
-        }
+      .t-next-btn {
+        padding: 10px 20px; border: none; border-radius: 8px;
+        background: linear-gradient(135deg, var(--gold), var(--gold-light));
+        color: var(--green-dark); cursor: pointer; font-weight: 700; font-size: 0.95rem;
+        transition: all 0.3s; font-family: "Cairo", sans-serif;
       }
+      .t-next-btn:hover { transform: translateY(-1px); box-shadow: 0 4px 12px rgba(212,175,55,0.4); }
 
-      .confirm-dialog {
-        position: fixed;
-        top: 0;
-        left: 0;
-        width: 100%;
-        height: 100%;
-        background: rgba(0, 0, 0, 0.7);
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        z-index: 2500;
-        padding: 15px;
-      }
+      /* Section title */
+      .section-title { color: var(--green-dark); font-size: 1.1rem; font-weight: 700; margin-bottom: 12px; text-align: center; }
 
-      .confirm-content {
-        background: white;
-        padding: 20px;
-        border-radius: 12px;
-        max-width: 400px;
-        width: 100%;
-        text-align: center;
-      }
-
-      .confirm-content h3 {
-        color: var(--dark-green);
-        font-size: 1.2rem;
-        margin-bottom: 12px;
-      }
-
-      .confirm-content p {
-        font-size: 0.95rem;
-        margin-bottom: 20px;
-        line-height: 1.5;
-      }
-
-      .confirm-buttons {
-        display: grid;
-        grid-template-columns: 1fr 1fr;
-        gap: 8px;
-      }
-
-      .btn-danger {
-        background: #dc2626;
-        color: white;
-      }
-
-      .btn-danger:hover {
-        background: #b91c1c;
+      @media (max-width: 480px) {
+        h1 { font-size: 1.2rem; }
+        .card { padding: 12px 10px; }
+        .type-grid { grid-template-columns: 1fr; }
+        .stats-grid { grid-template-columns: repeat(3,1fr); }
+        .stat-card .s-num { font-size: 1.2rem; }
+        .timer { font-size: 1.5rem; }
       }
     </style>
   </head>
@@ -1010,136 +409,102 @@
     <div class="container">
       <div class="header">
         <div class="logo">
-          <img src="360_F_498618110_CmzpqAOH4xxhBFqXKEx5cOwYhvHpnmDH.jpg" alt="شعار رمضان" />
+          <img src="360_F_498618110_CmzpqAOH4xxhBFqXKEx5cOwYhvHpnmDH.jpg" alt="شعار" onerror="this.style.display='none';this.parentElement.innerHTML='🌙'"/>
         </div>
         <h1>مسابقة حفظ جزء عم</h1>
-        <p class="subtitle">رمضان المبارك 1446</p>
+        <p class="subtitle">رمضان المبارك 1446 ✨</p>
       </div>
 
       <!-- الصفحة الرئيسية -->
-      <div id="homePage" class="card">
-        <button class="btn btn-primary big-icon-btn" onclick="showRegisterPage()">
-          🆕 تسجيل جديد
-        </button>
-
-        <button class="btn btn-secondary big-icon-btn" onclick="showLoginPage()">
-          🔑 دخول
-        </button>
-
-        <button class="btn btn-secondary" onclick="showAdminLogin()" style="margin-top: 20px;">
-          👩‍🏫 دخول الاستاذة
-        </button>
+      <div id="homePage" class="card hidden">
+        <button class="btn btn-primary big-btn" onclick="showPage('registerPage')">🆕 تسجيل جديد</button>
+        <button class="btn btn-secondary big-btn" onclick="showPage('loginPage')">🔑 دخول</button>
+        <button class="btn btn-secondary" onclick="showPage('adminLoginPage')" style="margin-top: 10px;">👩‍🏫 دخول الاستاذة</button>
       </div>
 
       <!-- صفحة التسجيل -->
       <div id="registerPage" class="card hidden">
-        <h2 style="color: var(--dark-green); margin-bottom: 15px; text-align: center; font-size: 1.3rem;">
-          تسجيل جديد
-        </h2>
-
+        <h2 class="section-title">📝 تسجيل جديد</h2>
         <form id="registerForm">
           <div class="form-group">
-            <label>الاسم</label>
-            <input type="text" id="participantName" required placeholder="اكتب اسمك" />
+            <label>الاسم الكامل</label>
+            <input type="text" id="regName" required placeholder="اكتب اسمك الكامل"/>
           </div>
-
           <div class="form-group">
             <label>كلمة المرور</label>
             <div class="password-input-wrapper">
-              <input type="password" id="password" required placeholder="اختر كلمة مرور" />
-              <span class="password-toggle" onclick="togglePassword('password')">👁️</span>
+              <input type="password" id="regPass" required placeholder="اختر كلمة مرور سهلة"/>
+              <span class="password-toggle" onclick="togglePass('regPass',this)">👁️</span>
             </div>
           </div>
-
           <button type="submit" class="btn btn-primary">تسجيل 🌟</button>
         </form>
-
-        <button class="btn btn-secondary" onclick="showHomePage()">رجوع</button>
+        <button class="btn btn-secondary" onclick="showPage('homePage')">◀ رجوع</button>
       </div>
 
       <!-- صفحة تسجيل الدخول -->
       <div id="loginPage" class="card hidden">
-        <h2 style="color: var(--dark-green); margin-bottom: 15px; text-align: center; font-size: 1.3rem;">
-          تسجيل دخول
-        </h2>
-
-        <div id="loginError" class="error-message hidden"></div>
-
+        <h2 class="section-title">🔑 تسجيل دخول</h2>
+        <div id="loginError" class="error-msg hidden"></div>
         <form id="loginForm">
           <div class="form-group">
             <label>الاسم</label>
-            <input type="text" id="loginName" required placeholder="اسمك" />
+            <input type="text" id="loginName" required placeholder="اسمك"/>
           </div>
-
           <div class="form-group">
             <label>كلمة المرور</label>
             <div class="password-input-wrapper">
-              <input type="password" id="loginPassword" required placeholder="كلمة المرور" />
-              <span class="password-toggle" onclick="togglePassword('loginPassword')">👁️</span>
+              <input type="password" id="loginPass" required placeholder="كلمة المرور"/>
+              <span class="password-toggle" onclick="togglePass('loginPass',this)">👁️</span>
             </div>
           </div>
-
           <button type="submit" class="btn btn-primary">دخول 🔓</button>
         </form>
-
-        <button class="btn btn-secondary" onclick="showHomePage()">رجوع</button>
+        <button class="btn btn-secondary" onclick="showPage('homePage')">◀ رجوع</button>
       </div>
 
       <!-- صفحة دخول الاستاذة -->
       <div id="adminLoginPage" class="card hidden">
-        <h2 style="color: var(--dark-green); margin-bottom: 15px; text-align: center; font-size: 1.3rem;">
-          دخول الاستاذة
-        </h2>
-
-        <div id="adminError" class="error-message hidden"></div>
-
+        <h2 class="section-title">👩‍🏫 دخول الاستاذة</h2>
+        <div id="adminError" class="error-msg hidden"></div>
         <form id="adminLoginForm">
           <div class="form-group">
             <label>كلمة المرور</label>
             <div class="password-input-wrapper">
-              <input type="password" id="adminPassword" required placeholder="كلمة المرور" />
-              <span class="password-toggle" onclick="togglePassword('adminPassword')">👁️</span>
+              <input type="password" id="adminPass" required placeholder="كلمة المرور"/>
+              <span class="password-toggle" onclick="togglePass('adminPass',this)">👁️</span>
             </div>
           </div>
-
           <button type="submit" class="btn btn-primary">دخول</button>
         </form>
-
-        <button class="btn btn-secondary" onclick="showHomePage()">رجوع</button>
+        <button class="btn btn-secondary" onclick="showPage('homePage')">◀ رجوع</button>
       </div>
 
       <!-- صفحة المشارك -->
       <div id="participantPage" class="card hidden">
         <button class="logout-btn" onclick="logout()">خروج</button>
-
-        <h2 style="color: var(--dark-green); margin-bottom: 8px; text-align: center; font-size: 1.3rem;">
-          أهلاً <span id="participantName"></span> 🌙
+        <h2 style="color:var(--green-dark);text-align:center;font-size:1.2rem;margin-bottom:10px;padding-top:8px;">
+          أهلاً <span id="welcomeName"></span> 🌙
         </h2>
-
-        <div style="display: flex; gap: 8px; margin: 12px 0;">
-          <button class="btn btn-secondary" onclick="showRecordingSection()" style="flex: 1;">
-            🎤 تسجيل
-          </button>
-          <button class="btn btn-secondary" onclick="showMessagesSection()" style="flex: 1; position: relative;">
-            📬 رسائل
+        <div class="nav-tabs">
+          <div class="nav-tab active" id="tabRecord" onclick="switchTab('record')">🎤 تسجيل</div>
+          <div class="nav-tab" id="tabMessages" onclick="switchTab('messages')" style="position:relative;">
+            📬 رسائلي
             <span id="unreadBadge" class="unread-badge hidden"></span>
-          </button>
+          </div>
         </div>
 
         <!-- قسم التسجيل -->
-        <div id="recordingSection">
-          <h3 style="color: var(--dark-green); margin-bottom: 10px; font-size: 1.1rem; text-align: center;">
-            اختر نوع التسجيل
-          </h3>
-
-          <div class="record-type-grid">
-            <div class="type-card selected" onclick="selectType('audio')">
-              <div class="icon">🎤</div>
-              <h3>صوت</h3>
+        <div id="recordSection">
+          <h3 class="section-title">اختر نوع التسجيل</h3>
+          <div class="type-grid">
+            <div class="type-card selected" id="audioCard" onclick="selectType('audio',this)">
+              <div class="tc-icon">🎤</div>
+              <h3>تسجيل صوتي</h3>
             </div>
-            <div class="type-card" onclick="selectType('video')">
-              <div class="icon">🎥</div>
-              <h3>فيديو</h3>
+            <div class="type-card" id="videoCard" onclick="selectType('video',this)">
+              <div class="tc-icon">🎥</div>
+              <h3>تسجيل فيديو</h3>
             </div>
           </div>
 
@@ -1147,127 +512,103 @@
             <video id="liveVideo" autoplay muted playsinline></video>
           </div>
 
-          <div class="recording-controls">
-            <button class="btn btn-primary big-icon-btn" id="recordBtn" onclick="startRecording()">
-              🔴 ابدأ التسجيل
-            </button>
+          <button class="btn btn-primary big-btn" id="recordBtn" onclick="startRecording()">🔴 ابدأ التسجيل</button>
+          <div class="timer hidden" id="timer">00:00</div>
+          <button class="btn btn-danger big-btn hidden" id="stopBtn" onclick="stopRecording()">⏹ إيقاف التسجيل</button>
 
-            <div class="timer hidden" id="timer">00:00</div>
-
-            <button class="btn btn-danger big-icon-btn hidden" id="stopBtn" onclick="stopRecording()">
-              ⏹ إيقاف
-            </button>
-          </div>
-
-          <div id="recordingPreview" class="recording-preview hidden">
-            <h3 style="color: var(--dark-green); margin-bottom: 10px; font-size: 1.1rem;">
-              المعاينة
-            </h3>
+          <div id="recPreviewSection" class="rec-preview hidden">
+            <h3 class="section-title">معاينة التسجيل</h3>
             <div id="previewMedia"></div>
-            <button class="btn btn-primary" onclick="saveRecording()" style="margin-top: 12px;">
-              💾 حفظ
-            </button>
-            <button class="btn btn-secondary" onclick="cancelRecording()">
-              🔄 إلغاء
-            </button>
+            <button class="btn btn-primary" onclick="saveRecording()" style="margin-top:12px;">💾 حفظ التسجيل</button>
+            <button class="btn btn-secondary" onclick="cancelRecording()">🔄 تسجيل من جديد</button>
           </div>
 
-          <div style="margin-top: 20px;">
-            <h3 style="color: var(--dark-green); margin-bottom: 10px; font-size: 1.1rem;">
-              تسجيلاتي
-            </h3>
-            <div id="myRecordingsList"></div>
+          <div style="margin-top:20px;">
+            <h3 class="section-title">تسجيلاتي 🎙️</h3>
+            <div id="myRecList"></div>
           </div>
         </div>
 
         <!-- قسم الرسائل -->
         <div id="messagesSection" class="hidden">
-          <h3 style="color: var(--dark-green); margin-bottom: 12px; font-size: 1.1rem;">
-            📬 رسائل الاستاذة
-          </h3>
-          <div id="messagesList"></div>
+          <h3 class="section-title">📬 رسائل الاستاذة</h3>
+          <div id="participantMsgList"></div>
         </div>
       </div>
 
-      <!-- صفحة المشاركين (للاستاذة) -->
+      <!-- صفحة المشاركين للاستاذة -->
       <div id="adminParticipantsPage" class="card hidden">
         <button class="logout-btn" onclick="logout()">خروج</button>
-
-        <h2 style="color: var(--dark-green); margin-bottom: 12px; text-align: center; font-size: 1.3rem;">
-          إدارة المشاركين
-        </h2>
-
-        <div class="stats-container">
-          <div class="stat-card">
-            <div class="icon">👥</div>
-            <div class="number" id="totalParticipants">0</div>
-            <div class="label">مشارك</div>
-          </div>
-          <div class="stat-card">
-            <div class="icon">🎙️</div>
-            <div class="number" id="totalRecordings">0</div>
-            <div class="label">تسجيل كلي</div>
-          </div>
-          <div class="stat-card">
-            <div class="icon">🆕</div>
-            <div class="number" id="newRecordings">0</div>
-            <div class="label">جديد</div>
-          </div>
+        <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:12px;padding-top:6px;">
+          <h2 style="color:var(--green-dark);font-size:1.2rem;">إدارة المشاركين</h2>
+          <button onclick="showTutorial('admin')" style="background:linear-gradient(135deg,var(--gold),var(--gold-light));border:none;padding:7px 12px;border-radius:8px;cursor:pointer;font-weight:700;font-size:0.85rem;color:var(--green-dark);font-family:'Cairo',sans-serif;">❓ مساعدة</button>
         </div>
-
+        <div class="stats-grid">
+          <div class="stat-card"><div class="s-icon">👥</div><div class="s-num" id="totalPart">0</div><div class="s-label">مشارك</div></div>
+          <div class="stat-card"><div class="s-icon">🎙️</div><div class="s-num" id="totalRec">0</div><div class="s-label">تسجيل كلي</div></div>
+          <div class="stat-card"><div class="s-icon">🆕</div><div class="s-num" id="newRec">0</div><div class="s-label">جديد</div></div>
+        </div>
         <div id="participantsList" class="participants-grid"></div>
       </div>
 
-      <!-- صفحة تسجيلات مشارك معين (للاستاذة) -->
+      <!-- صفحة تسجيلات مشارك معين -->
       <div id="adminRecordingsPage" class="card hidden">
         <button class="logout-btn" onclick="logout()">خروج</button>
-        <button class="back-btn" onclick="backToParticipants()">← رجوع</button>
-
-        <h2 id="participantTitle" style="color: var(--dark-green); margin-bottom: 12px; text-align: center; font-size: 1.3rem;">
-        </h2>
-
-        <!-- مجموع التقييمات الكلي -->
-        <div style="text-align: center; margin-bottom: 12px;">
-          <div class="total-rating-badge" id="totalRatingBadge">
-            <span class="icon">⭐</span>
-            <span class="text">المجموع الكلي:</span>
-            <span class="value" id="totalRatingValue">0</span>
-            <span class="text">/</span>
-            <span class="value" id="totalRatingMax">0</span>
+        <button class="back-btn" onclick="backToParticipants()">رجوع ◀</button>
+        <h2 id="partTitle" style="color:var(--green-dark);text-align:center;font-size:1.2rem;margin-bottom:10px;padding-top:6px;"></h2>
+        
+        <div style="text-align:center;margin-bottom:10px;">
+          <div class="total-rating" id="totalRatingDiv" style="display:none;">
+            <span>⭐</span><span>المجموع الكلي:</span>
+            <span id="totalRatVal" style="font-size:1.1rem;font-weight:900;">0</span>
+            <span>/</span>
+            <span id="totalRatMax">0</span>
           </div>
         </div>
 
-        <!-- قسم معلومات التواصل -->
-        <div class="contact-info-section">
-          <div class="contact-info-header">
-            <span class="contact-info-title">📞 معلومات التواصل</span>
-            <button class="toggle-contact-btn" onclick="toggleContactInfo()">
-              <span id="contactToggleText">عرض</span>
-            </button>
+        <div class="contact-section">
+          <div class="contact-header">
+            <span class="contact-title">📞 معلومات التواصل</span>
+            <button class="toggle-contact-btn" onclick="toggleContact()"><span id="contactToggle">عرض</span></button>
           </div>
-          <div id="contactInfoContent" class="contact-info-content hidden">
+          <div id="contactContent" class="hidden">
             <div class="info-row">
-              <div>
-                <div class="info-label">الاسم</div>
-                <div class="info-value" id="contactName">-</div>
-              </div>
-              <button class="copy-btn" onclick="copyToClipboard('name')">
-                📋 نسخ
-              </button>
+              <div><div class="info-label">الاسم</div><div class="info-val" id="cName">-</div></div>
+              <button class="copy-btn" onclick="copyInfo('name',this)">📋 نسخ</button>
             </div>
             <div class="info-row">
-              <div>
-                <div class="info-label">كلمة المرور</div>
-                <div class="info-value" id="contactPassword">-</div>
-              </div>
-              <button class="copy-btn" onclick="copyToClipboard('password')">
-                📋 نسخ
-              </button>
+              <div><div class="info-label">كلمة المرور</div><div class="info-val" id="cPass">-</div></div>
+              <button class="copy-btn" onclick="copyInfo('pass',this)">📋 نسخ</button>
             </div>
           </div>
         </div>
 
-        <div id="adminRecordingsList"></div>
+        <div id="adminRecList"></div>
+      </div>
+    </div>
+
+    <!-- ======== TUTORIAL ======== -->
+    <div id="tutorialOverlay" class="tutorial-overlay hidden">
+      <div class="tutorial-box">
+        <div class="tutorial-header">
+          <h3 id="tutTitle">🌟 مرحباً بك!</h3>
+          <span id="tutStepIndicator" class="tutorial-step-indicator">1 / 4</span>
+        </div>
+        <div class="tutorial-content">
+          <div class="tutorial-icon" id="tutIcon">🎉</div>
+          <div class="tutorial-title" id="tutStepTitle"></div>
+          <div class="tutorial-desc" id="tutDesc"></div>
+          <div class="tutorial-highlight hidden" id="tutHighlight">
+            <p id="tutHighlightText"></p>
+          </div>
+        </div>
+        <div class="tutorial-footer">
+          <div class="tutorial-dots" id="tutDots"></div>
+          <div class="tutorial-btns" id="tutBtns">
+            <button class="t-skip-btn" onclick="skipTutorial()">تخطي</button>
+            <button class="t-next-btn" id="tutNextBtn" onclick="nextTutorialStep()">التالي ◀</button>
+          </div>
+        </div>
       </div>
     </div>
 
@@ -1275,8 +616,7 @@
     <script type="module">
       import { initializeApp } from "https://www.gstatic.com/firebasejs/12.9.0/firebase-app.js";
       import { getDatabase, ref, set, get, push, update, remove } from 'https://www.gstatic.com/firebasejs/12.9.0/firebase-database.js';
-
-      const firebaseConfig = {
+      const cfg = {
         apiKey: "AIzaSyAfhQL5spF3KcrbngSzunLaHT_7cieHkUk",
         authDomain: "opject-e223d.firebaseapp.com",
         databaseURL: "https://opject-e223d-default-rtdb.firebaseio.com/",
@@ -1285,1323 +625,948 @@
         messagingSenderId: "607939195786",
         appId: "1:607939195786:web:c264710387d50fc2990e73"
       };
-
-      const app = initializeApp(firebaseConfig);
-      const database = getDatabase(app);
-
-      window.db = database;
-      window.dbRef = ref;
-      window.dbSet = set;
-      window.dbGet = get;
-      window.dbPush = push;
-      window.dbUpdate = update;
-      window.dbRemove = remove;
-      window.firebaseInitialized = true;
+      const app = initializeApp(cfg);
+      const db = getDatabase(app);
+      window.db = db; window.dbRef = ref; window.dbSet = set; window.dbGet = get;
+      window.dbPush = push; window.dbUpdate = update; window.dbRemove = remove;
+      window.firebaseReady = true;
     </script>
 
     <script>
-      let currentUser = null;
-      let isAdmin = false;
-      let mediaRecorder = null;
-      let recordedChunks = [];
-      let recordingType = "audio";
-      let timerInterval = null;
-      let recordingStartTime = null;
-      let previewStream = null;
-      let currentParticipant = null;
-      let adminVoiceRecorder = null;
-      let adminVoiceChunks = [];
-      let adminVoiceTimer = null;
-      let currentRecordingForMessage = null;
-      let viewedRecordings = new Set();
-      let selectedRating = 0;
+    // ========== STATE ==========
+    let currentUser = null;
+    let isAdmin = false;
+    let mediaRecorder = null;
+    let recChunks = [];
+    let recType = "audio";
+    let timerInterval = null;
+    let recStartTime = null;
+    let previewStream = null;
+    let currentParticipant = null;
+    let adminVoiceRec = null;
+    let adminVoiceChunks = [];
+    let adminVoiceTimer = null;
+    let currentRecordingForMsg = null;
+    let viewedRecs = new Set();
+    let selectedRating = 0;
+    let tutorialStep = 0;
+    let tutorialMode = '';
+    let tutorialSteps = [];
 
-      window.onload = function () {
-        const checkFirebase = setInterval(() => {
-          if (window.firebaseInitialized && window.db) {
-            clearInterval(checkFirebase);
-            loadCurrentSession();
-            loadViewedRecordings();
-          }
-        }, 100);
-
-        setTimeout(() => {
-          clearInterval(checkFirebase);
-          if (!window.db) {
-            alert("خطأ في الاتصال. الرجاء تحديث الصفحة.");
-            showHomePage();
-          }
-        }, 5000);
-      };
-
-      function loadViewedRecordings() {
-        const stored = localStorage.getItem('viewedRecordings');
-        if (stored) {
-          viewedRecordings = new Set(JSON.parse(stored));
+    // ========== INIT ==========
+    window.onload = function() {
+      const check = setInterval(() => {
+        if (window.firebaseReady && window.db) {
+          clearInterval(check);
+          loadViewedRecs();
+          loadSession();
         }
-      }
+      }, 100);
+      setTimeout(() => { clearInterval(check); if (!window.db) { alert("خطأ في الاتصال. الرجاء تحديث الصفحة."); showPage('homePage'); } }, 5000);
+    };
 
-      function saveViewedRecordings() {
-        localStorage.setItem('viewedRecordings', JSON.stringify([...viewedRecordings]));
-      }
-
-      function markRecordingAsViewed(participantId, recordingId) {
-        viewedRecordings.add(`${participantId}_${recordingId}`);
-        saveViewedRecordings();
-      }
-
-      function isRecordingViewed(participantId, recordingId) {
-        return viewedRecordings.has(`${participantId}_${recordingId}`);
-      }
-
-      function showLoading() {
-        const existing = document.getElementById('loadingOverlay');
-        if (existing) return;
-        
-        const overlay = document.createElement('div');
-        overlay.className = 'loading-overlay';
-        overlay.id = 'loadingOverlay';
-        overlay.innerHTML = `
-          <div class="loading-spinner">
-            <div class="spinner"></div>
-            <p>جاري التحميل...</p>
-          </div>
-        `;
-        document.body.appendChild(overlay);
-      }
-
-      function hideLoading() {
-        const overlay = document.getElementById('loadingOverlay');
-        if (overlay) overlay.remove();
-      }
-
-      async function loadCurrentSession() {
-        const session = localStorage.getItem("currentSession");
-        if (session) {
-          const data = JSON.parse(session);
-          if (data.isAdmin) {
-            isAdmin = true;
-            showAdminParticipantsPage();
-          } else {
-            showLoading();
-            try {
-              const snapshot = await window.dbGet(window.dbRef(window.db, 'participants/' + data.userId));
-              hideLoading();
-              if (snapshot.exists()) {
-                currentUser = { id: data.userId, ...snapshot.val() };
-                showParticipantPage();
-              } else {
-                localStorage.removeItem("currentSession");
-                showHomePage();
-              }
-            } catch (error) {
-              hideLoading();
-              localStorage.removeItem("currentSession");
-              alert("خطأ في تحميل البيانات");
-              showHomePage();
-            }
-          }
-        } else {
-          showHomePage();
-        }
-      }
-
-      function saveSession() {
-        const session = isAdmin
-          ? { isAdmin: true }
-          : { isAdmin: false, userId: currentUser.id };
-        localStorage.setItem("currentSession", JSON.stringify(session));
-      }
-
-      function showHomePage() {
-        hideAllPages();
-        document.getElementById("homePage").classList.remove("hidden");
-      }
-
-      function showRegisterPage() {
-        hideAllPages();
-        document.getElementById("registerPage").classList.remove("hidden");
-      }
-
-      function showLoginPage() {
-        hideAllPages();
-        document.getElementById("loginPage").classList.remove("hidden");
-      }
-
-      function showAdminLogin() {
-        hideAllPages();
-        document.getElementById("adminLoginPage").classList.remove("hidden");
-      }
-
-      function showParticipantPage() {
-        hideAllPages();
-        document.getElementById("participantPage").classList.remove("hidden");
-        document.getElementById("participantName").textContent = currentUser.name;
-        showRecordingSection();
-        loadMyRecordings();
-        updateUnreadBadge();
-      }
-
-      async function showAdminParticipantsPage() {
-        hideAllPages();
-        document.getElementById("adminParticipantsPage").classList.remove("hidden");
-        await loadParticipants();
-      }
-
-      async function showAdminRecordingsPage(participant) {
-        hideAllPages();
-        currentParticipant = participant;
-        document.getElementById("adminRecordingsPage").classList.remove("hidden");
-        document.getElementById("participantTitle").textContent = "تسجيلات: " + participant.name;
-        
-        // تحديث معلومات التواصل
-        document.getElementById("contactName").textContent = participant.name;
-        document.getElementById("contactPassword").textContent = participant.password;
-        
-        // حساب وعرض مجموع التقييمات
-        await calculateAndDisplayTotalRating();
-        
-        await loadParticipantRecordings();
-      }
-
-      async function calculateAndDisplayTotalRating() {
-        const messagesSnapshot = await window.dbGet(window.dbRef(window.db, 'messages'));
-        
-        let totalRating = 0;
-        let ratedRecordingsCount = 0;
-        const ratedRecordingsSet = new Set();
-
-        if (messagesSnapshot.exists()) {
-          const messages = messagesSnapshot.val();
-          Object.values(messages).forEach(msg => {
-            if (msg.participantId === currentParticipant.id && 
-                msg.messageType === 'rating' && 
-                msg.rating && 
-                !ratedRecordingsSet.has(msg.recordingId)) {
-              totalRating += msg.rating;
-              ratedRecordingsSet.add(msg.recordingId);
-              ratedRecordingsCount++;
-            }
-          });
-        }
-
-        const maxPossibleRating = ratedRecordingsCount * 5;
-        
-        document.getElementById("totalRatingValue").textContent = totalRating.toFixed(1);
-        document.getElementById("totalRatingMax").textContent = maxPossibleRating;
-
-        const badge = document.getElementById("totalRatingBadge");
-        if (ratedRecordingsCount === 0) {
-          badge.style.display = 'none';
-        } else {
-          badge.style.display = 'inline-flex';
-        }
-      }
-
-      function backToParticipants() {
-        currentParticipant = null;
-        // إخفاء معلومات التواصل عند الرجوع
-        const contactContent = document.getElementById("contactInfoContent");
-        if (!contactContent.classList.contains("hidden")) {
-          toggleContactInfo();
-        }
+    // ========== SESSION ==========
+    function loadSession() {
+      const s = localStorage.getItem("session");
+      if (!s) { showPage('homePage'); return; }
+      const d = JSON.parse(s);
+      if (d.isAdmin) {
+        isAdmin = true;
         showAdminParticipantsPage();
-      }
-
-      function hideAllPages() {
-        document.getElementById("homePage").classList.add("hidden");
-        document.getElementById("registerPage").classList.add("hidden");
-        document.getElementById("loginPage").classList.add("hidden");
-        document.getElementById("adminLoginPage").classList.add("hidden");
-        document.getElementById("participantPage").classList.add("hidden");
-        document.getElementById("adminParticipantsPage").classList.add("hidden");
-        document.getElementById("adminRecordingsPage").classList.add("hidden");
-      }
-
-      function showRecordingSection() {
-        document.getElementById("recordingSection").classList.remove("hidden");
-        document.getElementById("messagesSection").classList.add("hidden");
-        if (recordingType === "video" && !previewStream) {
-          startVideoPreview();
-        }
-      }
-
-      async function showMessagesSection() {
-        document.getElementById("recordingSection").classList.add("hidden");
-        document.getElementById("messagesSection").classList.remove("hidden");
-        stopVideoPreview();
-        await loadMessages();
-        await markMessagesAsRead();
-      }
-
-      async function updateUnreadBadge() {
-        const snapshot = await window.dbGet(window.dbRef(window.db, 'messages'));
-        let unreadCount = 0;
-        
-        if (snapshot.exists()) {
-          const messages = snapshot.val();
-          Object.values(messages).forEach(msg => {
-            if (msg.participantId === currentUser.id && !msg.read) {
-              unreadCount++;
-            }
-          });
-        }
-
-        const badge = document.getElementById("unreadBadge");
-        if (unreadCount > 0) {
-          badge.textContent = unreadCount;
-          badge.classList.remove("hidden");
-        } else {
-          badge.classList.add("hidden");
-        }
-      }
-
-      async function markMessagesAsRead() {
-        const snapshot = await window.dbGet(window.dbRef(window.db, 'messages'));
-        
-        if (snapshot.exists()) {
-          const messages = snapshot.val();
-          const updates = {};
-          
-          Object.entries(messages).forEach(([msgId, msg]) => {
-            if (msg.participantId === currentUser.id && !msg.read) {
-              updates[`messages/${msgId}/read`] = true;
-            }
-          });
-
-          if (Object.keys(updates).length > 0) {
-            await window.dbUpdate(window.dbRef(window.db), updates);
-          }
-        }
-        
-        updateUnreadBadge();
-      }
-
-      async function loadMessages() {
-        const snapshot = await window.dbGet(window.dbRef(window.db, 'messages'));
-        const listDiv = document.getElementById("messagesList");
-
-        if (!snapshot.exists()) {
-          listDiv.innerHTML = '<div class="empty-state"><div class="icon">📭</div><p>لا توجد رسائل</p></div>';
-          return;
-        }
-
-        const messages = [];
-        snapshot.forEach(child => {
-          const msg = child.val();
-          if (msg.participantId === currentUser.id) {
-            messages.push({ id: child.key, ...msg });
-          }
-        });
-
-        if (messages.length === 0) {
-          listDiv.innerHTML = '<div class="empty-state"><div class="icon">📭</div><p>لا توجد رسائل</p></div>';
-          return;
-        }
-
-        messages.sort((a, b) => new Date(b.timestamp) - new Date(a.timestamp));
-
-        let html = '';
-        for (const msg of messages) {
-          let typeIcon = '✉️';
-          if (msg.messageType === 'voice') typeIcon = '🎤';
-          if (msg.messageType === 'rating') typeIcon = '⭐';
-
-          html += `
-            <div class="message-item ${!msg.read ? "unread" : ""}">
-              <div class="message-header">
-                <span style="color: var(--primary-gold); font-weight: 700; font-size: 1rem;">
-                  ${typeIcon} رسالة من الاستاذة
-                </span>
-                <span style="color: #666; font-size: 0.75rem;">
-                  ${new Date(msg.timestamp).toLocaleDateString("ar-SA")}
-                </span>
-              </div>
-              <div class="message-content">${msg.message}</div>
-              ${msg.messageType === 'voice' && msg.voiceData ? `
-                <div class="message-recording">
-                  <p style="color: var(--dark-green); font-weight: 600; margin-bottom: 6px; font-size: 0.9rem;">
-                    🎤 رسالة صوتية
-                  </p>
-                  <audio controls src="${msg.voiceData}"></audio>
-                </div>
-              ` : ''}
-              ${msg.messageType === 'rating' && msg.rating ? `
-                <div class="message-rating">
-                  <p style="color: var(--dark-green); font-weight: 700; margin-bottom: 6px; font-size: 1rem;">
-                    تقييمك
-                  </p>
-                  <div class="message-stars">
-                    ${generateStarsDisplay(msg.rating)}
-                  </div>
-                  <p style="color: var(--dark-green); font-weight: 700; font-size: 1.3rem; margin-top: 6px;">
-                    ${msg.rating} / 5
-                  </p>
-                </div>
-              ` : ''}
-            </div>
-          `;
-        }
-
-        listDiv.innerHTML = html;
-      }
-
-      function generateStarsDisplay(rating) {
-        let starsHtml = '';
-        for (let i = 1; i <= 5; i++) {
-          if (rating >= i) {
-            // نجمة كاملة
-            starsHtml += '<span class="star filled">⭐</span>';
-          } else if (rating > i - 1 && rating < i) {
-            // نصف نجمة (فقط إذا كان التقييم بين الرقمين)
-            starsHtml += '<span class="star half">⭐</span>';
-          } else {
-            // نجمة فارغة
-            starsHtml += '<span class="star">⭐</span>';
-          }
-        }
-        return starsHtml;
-      }
-
-      document.getElementById("registerForm").onsubmit = async function (e) {
-        e.preventDefault();
-        const name = document.getElementById("participantName").value.trim();
-        const password = document.getElementById("password").value;
-        
-        if (!name || !password) {
-          alert("الرجاء ملء جميع الحقول!");
-          return;
-        }
-
+      } else {
         showLoading();
-        
-        try {
-          const snapshot = await window.dbGet(window.dbRef(window.db, 'participants'));
-          
-          if (snapshot.exists()) {
-            const participants = snapshot.val();
-            const exists = Object.values(participants).some(p => p.name === name);
-            
-            if (exists) {
-              hideLoading();
-              alert("هذا الاسم مسجل مسبقاً!");
-              return;
-            }
-          }
-
-          const participantId = Date.now().toString();
-          const participant = {
-            name: name,
-            password: password,
-            registeredAt: new Date().toISOString(),
-            recordings: []
-          };
-
-          await window.dbSet(window.dbRef(window.db, 'participants/' + participantId), participant);
-
-          currentUser = { id: participantId, ...participant };
-          saveSession();
+        window.dbGet(window.dbRef(window.db, 'participants/'+d.userId)).then(snap => {
           hideLoading();
-          showParticipantPage();
-        } catch (error) {
-          hideLoading();
-          alert("حدث خطأ: " + error.message);
-        }
-      };
-
-      document.getElementById("loginForm").onsubmit = async function (e) {
-        e.preventDefault();
-        const name = document.getElementById("loginName").value;
-        const password = document.getElementById("loginPassword").value;
-
-        showLoading();
-        const snapshot = await window.dbGet(window.dbRef(window.db, 'participants'));
-        hideLoading();
-
-        if (snapshot.exists()) {
-          const participants = snapshot.val();
-          let foundUser = null;
-          let foundId = null;
-
-          Object.entries(participants).forEach(([id, p]) => {
-            if (p.name === name && p.password === password) {
-              foundUser = p;
-              foundId = id;
-            }
-          });
-
-          if (foundUser) {
-            currentUser = { id: foundId, ...foundUser };
-            saveSession();
+          if (snap.exists()) {
+            currentUser = { id: d.userId, ...snap.val() };
             showParticipantPage();
-            return;
-          }
-        }
-
-        document.getElementById("loginError").textContent = "الاسم أو كلمة المرور خاطئة!";
-        document.getElementById("loginError").classList.remove("hidden");
-        setTimeout(() => {
-          document.getElementById("loginError").classList.add("hidden");
-        }, 3000);
-      };
-
-      document.getElementById("adminLoginForm").onsubmit = function (e) {
-        e.preventDefault();
-        const password = document.getElementById("adminPassword").value;
-
-        if (password === "Qur@n2025#Admin$Ramadan") {
-          isAdmin = true;
-          saveSession();
-          showAdminParticipantsPage();
-        } else {
-          document.getElementById("adminError").textContent = "كلمة المرور خاطئة!";
-          document.getElementById("adminError").classList.remove("hidden");
-          setTimeout(() => {
-            document.getElementById("adminError").classList.add("hidden");
-          }, 3000);
-        }
-      };
-
-      function logout() {
-        stopVideoPreview();
-        localStorage.removeItem("currentSession");
-        currentUser = null;
-        isAdmin = false;
-        currentParticipant = null;
-        showHomePage();
-      }
-
-      function togglePassword(inputId) {
-        const input = document.getElementById(inputId);
-        const icon = event.target;
-        
-        if (input.type === "password") {
-          input.type = "text";
-          icon.textContent = "🙈";
-        } else {
-          input.type = "password";
-          icon.textContent = "👁️";
-        }
-      }
-
-      function selectType(type) {
-        recordingType = type;
-        document.querySelectorAll(".type-card").forEach((el) => el.classList.remove("selected"));
-        event.target.closest(".type-card").classList.add("selected");
-        
-        if (type === "video") {
-          startVideoPreview();
-        } else {
-          stopVideoPreview();
-        }
-      }
-
-      async function startVideoPreview() {
-        try {
-          if (previewStream) return;
-          
-          const stream = await navigator.mediaDevices.getUserMedia({ video: true, audio: false });
-          previewStream = stream;
-          const liveVideo = document.getElementById("liveVideo");
-          liveVideo.srcObject = stream;
-          document.getElementById("livePreview").classList.remove("hidden");
-        } catch (err) {
-          alert("خطأ في الكاميرا: " + err.message);
-        }
-      }
-
-      function stopVideoPreview() {
-        if (previewStream) {
-          previewStream.getTracks().forEach((track) => track.stop());
-          previewStream = null;
-          const liveVideo = document.getElementById("liveVideo");
-          if (liveVideo.srcObject) {
-            liveVideo.srcObject = null;
-          }
-          document.getElementById("livePreview").classList.add("hidden");
-        }
-      }
-
-      async function startRecording() {
-        try {
-          let stream;
-          
-          if (recordingType === "video") {
-            if (previewStream) {
-              const audioStream = await navigator.mediaDevices.getUserMedia({ audio: true });
-              stream = new MediaStream([
-                ...previewStream.getVideoTracks(),
-                ...audioStream.getAudioTracks()
-              ]);
-            } else {
-              stream = await navigator.mediaDevices.getUserMedia({ video: true, audio: true });
-              previewStream = stream;
-              const liveVideo = document.getElementById("liveVideo");
-              liveVideo.srcObject = stream;
-              document.getElementById("livePreview").classList.remove("hidden");
-            }
           } else {
-            stream = await navigator.mediaDevices.getUserMedia({ audio: true });
+            localStorage.removeItem("session");
+            showPage('homePage');
           }
+        }).catch(() => { hideLoading(); localStorage.removeItem("session"); showPage('homePage'); });
+      }
+    }
 
-          recordedChunks = [];
-          mediaRecorder = new MediaRecorder(stream);
+    function saveSession() {
+      localStorage.setItem("session", JSON.stringify(isAdmin ? {isAdmin:true} : {isAdmin:false, userId:currentUser.id}));
+    }
 
-          mediaRecorder.ondataavailable = function (e) {
-            if (e.data.size > 0) {
-              recordedChunks.push(e.data);
-            }
-          };
+    // ========== NAVIGATION ==========
+    function showPage(pageId) {
+      ['homePage','registerPage','loginPage','adminLoginPage','participantPage','adminParticipantsPage','adminRecordingsPage'].forEach(id => {
+        document.getElementById(id).classList.add("hidden");
+      });
+      document.getElementById(pageId).classList.remove("hidden");
+    }
 
-          mediaRecorder.onstop = function () {
-            if (recordingType === "audio") {
-              stream.getTracks().forEach((track) => track.stop());
-            }
-            showPreview();
-          };
+    function showParticipantPage() {
+      showPage('participantPage');
+      document.getElementById('welcomeName').textContent = currentUser.name;
+      switchTab('record');
+      loadMyRecs();
+      updateUnreadBadge();
+      // توتوريال للمرة الأولى
+      const key = 'tutorial_participant_' + currentUser.id;
+      if (!localStorage.getItem(key)) {
+        localStorage.setItem(key, '1');
+        setTimeout(() => showTutorial('participant'), 500);
+      }
+    }
 
-          mediaRecorder.start();
+    async function showAdminParticipantsPage() {
+      showPage('adminParticipantsPage');
+      await loadParticipants();
+      // توتوريال للاستاذة أول مرة
+      if (!localStorage.getItem('tutorial_admin')) {
+        localStorage.setItem('tutorial_admin', '1');
+        setTimeout(() => showTutorial('admin'), 500);
+      }
+    }
 
-          document.getElementById("recordBtn").classList.add("hidden");
-          document.getElementById("stopBtn").classList.remove("hidden");
-          document.getElementById("timer").classList.remove("hidden");
-          
-          if (recordingType === "video") {
-            document.getElementById("livePreview").classList.add("recording");
+    async function showAdminRecordingsPage(p) {
+      currentParticipant = p;
+      showPage('adminRecordingsPage');
+      document.getElementById('partTitle').textContent = 'تسجيلات: ' + p.name;
+      document.getElementById('cName').textContent = p.name;
+      document.getElementById('cPass').textContent = p.password;
+      // reset contact info
+      document.getElementById('contactContent').classList.add('hidden');
+      document.getElementById('contactToggle').textContent = 'عرض';
+      await calcTotalRating();
+      await loadParticipantRecs();
+    }
+
+    function backToParticipants() {
+      currentParticipant = null;
+      showAdminParticipantsPage();
+    }
+
+    function logout() {
+      stopVideoPreview();
+      localStorage.removeItem("session");
+      currentUser = null; isAdmin = false; currentParticipant = null;
+      showPage('homePage');
+    }
+
+    // ========== TABS (participant) ==========
+    function switchTab(tab) {
+      document.getElementById('tabRecord').classList.toggle('active', tab==='record');
+      document.getElementById('tabMessages').classList.toggle('active', tab==='messages');
+      document.getElementById('recordSection').classList.toggle('hidden', tab!=='record');
+      document.getElementById('messagesSection').classList.toggle('hidden', tab!=='messages');
+      if (tab === 'record') {
+        if (recType === 'video' && !previewStream) startVideoPreview();
+      } else {
+        stopVideoPreview();
+        loadParticipantMessages();
+        markMsgsRead();
+      }
+    }
+
+    // ========== FORMS ==========
+    function togglePass(id, el) {
+      const inp = document.getElementById(id);
+      if (inp.type === "password") { inp.type = "text"; el.textContent = "🙈"; }
+      else { inp.type = "password"; el.textContent = "👁️"; }
+    }
+
+    document.getElementById("registerForm").onsubmit = async function(e) {
+      e.preventDefault();
+      const name = document.getElementById("regName").value.trim();
+      const pass = document.getElementById("regPass").value;
+      if (!name || !pass) { alert("الرجاء ملء جميع الحقول!"); return; }
+      showLoading();
+      try {
+        const snap = await window.dbGet(window.dbRef(window.db, 'participants'));
+        if (snap.exists()) {
+          if (Object.values(snap.val()).some(p => p.name === name)) {
+            hideLoading(); alert("هذا الاسم مسجل مسبقاً!"); return;
           }
-
-          recordingStartTime = Date.now();
-          timerInterval = setInterval(updateTimer, 1000);
-        } catch (err) {
-          alert("خطأ: " + err.message);
         }
-      }
+        const id = Date.now().toString();
+        const p = { name, password: pass, registeredAt: new Date().toISOString(), recordings: [] };
+        await window.dbSet(window.dbRef(window.db, 'participants/'+id), p);
+        currentUser = { id, ...p };
+        saveSession(); hideLoading(); showParticipantPage();
+      } catch(err) { hideLoading(); alert("خطأ: " + err.message); }
+    };
 
-      function updateTimer() {
-        const elapsed = Math.floor((Date.now() - recordingStartTime) / 1000);
-        const minutes = Math.floor(elapsed / 60).toString().padStart(2, "0");
-        const seconds = (elapsed % 60).toString().padStart(2, "0");
-        document.getElementById("timer").textContent = `${minutes}:${seconds}`;
-      }
-
-      function stopRecording() {
-        if (mediaRecorder && mediaRecorder.state !== "inactive") {
-          mediaRecorder.stop();
-          clearInterval(timerInterval);
-        }
-      }
-
-      function cancelRecording() {
-        if (mediaRecorder && mediaRecorder.state !== "inactive") {
-          mediaRecorder.stop();
-        }
-
-        document.getElementById("livePreview").classList.remove("recording");
-
-        if (recordingType === "audio") {
-          const liveVideo = document.getElementById("liveVideo");
-          if (liveVideo.srcObject) {
-            liveVideo.srcObject.getTracks().forEach((track) => track.stop());
-            liveVideo.srcObject = null;
-          }
-          document.getElementById("livePreview").classList.add("hidden");
-        }
-
-        clearInterval(timerInterval);
-        recordedChunks = [];
-
-        document.getElementById("recordBtn").classList.remove("hidden");
-        document.getElementById("stopBtn").classList.add("hidden");
-        document.getElementById("timer").classList.add("hidden");
-        document.getElementById("timer").textContent = "00:00";
-        document.getElementById("recordingPreview").classList.add("hidden");
-      }
-
-      function showPreview() {
-        const blob = new Blob(recordedChunks, {
-          type: recordingType === "video" ? "video/webm" : "audio/webm",
+    document.getElementById("loginForm").onsubmit = async function(e) {
+      e.preventDefault();
+      const name = document.getElementById("loginName").value;
+      const pass = document.getElementById("loginPass").value;
+      showLoading();
+      const snap = await window.dbGet(window.dbRef(window.db, 'participants'));
+      hideLoading();
+      if (snap.exists()) {
+        let found = null, foundId = null;
+        Object.entries(snap.val()).forEach(([id, p]) => {
+          if (p.name === name && p.password === pass) { found = p; foundId = id; }
         });
+        if (found) {
+          currentUser = { id: foundId, ...found };
+          saveSession(); showParticipantPage(); return;
+        }
+      }
+      showError('loginError', 'الاسم أو كلمة المرور خاطئة!');
+    };
 
-        const url = URL.createObjectURL(blob);
-        const previewDiv = document.getElementById("previewMedia");
+    document.getElementById("adminLoginForm").onsubmit = function(e) {
+      e.preventDefault();
+      const pass = document.getElementById("adminPass").value;
+      if (pass === "Qur@n2025#Admin$Ramadan") {
+        isAdmin = true; saveSession(); showAdminParticipantsPage();
+      } else {
+        showError('adminError', 'كلمة المرور خاطئة!');
+      }
+    };
 
-        if (recordingType === "video") {
-          previewDiv.innerHTML = `<video controls src="${url}"></video>`;
+    function showError(id, msg) {
+      const el = document.getElementById(id);
+      el.textContent = msg; el.classList.remove('hidden');
+      setTimeout(() => el.classList.add('hidden'), 3000);
+    }
+
+    // ========== RECORDING ==========
+    function selectType(type, card) {
+      recType = type;
+      document.querySelectorAll('.type-card').forEach(c => c.classList.remove('selected'));
+      card.classList.add('selected');
+      if (type === 'video') startVideoPreview();
+      else stopVideoPreview();
+    }
+
+    async function startVideoPreview() {
+      try {
+        if (previewStream) return;
+        const stream = await navigator.mediaDevices.getUserMedia({ video: true, audio: false });
+        previewStream = stream;
+        document.getElementById('liveVideo').srcObject = stream;
+        document.getElementById('livePreview').classList.remove('hidden');
+      } catch(err) { alert("خطأ في الكاميرا: " + err.message); }
+    }
+
+    function stopVideoPreview() {
+      if (previewStream) {
+        previewStream.getTracks().forEach(t => t.stop());
+        previewStream = null;
+        const v = document.getElementById('liveVideo');
+        if (v.srcObject) { v.srcObject = null; }
+        document.getElementById('livePreview').classList.add('hidden');
+      }
+    }
+
+    async function startRecording() {
+      try {
+        let stream;
+        if (recType === 'video') {
+          if (previewStream) {
+            const a = await navigator.mediaDevices.getUserMedia({ audio: true });
+            stream = new MediaStream([...previewStream.getVideoTracks(), ...a.getAudioTracks()]);
+          } else {
+            stream = await navigator.mediaDevices.getUserMedia({ video: true, audio: true });
+            previewStream = stream;
+            document.getElementById('liveVideo').srcObject = stream;
+            document.getElementById('livePreview').classList.remove('hidden');
+          }
         } else {
-          previewDiv.innerHTML = `<audio controls src="${url}"></audio>`;
+          stream = await navigator.mediaDevices.getUserMedia({ audio: true });
         }
 
-        document.getElementById("recordingPreview").classList.remove("hidden");
-      }
-
-      function blobToBase64(blob) {
-        return new Promise((resolve, reject) => {
-          const reader = new FileReader();
-          reader.onloadend = () => resolve(reader.result);
-          reader.onerror = reject;
-          reader.readAsDataURL(blob);
-        });
-      }
-
-      async function saveRecording() {
-        showLoading();
-        
-        try {
-          const blob = new Blob(recordedChunks, {
-            type: recordingType === "video" ? "video/webm" : "audio/webm",
-          });
-
-          const base64Data = await blobToBase64(blob);
-
-          const recordingId = Date.now().toString();
-          const recording = {
-            id: recordingId,
-            type: recordingType,
-            data: base64Data,
-            timestamp: new Date().toISOString(),
-          };
-
-          const recordings = currentUser.recordings || [];
-          recordings.push(recording);
-
-          await window.dbUpdate(window.dbRef(window.db), {
-            [`participants/${currentUser.id}/recordings`]: recordings
-          });
-
-          currentUser.recordings = recordings;
-
-          hideLoading();
-          alert("تم الحفظ بنجاح! ✅");
-          
-          document.getElementById("livePreview").classList.remove("recording");
-          clearInterval(timerInterval);
-          recordedChunks = [];
-
-          document.getElementById("recordBtn").classList.remove("hidden");
-          document.getElementById("stopBtn").classList.add("hidden");
-          document.getElementById("timer").classList.add("hidden");
-          document.getElementById("timer").textContent = "00:00";
-          document.getElementById("recordingPreview").classList.add("hidden");
-          
-          loadMyRecordings();
-        } catch (error) {
-          hideLoading();
-          alert("خطأ في الحفظ: " + error.message);
-        }
-      }
-
-      function loadMyRecordings() {
-        const listDiv = document.getElementById("myRecordingsList");
-
-        if (!currentUser.recordings || currentUser.recordings.length === 0) {
-          listDiv.innerHTML = '<div class="empty-state"><div class="icon">🎙️</div><p>لا توجد تسجيلات</p></div>';
-          return;
-        }
-
-        listDiv.innerHTML = currentUser.recordings
-          .map((rec, index) => `
-            <div class="recording-item">
-              <div class="three-dots" onclick="showRecordingMenu(event, '${rec.id}')">⋮</div>
-              <p style="color: var(--dark-green); font-weight: 700; font-size: 1rem; margin-bottom: 4px;">
-                التسجيل ${index + 1} - ${rec.type === "video" ? "🎥 فيديو" : "🎤 صوت"}
-              </p>
-              <p class="recording-date">
-                ${new Date(rec.timestamp).toLocaleDateString("ar-SA")}
-              </p>
-              ${rec.type === "video" 
-                ? `<video controls src="${rec.data}"></video>`
-                : `<audio controls src="${rec.data}"></audio>`
-              }
-            </div>
-          `).join("");
-      }
-
-      function showRecordingMenu(e, recordingId) {
-        e.stopPropagation();
-        
-        const existingMenu = document.querySelector(".menu-popup");
-        if (existingMenu) existingMenu.remove();
-
-        const menu = document.createElement("div");
-        menu.className = "menu-popup";
-        menu.innerHTML = `
-          <div class="menu-item danger" onclick="confirmDeleteRecording('${recordingId}')">
-            🗑️ حذف التسجيل
-          </div>
-        `;
-
-        e.target.parentElement.appendChild(menu);
-
-        setTimeout(() => {
-          document.addEventListener("click", function closeMenu(e) {
-            if (!menu.contains(e.target)) {
-              menu.remove();
-              document.removeEventListener("click", closeMenu);
-            }
-          });
-        }, 10);
-      }
-
-      function confirmDeleteRecording(recordingId) {
-        const dialog = document.createElement("div");
-        dialog.className = "confirm-dialog";
-        dialog.innerHTML = `
-          <div class="confirm-content">
-            <h3>⚠️ تأكيد الحذف</h3>
-            <p>هل تريد حذف هذا التسجيل؟<br>لن يمكن استرجاعه.</p>
-            <div class="confirm-buttons">
-              <button class="btn btn-danger" onclick="deleteRecording('${recordingId}')">حذف</button>
-              <button class="btn btn-secondary" onclick="closeConfirmDialog()">إلغاء</button>
-            </div>
-          </div>
-        `;
-        document.body.appendChild(dialog);
-      }
-
-      function closeConfirmDialog() {
-        const dialog = document.querySelector(".confirm-dialog");
-        if (dialog) dialog.remove();
-      }
-
-      async function deleteRecording(recordingId) {
-        showLoading();
-
-        const recordings = currentUser.recordings.filter(r => r.id !== recordingId);
-        
-        await window.dbUpdate(window.dbRef(window.db), {
-          [`participants/${currentUser.id}/recordings`]: recordings
-        });
-
-        const messagesSnapshot = await window.dbGet(window.dbRef(window.db, 'messages'));
-        if (messagesSnapshot.exists()) {
-          const updates = {};
-          messagesSnapshot.forEach(child => {
-            const msg = child.val();
-            if (msg.recordingId === recordingId) {
-              updates[`messages/${child.key}`] = null;
-            }
-          });
-
-          if (Object.keys(updates).length > 0) {
-            await window.dbUpdate(window.dbRef(window.db), updates);
-          }
-        }
-
-        currentUser.recordings = recordings;
-
-        hideLoading();
-        closeConfirmDialog();
-        loadMyRecordings();
-        updateUnreadBadge();
-
-        alert("تم الحذف! ✅");
-      }
-
-      async function loadParticipants() {
-        showLoading();
-        const snapshot = await window.dbGet(window.dbRef(window.db, 'participants'));
-        hideLoading();
-
-        const listDiv = document.getElementById("participantsList");
-
-        if (!snapshot.exists()) {
-          listDiv.innerHTML = '<div class="empty-state"><div class="icon">👥</div><p>لا يوجد مشاركون</p></div>';
-          updateAdminStats(0, 0, 0);
-          return;
-        }
-
-        let participants = [];
-        snapshot.forEach(child => {
-          const p = { id: child.key, ...child.val() };
-          participants.push(p);
-        });
-
-        if (participants.length === 0) {
-          listDiv.innerHTML = '<div class="empty-state"><div class="icon">👥</div><p>لا يوجد مشاركون</p></div>';
-          updateAdminStats(0, 0, 0);
-          return;
-        }
-
-        let totalRecordings = 0;
-        let newRecordings = 0;
-
-        participants.forEach(p => {
-          const recordingsCount = (p.recordings || []).length;
-          totalRecordings += recordingsCount;
-          
-          (p.recordings || []).forEach(rec => {
-            if (!isRecordingViewed(p.id, rec.id)) {
-              newRecordings++;
-            }
-          });
-        });
-
-        updateAdminStats(participants.length, totalRecordings, newRecordings);
-
-        listDiv.innerHTML = participants
-          .map(p => {
-            const newCount = (p.recordings || []).filter(rec => !isRecordingViewed(p.id, rec.id)).length;
-            return `
-              <div class="participant-card" onclick='showAdminRecordingsPage(${JSON.stringify(p).replace(/'/g, "&#39;")})'>
-                ${newCount > 0 ? `<div class="new-recordings-badge">${newCount}</div>` : ''}
-                <div class="icon">👤</div>
-                <h3>${p.name}</h3>
-                <p class="count">${(p.recordings || []).length} تسجيل</p>
-              </div>
-            `;
-          }).join("");
-      }
-
-      function updateAdminStats(participants, recordings, newRecs) {
-        document.getElementById("totalParticipants").textContent = participants;
-        document.getElementById("totalRecordings").textContent = recordings;
-        document.getElementById("newRecordings").textContent = newRecs;
-      }
-
-      async function loadParticipantRecordings() {
-        const listDiv = document.getElementById("adminRecordingsList");
-
-        if (!currentParticipant.recordings || currentParticipant.recordings.length === 0) {
-          listDiv.innerHTML = '<div class="empty-state"><div class="icon">🎙️</div><p>لا توجد تسجيلات</p></div>';
-          return;
-        }
-
-        currentParticipant.recordings.forEach(rec => {
-          markRecordingAsViewed(currentParticipant.id, rec.id);
-        });
-
-        listDiv.innerHTML = currentParticipant.recordings
-          .map((rec, index) => `
-            <div class="recording-item">
-              <div class="three-dots" onclick="showAdminRecordingMenu(event, '${rec.id}')">⋮</div>
-              <p style="color: var(--dark-green); font-weight: 700; font-size: 1rem; margin-bottom: 4px;">
-                التسجيل ${index + 1} - ${rec.type === "video" ? "🎥 فيديو" : "🎤 صوت"}
-              </p>
-              <p class="recording-date">
-                ${new Date(rec.timestamp).toLocaleDateString("ar-SA")}
-              </p>
-              ${rec.type === "video" 
-                ? `<video controls src="${rec.data}"></video>`
-                : `<audio controls src="${rec.data}"></audio>`
-              }
-            </div>
-          `).join("");
-      }
-
-      function showAdminRecordingMenu(e, recordingId) {
-        e.stopPropagation();
-        
-        const existingMenu = document.querySelector(".menu-popup");
-        if (existingMenu) existingMenu.remove();
-
-        const menu = document.createElement("div");
-        menu.className = "menu-popup";
-        menu.innerHTML = `
-          <div class="menu-item" onclick="openMessageModal('${recordingId}', 'text')">
-            ✍️ رسالة نصية
-          </div>
-          <div class="menu-item" onclick="openMessageModal('${recordingId}', 'voice')">
-            🎤 رسالة صوتية
-          </div>
-          <div class="menu-item" onclick="openMessageModal('${recordingId}', 'rating')">
-            ⭐ تقييم
-          </div>
-          <div class="menu-item danger" onclick="confirmDeleteRecordingAdmin('${recordingId}')">
-            🗑️ حذف التسجيل
-          </div>
-        `;
-
-        e.target.parentElement.appendChild(menu);
-
-        setTimeout(() => {
-          document.addEventListener("click", function closeMenu(e) {
-            if (!menu.contains(e.target)) {
-              menu.remove();
-              document.removeEventListener("click", closeMenu);
-            }
-          });
-        }, 10);
-      }
-
-      function openMessageModal(recordingId, type) {
-        currentRecordingForMessage = recordingId;
-        selectedRating = 0;
-        
-        const modal = document.createElement("div");
-        modal.className = "message-modal";
-        modal.id = "messageModal";
-        
-        modal.innerHTML = `
-          <div class="message-modal-content">
-            <h3>إرسال رسالة للمشارك</h3>
-            
-            <div class="message-type-btns">
-              <button class="message-type-btn ${type === 'text' ? 'active' : ''}" onclick="switchMessageType('text')">
-                ✍️ نصية
-              </button>
-              <button class="message-type-btn ${type === 'voice' ? 'active' : ''}" onclick="switchMessageType('voice')">
-                🎤 صوتية
-              </button>
-              <button class="message-type-btn ${type === 'rating' ? 'active' : ''}" onclick="switchMessageType('rating')">
-                ⭐ تقييم
-              </button>
-            </div>
-
-            <div id="textMessageDiv" class="${type !== 'text' ? 'hidden' : ''}">
-              <textarea id="messageText" placeholder="اكتب رسالتك هنا..."></textarea>
-            </div>
-
-            <div id="voiceMessageDiv" class="voice-recorder ${type !== 'voice' ? 'hidden' : ''}">
-              <button class="btn btn-primary" id="voiceRecordBtn" onclick="startAdminVoice()">
-                🎤 ابدأ التسجيل
-              </button>
-              <div class="timer hidden" id="voiceTimer">00:00</div>
-              <button class="btn btn-danger hidden" id="voiceStopBtn" onclick="stopAdminVoice()">
-                ⏹ إيقاف
-              </button>
-              <div id="voicePreviewDiv" class="hidden">
-                <audio id="voicePreview" controls></audio>
-              </div>
-            </div>
-
-            <div id="ratingMessageDiv" class="rating-container ${type !== 'rating' ? 'hidden' : ''}">
-              <p style="color: var(--dark-green); font-weight: 700; font-size: 1.1rem; margin-bottom: 10px;">
-                اختر التقييم
-              </p>
-              <div class="stars-display" id="starsDisplay">
-                ${[1, 2, 3, 4, 5].map(i => 
-                  `<span class="star" onclick="setRating(${i})" data-value="${i}">⭐</span>`
-                ).join('')}
-              </div>
-              <div class="rating-value" id="ratingValue">0 / 5</div>
-              <div class="rating-buttons">
-                ${[0.5, 1, 1.5, 2, 2.5, 3, 3.5, 4, 4.5, 5].map(val => 
-                  `<button class="rating-btn" onclick="setRating(${val})">${val}</button>`
-                ).join('')}
-              </div>
-            </div>
-
-            <div class="modal-buttons">
-              <button class="btn btn-primary" onclick="sendMessageToParticipant()">إرسال</button>
-              <button class="btn btn-secondary" onclick="closeMessageModal()">إلغاء</button>
-            </div>
-          </div>
-        `;
-        
-        document.body.appendChild(modal);
-      }
-
-      function switchMessageType(type) {
-        document.querySelectorAll(".message-type-btn").forEach(btn => btn.classList.remove("active"));
-        event.target.classList.add("active");
-
-        document.getElementById("textMessageDiv").classList.add("hidden");
-        document.getElementById("voiceMessageDiv").classList.add("hidden");
-        document.getElementById("ratingMessageDiv").classList.add("hidden");
-
-        if (type === 'text') {
-          document.getElementById("textMessageDiv").classList.remove("hidden");
-        } else if (type === 'voice') {
-          document.getElementById("voiceMessageDiv").classList.remove("hidden");
-        } else if (type === 'rating') {
-          document.getElementById("ratingMessageDiv").classList.remove("hidden");
-        }
-      }
-
-      function setRating(value) {
-        selectedRating = value;
-        document.getElementById("ratingValue").textContent = `${value} / 5`;
-
-        // تحديث النجوم
-        const stars = document.querySelectorAll("#starsDisplay .star");
-        stars.forEach((star, index) => {
-          const starValue = index + 1;
-          star.classList.remove("filled", "half");
-          
-          if (value >= starValue) {
-            star.classList.add("filled");
-          } else if (value > starValue - 1 && value < starValue) {
-            star.classList.add("half");
-          }
-        });
-
-        // تحديث الأزرار
-        document.querySelectorAll(".rating-btn").forEach(btn => {
-          btn.classList.remove("active");
-          if (parseFloat(btn.textContent) === value) {
-            btn.classList.add("active");
-          }
-        });
-      }
-
-      async function startAdminVoice() {
-        try {
-          const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
-          
-          adminVoiceChunks = [];
-          adminVoiceRecorder = new MediaRecorder(stream);
-
-          adminVoiceRecorder.ondataavailable = function (e) {
-            if (e.data.size > 0) {
-              adminVoiceChunks.push(e.data);
-            }
-          };
-
-          adminVoiceRecorder.onstop = function () {
-            stream.getTracks().forEach(track => track.stop());
-            
-            const blob = new Blob(adminVoiceChunks, { type: "audio/webm" });
-            const url = URL.createObjectURL(blob);
-            
-            document.getElementById("voicePreview").src = url;
-            document.getElementById("voicePreviewDiv").classList.remove("hidden");
-          };
-
-          adminVoiceRecorder.start();
-
-          document.getElementById("voiceRecordBtn").classList.add("hidden");
-          document.getElementById("voiceStopBtn").classList.remove("hidden");
-          document.getElementById("voiceTimer").classList.remove("hidden");
-
-          const startTime = Date.now();
-          adminVoiceTimer = setInterval(() => {
-            const elapsed = Math.floor((Date.now() - startTime) / 1000);
-            const minutes = Math.floor(elapsed / 60).toString().padStart(2, "0");
-            const seconds = (elapsed % 60).toString().padStart(2, "0");
-            document.getElementById("voiceTimer").textContent = `${minutes}:${seconds}`;
-          }, 1000);
-
-        } catch (err) {
-          alert("خطأ في المايكروفون: " + err.message);
-        }
-      }
-
-      function stopAdminVoice() {
-        if (adminVoiceRecorder && adminVoiceRecorder.state !== "inactive") {
-          adminVoiceRecorder.stop();
-          clearInterval(adminVoiceTimer);
-          
-          document.getElementById("voiceRecordBtn").classList.remove("hidden");
-          document.getElementById("voiceStopBtn").classList.add("hidden");
-          document.getElementById("voiceTimer").classList.add("hidden");
-          document.getElementById("voiceTimer").textContent = "00:00";
-        }
-      }
-
-      async function sendMessageToParticipant() {
-        const activeBtn = document.querySelector(".message-type-btn.active");
-        let messageType = 'text';
-        
-        if (activeBtn.textContent.includes("نصية")) {
-          messageType = 'text';
-        } else if (activeBtn.textContent.includes("صوتية")) {
-          messageType = 'voice';
-        } else if (activeBtn.textContent.includes("تقييم")) {
-          messageType = 'rating';
-        }
-
-        showLoading();
-
-        try {
-          if (messageType === 'text') {
-            const messageText = document.getElementById("messageText").value.trim();
-            if (!messageText) {
-              hideLoading();
-              alert("الرجاء كتابة رسالة!");
-              return;
-            }
-
-            await sendMessage(currentParticipant.id, currentRecordingForMessage, messageText, 'text', null, null);
-          } else if (messageType === 'voice') {
-            if (!adminVoiceChunks || adminVoiceChunks.length === 0) {
-              hideLoading();
-              alert("الرجاء تسجيل رسالة صوتية!");
-              return;
-            }
-
-            const blob = new Blob(adminVoiceChunks, { type: "audio/webm" });
-            const base64Data = await blobToBase64(blob);
-            
-            await sendMessage(currentParticipant.id, currentRecordingForMessage, "رسالة صوتية من الاستاذة 🎤", 'voice', base64Data, null);
-          } else if (messageType === 'rating') {
-            if (selectedRating === 0) {
-              hideLoading();
-              alert("الرجاء اختيار تقييم!");
-              return;
-            }
-
-            // حذف التقييمات السابقة لنفس التسجيل
-            const messagesSnapshot = await window.dbGet(window.dbRef(window.db, 'messages'));
-            if (messagesSnapshot.exists()) {
-              const updates = {};
-              messagesSnapshot.forEach(child => {
-                const msg = child.val();
-                if (msg.recordingId === currentRecordingForMessage && 
-                    msg.participantId === currentParticipant.id && 
-                    msg.messageType === 'rating') {
-                  updates[`messages/${child.key}`] = null;
-                }
-              });
-
-              if (Object.keys(updates).length > 0) {
-                await window.dbUpdate(window.dbRef(window.db), updates);
-              }
-            }
-
-            await sendMessage(currentParticipant.id, currentRecordingForMessage, `تقييمك: ${selectedRating} / 5 نجوم`, 'rating', null, selectedRating);
-          }
-
-          hideLoading();
-          closeMessageModal();
-          
-          // تحديث مجموع التقييمات
-          if (messageType === 'rating') {
-            await calculateAndDisplayTotalRating();
-          }
-          
-          alert("تم الإرسال! ✅");
-        } catch (error) {
-          hideLoading();
-          alert("خطأ في الإرسال: " + error.message);
-        }
-      }
-
-      async function sendMessage(participantId, recordingId, message, messageType, voiceData, rating) {
-        const messagesRef = window.dbRef(window.db, 'messages');
-        const newMessageRef = window.dbPush(messagesRef);
-
-        const newMessage = {
-          participantId: participantId,
-          recordingId: recordingId,
-          message: message,
-          messageType: messageType,
-          timestamp: new Date().toISOString(),
-          read: false,
+        recChunks = [];
+        mediaRecorder = new MediaRecorder(stream);
+        mediaRecorder.ondataavailable = e => { if (e.data.size > 0) recChunks.push(e.data); };
+        mediaRecorder.onstop = () => {
+          if (recType === 'audio') stream.getTracks().forEach(t => t.stop());
+          showRecPreview();
         };
+        mediaRecorder.start();
 
-        if (messageType === 'voice' && voiceData) {
-          newMessage.voiceData = voiceData;
-        }
+        document.getElementById('recordBtn').classList.add('hidden');
+        document.getElementById('stopBtn').classList.remove('hidden');
+        document.getElementById('timer').classList.remove('hidden');
+        if (recType === 'video') document.getElementById('livePreview').classList.add('recording');
 
-        if (messageType === 'rating' && rating) {
-          newMessage.rating = rating;
-        }
+        recStartTime = Date.now();
+        timerInterval = setInterval(() => {
+          const e = Math.floor((Date.now()-recStartTime)/1000);
+          document.getElementById('timer').textContent = `${String(Math.floor(e/60)).padStart(2,'0')}:${String(e%60).padStart(2,'0')}`;
+        }, 1000);
+      } catch(err) { alert("خطأ: " + err.message); }
+    }
 
-        await window.dbSet(newMessageRef, newMessage);
-        return newMessage;
+    function stopRecording() {
+      if (mediaRecorder && mediaRecorder.state !== 'inactive') {
+        mediaRecorder.stop(); clearInterval(timerInterval);
+      }
+    }
+
+    function cancelRecording() {
+      if (mediaRecorder && mediaRecorder.state !== 'inactive') mediaRecorder.stop();
+      document.getElementById('livePreview').classList.remove('recording');
+      clearInterval(timerInterval); recChunks = [];
+      document.getElementById('recordBtn').classList.remove('hidden');
+      document.getElementById('stopBtn').classList.add('hidden');
+      document.getElementById('timer').classList.add('hidden');
+      document.getElementById('timer').textContent = '00:00';
+      document.getElementById('recPreviewSection').classList.add('hidden');
+    }
+
+    function showRecPreview() {
+      const blob = new Blob(recChunks, { type: recType === 'video' ? 'video/webm' : 'audio/webm' });
+      const url = URL.createObjectURL(blob);
+      document.getElementById('previewMedia').innerHTML = recType === 'video'
+        ? `<video controls src="${url}"></video>`
+        : `<audio controls src="${url}"></audio>`;
+      document.getElementById('recPreviewSection').classList.remove('hidden');
+      document.getElementById('recordBtn').classList.remove('hidden');
+      document.getElementById('stopBtn').classList.add('hidden');
+      document.getElementById('timer').classList.add('hidden');
+    }
+
+    async function saveRecording() {
+      showLoading();
+      try {
+        const blob = new Blob(recChunks, { type: recType === 'video' ? 'video/webm' : 'audio/webm' });
+        const b64 = await blobToBase64(blob);
+        const recId = Date.now().toString();
+        const rec = { id: recId, type: recType, data: b64, timestamp: new Date().toISOString() };
+        const recs = [...(currentUser.recordings || []), rec];
+        await window.dbUpdate(window.dbRef(window.db), { [`participants/${currentUser.id}/recordings`]: recs });
+        currentUser.recordings = recs;
+        hideLoading();
+        alert("تم الحفظ بنجاح! ✅");
+        document.getElementById('livePreview').classList.remove('recording');
+        clearInterval(timerInterval); recChunks = [];
+        document.getElementById('recPreviewSection').classList.add('hidden');
+        document.getElementById('timer').textContent = '00:00';
+        loadMyRecs();
+      } catch(err) { hideLoading(); alert("خطأ في الحفظ: " + err.message); }
+    }
+
+    // ========== MY RECORDINGS with ATTACHED MESSAGES ==========
+    async function loadMyRecs() {
+      const listDiv = document.getElementById("myRecList");
+      if (!currentUser.recordings || currentUser.recordings.length === 0) {
+        listDiv.innerHTML = '<div class="empty-state"><div class="e-icon">🎙️</div><p>لا توجد تسجيلات بعد<br><small>ابدأ أول تسجيل لك الآن!</small></p></div>';
+        return;
       }
 
-      function closeMessageModal() {
-        const modal = document.getElementById("messageModal");
-        if (modal) modal.remove();
+      // جلب الرسائل المرتبطة بتسجيلاتي
+      const msgsSnap = await window.dbGet(window.dbRef(window.db, 'messages'));
+      const myMessages = {};
+      if (msgsSnap.exists()) {
+        msgsSnap.forEach(child => {
+          const m = child.val();
+          if (m.participantId === currentUser.id) {
+            if (!myMessages[m.recordingId]) myMessages[m.recordingId] = [];
+            myMessages[m.recordingId].push({ id: child.key, ...m });
+          }
+        });
+      }
+
+      let html = '';
+      currentUser.recordings.forEach((rec, i) => {
+        const recMsgs = myMessages[rec.id] || [];
+        const hasUnread = recMsgs.some(m => !m.read);
         
-        adminVoiceChunks = [];
-        if (adminVoiceRecorder && adminVoiceRecorder.state !== "inactive") {
-          adminVoiceRecorder.stop();
-        }
-        clearInterval(adminVoiceTimer);
-        selectedRating = 0;
-      }
-
-      function confirmDeleteRecordingAdmin(recordingId) {
-        const dialog = document.createElement("div");
-        dialog.className = "confirm-dialog";
-        dialog.innerHTML = `
-          <div class="confirm-content">
-            <h3>⚠️ تأكيد الحذف</h3>
-            <p>هل تريد حذف هذا التسجيل؟<br>لن يمكن استرجاعه.</p>
-            <div class="confirm-buttons">
-              <button class="btn btn-danger" onclick="deleteRecordingAdmin('${recordingId}')">حذف</button>
-              <button class="btn btn-secondary" onclick="closeConfirmDialog()">إلغاء</button>
-            </div>
+        html += `
+          <div class="rec-item" id="recItem_${rec.id}">
+            ${hasUnread ? `<div style="position:absolute;top:-8px;right:-8px;background:var(--red);color:white;border-radius:50%;width:22px;height:22px;display:flex;align-items:center;justify-content:center;font-size:0.75rem;font-weight:700;border:2px solid white;">!</div>` : ''}
+            <div class="three-dots" onclick="showMyRecMenu(event,'${rec.id}')">⋮</div>
+            <p style="color:var(--green-dark);font-weight:700;font-size:1rem;margin-bottom:4px;">
+              التسجيل ${i+1} — ${rec.type === 'video' ? '🎥 فيديو' : '🎤 صوت'}
+            </p>
+            <p class="rec-date">${new Date(rec.timestamp).toLocaleDateString('ar-SA')}</p>
+            ${rec.type === 'video' ? `<video controls src="${rec.data}"></video>` : `<audio controls src="${rec.data}"></audio>`}
+            ${recMsgs.length > 0 ? buildAttachedMessages(recMsgs) : ''}
           </div>
         `;
-        document.body.appendChild(dialog);
-      }
+      });
+      listDiv.innerHTML = html;
+    }
 
-      async function deleteRecordingAdmin(recordingId) {
-        showLoading();
-
-        const recordings = currentParticipant.recordings.filter(r => r.id !== recordingId);
+    function buildAttachedMessages(msgs) {
+      // ترتيب من الأقدم للأحدث
+      msgs.sort((a,b) => new Date(a.timestamp) - new Date(b.timestamp));
+      let html = `
+        <div class="rec-messages">
+          <div class="rec-msg-header">
+            <span>💬</span>
+            <span>رسائل الاستاذة</span>
+          </div>
+      `;
+      msgs.forEach(msg => {
+        let typeIcon = '✉️';
+        if (msg.messageType === 'voice') typeIcon = '🎤';
+        if (msg.messageType === 'rating') typeIcon = '⭐';
         
-        await window.dbUpdate(window.dbRef(window.db), {
-          [`participants/${currentParticipant.id}/recordings`]: recordings
+        html += `
+          <div class="attached-msg ${!msg.read ? 'unread' : ''}">
+            <div class="msg-type">${typeIcon} ${new Date(msg.timestamp).toLocaleDateString('ar-SA')}</div>
+            <div class="msg-body">${msg.message}</div>
+            ${msg.messageType === 'voice' && msg.voiceData ? `<audio controls src="${msg.voiceData}"></audio>` : ''}
+            ${msg.messageType === 'rating' && msg.rating ? `
+              <div class="rating-display">
+                <div class="rating-stars">${generateStars(msg.rating)}</div>
+                <div class="rating-num">${msg.rating} / 5 ⭐</div>
+              </div>` : ''}
+          </div>
+        `;
+      });
+      html += '</div>';
+      return html;
+    }
+
+    function generateStars(rating) {
+      let html = '';
+      for (let i = 1; i <= 5; i++) {
+        if (rating >= i) html += '<span style="color:#fbbf24;">⭐</span>';
+        else if (rating > i-1) html += '<span style="opacity:0.4;">⭐</span>';
+        else html += '<span style="opacity:0.2;">⭐</span>';
+      }
+      return html;
+    }
+
+    function showMyRecMenu(e, recId) {
+      e.stopPropagation();
+      document.querySelectorAll('.menu-popup').forEach(m => m.remove());
+      const menu = document.createElement('div');
+      menu.className = 'menu-popup';
+      menu.innerHTML = `<div class="menu-item danger" onclick="confirmDelete('${recId}', false)">🗑️ حذف التسجيل</div>`;
+      e.target.parentElement.appendChild(menu);
+      setTimeout(() => {
+        document.addEventListener('click', function close(e) {
+          if (!menu.contains(e.target)) { menu.remove(); document.removeEventListener('click', close); }
         });
+      }, 10);
+    }
 
-        const messagesSnapshot = await window.dbGet(window.dbRef(window.db, 'messages'));
-        if (messagesSnapshot.exists()) {
-          const updates = {};
-          messagesSnapshot.forEach(child => {
-            const msg = child.val();
-            if (msg.recordingId === recordingId) {
-              updates[`messages/${child.key}`] = null;
-            }
-          });
+    // ========== PARTICIPANT MESSAGES PAGE ==========
+    async function loadParticipantMessages() {
+      const listDiv = document.getElementById("participantMsgList");
+      const snap = await window.dbGet(window.dbRef(window.db, 'messages'));
+      if (!snap.exists()) {
+        listDiv.innerHTML = '<div class="empty-state"><div class="e-icon">📭</div><p>لا توجد رسائل بعد</p></div>';
+        return;
+      }
+      const msgs = [];
+      snap.forEach(child => {
+        const m = child.val();
+        if (m.participantId === currentUser.id) msgs.push({ id: child.key, ...m });
+      });
+      if (msgs.length === 0) {
+        listDiv.innerHTML = '<div class="empty-state"><div class="e-icon">📭</div><p>لا توجد رسائل بعد</p></div>';
+        return;
+      }
+      msgs.sort((a,b) => new Date(b.timestamp) - new Date(a.timestamp));
+      listDiv.innerHTML = msgs.map(msg => `
+        <div style="background:linear-gradient(135deg,#fff9e6,white);padding:14px;border-radius:10px;margin-bottom:10px;border-right:3px solid var(--gold);${!msg.read?'box-shadow:0 3px 12px rgba(212,175,55,0.2);':''}">
+          <div style="display:flex;justify-content:space-between;margin-bottom:8px;padding-bottom:8px;border-bottom:1px solid var(--border);">
+            <span style="color:var(--gold);font-weight:700;">${msg.messageType==='voice'?'🎤':msg.messageType==='rating'?'⭐':'✉️'} رسالة من الاستاذة</span>
+            <span style="color:#888;font-size:0.75rem;">${new Date(msg.timestamp).toLocaleDateString('ar-SA')}</span>
+          </div>
+          <p style="font-size:0.95rem;line-height:1.6;">${msg.message}</p>
+          ${msg.messageType === 'voice' && msg.voiceData ? `<div style="background:white;padding:8px;border-radius:8px;margin-top:8px;border:1px solid var(--border);"><audio controls src="${msg.voiceData}" style="width:100%;"></audio></div>` : ''}
+          ${msg.messageType === 'rating' && msg.rating ? `<div class="rating-display" style="margin-top:8px;"><div class="rating-stars">${generateStars(msg.rating)}</div><div class="rating-num">${msg.rating} / 5</div></div>` : ''}
+        </div>
+      `).join('');
+    }
 
-          if (Object.keys(updates).length > 0) {
-            await window.dbUpdate(window.dbRef(window.db), updates);
+    async function updateUnreadBadge() {
+      const snap = await window.dbGet(window.dbRef(window.db, 'messages'));
+      let count = 0;
+      if (snap.exists()) {
+        snap.forEach(child => {
+          const m = child.val();
+          if (m.participantId === currentUser.id && !m.read) count++;
+        });
+      }
+      const badge = document.getElementById('unreadBadge');
+      if (count > 0) { badge.textContent = count; badge.classList.remove('hidden'); }
+      else badge.classList.add('hidden');
+    }
+
+    async function markMsgsRead() {
+      const snap = await window.dbGet(window.dbRef(window.db, 'messages'));
+      if (!snap.exists()) return;
+      const updates = {};
+      snap.forEach(child => {
+        const m = child.val();
+        if (m.participantId === currentUser.id && !m.read) updates[`messages/${child.key}/read`] = true;
+      });
+      if (Object.keys(updates).length > 0) await window.dbUpdate(window.dbRef(window.db), updates);
+      updateUnreadBadge();
+      loadMyRecs(); // تحديث التسجيلات لإزالة علامات الجديد
+    }
+
+    // ========== ADMIN: LOAD PARTICIPANTS ==========
+    async function loadParticipants() {
+      showLoading();
+      const snap = await window.dbGet(window.dbRef(window.db, 'participants'));
+      hideLoading();
+      const listDiv = document.getElementById('participantsList');
+      if (!snap.exists()) {
+        listDiv.innerHTML = '<div class="empty-state"><div class="e-icon">👥</div><p>لا يوجد مشاركون بعد</p></div>';
+        updateStats(0,0,0); return;
+      }
+      let participants = [];
+      snap.forEach(child => participants.push({ id: child.key, ...child.val() }));
+      let totalR = 0, newR = 0;
+      participants.forEach(p => {
+        const recs = p.recordings || [];
+        totalR += recs.length;
+        recs.forEach(r => { if (!isViewed(p.id, r.id)) newR++; });
+      });
+      updateStats(participants.length, totalR, newR);
+      listDiv.innerHTML = participants.map(p => {
+        const newCount = (p.recordings||[]).filter(r => !isViewed(p.id, r.id)).length;
+        return `
+          <div class="participant-card" onclick='showAdminRecordingsPage(${JSON.stringify(p)})'>
+            ${newCount > 0 ? `<div class="new-rec-badge">${newCount}</div>` : ''}
+            <div class="p-icon">👤</div>
+            <h3>${p.name}</h3>
+            <p class="p-count">${(p.recordings||[]).length} تسجيل</p>
+          </div>
+        `;
+      }).join('');
+    }
+
+    function updateStats(p, r, n) {
+      document.getElementById('totalPart').textContent = p;
+      document.getElementById('totalRec').textContent = r;
+      document.getElementById('newRec').textContent = n;
+    }
+
+    // ========== ADMIN: LOAD PARTICIPANT RECORDINGS (with messages) ==========
+    async function loadParticipantRecs() {
+      const listDiv = document.getElementById('adminRecList');
+      if (!currentParticipant.recordings || currentParticipant.recordings.length === 0) {
+        listDiv.innerHTML = '<div class="empty-state"><div class="e-icon">🎙️</div><p>لا توجد تسجيلات</p></div>';
+        return;
+      }
+      // تحديد الرسائل لكل تسجيل
+      const msgsSnap = await window.dbGet(window.dbRef(window.db, 'messages'));
+      const recMsgs = {};
+      if (msgsSnap.exists()) {
+        msgsSnap.forEach(child => {
+          const m = child.val();
+          if (m.participantId === currentParticipant.id) {
+            if (!recMsgs[m.recordingId]) recMsgs[m.recordingId] = [];
+            recMsgs[m.recordingId].push({ id: child.key, ...m });
           }
-        }
-
-        currentParticipant.recordings = recordings;
-
-        const snapshot = await window.dbGet(window.dbRef(window.db, 'participants/' + currentParticipant.id));
-        if (snapshot.exists()) {
-          currentParticipant = { id: currentParticipant.id, ...snapshot.val() };
-        }
-
-        hideLoading();
-        closeConfirmDialog();
-        
-        // تحديث مجموع التقييمات
-        await calculateAndDisplayTotalRating();
-        
-        loadParticipantRecordings();
-
-        alert("تم الحذف! ✅");
+        });
       }
+      // تحديد كمشاهَد
+      currentParticipant.recordings.forEach(r => markViewed(currentParticipant.id, r.id));
 
-      // دالة عرض/إخفاء معلومات التواصل
-      function toggleContactInfo() {
-        const content = document.getElementById("contactInfoContent");
-        const toggleText = document.getElementById("contactToggleText");
-        
-        if (content.classList.contains("hidden")) {
-          content.classList.remove("hidden");
-          toggleText.textContent = "إخفاء";
+      listDiv.innerHTML = currentParticipant.recordings.map((rec, i) => {
+        const msgs = recMsgs[rec.id] || [];
+        return `
+          <div class="rec-item">
+            <div class="three-dots" onclick="showAdminRecMenu(event,'${rec.id}')">⋮</div>
+            <p style="color:var(--green-dark);font-weight:700;font-size:1rem;margin-bottom:4px;">
+              التسجيل ${i+1} — ${rec.type === 'video' ? '🎥 فيديو' : '🎤 صوت'}
+            </p>
+            <p class="rec-date">${new Date(rec.timestamp).toLocaleDateString('ar-SA')}</p>
+            ${rec.type === 'video' ? `<video controls src="${rec.data}"></video>` : `<audio controls src="${rec.data}"></audio>`}
+            ${msgs.length > 0 ? buildAdminMsgs(msgs) : ''}
+          </div>
+        `;
+      }).join('');
+    }
+
+    function buildAdminMsgs(msgs) {
+      msgs.sort((a,b) => new Date(a.timestamp) - new Date(b.timestamp));
+      let html = `<div class="rec-messages"><div class="rec-msg-header"><span>💬</span><span>رسائل أُرسلت</span></div>`;
+      msgs.forEach(msg => {
+        html += `
+          <div class="attached-msg">
+            <div class="msg-type">${msg.messageType==='voice'?'🎤':msg.messageType==='rating'?'⭐':'✉️'} ${new Date(msg.timestamp).toLocaleDateString('ar-SA')}</div>
+            <div class="msg-body">${msg.message}</div>
+            ${msg.messageType === 'voice' && msg.voiceData ? `<audio controls src="${msg.voiceData}"></audio>` : ''}
+            ${msg.messageType === 'rating' && msg.rating ? `<div class="rating-display"><div class="rating-stars">${generateStars(msg.rating)}</div><div class="rating-num">${msg.rating} / 5</div></div>` : ''}
+          </div>
+        `;
+      });
+      html += '</div>';
+      return html;
+    }
+
+    function showAdminRecMenu(e, recId) {
+      e.stopPropagation();
+      document.querySelectorAll('.menu-popup').forEach(m => m.remove());
+      const menu = document.createElement('div');
+      menu.className = 'menu-popup';
+      menu.innerHTML = `
+        <div class="menu-item" onclick="openMsgModal('${recId}','text')">✍️ رسالة نصية</div>
+        <div class="menu-item" onclick="openMsgModal('${recId}','voice')">🎤 رسالة صوتية</div>
+        <div class="menu-item" onclick="openMsgModal('${recId}','rating')">⭐ تقييم</div>
+        <div class="menu-item danger" onclick="confirmDelete('${recId}', true)">🗑️ حذف التسجيل</div>
+      `;
+      e.target.parentElement.appendChild(menu);
+      setTimeout(() => {
+        document.addEventListener('click', function close(e) {
+          if (!menu.contains(e.target)) { menu.remove(); document.removeEventListener('click', close); }
+        });
+      }, 10);
+    }
+
+    // ========== MESSAGE MODAL ==========
+    function openMsgModal(recId, type) {
+      currentRecordingForMsg = recId;
+      selectedRating = 0;
+      const modal = document.createElement('div');
+      modal.className = 'msg-modal-overlay';
+      modal.id = 'msgModal';
+      modal.innerHTML = `
+        <div class="msg-modal-box">
+          <h3>📨 إرسال رسالة للمشارك</h3>
+          <div class="msg-type-btns">
+            <button class="msg-type-btn ${type==='text'?'active':''}" onclick="switchMsgType('text',this)">✍️ نصية</button>
+            <button class="msg-type-btn ${type==='voice'?'active':''}" onclick="switchMsgType('voice',this)">🎤 صوتية</button>
+            <button class="msg-type-btn ${type==='rating'?'active':''}" onclick="switchMsgType('rating',this)">⭐ تقييم</button>
+          </div>
+          <div id="textDiv" class="${type!=='text'?'hidden':''}">
+            <textarea id="msgText" placeholder="اكتب رسالتك هنا..."></textarea>
+          </div>
+          <div id="voiceDiv" class="voice-box ${type!=='voice'?'hidden':''}">
+            <button class="btn btn-primary" id="vRecBtn" onclick="startAdminVoice()">🎤 ابدأ التسجيل</button>
+            <div class="timer hidden" id="vTimer">00:00</div>
+            <button class="btn btn-danger hidden" id="vStopBtn" onclick="stopAdminVoice()">⏹ إيقاف</button>
+            <div id="vPreview" class="hidden"><audio id="vAudio" controls></audio></div>
+          </div>
+          <div id="ratingDiv" class="rating-box ${type!=='rating'?'hidden':''}">
+            <p style="color:var(--green-dark);font-weight:700;margin-bottom:8px;">اختر التقييم</p>
+            <div class="stars-row" id="starsRow">
+              ${[1,2,3,4,5].map(i => `<span class="star" onclick="setRating(${i})" data-v="${i}">⭐</span>`).join('')}
+            </div>
+            <div class="rating-val" id="ratVal">0 / 5</div>
+            <div class="rating-btns-grid">
+              ${[0.5,1,1.5,2,2.5,3,3.5,4,4.5,5].map(v => `<button class="r-btn" onclick="setRating(${v})">${v}</button>`).join('')}
+            </div>
+          </div>
+          <div class="modal-btns">
+            <button class="btn btn-primary" onclick="sendMsg()">إرسال ✅</button>
+            <button class="btn btn-secondary" onclick="closeMsgModal()">إلغاء</button>
+          </div>
+        </div>
+      `;
+      document.body.appendChild(modal);
+    }
+
+    function switchMsgType(type, btn) {
+      document.querySelectorAll('.msg-type-btn').forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+      ['textDiv','voiceDiv','ratingDiv'].forEach(id => document.getElementById(id).classList.add('hidden'));
+      if (type==='text') document.getElementById('textDiv').classList.remove('hidden');
+      else if (type==='voice') document.getElementById('voiceDiv').classList.remove('hidden');
+      else document.getElementById('ratingDiv').classList.remove('hidden');
+    }
+
+    function setRating(v) {
+      selectedRating = v;
+      document.getElementById('ratVal').textContent = `${v} / 5`;
+      document.querySelectorAll('#starsRow .star').forEach((s, i) => {
+        s.classList.remove('filled');
+        if (v >= i+1) s.classList.add('filled');
+      });
+      document.querySelectorAll('.r-btn').forEach(b => {
+        b.classList.toggle('active', parseFloat(b.textContent) === v);
+      });
+    }
+
+    async function startAdminVoice() {
+      try {
+        const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
+        adminVoiceChunks = [];
+        adminVoiceRec = new MediaRecorder(stream);
+        adminVoiceRec.ondataavailable = e => { if (e.data.size > 0) adminVoiceChunks.push(e.data); };
+        adminVoiceRec.onstop = () => {
+          stream.getTracks().forEach(t => t.stop());
+          const blob = new Blob(adminVoiceChunks, { type: 'audio/webm' });
+          document.getElementById('vAudio').src = URL.createObjectURL(blob);
+          document.getElementById('vPreview').classList.remove('hidden');
+        };
+        adminVoiceRec.start();
+        document.getElementById('vRecBtn').classList.add('hidden');
+        document.getElementById('vStopBtn').classList.remove('hidden');
+        document.getElementById('vTimer').classList.remove('hidden');
+        const t0 = Date.now();
+        adminVoiceTimer = setInterval(() => {
+          const e = Math.floor((Date.now()-t0)/1000);
+          document.getElementById('vTimer').textContent = `${String(Math.floor(e/60)).padStart(2,'0')}:${String(e%60).padStart(2,'0')}`;
+        }, 1000);
+      } catch(err) { alert("خطأ: " + err.message); }
+    }
+
+    function stopAdminVoice() {
+      if (adminVoiceRec && adminVoiceRec.state !== 'inactive') { adminVoiceRec.stop(); clearInterval(adminVoiceTimer); }
+      document.getElementById('vRecBtn').classList.remove('hidden');
+      document.getElementById('vStopBtn').classList.add('hidden');
+      document.getElementById('vTimer').classList.add('hidden');
+    }
+
+    async function sendMsg() {
+      const activeBtn = document.querySelector('.msg-type-btn.active');
+      let type = 'text';
+      if (activeBtn.textContent.includes('صوتية')) type = 'voice';
+      else if (activeBtn.textContent.includes('تقييم')) type = 'rating';
+
+      showLoading();
+      try {
+        if (type === 'text') {
+          const txt = document.getElementById('msgText').value.trim();
+          if (!txt) { hideLoading(); alert("اكتب رسالة أولاً!"); return; }
+          await saveMsg(currentParticipant.id, currentRecordingForMsg, txt, 'text', null, null);
+        } else if (type === 'voice') {
+          if (!adminVoiceChunks.length) { hideLoading(); alert("سجّل رسالة صوتية أولاً!"); return; }
+          const b64 = await blobToBase64(new Blob(adminVoiceChunks, { type: 'audio/webm' }));
+          await saveMsg(currentParticipant.id, currentRecordingForMsg, "🎤 رسالة صوتية من الاستاذة", 'voice', b64, null);
         } else {
-          content.classList.add("hidden");
-          toggleText.textContent = "عرض";
+          if (!selectedRating) { hideLoading(); alert("اختر تقييماً أولاً!"); return; }
+          // حذف التقييم السابق لنفس التسجيل
+          const snap = await window.dbGet(window.dbRef(window.db, 'messages'));
+          if (snap.exists()) {
+            const updates = {};
+            snap.forEach(c => { const m = c.val(); if (m.recordingId===currentRecordingForMsg && m.participantId===currentParticipant.id && m.messageType==='rating') updates[`messages/${c.key}`]=null; });
+            if (Object.keys(updates).length) await window.dbUpdate(window.dbRef(window.db), updates);
+          }
+          await saveMsg(currentParticipant.id, currentRecordingForMsg, `تقييمك: ${selectedRating} / 5 نجوم ⭐`, 'rating', null, selectedRating);
         }
-      }
+        hideLoading(); closeMsgModal();
+        await calcTotalRating();
+        await loadParticipantRecs();
+        alert("تم الإرسال! ✅");
+      } catch(err) { hideLoading(); alert("خطأ: " + err.message); }
+    }
 
-      // دالة نسخ النص
-      async function copyToClipboard(type) {
-        let textToCopy = '';
-        let buttonElement = event.target.closest('.copy-btn');
-        
-        if (type === 'name') {
-          textToCopy = currentParticipant.name;
-        } else if (type === 'password') {
-          textToCopy = currentParticipant.password;
-        }
+    async function saveMsg(pId, recId, msg, type, voiceData, rating) {
+      const ref = window.dbPush(window.dbRef(window.db, 'messages'));
+      const obj = { participantId: pId, recordingId: recId, message: msg, messageType: type, timestamp: new Date().toISOString(), read: false };
+      if (voiceData) obj.voiceData = voiceData;
+      if (rating) obj.rating = rating;
+      await window.dbSet(ref, obj);
+    }
 
-        try {
-          await navigator.clipboard.writeText(textToCopy);
-          
-          // تغيير شكل الزر مؤقتاً
-          const originalHTML = buttonElement.innerHTML;
-          buttonElement.innerHTML = '✅ تم النسخ';
-          buttonElement.classList.add('copied');
-          
-          setTimeout(() => {
-            buttonElement.innerHTML = originalHTML;
-            buttonElement.classList.remove('copied');
-          }, 2000);
-        } catch (err) {
-          alert('فشل النسخ: ' + err);
-        }
+    function closeMsgModal() {
+      document.getElementById('msgModal')?.remove();
+      adminVoiceChunks = [];
+      if (adminVoiceRec && adminVoiceRec.state !== 'inactive') adminVoiceRec.stop();
+      clearInterval(adminVoiceTimer);
+      selectedRating = 0;
+    }
+
+    // ========== CALC TOTAL RATING ==========
+    async function calcTotalRating() {
+      const snap = await window.dbGet(window.dbRef(window.db, 'messages'));
+      let total = 0, count = 0;
+      const ratedSet = new Set();
+      if (snap.exists()) {
+        snap.forEach(c => {
+          const m = c.val();
+          if (m.participantId === currentParticipant.id && m.messageType === 'rating' && m.rating && !ratedSet.has(m.recordingId)) {
+            total += m.rating; ratedSet.add(m.recordingId); count++;
+          }
+        });
       }
+      const div = document.getElementById('totalRatingDiv');
+      if (count === 0) { div.style.display = 'none'; return; }
+      div.style.display = 'inline-flex';
+      document.getElementById('totalRatVal').textContent = total.toFixed(1);
+      document.getElementById('totalRatMax').textContent = count * 5;
+    }
+
+    // ========== DELETE ==========
+    function confirmDelete(recId, isAdminDelete) {
+      const d = document.createElement('div');
+      d.className = 'confirm-overlay';
+      d.innerHTML = `
+        <div class="confirm-box">
+          <h3>⚠️ تأكيد الحذف</h3>
+          <p>هل تريد حذف هذا التسجيل؟<br>لن يمكن استرجاعه.</p>
+          <div class="confirm-btns">
+            <button class="btn btn-danger" onclick="doDelete('${recId}',${isAdminDelete})">حذف</button>
+            <button class="btn btn-secondary" onclick="this.closest('.confirm-overlay').remove()">إلغاء</button>
+          </div>
+        </div>
+      `;
+      document.body.appendChild(d);
+    }
+
+    async function doDelete(recId, isAdminDelete) {
+      showLoading();
+      const source = isAdminDelete ? currentParticipant : currentUser;
+      const pId = isAdminDelete ? currentParticipant.id : currentUser.id;
+      const newRecs = (source.recordings || []).filter(r => r.id !== recId);
+      await window.dbUpdate(window.dbRef(window.db), { [`participants/${pId}/recordings`]: newRecs });
+      // حذف الرسائل المرتبطة
+      const snap = await window.dbGet(window.dbRef(window.db, 'messages'));
+      if (snap.exists()) {
+        const updates = {};
+        snap.forEach(c => { if (c.val().recordingId === recId) updates[`messages/${c.key}`] = null; });
+        if (Object.keys(updates).length) await window.dbUpdate(window.dbRef(window.db), updates);
+      }
+      if (isAdminDelete) {
+        currentParticipant.recordings = newRecs;
+        await calcTotalRating();
+        await loadParticipantRecs();
+      } else {
+        currentUser.recordings = newRecs;
+        loadMyRecs();
+        updateUnreadBadge();
+      }
+      hideLoading();
+      document.querySelector('.confirm-overlay')?.remove();
+      alert("تم الحذف! ✅");
+    }
+
+    // ========== CONTACT INFO ==========
+    function toggleContact() {
+      const c = document.getElementById('contactContent');
+      const t = document.getElementById('contactToggle');
+      if (c.classList.contains('hidden')) { c.classList.remove('hidden'); t.textContent = 'إخفاء'; }
+      else { c.classList.add('hidden'); t.textContent = 'عرض'; }
+    }
+
+    async function copyInfo(type, btn) {
+      const text = type === 'name' ? currentParticipant.name : currentParticipant.password;
+      try {
+        await navigator.clipboard.writeText(text);
+        const orig = btn.innerHTML;
+        btn.innerHTML = '✅ تم'; btn.classList.add('copied');
+        setTimeout(() => { btn.innerHTML = orig; btn.classList.remove('copied'); }, 2000);
+      } catch(err) { alert("فشل النسخ"); }
+    }
+
+    // ========== VIEWED RECORDINGS ==========
+    function loadViewedRecs() { const s = localStorage.getItem('viewedRecs'); if (s) viewedRecs = new Set(JSON.parse(s)); }
+    function saveViewedRecs() { localStorage.setItem('viewedRecs', JSON.stringify([...viewedRecs])); }
+    function markViewed(pId, rId) { viewedRecs.add(`${pId}_${rId}`); saveViewedRecs(); }
+    function isViewed(pId, rId) { return viewedRecs.has(`${pId}_${rId}`); }
+
+    // ========== UTILS ==========
+    function blobToBase64(blob) {
+      return new Promise((res, rej) => {
+        const r = new FileReader();
+        r.onloadend = () => res(r.result);
+        r.onerror = rej;
+        r.readAsDataURL(blob);
+      });
+    }
+
+    function showLoading() {
+      if (document.getElementById('loadingOverlay')) return;
+      const d = document.createElement('div');
+      d.className = 'loading-overlay'; d.id = 'loadingOverlay';
+      d.innerHTML = '<div class="loading-text"><div class="spinner"></div><p>جاري التحميل...</p></div>';
+      document.body.appendChild(d);
+    }
+    function hideLoading() { document.getElementById('loadingOverlay')?.remove(); }
+
+    // ========== TUTORIAL ==========
+    const PARTICIPANT_STEPS = [
+      {
+        icon: '🌟', title: 'مرحباً في مسابقة جزء عم!',
+        desc: 'هذا التطبيق يساعدك على إرسال تسجيلاتك لحفظ القرآن للاستاذة مباشرة.',
+        highlight: null
+      },
+      {
+        icon: '🎤', title: 'كيف تسجّل؟',
+        desc: 'اضغط على "ابدأ التسجيل" لتسجيل حفظك صوتاً أو فيديو، ثم اضغط "إيقاف" عند الانتهاء.',
+        highlight: '📌 يمكنك اختيار تسجيل صوتي أو فيديو من الأزرار فوق'
+      },
+      {
+        icon: '💾', title: 'حفظ التسجيل',
+        desc: 'بعد التسجيل ستظهر لك معاينة، راجعها ثم اضغط "حفظ" لإرسالها للاستاذة.',
+        highlight: '✅ التسجيل يُحفظ تلقائياً في قاعدة البيانات'
+      },
+      {
+        icon: '📬', title: 'رسائل الاستاذة',
+        desc: 'ستجد تعليقات الاستاذة وتقييماتها مباشرة تحت كل تسجيل، أو في تبويب "رسائلي".',
+        highlight: '🔔 ستظهر نقطة حمراء عند وصول رسالة جديدة'
+      }
+    ];
+
+    const ADMIN_STEPS = [
+      {
+        icon: '👩‍🏫', title: 'لوحة إدارة المشاركين',
+        desc: 'هنا تجدين قائمة كل المشاركين وعدد تسجيلاتهم والتسجيلات الجديدة.',
+        highlight: '🔴 الرقم الأحمر يعني تسجيلات لم تشاهديها بعد'
+      },
+      {
+        icon: '🎙️', title: 'مراجعة التسجيلات',
+        desc: 'اضغطي على اسم أي مشارك لترى جميع تسجيلاته وتستمعي إليها.',
+        highlight: null
+      },
+      {
+        icon: '💬', title: 'إرسال رسائل وتقييمات',
+        desc: 'اضغطي على النقاط (⋮) بجانب أي تسجيل لإرسال: رسالة نصية، رسالة صوتية، أو تقييم بالنجوم.',
+        highlight: '⭐ التقييمات تظهر مباشرة تحت تسجيل الطالبة'
+      },
+      {
+        icon: '📊', title: 'متابعة التقدم',
+        desc: 'يظهر مجموع نقاط كل مشارك في أعلى صفحته، يمكنك أيضاً نسخ اسم المشارك وكلمة مروره.',
+        highlight: '📋 اضغطي "عرض" في قسم معلومات التواصل'
+      }
+    ];
+
+    function showTutorial(mode) {
+      tutorialMode = mode;
+      tutorialStep = 0;
+      tutorialSteps = mode === 'admin' ? ADMIN_STEPS : PARTICIPANT_STEPS;
+      document.getElementById('tutTitle').textContent = mode === 'admin' ? '👩‍🏫 دليل الاستاذة' : '🌟 مرحباً بك!';
+      document.getElementById('tutorialOverlay').classList.remove('hidden');
+      renderTutorialStep();
+    }
+
+    function renderTutorialStep() {
+      const step = tutorialSteps[tutorialStep];
+      const total = tutorialSteps.length;
+      document.getElementById('tutStepIndicator').textContent = `${tutorialStep+1} / ${total}`;
+      document.getElementById('tutIcon').textContent = step.icon;
+      document.getElementById('tutStepTitle').textContent = step.title;
+      document.getElementById('tutDesc').textContent = step.desc;
+      const hl = document.getElementById('tutHighlight');
+      if (step.highlight) {
+        hl.classList.remove('hidden');
+        document.getElementById('tutHighlightText').textContent = step.highlight;
+      } else hl.classList.add('hidden');
+      // dots
+      const dots = document.getElementById('tutDots');
+      dots.innerHTML = tutorialSteps.map((_,i) => `<div class="t-dot ${i===tutorialStep?'active':''}"></div>`).join('');
+      // buttons
+      const btns = document.getElementById('tutBtns');
+      const isLast = tutorialStep === total - 1;
+      btns.className = 'tutorial-btns' + (tutorialStep === 0 ? ' first' : '');
+      if (tutorialStep === 0) {
+        btns.innerHTML = `<button class="t-next-btn" onclick="nextTutorialStep()">ابدأ الجولة ◀</button>`;
+      } else if (isLast) {
+        btns.innerHTML = `
+          <button class="t-skip-btn" onclick="skipTutorial()">◀ السابق</button>
+          <button class="t-next-btn" onclick="skipTutorial()">✅ فهمت!</button>
+        `;
+        // override prev button
+        btns.querySelector('.t-skip-btn').onclick = prevTutorialStep;
+      } else {
+        btns.innerHTML = `
+          <button class="t-skip-btn" onclick="prevTutorialStep()">◀ السابق</button>
+          <button class="t-next-btn" onclick="nextTutorialStep()">التالي ◀</button>
+        `;
+      }
+    }
+
+    function nextTutorialStep() {
+      if (tutorialStep < tutorialSteps.length - 1) { tutorialStep++; renderTutorialStep(); }
+      else skipTutorial();
+    }
+    function prevTutorialStep() {
+      if (tutorialStep > 0) { tutorialStep--; renderTutorialStep(); }
+    }
+    function skipTutorial() {
+      document.getElementById('tutorialOverlay').classList.add('hidden');
+    }
     </script>
   </body>
 </html>
