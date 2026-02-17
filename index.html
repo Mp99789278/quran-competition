@@ -503,7 +503,7 @@
         const checkFirebase = setInterval(() => {
           if (window.firebaseInitialized && window.db) {
             clearInterval(checkFirebase);
-            loadCurrentSession();
+            testFirebaseConnection();
             loadViewedRecordings();
           }
         }, 100);
@@ -515,6 +515,37 @@
           }
         }, 5000);
       };
+
+      async function testFirebaseConnection() {
+        try {
+          // اختبار الكتابة والقراءة
+          const testRef = window.dbRef(window.db, 'connectionTest');
+          await window.dbSet(testRef, { t: Date.now() });
+          await window.dbGet(testRef);
+          await window.dbRemove(testRef);
+          // كل شيء يعمل
+          loadCurrentSession();
+        } catch(e) {
+          // Firebase Rules مغلقة
+          showHomePage();
+          const card = document.getElementById("homePage");
+          const alertDiv = document.createElement("div");
+          alertDiv.className = "error-message";
+          alertDiv.style.cssText = "margin-bottom:12px;font-size:0.88rem;line-height:1.7;";
+          alertDiv.innerHTML = `
+            ⚠️ <strong>تنبيه: Firebase Rules مغلقة!</strong><br>
+            البيانات لن تُحفظ ولن تُقرأ.<br><br>
+            <strong>الحل:</strong> اذهب إلى<br>
+            Firebase Console → Realtime Database → Rules<br>
+            وغيّر إلى:<br>
+            <code style="background:#fff;padding:6px 10px;display:block;margin-top:6px;border-radius:6px;direction:ltr;font-size:0.82rem;border:1px solid #ccc;">
+{ "rules": { ".read": true, ".write": true } }
+            </code>
+            ثم اضغط <strong>Publish</strong>
+          `;
+          card.insertBefore(alertDiv, card.firstChild);
+        }
+      }
 
       function loadViewedRecordings() {
         const stored = localStorage.getItem('viewedRecordings');
@@ -557,7 +588,9 @@
               const snapshot = await window.dbGet(window.dbRef(window.db, 'participants/' + data.userId));
               hideLoading();
               if (snapshot.exists()) {
-                currentUser = { id: data.userId, ...snapshot.val() };
+                const val = snapshot.val();
+                val.recordings = toRecordingsArray(val.recordings);
+                currentUser = { id: data.userId, ...val };
                 showParticipantPage();
               } else {
                 localStorage.removeItem("currentSession");
@@ -1256,9 +1289,10 @@
           const base64Data = await blobToBase64(blob);
           const recordingId = Date.now().toString();
           const recording = { id: recordingId, type: recordingType, data: base64Data, timestamp: new Date().toISOString() };
-          const recordings = currentUser.recordings || [];
+          // حفظ كـ object بـ recordingId كمفتاح (Firebase لا يدعم arrays بشكل صحيح)
+          await window.dbSet(window.dbRef(window.db, `participants/${currentUser.id}/recordings/${recordingId}`), recording);
+          const recordings = toRecordingsArray(currentUser.recordings);
           recordings.push(recording);
-          await window.dbUpdate(window.dbRef(window.db), { [`participants/${currentUser.id}/recordings`]: recordings });
           currentUser.recordings = recordings;
           hideLoading();
           alert("تم الحفظ بنجاح! ✅");
@@ -1277,13 +1311,24 @@
         }
       }
 
-      function loadMyRecordings() {
+      async function loadMyRecordings() {
+        // اقرأ البيانات الحديثة من Firebase
+        try {
+          const snap = await window.dbGet(window.dbRef(window.db, `participants/${currentUser.id}/recordings`));
+          if (snap.exists()) {
+            currentUser.recordings = toRecordingsArray(snap.val());
+          } else {
+            currentUser.recordings = [];
+          }
+        } catch(e) { /* استخدم الكاش المحلي */ }
+
         const listDiv = document.getElementById("myRecordingsList");
-        if (!currentUser.recordings || currentUser.recordings.length === 0) {
+        const recordings = toRecordingsArray(currentUser.recordings);
+        if (recordings.length === 0) {
           listDiv.innerHTML = '<div class="empty-state"><div class="icon">🎙️</div><p>لا توجد تسجيلات</p></div>';
           return;
         }
-        listDiv.innerHTML = currentUser.recordings.map((rec, index) => `
+        listDiv.innerHTML = recordings.map((rec, index) => `
           <div class="recording-item">
             <div class="three-dots" onclick="showRecordingMenu(event, '${rec.id}')">⋮</div>
             <p style="color:var(--dark-green);font-weight:700;font-size:1rem;margin-bottom:4px;">
@@ -1330,56 +1375,101 @@
 
       async function deleteRecording(recordingId) {
         showLoading();
-        const recordings = currentUser.recordings.filter(r => r.id !== recordingId);
-        await window.dbUpdate(window.dbRef(window.db), { [`participants/${currentUser.id}/recordings`]: recordings });
-        const messagesSnapshot = await window.dbGet(window.dbRef(window.db, 'messages'));
-        if (messagesSnapshot.exists()) {
-          const updates = {};
-          messagesSnapshot.forEach(child => { if (child.val().recordingId === recordingId) updates[`messages/${child.key}`] = null; });
-          if (Object.keys(updates).length > 0) await window.dbUpdate(window.dbRef(window.db), updates);
+        try {
+          // حذف التسجيل من Firebase مباشرة بالمسار
+          await window.dbRemove(window.dbRef(window.db, `participants/${currentUser.id}/recordings/${recordingId}`));
+          const messagesSnapshot = await window.dbGet(window.dbRef(window.db, 'messages'));
+          if (messagesSnapshot.exists()) {
+            const updates = {};
+            messagesSnapshot.forEach(child => { if (child.val().recordingId === recordingId) updates[`messages/${child.key}`] = null; });
+            if (Object.keys(updates).length > 0) await window.dbUpdate(window.dbRef(window.db), updates);
+          }
+          currentUser.recordings = (currentUser.recordings || []).filter(r => r.id !== recordingId);
+          hideLoading();
+          closeConfirmDialog();
+          loadMyRecordings();
+          updateUnreadBadge();
+          alert("تم الحذف! ✅");
+        } catch(e) {
+          hideLoading();
+          alert("خطأ في الحذف: " + e.message);
         }
-        currentUser.recordings = recordings;
-        hideLoading();
-        closeConfirmDialog();
-        loadMyRecordings();
-        updateUnreadBadge();
-        alert("تم الحذف! ✅");
+      }
+
+      // تحويل recordings من Firebase (قد تكون object أو array) إلى array
+      function toRecordingsArray(recordings) {
+        if (!recordings) return [];
+        if (Array.isArray(recordings)) return recordings.filter(r => r && r.id);
+        if (typeof recordings === 'object') return Object.values(recordings).filter(r => r && r.id);
+        return [];
       }
 
       async function loadParticipants() {
         showLoading();
-        const snapshot = await window.dbGet(window.dbRef(window.db, 'participants'));
-        hideLoading();
-        const listDiv = document.getElementById("participantsList");
-        if (!snapshot.exists()) {
-          listDiv.innerHTML = '<div class="empty-state"><div class="icon">👥</div><p>لا يوجد مشاركون</p></div>';
+        try {
+          const snapshot = await window.dbGet(window.dbRef(window.db, 'participants'));
+          hideLoading();
+          const listDiv = document.getElementById("participantsList");
+          if (!snapshot.exists()) {
+            listDiv.innerHTML = '<div class="empty-state"><div class="icon">👥</div><p>لا يوجد مشاركون بعد</p></div>';
+            updateAdminStats(0, 0, 0);
+            return;
+          }
+          let participants = [];
+          snapshot.forEach(child => {
+            const val = child.val();
+            const recs = toRecordingsArray(val.recordings);
+            participants.push({ id: child.key, ...val, recordings: recs });
+          });
+          if (participants.length === 0) {
+            listDiv.innerHTML = '<div class="empty-state"><div class="icon">👥</div><p>لا يوجد مشاركون بعد</p></div>';
+            updateAdminStats(0, 0, 0);
+            return;
+          }
+          let totalRecordings = 0, newRecordings = 0;
+          participants.forEach(p => {
+            totalRecordings += p.recordings.length;
+            p.recordings.forEach(rec => { if (!isRecordingViewed(p.id, rec.id)) newRecordings++; });
+          });
+          updateAdminStats(participants.length, totalRecordings, newRecordings);
+          listDiv.innerHTML = participants.map(p => {
+            const newCount = p.recordings.filter(rec => !isRecordingViewed(p.id, rec.id)).length;
+            // نبني JSON آمن
+            const pSafe = JSON.stringify({ id: p.id, name: p.name, password: p.password, recordings: p.recordings, registeredAt: p.registeredAt || '' });
+            return `
+              <div class="participant-card" onclick='openParticipant(${p.id.replace(/[^0-9]/g,"")})'>
+                ${newCount > 0 ? `<div class="new-recordings-badge">${newCount}</div>` : ''}
+                <div class="icon">👤</div>
+                <h3>${p.name}</h3>
+                <p class="count">${p.recordings.length} تسجيل</p>
+              </div>`;
+          }).join("");
+          // حفظ بيانات المشاركين للاستخدام عند الضغط
+          window._participantsCache = {};
+          participants.forEach(p => { window._participantsCache[p.id] = p; });
+        } catch (error) {
+          hideLoading();
+          const listDiv = document.getElementById("participantsList");
+          if (error.message && error.message.includes('permission')) {
+            listDiv.innerHTML = `
+              <div class="error-message" style="grid-column:1/-1;">
+                🔒 <strong>خطأ في صلاحيات Firebase!</strong><br><br>
+                الحل: اذهب إلى Firebase Console → Realtime Database → Rules وغيّر الـ Rules إلى:<br>
+                <code style="background:#f1f1f1;padding:8px;display:block;margin-top:8px;border-radius:6px;direction:ltr;font-size:0.85rem;">
+                { "rules": { ".read": true, ".write": true } }
+                </code>
+                ثم اضغط "Publish"
+              </div>`;
+          } else {
+            listDiv.innerHTML = `<div class="error-message" style="grid-column:1/-1;">⚠️ خطأ في تحميل البيانات: ${error.message}<br>تأكد من اتصالك بالإنترنت</div>`;
+          }
           updateAdminStats(0, 0, 0);
-          return;
         }
-        let participants = [];
-        snapshot.forEach(child => participants.push({ id: child.key, ...child.val() }));
-        if (participants.length === 0) {
-          listDiv.innerHTML = '<div class="empty-state"><div class="icon">👥</div><p>لا يوجد مشاركون</p></div>';
-          updateAdminStats(0, 0, 0);
-          return;
-        }
-        let totalRecordings = 0, newRecordings = 0;
-        participants.forEach(p => {
-          const count = (p.recordings || []).length;
-          totalRecordings += count;
-          (p.recordings || []).forEach(rec => { if (!isRecordingViewed(p.id, rec.id)) newRecordings++; });
-        });
-        updateAdminStats(participants.length, totalRecordings, newRecordings);
-        listDiv.innerHTML = participants.map(p => {
-          const newCount = (p.recordings || []).filter(rec => !isRecordingViewed(p.id, rec.id)).length;
-          return `
-            <div class="participant-card" onclick='showAdminRecordingsPage(${JSON.stringify(p).replace(/'/g, "&#39;")})'>
-              ${newCount > 0 ? `<div class="new-recordings-badge">${newCount}</div>` : ''}
-              <div class="icon">👤</div>
-              <h3>${p.name}</h3>
-              <p class="count">${(p.recordings || []).length} تسجيل</p>
-            </div>`;
-        }).join("");
+      }
+
+      function openParticipant(id) {
+        const p = window._participantsCache && window._participantsCache[id];
+        if (p) showAdminRecordingsPage(p);
       }
 
       function updateAdminStats(participants, recordings, newRecs) {
@@ -1390,13 +1480,27 @@
 
       async function loadParticipantRecordings() {
         const listDiv = document.getElementById("adminRecordingsList");
-        if (!currentParticipant.recordings || currentParticipant.recordings.length === 0) {
+        // اقرأ تسجيلات محدّثة من Firebase
+        try {
+          const snap = await window.dbGet(window.dbRef(window.db, `participants/${currentParticipant.id}/recordings`));
+          if (snap.exists()) {
+            currentParticipant.recordings = toRecordingsArray(snap.val());
+            if (window._participantsCache && window._participantsCache[currentParticipant.id]) {
+              window._participantsCache[currentParticipant.id].recordings = currentParticipant.recordings;
+            }
+          } else {
+            currentParticipant.recordings = [];
+          }
+        } catch(e) { currentParticipant.recordings = toRecordingsArray(currentParticipant.recordings); }
+
+        const recordings = currentParticipant.recordings;
+        if (!recordings || recordings.length === 0) {
           listDiv.innerHTML = '<div class="empty-state"><div class="icon">🎙️</div><p>لا توجد تسجيلات</p></div>';
           return;
         }
-        currentParticipant.recordings.forEach(rec => markRecordingAsViewed(currentParticipant.id, rec.id));
+        recordings.forEach(rec => markRecordingAsViewed(currentParticipant.id, rec.id));
 
-        listDiv.innerHTML = currentParticipant.recordings.map((rec, index) => `
+        listDiv.innerHTML = recordings.map((rec, index) => `
           <div class="recording-item">
             <div class="three-dots" onclick="showAdminRecordingMenu(event, '${rec.id}')">⋮</div>
             <p style="color:var(--dark-green);font-weight:700;font-size:1rem;margin-bottom:4px;">
@@ -1612,23 +1716,24 @@
 
       async function deleteRecordingAdmin(recordingId) {
         showLoading();
-        const recordings = currentParticipant.recordings.filter(r => r.id !== recordingId);
-        await window.dbUpdate(window.dbRef(window.db), { [`participants/${currentParticipant.id}/recordings`]: recordings });
-        const messagesSnapshot = await window.dbGet(window.dbRef(window.db, 'messages'));
-        if (messagesSnapshot.exists()) {
-          const updates = {};
-          messagesSnapshot.forEach(child => { if (child.val().recordingId === recordingId) updates[`messages/${child.key}`] = null; });
-          if (Object.keys(updates).length > 0) await window.dbUpdate(window.dbRef(window.db), updates);
+        try {
+          await window.dbRemove(window.dbRef(window.db, `participants/${currentParticipant.id}/recordings/${recordingId}`));
+          const messagesSnapshot = await window.dbGet(window.dbRef(window.db, 'messages'));
+          if (messagesSnapshot.exists()) {
+            const updates = {};
+            messagesSnapshot.forEach(child => { if (child.val().recordingId === recordingId) updates[`messages/${child.key}`] = null; });
+            if (Object.keys(updates).length > 0) await window.dbUpdate(window.dbRef(window.db), updates);
+          }
+          hideLoading();
+          closeConfirmDialog();
+          await calculateAndDisplayTotalRating();
+          await loadAdminSentMessages();
+          await loadParticipantRecordings();
+          alert("تم الحذف! ✅");
+        } catch(e) {
+          hideLoading();
+          alert("خطأ في الحذف: " + e.message);
         }
-        currentParticipant.recordings = recordings;
-        const snapshot = await window.dbGet(window.dbRef(window.db, 'participants/' + currentParticipant.id));
-        if (snapshot.exists()) currentParticipant = { id: currentParticipant.id, ...snapshot.val() };
-        hideLoading();
-        closeConfirmDialog();
-        await calculateAndDisplayTotalRating();
-        await loadAdminSentMessages();
-        loadParticipantRecordings();
-        alert("تم الحذف! ✅");
       }
 
       function toggleContactInfo() {
