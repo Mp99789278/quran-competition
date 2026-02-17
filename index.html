@@ -186,6 +186,45 @@
       /* شارة الإعلانات */
       .broadcast-new-badge { background: #dc2626; color: white; border-radius: 12px; padding: 2px 8px; font-size: 0.75rem; font-weight: 700; margin-right: 6px; }
 
+      /* لوحة الترتيب */
+      .leaderboard-modal { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.75); display: flex; align-items: flex-start; justify-content: center; z-index: 2000; padding: 15px; overflow-y: auto; }
+      .leaderboard-content { background: var(--white); border-radius: 16px; width: 100%; max-width: 500px; margin: auto; overflow: hidden; box-shadow: 0 10px 40px rgba(0,0,0,0.3); }
+      .leaderboard-header { background: linear-gradient(135deg, var(--dark-green), var(--medium-green)); padding: 20px 15px; text-align: center; position: relative; }
+      .leaderboard-header h2 { color: var(--white); font-family: "Amiri", serif; font-size: 1.5rem; margin-bottom: 4px; }
+      .leaderboard-header p { color: var(--primary-gold); font-size: 0.85rem; }
+      .leaderboard-close { position: absolute; top: 12px; left: 12px; background: rgba(255,255,255,0.2); color: white; border: none; border-radius: 50%; width: 32px; height: 32px; cursor: pointer; font-size: 1rem; display: flex; align-items: center; justify-content: center; transition: all 0.3s; }
+      .leaderboard-close:hover { background: rgba(255,255,255,0.35); }
+      .leaderboard-body { padding: 15px; }
+      .leaderboard-row { display: flex; align-items: center; gap: 12px; padding: 12px; border-radius: 12px; margin-bottom: 8px; transition: all 0.3s; border: 2px solid transparent; }
+      .leaderboard-row:hover { transform: translateX(-3px); }
+      .leaderboard-row.rank-1 { background: linear-gradient(135deg, #fffbeb, #fef3c7); border-color: #f59e0b; box-shadow: 0 4px 15px rgba(245,158,11,0.2); }
+      .leaderboard-row.rank-2 { background: linear-gradient(135deg, #f8fafc, #e2e8f0); border-color: #94a3b8; }
+      .leaderboard-row.rank-3 { background: linear-gradient(135deg, #fff7ed, #ffedd5); border-color: #f97316; }
+      .leaderboard-row.rank-other { background: var(--cream); border-color: var(--border-light); }
+      .leaderboard-row.rank-mine { border-color: var(--primary-gold) !important; box-shadow: 0 0 0 3px rgba(212,175,55,0.25); }
+      .rank-badge { width: 42px; height: 42px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 1.3rem; font-weight: 900; flex-shrink: 0; }
+      .rank-1 .rank-badge { background: linear-gradient(135deg, #f59e0b, #fbbf24); color: white; }
+      .rank-2 .rank-badge { background: linear-gradient(135deg, #94a3b8, #cbd5e1); color: white; }
+      .rank-3 .rank-badge { background: linear-gradient(135deg, #f97316, #fb923c); color: white; }
+      .rank-other .rank-badge { background: var(--light-green); color: var(--dark-green); font-size: 1rem; }
+      .rank-info { flex: 1; }
+      .rank-name { color: var(--dark-green); font-weight: 700; font-size: 1rem; margin-bottom: 3px; }
+      .rank-name .you-tag { background: var(--primary-gold); color: var(--dark-green); border-radius: 8px; padding: 1px 7px; font-size: 0.72rem; font-weight: 700; margin-right: 6px; }
+      .rank-details { color: #777; font-size: 0.8rem; }
+      .rank-score { text-align: center; }
+      .rank-score .score-num { font-size: 1.4rem; font-weight: 900; color: var(--dark-green); line-height: 1; }
+      .rank-score .score-label { font-size: 0.7rem; color: #888; }
+      .rank-stars { color: #fbbf24; font-size: 0.85rem; margin-top: 2px; }
+      .leaderboard-empty { text-align: center; padding: 30px; color: #aaa; }
+      .leaderboard-empty .icon { font-size: 3rem; margin-bottom: 10px; }
+      .my-rank-banner { background: linear-gradient(135deg, #e8f5e9, #f0fff4); border: 2px solid #4caf50; border-radius: 10px; padding: 12px 15px; margin-bottom: 15px; display: flex; align-items: center; gap: 10px; }
+      .my-rank-banner .icon { font-size: 1.5rem; }
+      .my-rank-banner .text { color: var(--dark-green); font-size: 0.95rem; font-weight: 600; }
+      .my-rank-banner .text strong { font-size: 1.1rem; }
+
+      @keyframes popIn { 0% { transform: scale(0.8); opacity: 0; } 100% { transform: scale(1); opacity: 1; } }
+      .leaderboard-row { animation: popIn 0.3s ease both; }
+
       .confirm-dialog { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.7); display: flex; align-items: center; justify-content: center; z-index: 2500; padding: 15px; }
       .confirm-content { background: white; padding: 20px; border-radius: 12px; max-width: 400px; width: 100%; text-align: center; }
       .confirm-content h3 { color: var(--dark-green); font-size: 1.2rem; margin-bottom: 12px; }
@@ -298,6 +337,7 @@
             📬 رسائل
             <span id="unreadBadge" class="unread-badge hidden"></span>
           </button>
+          <button class="btn btn-secondary" onclick="showLeaderboard('participant')" style="flex:1;">🏆 ترتيب</button>
         </div>
 
         <!-- قسم التسجيل -->
@@ -336,6 +376,11 @@
           <h3 style="color:var(--dark-green);margin-bottom:12px;font-size:1.1rem;">📬 رسائل الاستاذة</h3>
           <div id="messagesList"></div>
         </div>
+
+        <!-- قسم الترتيب -->
+        <div id="leaderboardSection" class="hidden">
+          <div id="leaderboardContent"></div>
+        </div>
       </div>
 
       <!-- صفحة المشاركين (للاستاذة) -->
@@ -362,8 +407,11 @@
         </div>
 
         <!-- زر الإعلان العام -->
-        <button class="btn btn-primary" onclick="showBroadcastModal()" style="margin-bottom:10px;">
+        <button class="btn btn-primary" onclick="showBroadcastModal()" style="margin-bottom:8px;">
           📢 إرسال إعلان عام لجميع المشاركين
+        </button>
+        <button class="btn btn-secondary" onclick="showLeaderboard('admin')" style="margin-bottom:10px;">
+          🏆 عرض لوحة الترتيب
         </button>
 
         <!-- قائمة الإعلانات للحذف -->
@@ -1780,6 +1828,133 @@
           buttonElement.classList.add('copied');
           setTimeout(() => { buttonElement.innerHTML = originalHTML; buttonElement.classList.remove('copied'); }, 2000);
         } catch(err) { alert('فشل النسخ: ' + err); }
+      }
+
+      // ====== لوحة الترتيب ======
+      async function showLeaderboard(caller) {
+        showLoading();
+        try {
+          const participantsSnap = await window.dbGet(window.dbRef(window.db, 'participants'));
+          const messagesSnap = await window.dbGet(window.dbRef(window.db, 'messages'));
+
+          let participants = [];
+          if (participantsSnap.exists()) {
+            participantsSnap.forEach(child => {
+              const val = child.val();
+              participants.push({ id: child.key, name: val.name, recordings: toRecordingsArray(val.recordings) });
+            });
+          }
+
+          const ratings = {};
+          participants.forEach(p => { ratings[p.id] = { total: 0, ratedSet: new Set() }; });
+
+          if (messagesSnap.exists()) {
+            messagesSnap.forEach(child => {
+              const msg = child.val();
+              if (msg.messageType === 'rating' && msg.rating && ratings[msg.participantId]) {
+                const r = ratings[msg.participantId];
+                if (!r.ratedSet.has(msg.recordingId)) {
+                  r.total += msg.rating;
+                  r.ratedSet.add(msg.recordingId);
+                }
+              }
+            });
+          }
+
+          const ranked = participants.map(p => ({
+            ...p,
+            totalRating: ratings[p.id] ? ratings[p.id].total : 0,
+            ratedCount: ratings[p.id] ? ratings[p.id].ratedSet.size : 0,
+            maxRating: ratings[p.id] ? ratings[p.id].ratedSet.size * 5 : 0,
+          })).sort((a, b) => b.totalRating - a.totalRating || b.ratedCount - a.ratedCount);
+
+          hideLoading();
+          renderLeaderboard(ranked, caller);
+        } catch(e) {
+          hideLoading();
+          alert("خطأ في تحميل الترتيب: " + e.message);
+        }
+      }
+
+      function renderLeaderboard(ranked, caller) {
+        const old = document.getElementById('leaderboardModal');
+        if (old) old.remove();
+
+        const myId = currentUser && !isAdmin ? currentUser.id : null;
+        const myRank = myId ? ranked.findIndex(p => p.id === myId) + 1 : 0;
+
+        const rankEmoji = (i) => i === 0 ? '🥇' : i === 1 ? '🥈' : i === 2 ? '🥉' : (i + 1);
+        const rankClass = (i) => i === 0 ? 'rank-1' : i === 1 ? 'rank-2' : i === 2 ? 'rank-3' : 'rank-other';
+
+        const starsHtml = (rating, max) => {
+          if (!max) return '<span style="color:#bbb;font-size:0.8rem;">لا يوجد تقييم بعد</span>';
+          const full = Math.floor(rating);
+          const half = rating % 1 >= 0.5 ? 1 : 0;
+          const empty = 5 - full - half;
+          return '⭐'.repeat(full) + (half ? '✨' : '') + '☆'.repeat(Math.max(0, empty));
+        };
+
+        let rowsHtml = '';
+        if (ranked.length === 0) {
+          rowsHtml = `<div class="leaderboard-empty"><div class="icon">🏆</div><p>لا يوجد مشاركون بعد</p></div>`;
+        } else {
+          ranked.forEach((p, i) => {
+            const isMine = p.id === myId;
+            rowsHtml += `
+              <div class="leaderboard-row ${rankClass(i)} ${isMine ? 'rank-mine' : ''}" style="animation-delay:${i * 0.06}s">
+                <div class="rank-badge">${rankEmoji(i)}</div>
+                <div class="rank-info">
+                  <div class="rank-name">
+                    ${p.name}
+                    ${isMine ? '<span class="you-tag">أنتِ</span>' : ''}
+                  </div>
+                  <div class="rank-details">${p.recordings.length} تسجيل • ${p.ratedCount} تقييم</div>
+                  <div class="rank-stars">${starsHtml(p.totalRating, p.maxRating)}</div>
+                </div>
+                <div class="rank-score">
+                  <div class="score-num">${p.totalRating > 0 ? p.totalRating.toFixed(1) : '-'}</div>
+                  ${p.maxRating > 0 ? `<div class="score-label">من ${p.maxRating}</div>` : '<div class="score-label">نقطة</div>'}
+                </div>
+              </div>`;
+          });
+        }
+
+        let myBanner = '';
+        if (myId && myRank > 0 && ranked.length > 0) {
+          const me = ranked[myRank - 1];
+          myBanner = `
+            <div class="my-rank-banner">
+              <span class="icon">📍</span>
+              <div class="text">مرتبتك الحالية: <strong>${myRank} من ${ranked.length}</strong> • مجموعك: <strong>${me.totalRating > 0 ? me.totalRating.toFixed(1) : '0'} نقطة</strong></div>
+            </div>`;
+        }
+
+        const modal = document.createElement('div');
+        modal.className = 'leaderboard-modal';
+        modal.id = 'leaderboardModal';
+        modal.innerHTML = `
+          <div class="leaderboard-content">
+            <div class="leaderboard-header">
+              <button class="leaderboard-close" onclick="closeLeaderboard()">✕</button>
+              <h2>🏆 لوحة الترتيب</h2>
+              <p>مسابقة حفظ جزء عم - رمضان 1446</p>
+            </div>
+            <div class="leaderboard-body">
+              ${myBanner}
+              ${rowsHtml}
+            </div>
+          </div>`;
+        document.body.appendChild(modal);
+
+        // إغلاق بالضغط خارج الـ modal
+        modal.addEventListener('click', function(e) {
+          if (e.target === modal) closeLeaderboard();
+        });
+      }
+
+      function closeLeaderboard() {
+        const modal = document.getElementById('leaderboardModal');
+        if (modal) modal.remove();
       }
     </script>
   </body>
