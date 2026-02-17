@@ -376,11 +376,6 @@
           <h3 style="color:var(--dark-green);margin-bottom:12px;font-size:1.1rem;">📬 رسائل الاستاذة</h3>
           <div id="messagesList"></div>
         </div>
-
-        <!-- قسم الترتيب -->
-        <div id="leaderboardSection" class="hidden">
-          <div id="leaderboardContent"></div>
-        </div>
       </div>
 
       <!-- صفحة المشاركين (للاستاذة) -->
@@ -1830,8 +1825,9 @@
         } catch(err) { alert('فشل النسخ: ' + err); }
       }
 
-      // ====== لوحة الترتيب ======
+      // ====== لوحة الترتيب (للأستاذة فقط) ======
       async function showLeaderboard(caller) {
+        if (!isAdmin) return; // للأستاذة فقط
         showLoading();
         try {
           const participantsSnap = await window.dbGet(window.dbRef(window.db, 'participants'));
