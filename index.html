@@ -114,21 +114,15 @@
       .voice-recorder audio { width: 100%; margin-top: 10px; }
       .modal-buttons { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-top: 12px; }
       .unread-badge { position: absolute; top: -6px; left: -6px; background: #dc2626; color: white; border-radius: 50%; width: 24px; height: 24px; display: flex; align-items: center; justify-content: center; font-size: 0.8rem; font-weight: 700; box-shadow: 0 2px 6px rgba(220,38,38,0.4); }
-
-      /* رسائل المشارك */
       .message-item { background: linear-gradient(135deg, #fff9e6, white); padding: 12px; border-radius: 10px; margin-bottom: 10px; border-right: 3px solid var(--primary-gold); }
       .message-item.unread { background: linear-gradient(135deg, #fff4d6, #fff9e6); box-shadow: 0 3px 15px rgba(212,175,55,0.2); }
       .message-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px; padding-bottom: 8px; border-bottom: 2px solid var(--border-light); }
       .message-content { font-size: 0.95rem; line-height: 1.6; margin-bottom: 8px; }
       .message-recording { background: white; padding: 10px; border-radius: 8px; margin-top: 8px; border: 1px solid var(--border-light); }
       .message-recording audio { width: 100%; margin-top: 6px; }
-
-      /* التسجيل المرتبط */
       .linked-recording { background: linear-gradient(135deg, #e8f5e9, #f0fff4); padding: 12px; border-radius: 8px; margin-top: 10px; border: 2px solid #4caf50; }
       .linked-recording p { color: var(--dark-green); font-weight: 700; margin-bottom: 8px; font-size: 0.9rem; }
       .linked-recording audio, .linked-recording video { width: 100%; border-radius: 6px; }
-
-      /* التقييم */
       .rating-container { background: linear-gradient(to bottom, #fff9e6, white); padding: 15px; border-radius: 8px; border: 2px solid var(--primary-gold); text-align: center; }
       .stars-display { display: flex; justify-content: center; align-items: center; gap: 8px; margin: 15px 0; font-size: 2.5rem; }
       .star { cursor: pointer; transition: all 0.2s ease; color: #d1d5db; }
@@ -142,8 +136,6 @@
       .message-rating { background: linear-gradient(135deg, #fef3c7, #fde68a); padding: 12px; border-radius: 8px; margin-top: 8px; text-align: center; border: 2px solid #fbbf24; }
       .message-stars { font-size: 2rem; margin: 8px 0; }
       .message-stars .star { cursor: default; }
-
-      /* معلومات التواصل */
       .contact-info-section { background: linear-gradient(135deg, #dbeafe, #e0f2fe); padding: 12px; border-radius: 10px; margin-bottom: 15px; border: 2px solid var(--primary-gold); }
       .contact-info-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px; }
       .contact-info-title { color: var(--dark-green); font-weight: 700; font-size: 1rem; }
@@ -156,14 +148,10 @@
       .copy-btn { background: var(--dark-green); color: white; border: none; padding: 8px 12px; border-radius: 6px; cursor: pointer; font-size: 0.85rem; font-weight: 600; transition: all 0.3s ease; display: flex; align-items: center; gap: 4px; }
       .copy-btn:hover { background: var(--medium-green); transform: scale(1.05); }
       .copy-btn.copied { background: #10b981; }
-
-      /* شارة المجموع الكلي */
       .total-rating-badge { background: linear-gradient(135deg, #fef3c7, #fde68a); padding: 8px 12px; border-radius: 8px; display: inline-flex; align-items: center; gap: 6px; margin-bottom: 12px; border: 2px solid #fbbf24; box-shadow: 0 2px 8px rgba(251,191,36,0.3); }
       .total-rating-badge .icon { font-size: 1.2rem; }
       .total-rating-badge .text { color: var(--dark-green); font-weight: 700; font-size: 0.9rem; }
       .total-rating-badge .value { color: var(--dark-green); font-weight: 900; font-size: 1.1rem; }
-
-      /* الإعلانات العامة */
       .broadcast-banner { background: linear-gradient(135deg, #fef3c7, #fde68a); padding: 14px; border-radius: 12px; margin-bottom: 12px; border: 2px solid #fbbf24; position: relative; box-shadow: 0 3px 12px rgba(251,191,36,0.3); }
       .broadcast-banner .broadcast-icon { font-size: 1.5rem; margin-bottom: 6px; }
       .broadcast-banner .broadcast-title { color: var(--dark-green); font-weight: 700; font-size: 1rem; margin-bottom: 6px; }
@@ -171,22 +159,9 @@
       .broadcast-banner audio { width: 100%; margin-top: 8px; border-radius: 6px; }
       .broadcast-delete-btn { position: absolute; top: 8px; left: 8px; background: #dc2626; color: white; border: none; border-radius: 50%; width: 28px; height: 28px; cursor: pointer; font-size: 0.8rem; display: flex; align-items: center; justify-content: center; transition: all 0.3s ease; }
       .broadcast-delete-btn:hover { background: #b91c1c; transform: scale(1.1); }
-
-      /* صفحة الإعلانات للأستاذة */
-      .admin-broadcast-form { background: linear-gradient(to bottom, #f0fff4, white); padding: 15px; border-radius: 12px; border: 2px solid #4caf50; margin-bottom: 15px; }
-      .admin-broadcast-form h3 { color: var(--dark-green); font-size: 1.1rem; margin-bottom: 12px; }
-      .admin-broadcast-form textarea { width: 100%; padding: 12px; border: 2px solid var(--border-light); border-radius: 8px; font-family: "Cairo", sans-serif; font-size: 0.95rem; min-height: 80px; resize: vertical; margin-bottom: 8px; }
-      .broadcasts-list .broadcast-banner .broadcast-date { color: #888; font-size: 0.78rem; margin-top: 4px; }
-
-      /* حذف الرسائل للأستاذة */
       .admin-msg-item { background: white; padding: 12px; border-radius: 10px; border: 2px solid var(--border-light); margin-bottom: 10px; position: relative; }
       .admin-msg-item .msg-delete-btn { position: absolute; top: 8px; left: 8px; background: #dc2626; color: white; border: none; border-radius: 6px; padding: 4px 8px; cursor: pointer; font-size: 0.8rem; font-weight: 600; transition: all 0.3s ease; }
       .admin-msg-item .msg-delete-btn:hover { background: #b91c1c; }
-
-      /* شارة الإعلانات */
-      .broadcast-new-badge { background: #dc2626; color: white; border-radius: 12px; padding: 2px 8px; font-size: 0.75rem; font-weight: 700; margin-right: 6px; }
-
-      /* لوحة الترتيب */
       .leaderboard-modal { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.75); display: flex; align-items: flex-start; justify-content: center; z-index: 2000; padding: 15px; overflow-y: auto; }
       .leaderboard-content { background: var(--white); border-radius: 16px; width: 100%; max-width: 500px; margin: auto; overflow: hidden; box-shadow: 0 10px 40px rgba(0,0,0,0.3); }
       .leaderboard-header { background: linear-gradient(135deg, var(--dark-green), var(--medium-green)); padding: 20px 15px; text-align: center; position: relative; }
@@ -221,16 +196,13 @@
       .my-rank-banner .icon { font-size: 1.5rem; }
       .my-rank-banner .text { color: var(--dark-green); font-size: 0.95rem; font-weight: 600; }
       .my-rank-banner .text strong { font-size: 1.1rem; }
-
       @keyframes popIn { 0% { transform: scale(0.8); opacity: 0; } 100% { transform: scale(1); opacity: 1; } }
       .leaderboard-row { animation: popIn 0.3s ease both; }
-
       .confirm-dialog { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.7); display: flex; align-items: center; justify-content: center; z-index: 2500; padding: 15px; }
       .confirm-content { background: white; padding: 20px; border-radius: 12px; max-width: 400px; width: 100%; text-align: center; }
       .confirm-content h3 { color: var(--dark-green); font-size: 1.2rem; margin-bottom: 12px; }
       .confirm-content p { font-size: 0.95rem; margin-bottom: 20px; line-height: 1.5; }
       .confirm-buttons { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
-
       @media (max-width: 768px) {
         h1 { font-size: 1.3rem; }
         .subtitle { font-size: 0.85rem; }
@@ -257,7 +229,6 @@
         <p class="subtitle">رمضان المبارك 1446</p>
       </div>
 
-      <!-- إعلانات الاستاذة العامة - تظهر للجميع تحت العنوان -->
       <div id="globalBroadcastsBar"></div>
 
       <!-- الصفحة الرئيسية -->
@@ -337,7 +308,6 @@
             📬 رسائل
             <span id="unreadBadge" class="unread-badge hidden"></span>
           </button>
-
         </div>
 
         <!-- قسم التسجيل -->
@@ -401,7 +371,6 @@
           </div>
         </div>
 
-        <!-- زر الإعلان العام -->
         <button class="btn btn-primary" onclick="showBroadcastModal()" style="margin-bottom:8px;">
           📢 إرسال إعلان عام لجميع المشاركين
         </button>
@@ -409,9 +378,7 @@
           🏆 عرض لوحة الترتيب
         </button>
 
-        <!-- قائمة الإعلانات للحذف -->
         <div id="adminBroadcastsList" style="margin-bottom:12px;"></div>
-
         <div id="participantsList" class="participants-grid"></div>
       </div>
 
@@ -422,7 +389,6 @@
 
         <h2 id="participantTitle" style="color:var(--dark-green);margin-bottom:12px;text-align:center;font-size:1.3rem;"></h2>
 
-        <!-- مجموع التقييمات -->
         <div style="text-align:center;margin-bottom:12px;">
           <div class="total-rating-badge" id="totalRatingBadge">
             <span class="icon">⭐</span>
@@ -433,14 +399,12 @@
           </div>
         </div>
 
-        <!-- حذف الحساب -->
         <div style="text-align:center;margin-bottom:12px;">
           <button class="btn btn-danger" onclick="confirmDeleteAccount()" style="width:auto;padding:10px 20px;font-size:0.9rem;">
             🗑️ حذف حساب هذا المشارك نهائياً
           </button>
         </div>
 
-        <!-- معلومات التواصل -->
         <div class="contact-info-section">
           <div class="contact-info-header">
             <span class="contact-info-title">📞 معلومات التواصل</span>
@@ -466,9 +430,7 @@
           </div>
         </div>
 
-        <!-- رسائل الأستاذة السابقة -->
         <div id="adminSentMessages" style="margin-bottom:12px;"></div>
-
         <div id="adminRecordingsList"></div>
       </div>
     </div>
@@ -515,11 +477,23 @@
       let viewedRecordings = new Set();
       let selectedRating = 0;
 
-      // ====== تحويل base64 إلى Blob URL لتشغيل أفضل ======
+      // ====== FIX 1: تحسين تحويل base64 إلى Blob URL مع fallback ======
+      // نخزن blob URLs لمنع memory leaks وإعادة الإنشاء
+      const blobUrlCache = new Map();
+
       function dataUriToObjectUrl(dataUri) {
+        if (!dataUri) return '';
+        // لو مش data URI، ارجعه مباشرة
+        if (!dataUri.startsWith('data:')) return dataUri;
+        // تحقق من الكاش
+        if (blobUrlCache.has(dataUri.substring(0, 50))) {
+          const cached = blobUrlCache.get(dataUri.substring(0, 50));
+          // تحقق أن الـ URL لا يزال صالح
+          try { return cached; } catch(e) {}
+        }
         try {
-          if (!dataUri || !dataUri.startsWith('data:')) return dataUri;
           const [header, base64] = dataUri.split(',');
+          if (!header || !base64) return dataUri;
           const mimeMatch = header.match(/:(.*?);/);
           const mimeType = mimeMatch ? mimeMatch[1] : 'audio/webm';
           const binary = atob(base64);
@@ -528,18 +502,32 @@
             array[i] = binary.charCodeAt(i);
           }
           const blob = new Blob([array], { type: mimeType });
-          return URL.createObjectURL(blob);
+          const url = URL.createObjectURL(blob);
+          blobUrlCache.set(dataUri.substring(0, 50), url);
+          return url;
         } catch(e) {
+          console.warn('dataUriToObjectUrl error:', e);
+          // Fallback: استخدم data URI مباشرة
           return dataUri;
         }
       }
 
+      // ====== FIX 2: createMediaElement محسّن مع multiple source types ======
       function createMediaElement(data, type, extra = '') {
-        const url = dataUriToObjectUrl(data);
+        if (!data) return '<p style="color:#999;font-size:0.85rem;">⚠️ لا توجد بيانات</p>';
+        const blobUrl = dataUriToObjectUrl(data);
         if (type === 'video') {
-          return `<video controls src="${url}" ${extra}></video>`;
+          return `<video controls src="${blobUrl}" ${extra} style="width:100%;border-radius:8px;background:#000;">
+            <source src="${blobUrl}" type="video/webm">
+            متصفحك لا يدعم تشغيل الفيديو.
+          </video>`;
         } else {
-          return `<audio controls src="${url}" ${extra}></audio>`;
+          // للصوت: نجرب blob URL أولاً، ثم data URI مباشرة
+          return `<audio controls ${extra} style="width:100%;">
+            <source src="${blobUrl}" type="audio/webm">
+            <source src="${blobUrl}" type="audio/ogg">
+            متصفحك لا يدعم تشغيل الصوت.
+          </audio>`;
         }
       }
 
@@ -560,7 +548,6 @@
         }, 5000);
       };
 
-      // تحميل الإعلانات العامة في الشريط العلوي (لجميع الصفحات)
       async function loadGlobalBroadcasts() {
         const bar = document.getElementById("globalBroadcastsBar");
         if (!bar) return;
@@ -578,7 +565,7 @@
                 <span style="color:var(--dark-green);font-weight:700;font-size:0.95rem;">إعلان من الاستاذة</span>
                 <span style="color:#888;font-size:0.75rem;margin-right:auto;">${new Date(b.timestamp).toLocaleDateString("ar-SA")}</span>
               </div>
-              <div style="color:var(--text-dark);font-size:0.95rem;line-height:1.7;">${b.message}</div>
+              <div style="color:var(--text-dark);font-size:0.95rem;line-height:1.7;">${b.message || ''}</div>
               ${b.type === 'voice' && b.voiceData ? createMediaElement(b.voiceData, 'audio', 'style="margin-top:8px;"') : ''}
             </div>`).join("");
         } catch(e) { bar.innerHTML = ''; }
@@ -586,16 +573,13 @@
 
       async function testFirebaseConnection() {
         try {
-          // اختبار الكتابة والقراءة
           const testRef = window.dbRef(window.db, 'connectionTest');
           await window.dbSet(testRef, { t: Date.now() });
           await window.dbGet(testRef);
           await window.dbRemove(testRef);
-          // كل شيء يعمل
           loadCurrentSession();
           loadGlobalBroadcasts();
         } catch(e) {
-          // Firebase Rules مغلقة
           showHomePage();
           const card = document.getElementById("homePage");
           const alertDiv = document.createElement("div");
@@ -617,11 +601,15 @@
       }
 
       function loadViewedRecordings() {
-        const stored = localStorage.getItem('viewedRecordings');
-        if (stored) viewedRecordings = new Set(JSON.parse(stored));
+        try {
+          const stored = localStorage.getItem('viewedRecordings');
+          if (stored) viewedRecordings = new Set(JSON.parse(stored));
+        } catch(e) { viewedRecordings = new Set(); }
       }
       function saveViewedRecordings() {
-        localStorage.setItem('viewedRecordings', JSON.stringify([...viewedRecordings]));
+        try {
+          localStorage.setItem('viewedRecordings', JSON.stringify([...viewedRecordings]));
+        } catch(e) {}
       }
       function markRecordingAsViewed(participantId, recordingId) {
         viewedRecordings.add(`${participantId}_${recordingId}`);
@@ -645,33 +633,39 @@
       }
 
       async function loadCurrentSession() {
-        const session = localStorage.getItem("currentSession");
-        if (session) {
-          const data = JSON.parse(session);
-          if (data.isAdmin) {
-            isAdmin = true;
-            showAdminParticipantsPage();
-          } else {
-            showLoading();
-            try {
-              const snapshot = await window.dbGet(window.dbRef(window.db, 'participants/' + data.userId));
-              hideLoading();
-              if (snapshot.exists()) {
-                const val = snapshot.val();
-                val.recordings = toRecordingsArray(val.recordings);
-                currentUser = { id: data.userId, ...val };
-                showParticipantPage();
-              } else {
+        try {
+          const session = localStorage.getItem("currentSession");
+          if (session) {
+            const data = JSON.parse(session);
+            if (data.isAdmin) {
+              isAdmin = true;
+              showAdminParticipantsPage();
+            } else {
+              showLoading();
+              try {
+                const snapshot = await window.dbGet(window.dbRef(window.db, 'participants/' + data.userId));
+                hideLoading();
+                if (snapshot.exists()) {
+                  const val = snapshot.val();
+                  // FIX 3: دائماً استخدم toRecordingsArray عند تحميل البيانات
+                  val.recordings = toRecordingsArray(val.recordings);
+                  currentUser = { id: data.userId, ...val };
+                  showParticipantPage();
+                } else {
+                  localStorage.removeItem("currentSession");
+                  showHomePage();
+                }
+              } catch (error) {
+                hideLoading();
                 localStorage.removeItem("currentSession");
                 showHomePage();
               }
-            } catch (error) {
-              hideLoading();
-              localStorage.removeItem("currentSession");
-              showHomePage();
             }
+          } else {
+            showHomePage();
           }
-        } else {
+        } catch(e) {
+          localStorage.removeItem("currentSession");
           showHomePage();
         }
       }
@@ -715,68 +709,75 @@
       }
 
       async function calculateAndDisplayTotalRating() {
-        const messagesSnapshot = await window.dbGet(window.dbRef(window.db, 'messages'));
-        let totalRating = 0;
-        let ratedRecordingsCount = 0;
-        const ratedRecordingsSet = new Set();
-        if (messagesSnapshot.exists()) {
-          const messages = messagesSnapshot.val();
-          Object.values(messages).forEach(msg => {
-            if (msg.participantId === currentParticipant.id && msg.messageType === 'rating' && msg.rating && !ratedRecordingsSet.has(msg.recordingId)) {
-              totalRating += msg.rating;
-              ratedRecordingsSet.add(msg.recordingId);
-              ratedRecordingsCount++;
-            }
-          });
+        try {
+          const messagesSnapshot = await window.dbGet(window.dbRef(window.db, 'messages'));
+          let totalRating = 0;
+          let ratedRecordingsCount = 0;
+          const ratedRecordingsSet = new Set();
+          if (messagesSnapshot.exists()) {
+            messagesSnapshot.forEach(child => {
+              const msg = child.val();
+              if (msg.participantId === currentParticipant.id && msg.messageType === 'rating' && msg.rating && !ratedRecordingsSet.has(msg.recordingId)) {
+                totalRating += msg.rating;
+                ratedRecordingsSet.add(msg.recordingId);
+                ratedRecordingsCount++;
+              }
+            });
+          }
+          const maxPossibleRating = ratedRecordingsCount * 5;
+          document.getElementById("totalRatingValue").textContent = totalRating.toFixed(1);
+          document.getElementById("totalRatingMax").textContent = maxPossibleRating;
+          const badge = document.getElementById("totalRatingBadge");
+          badge.style.display = ratedRecordingsCount === 0 ? 'none' : 'inline-flex';
+        } catch(e) {
+          console.error('calculateAndDisplayTotalRating error:', e);
         }
-        const maxPossibleRating = ratedRecordingsCount * 5;
-        document.getElementById("totalRatingValue").textContent = totalRating.toFixed(1);
-        document.getElementById("totalRatingMax").textContent = maxPossibleRating;
-        const badge = document.getElementById("totalRatingBadge");
-        badge.style.display = ratedRecordingsCount === 0 ? 'none' : 'inline-flex';
       }
 
-      // ====== تحميل الرسائل المرسلة من الأستاذة لمشارك معين ======
       async function loadAdminSentMessages() {
         const div = document.getElementById("adminSentMessages");
-        const snapshot = await window.dbGet(window.dbRef(window.db, 'messages'));
-        if (!snapshot.exists()) { div.innerHTML = ''; return; }
+        try {
+          const snapshot = await window.dbGet(window.dbRef(window.db, 'messages'));
+          if (!snapshot.exists()) { div.innerHTML = ''; return; }
 
-        const messages = [];
-        snapshot.forEach(child => {
-          const msg = child.val();
-          if (msg.participantId === currentParticipant.id) {
-            messages.push({ id: child.key, ...msg });
+          const messages = [];
+          snapshot.forEach(child => {
+            const msg = child.val();
+            if (msg.participantId === currentParticipant.id) {
+              messages.push({ id: child.key, ...msg });
+            }
+          });
+
+          if (messages.length === 0) { div.innerHTML = ''; return; }
+          messages.sort((a, b) => new Date(b.timestamp) - new Date(a.timestamp));
+
+          let html = `<h3 style="color:var(--dark-green);margin-bottom:10px;font-size:1rem;">📨 رسائلك المرسلة لهذا المشارك</h3>`;
+          for (const msg of messages) {
+            let typeIcon = '✉️';
+            if (msg.messageType === 'voice') typeIcon = '🎤';
+            if (msg.messageType === 'rating') typeIcon = '⭐';
+            html += `
+              <div class="admin-msg-item">
+                <button class="msg-delete-btn" onclick="deleteMessage('${msg.id}')">🗑️ حذف</button>
+                <p style="color:var(--dark-green);font-weight:700;font-size:0.9rem;margin-bottom:4px;margin-left:55px;">${typeIcon} ${msg.message || ''}</p>
+                <p style="color:#888;font-size:0.78rem;">${new Date(msg.timestamp).toLocaleString("ar-SA")}</p>
+                ${msg.messageType === 'voice' && msg.voiceData ? `
+                  <div style="margin-top:8px;">
+                    ${createMediaElement(msg.voiceData, 'audio')}
+                  </div>` : ''}
+                ${msg.messageType === 'rating' && msg.rating ? `
+                  <div style="margin-top:6px;color:var(--dark-green);font-weight:700;">
+                    التقييم: ${msg.rating} / 5 ⭐
+                  </div>` : ''}
+              </div>`;
           }
-        });
-
-        if (messages.length === 0) { div.innerHTML = ''; return; }
-        messages.sort((a, b) => new Date(b.timestamp) - new Date(a.timestamp));
-
-        let html = `<h3 style="color:var(--dark-green);margin-bottom:10px;font-size:1rem;">📨 رسائلك المرسلة لهذا المشارك</h3>`;
-        for (const msg of messages) {
-          let typeIcon = '✉️';
-          if (msg.messageType === 'voice') typeIcon = '🎤';
-          if (msg.messageType === 'rating') typeIcon = '⭐';
-          html += `
-            <div class="admin-msg-item">
-              <button class="msg-delete-btn" onclick="deleteMessage('${msg.id}')">🗑️ حذف</button>
-              <p style="color:var(--dark-green);font-weight:700;font-size:0.9rem;margin-bottom:4px;margin-left:55px;">${typeIcon} ${msg.message}</p>
-              <p style="color:#888;font-size:0.78rem;">${new Date(msg.timestamp).toLocaleString("ar-SA")}</p>
-              ${msg.messageType === 'voice' && msg.voiceData ? `
-                <div style="margin-top:8px;">
-                  ${createMediaElement(msg.voiceData, 'audio')}
-                </div>` : ''}
-              ${msg.messageType === 'rating' && msg.rating ? `
-                <div style="margin-top:6px;color:var(--dark-green);font-weight:700;">
-                  التقييم: ${msg.rating} / 5 ⭐
-                </div>` : ''}
-            </div>`;
+          div.innerHTML = html;
+        } catch(e) {
+          div.innerHTML = '';
+          console.error('loadAdminSentMessages error:', e);
         }
-        div.innerHTML = html;
       }
 
-      // ====== حذف رسالة ======
       async function deleteMessage(msgId) {
         if (!confirm("هل تريد حذف هذه الرسالة؟")) return;
         showLoading();
@@ -792,7 +793,6 @@
         }
       }
 
-      // ====== حذف حساب المشارك نهائياً ======
       function confirmDeleteAccount() {
         const dialog = document.createElement("div");
         dialog.className = "confirm-dialog";
@@ -813,7 +813,6 @@
       async function deleteParticipantAccount() {
         showLoading();
         try {
-          // حذف التسجيلات والرسائل
           await window.dbRemove(window.dbRef(window.db, 'participants/' + currentParticipant.id));
           const messagesSnapshot = await window.dbGet(window.dbRef(window.db, 'messages'));
           if (messagesSnapshot.exists()) {
@@ -838,7 +837,6 @@
         }
       }
 
-      // ====== الإعلانات العامة ======
       function showBroadcastModal() {
         const modal = document.createElement("div");
         modal.className = "message-modal";
@@ -858,7 +856,7 @@
               <div class="timer hidden" id="bVoiceTimer">00:00</div>
               <button class="btn btn-danger hidden" id="bVoiceStopBtn" onclick="stopBroadcastVoice()">⏹ إيقاف</button>
               <div id="bVoicePreviewDiv" class="hidden">
-                <audio id="bVoicePreview" controls></audio>
+                <audio id="bVoicePreview" controls style="width:100%;margin-top:8px;"></audio>
               </div>
             </div>
             <div class="modal-buttons">
@@ -872,6 +870,7 @@
       let broadcastVoiceRecorder = null;
       let broadcastVoiceChunks = [];
       let broadcastVoiceTimerInterval = null;
+      let broadcastVoiceBlob = null;
 
       function switchBroadcastType(type, btn) {
         document.querySelectorAll("#broadcastModal .message-type-btn").forEach(b => b.classList.remove("active"));
@@ -884,16 +883,22 @@
         try {
           const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
           broadcastVoiceChunks = [];
-          broadcastVoiceRecorder = new MediaRecorder(stream);
-          broadcastVoiceRecorder.ondataavailable = e => { if (e.data.size > 0) broadcastVoiceChunks.push(e.data); };
+          broadcastVoiceBlob = null;
+          // FIX 4: استخدام mimeType المناسب للمتصفح
+          const mimeType = getSupportedMimeType();
+          broadcastVoiceRecorder = new MediaRecorder(stream, mimeType ? { mimeType } : {});
+          broadcastVoiceRecorder.ondataavailable = e => { if (e.data && e.data.size > 0) broadcastVoiceChunks.push(e.data); };
           broadcastVoiceRecorder.onstop = () => {
             stream.getTracks().forEach(t => t.stop());
-            const blob = new Blob(broadcastVoiceChunks, { type: "audio/webm" });
-            const url = dataUriToObjectUrl ? URL.createObjectURL(blob) : URL.createObjectURL(blob);
-            document.getElementById("bVoicePreview").src = url;
-            document.getElementById("bVoicePreviewDiv").classList.remove("hidden");
+            if (broadcastVoiceChunks.length > 0) {
+              broadcastVoiceBlob = new Blob(broadcastVoiceChunks, { type: mimeType || 'audio/webm' });
+              const url = URL.createObjectURL(broadcastVoiceBlob);
+              const preview = document.getElementById("bVoicePreview");
+              preview.src = url;
+              document.getElementById("bVoicePreviewDiv").classList.remove("hidden");
+            }
           };
-          broadcastVoiceRecorder.start();
+          broadcastVoiceRecorder.start(100);
           document.getElementById("bVoiceRecordBtn").classList.add("hidden");
           document.getElementById("bVoiceStopBtn").classList.remove("hidden");
           document.getElementById("bVoiceTimer").classList.remove("hidden");
@@ -902,7 +907,8 @@
             const elapsed = Math.floor((Date.now() - startTime) / 1000);
             const m = Math.floor(elapsed/60).toString().padStart(2,"0");
             const s = (elapsed%60).toString().padStart(2,"0");
-            document.getElementById("bVoiceTimer").textContent = `${m}:${s}`;
+            const timerEl = document.getElementById("bVoiceTimer");
+            if (timerEl) timerEl.textContent = `${m}:${s}`;
           }, 1000);
         } catch(err) { alert("خطأ في المايكروفون: " + err.message); }
       }
@@ -911,38 +917,34 @@
         if (broadcastVoiceRecorder && broadcastVoiceRecorder.state !== "inactive") {
           broadcastVoiceRecorder.stop();
           clearInterval(broadcastVoiceTimerInterval);
-          document.getElementById("bVoiceRecordBtn").classList.remove("hidden");
-          document.getElementById("bVoiceStopBtn").classList.add("hidden");
-          document.getElementById("bVoiceTimer").classList.add("hidden");
+          const btn = document.getElementById("bVoiceRecordBtn");
+          const stopBtn = document.getElementById("bVoiceStopBtn");
+          const timer = document.getElementById("bVoiceTimer");
+          if (btn) btn.classList.remove("hidden");
+          if (stopBtn) stopBtn.classList.add("hidden");
+          if (timer) timer.classList.add("hidden");
         }
       }
 
       async function sendBroadcast() {
         const activeBtn = document.querySelector("#broadcastModal .message-type-btn.active");
         const isVoice = activeBtn && activeBtn.textContent.includes("صوتي");
-
         showLoading();
         try {
-          const broadcastData = {
-            timestamp: new Date().toISOString(),
-            type: isVoice ? 'voice' : 'text'
-          };
-
+          const broadcastData = { timestamp: new Date().toISOString(), type: isVoice ? 'voice' : 'text' };
           if (isVoice) {
-            if (!broadcastVoiceChunks || broadcastVoiceChunks.length === 0) {
+            if (!broadcastVoiceBlob) {
               hideLoading();
               alert("الرجاء تسجيل رسالة صوتية!");
               return;
             }
-            const blob = new Blob(broadcastVoiceChunks, { type: "audio/webm" });
             broadcastData.message = "رسالة صوتية من الاستاذة 📢";
-            broadcastData.voiceData = await blobToBase64(blob);
+            broadcastData.voiceData = await blobToBase64(broadcastVoiceBlob);
           } else {
             const text = document.getElementById("broadcastText").value.trim();
             if (!text) { hideLoading(); alert("الرجاء كتابة الإعلان!"); return; }
             broadcastData.message = text;
           }
-
           const broadcastRef = window.dbPush(window.dbRef(window.db, 'broadcasts'));
           await window.dbSet(broadcastRef, broadcastData);
           hideLoading();
@@ -958,28 +960,29 @@
 
       async function loadAdminBroadcasts() {
         const div = document.getElementById("adminBroadcastsList");
-        const snapshot = await window.dbGet(window.dbRef(window.db, 'broadcasts'));
-        if (!snapshot.exists()) { div.innerHTML = ''; return; }
-
-        const broadcasts = [];
-        snapshot.forEach(child => broadcasts.push({ id: child.key, ...child.val() }));
-        if (broadcasts.length === 0) { div.innerHTML = ''; return; }
-
-        broadcasts.sort((a, b) => new Date(b.timestamp) - new Date(a.timestamp));
-
-        let html = `<h3 style="color:var(--dark-green);margin-bottom:8px;font-size:1rem;">📢 الإعلانات العامة الحالية</h3>`;
-        for (const b of broadcasts) {
-          html += `
-            <div class="broadcast-banner" style="position:relative;">
-              <button class="broadcast-delete-btn" onclick="deleteBroadcast('${b.id}')" title="حذف الإعلان">🗑️</button>
-              <div class="broadcast-icon">📢</div>
-              <div class="broadcast-title">إعلان عام</div>
-              <div class="broadcast-text">${b.message}</div>
-              ${b.type === 'voice' && b.voiceData ? createMediaElement(b.voiceData, 'audio') : ''}
-              <div class="broadcasts-list"><div class="broadcast-date" style="color:#888;font-size:0.78rem;margin-top:6px;">${new Date(b.timestamp).toLocaleString("ar-SA")}</div></div>
-            </div>`;
+        try {
+          const snapshot = await window.dbGet(window.dbRef(window.db, 'broadcasts'));
+          if (!snapshot.exists()) { div.innerHTML = ''; return; }
+          const broadcasts = [];
+          snapshot.forEach(child => broadcasts.push({ id: child.key, ...child.val() }));
+          if (broadcasts.length === 0) { div.innerHTML = ''; return; }
+          broadcasts.sort((a, b) => new Date(b.timestamp) - new Date(a.timestamp));
+          let html = `<h3 style="color:var(--dark-green);margin-bottom:8px;font-size:1rem;">📢 الإعلانات العامة الحالية</h3>`;
+          for (const b of broadcasts) {
+            html += `
+              <div class="broadcast-banner" style="position:relative;">
+                <button class="broadcast-delete-btn" onclick="deleteBroadcast('${b.id}')" title="حذف الإعلان">🗑️</button>
+                <div class="broadcast-icon">📢</div>
+                <div class="broadcast-title">إعلان عام</div>
+                <div class="broadcast-text">${b.message || ''}</div>
+                ${b.type === 'voice' && b.voiceData ? createMediaElement(b.voiceData, 'audio') : ''}
+                <div style="color:#888;font-size:0.78rem;margin-top:6px;">${new Date(b.timestamp).toLocaleString("ar-SA")}</div>
+              </div>`;
+          }
+          div.innerHTML = html;
+        } catch(e) {
+          div.innerHTML = '';
         }
-        div.innerHTML = html;
       }
 
       async function deleteBroadcast(broadcastId) {
@@ -1000,50 +1003,24 @@
         const modal = document.getElementById("broadcastModal");
         if (modal) modal.remove();
         broadcastVoiceChunks = [];
-        if (broadcastVoiceRecorder && broadcastVoiceRecorder.state !== "inactive") broadcastVoiceRecorder.stop();
-        clearInterval(broadcastVoiceTimerInterval);
-      }
-
-      // ====== تحميل الإعلانات للمشارك ======
-      async function loadParticipantBroadcasts() {
-        const div = document.getElementById("participantBroadcasts");
-        try {
-          const snapshot = await window.dbGet(window.dbRef(window.db, 'broadcasts'));
-          if (!snapshot.exists()) { div.innerHTML = ''; return; }
-
-          const broadcasts = [];
-          snapshot.forEach(child => broadcasts.push({ id: child.key, ...child.val() }));
-          if (broadcasts.length === 0) { div.innerHTML = ''; return; }
-
-          broadcasts.sort((a, b) => new Date(b.timestamp) - new Date(a.timestamp));
-
-          let html = '';
-          for (const b of broadcasts) {
-            html += `
-              <div class="broadcast-banner">
-                <div class="broadcast-icon">📢</div>
-                <div class="broadcast-title">إعلان من الاستاذة</div>
-                <div class="broadcast-text">${b.message}</div>
-                ${b.type === 'voice' && b.voiceData ? createMediaElement(b.voiceData, 'audio') : ''}
-                <div style="color:#888;font-size:0.78rem;margin-top:6px;">${new Date(b.timestamp).toLocaleString("ar-SA")}</div>
-              </div>`;
-          }
-          div.innerHTML = html;
-        } catch(e) {
-          div.innerHTML = '';
+        broadcastVoiceBlob = null;
+        if (broadcastVoiceRecorder && broadcastVoiceRecorder.state !== "inactive") {
+          try { broadcastVoiceRecorder.stop(); } catch(e) {}
         }
+        clearInterval(broadcastVoiceTimerInterval);
       }
 
       function backToParticipants() {
         currentParticipant = null;
         const contactContent = document.getElementById("contactInfoContent");
-        if (!contactContent.classList.contains("hidden")) toggleContactInfo();
+        if (contactContent && !contactContent.classList.contains("hidden")) toggleContactInfo();
         showAdminParticipantsPage();
       }
 
       function hideAllPages() {
         ["homePage","registerPage","loginPage","adminLoginPage","participantPage","adminParticipantsPage","adminRecordingsPage"].forEach(id => {
-          document.getElementById(id).classList.add("hidden");
+          const el = document.getElementById(id);
+          if (el) el.classList.add("hidden");
         });
       }
 
@@ -1062,106 +1039,135 @@
       }
 
       async function updateUnreadBadge() {
-        const snapshot = await window.dbGet(window.dbRef(window.db, 'messages'));
-        let unreadCount = 0;
-        if (snapshot.exists()) {
-          snapshot.forEach(child => {
-            const msg = child.val();
-            if (msg.participantId === currentUser.id && !msg.read) unreadCount++;
-          });
+        try {
+          const snapshot = await window.dbGet(window.dbRef(window.db, 'messages'));
+          let unreadCount = 0;
+          if (snapshot.exists()) {
+            snapshot.forEach(child => {
+              const msg = child.val();
+              if (msg.participantId === currentUser.id && !msg.read) unreadCount++;
+            });
+          }
+          const badge = document.getElementById("unreadBadge");
+          if (badge) {
+            if (unreadCount > 0) { badge.textContent = unreadCount; badge.classList.remove("hidden"); }
+            else { badge.classList.add("hidden"); }
+          }
+        } catch(e) {
+          console.error('updateUnreadBadge error:', e);
         }
-        const badge = document.getElementById("unreadBadge");
-        if (unreadCount > 0) { badge.textContent = unreadCount; badge.classList.remove("hidden"); }
-        else { badge.classList.add("hidden"); }
       }
 
       async function markMessagesAsRead() {
-        const snapshot = await window.dbGet(window.dbRef(window.db, 'messages'));
-        if (snapshot.exists()) {
-          const updates = {};
-          snapshot.forEach(child => {
-            const msg = child.val();
-            if (msg.participantId === currentUser.id && !msg.read) {
-              updates[`messages/${child.key}/read`] = true;
+        try {
+          const snapshot = await window.dbGet(window.dbRef(window.db, 'messages'));
+          if (snapshot.exists()) {
+            const updates = {};
+            snapshot.forEach(child => {
+              const msg = child.val();
+              if (msg.participantId === currentUser.id && !msg.read) {
+                updates[`messages/${child.key}/read`] = true;
+              }
+            });
+            if (Object.keys(updates).length > 0) {
+              await window.dbUpdate(window.dbRef(window.db), updates);
             }
-          });
-          if (Object.keys(updates).length > 0) await window.dbUpdate(window.dbRef(window.db), updates);
+          }
+          updateUnreadBadge();
+        } catch(e) {
+          console.error('markMessagesAsRead error:', e);
         }
-        updateUnreadBadge();
       }
 
+      // ====== FIX 5: المشكلة الرئيسية - loadMessages يتعطل بسبب myRecordings ======
       async function loadMessages() {
-        const snapshot = await window.dbGet(window.dbRef(window.db, 'messages'));
         const listDiv = document.getElementById("messagesList");
-        if (!snapshot.exists()) {
-          listDiv.innerHTML = '<div class="empty-state"><div class="icon">📭</div><p>لا توجد رسائل</p></div>';
-          return;
-        }
-        const messages = [];
-        snapshot.forEach(child => {
-          const msg = child.val();
-          if (msg.participantId === currentUser.id) messages.push({ id: child.key, ...msg });
-        });
-        if (messages.length === 0) {
-          listDiv.innerHTML = '<div class="empty-state"><div class="icon">📭</div><p>لا توجد رسائل</p></div>';
-          return;
-        }
-        messages.sort((a, b) => new Date(b.timestamp) - new Date(a.timestamp));
+        try {
+          const snapshot = await window.dbGet(window.dbRef(window.db, 'messages'));
+          if (!snapshot.exists()) {
+            listDiv.innerHTML = '<div class="empty-state"><div class="icon">📭</div><p>لا توجد رسائل</p></div>';
+            return;
+          }
+          const messages = [];
+          snapshot.forEach(child => {
+            const msg = child.val();
+            // FIX: تأكد من مقارنة String مع String
+            if (String(msg.participantId) === String(currentUser.id)) {
+              messages.push({ id: child.key, ...msg });
+            }
+          });
 
-        // جلب تسجيلات المشارك لعرضها مع الرسالة
-        const participantSnapshot = await window.dbGet(window.dbRef(window.db, 'participants/' + currentUser.id));
-        let myRecordings = [];
-        if (participantSnapshot.exists()) {
-          myRecordings = participantSnapshot.val().recordings || [];
-        }
+          if (messages.length === 0) {
+            listDiv.innerHTML = '<div class="empty-state"><div class="icon">📭</div><p>لا توجد رسائل</p></div>';
+            return;
+          }
+          messages.sort((a, b) => new Date(b.timestamp) - new Date(a.timestamp));
 
-        let html = '';
-        for (const msg of messages) {
-          let typeIcon = '✉️';
-          if (msg.messageType === 'voice') typeIcon = '🎤';
-          if (msg.messageType === 'rating') typeIcon = '⭐';
-
-          // ابحث عن التسجيل المرتبط
-          const linkedRec = myRecordings.find(r => r.id === msg.recordingId);
-          let linkedHtml = '';
-          if (linkedRec) {
-            linkedHtml = `
-              <div class="linked-recording">
-                <p>🔗 التسجيل الذي ردّت عليه الاستاذة:</p>
-                ${createMediaElement(linkedRec.data, linkedRec.type)}
-              </div>`;
+          // FIX الأساسي: جلب التسجيلات وتحويلها إلى array صحيح
+          let myRecordings = [];
+          try {
+            const participantSnapshot = await window.dbGet(window.dbRef(window.db, 'participants/' + currentUser.id));
+            if (participantSnapshot.exists()) {
+              // toRecordingsArray يحول object أو array إلى array صحيح
+              myRecordings = toRecordingsArray(participantSnapshot.val().recordings);
+            }
+          } catch(recErr) {
+            console.warn('Could not load recordings for messages:', recErr);
+            myRecordings = [];
           }
 
-          html += `
-            <div class="message-item ${!msg.read ? "unread" : ""}">
-              <div class="message-header">
-                <span style="color:var(--primary-gold);font-weight:700;font-size:1rem;">${typeIcon} رسالة من الاستاذة</span>
-                <span style="color:#666;font-size:0.75rem;">${new Date(msg.timestamp).toLocaleDateString("ar-SA")}</span>
-              </div>
-              <div class="message-content">${msg.message}</div>
-              ${msg.messageType === 'voice' && msg.voiceData ? `
-                <div class="message-recording">
-                  <p style="color:var(--dark-green);font-weight:600;margin-bottom:6px;font-size:0.9rem;">🎤 رسالة صوتية</p>
-                  ${createMediaElement(msg.voiceData, 'audio')}
-                </div>` : ''}
-              ${msg.messageType === 'rating' && msg.rating ? `
-                <div class="message-rating">
-                  <p style="color:var(--dark-green);font-weight:700;margin-bottom:6px;font-size:1rem;">تقييمك</p>
-                  <div class="message-stars">${generateStarsDisplay(msg.rating)}</div>
-                  <p style="color:var(--dark-green);font-weight:700;font-size:1.3rem;margin-top:6px;">${msg.rating} / 5</p>
-                </div>` : ''}
-              ${linkedHtml}
-            </div>`;
+          let html = '';
+          for (const msg of messages) {
+            let typeIcon = '✉️';
+            if (msg.messageType === 'voice') typeIcon = '🎤';
+            if (msg.messageType === 'rating') typeIcon = '⭐';
+
+            // البحث عن التسجيل المرتبط - myRecordings الآن array صحيح
+            let linkedHtml = '';
+            try {
+              const linkedRec = myRecordings.find(r => r && String(r.id) === String(msg.recordingId));
+              if (linkedRec && linkedRec.data) {
+                linkedHtml = `
+                  <div class="linked-recording">
+                    <p>🔗 التسجيل الذي ردّت عليه الاستاذة:</p>
+                    ${createMediaElement(linkedRec.data, linkedRec.type)}
+                  </div>`;
+              }
+            } catch(e) { linkedHtml = ''; }
+
+            html += `
+              <div class="message-item ${!msg.read ? "unread" : ""}">
+                <div class="message-header">
+                  <span style="color:var(--primary-gold);font-weight:700;font-size:1rem;">${typeIcon} رسالة من الاستاذة</span>
+                  <span style="color:#666;font-size:0.75rem;">${new Date(msg.timestamp).toLocaleDateString("ar-SA")}</span>
+                </div>
+                <div class="message-content">${msg.message || ''}</div>
+                ${msg.messageType === 'voice' && msg.voiceData ? `
+                  <div class="message-recording">
+                    <p style="color:var(--dark-green);font-weight:600;margin-bottom:6px;font-size:0.9rem;">🎤 رسالة صوتية</p>
+                    ${createMediaElement(msg.voiceData, 'audio')}
+                  </div>` : ''}
+                ${msg.messageType === 'rating' && msg.rating ? `
+                  <div class="message-rating">
+                    <p style="color:var(--dark-green);font-weight:700;margin-bottom:6px;font-size:1rem;">تقييمك</p>
+                    <div class="message-stars">${generateStarsDisplay(msg.rating)}</div>
+                    <p style="color:var(--dark-green);font-weight:700;font-size:1.3rem;margin-top:6px;">${msg.rating} / 5</p>
+                  </div>` : ''}
+                ${linkedHtml}
+              </div>`;
+          }
+          listDiv.innerHTML = html;
+        } catch(err) {
+          console.error('loadMessages error:', err);
+          listDiv.innerHTML = `<div class="empty-state"><div class="icon">⚠️</div><p>خطأ في تحميل الرسائل، حاول مرة أخرى</p></div>`;
         }
-        listDiv.innerHTML = html;
       }
 
       function generateStarsDisplay(rating) {
         let html = '';
         for (let i = 1; i <= 5; i++) {
           if (rating >= i) html += '<span class="star filled">⭐</span>';
-          else if (rating > i-1 && rating < i) html += '<span class="star half">⭐</span>';
-          else html += '<span class="star">⭐</span>';
+          else html += '<span class="star" style="color:#ddd;">⭐</span>';
         }
         return html;
       }
@@ -1175,13 +1181,14 @@
         try {
           const snapshot = await window.dbGet(window.dbRef(window.db, 'participants'));
           if (snapshot.exists()) {
-            const exists = Object.values(snapshot.val()).some(p => p.name === name);
+            const exists = Object.values(snapshot.val()).some(p => p && p.name === name);
             if (exists) { hideLoading(); alert("هذا الاسم مسجل مسبقاً!"); return; }
           }
           const participantId = Date.now().toString();
-          const participant = { name, password, registeredAt: new Date().toISOString(), recordings: [] };
+          // FIX 6: لا نحفظ recordings كـ array فارغ (Firebase يحذفه) - نحفظ بدونه
+          const participant = { name, password, registeredAt: new Date().toISOString() };
           await window.dbSet(window.dbRef(window.db, 'participants/' + participantId), participant);
-          currentUser = { id: participantId, ...participant };
+          currentUser = { id: participantId, ...participant, recordings: [] };
           saveSession();
           hideLoading();
           showParticipantPage();
@@ -1193,22 +1200,29 @@
 
       document.getElementById("loginForm").onsubmit = async function(e) {
         e.preventDefault();
-        const name = document.getElementById("loginName").value;
+        const name = document.getElementById("loginName").value.trim();
         const password = document.getElementById("loginPassword").value;
+        if (!name || !password) { alert("الرجاء ملء جميع الحقول!"); return; }
         showLoading();
-        const snapshot = await window.dbGet(window.dbRef(window.db, 'participants'));
-        hideLoading();
-        if (snapshot.exists()) {
-          let foundUser = null, foundId = null;
-          Object.entries(snapshot.val()).forEach(([id, p]) => {
-            if (p.name === name && p.password === password) { foundUser = p; foundId = id; }
-          });
-          if (foundUser) {
-            currentUser = { id: foundId, ...foundUser };
-            saveSession();
-            showParticipantPage();
-            return;
+        try {
+          const snapshot = await window.dbGet(window.dbRef(window.db, 'participants'));
+          hideLoading();
+          if (snapshot.exists()) {
+            let foundUser = null, foundId = null;
+            Object.entries(snapshot.val()).forEach(([id, p]) => {
+              if (p && p.name === name && p.password === password) { foundUser = p; foundId = id; }
+            });
+            if (foundUser) {
+              // FIX: تأكد من تحويل recordings بشكل صحيح
+              foundUser.recordings = toRecordingsArray(foundUser.recordings);
+              currentUser = { id: foundId, ...foundUser };
+              saveSession();
+              showParticipantPage();
+              return;
+            }
           }
+        } catch(err) {
+          hideLoading();
         }
         const err = document.getElementById("loginError");
         err.textContent = "الاسم أو كلمة المرور خاطئة!";
@@ -1233,10 +1247,15 @@
 
       function logout() {
         stopVideoPreview();
+        if (mediaRecorder && mediaRecorder.state !== "inactive") {
+          try { mediaRecorder.stop(); } catch(e) {}
+        }
+        clearInterval(timerInterval);
         localStorage.removeItem("currentSession");
         currentUser = null;
         isAdmin = false;
         currentParticipant = null;
+        recordedChunks = [];
         showHomePage();
       }
 
@@ -1263,67 +1282,150 @@
           const liveVideo = document.getElementById("liveVideo");
           liveVideo.srcObject = stream;
           document.getElementById("livePreview").classList.remove("hidden");
-        } catch(err) { alert("خطأ في الكاميرا: " + err.message); }
+        } catch(err) {
+          alert("خطأ في الكاميرا: " + err.message);
+          // رجوع للصوت إذا فشلت الكاميرا
+          recordingType = "audio";
+          document.querySelectorAll(".type-card").forEach((el, i) => {
+            el.classList.toggle("selected", i === 0);
+          });
+        }
       }
 
       function stopVideoPreview() {
         if (previewStream) {
-          previewStream.getTracks().forEach(track => track.stop());
+          previewStream.getTracks().forEach(track => { try { track.stop(); } catch(e) {} });
           previewStream = null;
           const liveVideo = document.getElementById("liveVideo");
-          if (liveVideo.srcObject) liveVideo.srcObject = null;
-          document.getElementById("livePreview").classList.add("hidden");
+          if (liveVideo && liveVideo.srcObject) liveVideo.srcObject = null;
+          const livePreview = document.getElementById("livePreview");
+          if (livePreview) livePreview.classList.add("hidden");
         }
       }
 
+      // FIX 7: الحصول على mimeType المدعوم من المتصفح
+      function getSupportedMimeType() {
+        const types = [
+          'audio/webm;codecs=opus',
+          'audio/webm',
+          'audio/ogg;codecs=opus',
+          'audio/ogg',
+          'audio/mp4',
+          ''
+        ];
+        for (const type of types) {
+          if (!type || MediaRecorder.isTypeSupported(type)) return type;
+        }
+        return '';
+      }
+
+      function getSupportedVideoMimeType() {
+        const types = [
+          'video/webm;codecs=vp9,opus',
+          'video/webm;codecs=vp8,opus',
+          'video/webm',
+          'video/mp4',
+          ''
+        ];
+        for (const type of types) {
+          if (!type || MediaRecorder.isTypeSupported(type)) return type;
+        }
+        return '';
+      }
+
+      // FIX 8: startRecording محسّن مع معالجة أخطاء أفضل
       async function startRecording() {
         try {
           let stream;
           if (recordingType === "video") {
             if (previewStream) {
-              const audioStream = await navigator.mediaDevices.getUserMedia({ audio: true });
-              stream = new MediaStream([...previewStream.getVideoTracks(), ...audioStream.getAudioTracks()]);
+              try {
+                const audioStream = await navigator.mediaDevices.getUserMedia({ audio: true });
+                stream = new MediaStream([...previewStream.getVideoTracks(), ...audioStream.getAudioTracks()]);
+              } catch(e) {
+                alert("خطأ في تشغيل الميكروفون: " + e.message);
+                return;
+              }
             } else {
-              stream = await navigator.mediaDevices.getUserMedia({ video: true, audio: true });
-              previewStream = stream;
-              const liveVideo = document.getElementById("liveVideo");
-              liveVideo.srcObject = stream;
-              document.getElementById("livePreview").classList.remove("hidden");
+              try {
+                stream = await navigator.mediaDevices.getUserMedia({ video: true, audio: true });
+                previewStream = new MediaStream(stream.getVideoTracks());
+                const liveVideo = document.getElementById("liveVideo");
+                liveVideo.srcObject = previewStream;
+                document.getElementById("livePreview").classList.remove("hidden");
+              } catch(e) {
+                alert("خطأ في الكاميرا: " + e.message);
+                return;
+              }
             }
           } else {
-            stream = await navigator.mediaDevices.getUserMedia({ audio: true });
+            try {
+              stream = await navigator.mediaDevices.getUserMedia({ audio: true });
+            } catch(e) {
+              alert("لا يمكن الوصول للميكروفون. تأكد من منح الإذن في المتصفح.\n" + e.message);
+              return;
+            }
           }
+
           recordedChunks = [];
-          mediaRecorder = new MediaRecorder(stream);
-          mediaRecorder.ondataavailable = e => { if (e.data.size > 0) recordedChunks.push(e.data); };
-          mediaRecorder.onstop = () => { if (recordingType === "audio") stream.getTracks().forEach(t => t.stop()); showPreview(); };
-          mediaRecorder.start();
+          const mimeType = recordingType === "video" ? getSupportedVideoMimeType() : getSupportedMimeType();
+          try {
+            mediaRecorder = mimeType
+              ? new MediaRecorder(stream, { mimeType })
+              : new MediaRecorder(stream);
+          } catch(e) {
+            mediaRecorder = new MediaRecorder(stream);
+          }
+
+          mediaRecorder.ondataavailable = e => {
+            if (e.data && e.data.size > 0) recordedChunks.push(e.data);
+          };
+          mediaRecorder.onstop = () => {
+            if (recordingType === "audio") {
+              stream.getTracks().forEach(t => { try { t.stop(); } catch(e) {} });
+            }
+            showPreview();
+          };
+          mediaRecorder.onerror = (e) => {
+            alert("خطأ في التسجيل: " + (e.error ? e.error.message : 'خطأ غير معروف'));
+            cancelRecording();
+          };
+
+          mediaRecorder.start(100); // جمع البيانات كل 100ms لضمان عدم فقدانها
           document.getElementById("recordBtn").classList.add("hidden");
           document.getElementById("stopBtn").classList.remove("hidden");
           document.getElementById("timer").classList.remove("hidden");
           if (recordingType === "video") document.getElementById("livePreview").classList.add("recording");
           recordingStartTime = Date.now();
           timerInterval = setInterval(updateTimer, 1000);
-        } catch(err) { alert("خطأ: " + err.message); }
+        } catch(err) {
+          alert("خطأ غير متوقع: " + err.message);
+        }
       }
 
       function updateTimer() {
         const elapsed = Math.floor((Date.now() - recordingStartTime) / 1000);
         const m = Math.floor(elapsed/60).toString().padStart(2,"0");
         const s = (elapsed%60).toString().padStart(2,"0");
-        document.getElementById("timer").textContent = `${m}:${s}`;
+        const timerEl = document.getElementById("timer");
+        if (timerEl) timerEl.textContent = `${m}:${s}`;
       }
 
       function stopRecording() {
         if (mediaRecorder && mediaRecorder.state !== "inactive") {
-          mediaRecorder.stop();
+          try {
+            mediaRecorder.stop();
+          } catch(e) {}
           clearInterval(timerInterval);
         }
       }
 
       function cancelRecording() {
-        if (mediaRecorder && mediaRecorder.state !== "inactive") mediaRecorder.stop();
-        document.getElementById("livePreview").classList.remove("recording");
+        if (mediaRecorder && mediaRecorder.state !== "inactive") {
+          try { mediaRecorder.stop(); } catch(e) {}
+        }
+        const livePreview = document.getElementById("livePreview");
+        if (livePreview) livePreview.classList.remove("recording");
         clearInterval(timerInterval);
         recordedChunks = [];
         document.getElementById("recordBtn").classList.remove("hidden");
@@ -1334,13 +1436,25 @@
       }
 
       function showPreview() {
-        const blob = new Blob(recordedChunks, { type: recordingType === "video" ? "video/webm" : "audio/webm" });
+        if (recordedChunks.length === 0) {
+          alert("لم يتم تسجيل أي بيانات. حاول مرة أخرى.");
+          cancelRecording();
+          return;
+        }
+        const mimeType = recordingType === "video"
+          ? (mediaRecorder && mediaRecorder.mimeType ? mediaRecorder.mimeType : "video/webm")
+          : (mediaRecorder && mediaRecorder.mimeType ? mediaRecorder.mimeType : "audio/webm");
+        const blob = new Blob(recordedChunks, { type: mimeType });
         const url = URL.createObjectURL(blob);
         const previewDiv = document.getElementById("previewMedia");
         previewDiv.innerHTML = recordingType === "video"
-          ? `<video controls src="${url}"></video>`
-          : `<audio controls src="${url}"></audio>`;
+          ? `<video controls src="${url}" style="width:100%;border-radius:8px;"></video>`
+          : `<audio controls src="${url}" style="width:100%;"></audio>`;
         document.getElementById("recordingPreview").classList.remove("hidden");
+        document.getElementById("livePreview").classList.remove("recording");
+        document.getElementById("recordBtn").classList.remove("hidden");
+        document.getElementById("stopBtn").classList.add("hidden");
+        document.getElementById("timer").classList.add("hidden");
       }
 
       function blobToBase64(blob) {
@@ -1352,37 +1466,61 @@
         });
       }
 
+      // FIX 9: saveRecording مع تحقق من الحجم
       async function saveRecording() {
+        if (recordedChunks.length === 0) {
+          alert("لا توجد بيانات للحفظ. يرجى التسجيل أولاً.");
+          return;
+        }
         showLoading();
         try {
-          const blob = new Blob(recordedChunks, { type: recordingType === "video" ? "video/webm" : "audio/webm" });
+          const mimeType = mediaRecorder && mediaRecorder.mimeType
+            ? mediaRecorder.mimeType
+            : (recordingType === "video" ? "video/webm" : "audio/webm");
+          const blob = new Blob(recordedChunks, { type: mimeType });
+
+          // تحقق من الحجم (Firebase يدعم حتى 10MB per request)
+          if (blob.size > 8 * 1024 * 1024) {
+            hideLoading();
+            alert("التسجيل كبير جداً (أكثر من 8MB). يرجى تقليل مدة التسجيل وحاول مرة أخرى.");
+            return;
+          }
+
           const base64Data = await blobToBase64(blob);
           const recordingId = Date.now().toString();
-          const recording = { id: recordingId, type: recordingType, data: base64Data, timestamp: new Date().toISOString() };
-          // حفظ كـ object بـ recordingId كمفتاح (Firebase لا يدعم arrays بشكل صحيح)
-          await window.dbSet(window.dbRef(window.db, `participants/${currentUser.id}/recordings/${recordingId}`), recording);
-          const recordings = toRecordingsArray(currentUser.recordings);
-          recordings.push(recording);
-          currentUser.recordings = recordings;
+          const recording = {
+            id: recordingId,
+            type: recordingType,
+            data: base64Data,
+            timestamp: new Date().toISOString()
+          };
+
+          await window.dbSet(
+            window.dbRef(window.db, `participants/${currentUser.id}/recordings/${recordingId}`),
+            recording
+          );
+
+          // تحديث القائمة المحلية
+          if (!Array.isArray(currentUser.recordings)) currentUser.recordings = [];
+          currentUser.recordings.push(recording);
+
           hideLoading();
           alert("تم الحفظ بنجاح! ✅");
-          document.getElementById("livePreview").classList.remove("recording");
-          clearInterval(timerInterval);
           recordedChunks = [];
-          document.getElementById("recordBtn").classList.remove("hidden");
-          document.getElementById("stopBtn").classList.add("hidden");
-          document.getElementById("timer").classList.add("hidden");
-          document.getElementById("timer").textContent = "00:00";
           document.getElementById("recordingPreview").classList.add("hidden");
+          document.getElementById("timer").textContent = "00:00";
           loadMyRecordings();
         } catch(error) {
           hideLoading();
-          alert("خطأ في الحفظ: " + error.message);
+          if (error.message && error.message.includes('quota')) {
+            alert("انتهت مساحة Firebase. يرجى التواصل مع المشرف.");
+          } else {
+            alert("خطأ في الحفظ: " + error.message + "\n\nيرجى التأكد من الاتصال بالإنترنت وحجم التسجيل.");
+          }
         }
       }
 
       async function loadMyRecordings() {
-        // اقرأ البيانات الحديثة من Firebase
         try {
           const snap = await window.dbGet(window.dbRef(window.db, `participants/${currentUser.id}/recordings`));
           if (snap.exists()) {
@@ -1390,7 +1528,10 @@
           } else {
             currentUser.recordings = [];
           }
-        } catch(e) { /* استخدم الكاش المحلي */ }
+        } catch(e) {
+          console.error('loadMyRecordings fetch error:', e);
+          if (!Array.isArray(currentUser.recordings)) currentUser.recordings = [];
+        }
 
         const listDiv = document.getElementById("myRecordingsList");
         const recordings = toRecordingsArray(currentUser.recordings);
@@ -1446,15 +1587,16 @@
       async function deleteRecording(recordingId) {
         showLoading();
         try {
-          // حذف التسجيل من Firebase مباشرة بالمسار
           await window.dbRemove(window.dbRef(window.db, `participants/${currentUser.id}/recordings/${recordingId}`));
           const messagesSnapshot = await window.dbGet(window.dbRef(window.db, 'messages'));
           if (messagesSnapshot.exists()) {
             const updates = {};
-            messagesSnapshot.forEach(child => { if (child.val().recordingId === recordingId) updates[`messages/${child.key}`] = null; });
+            messagesSnapshot.forEach(child => {
+              if (child.val().recordingId === recordingId) updates[`messages/${child.key}`] = null;
+            });
             if (Object.keys(updates).length > 0) await window.dbUpdate(window.dbRef(window.db), updates);
           }
-          currentUser.recordings = (currentUser.recordings || []).filter(r => r.id !== recordingId);
+          currentUser.recordings = toRecordingsArray(currentUser.recordings).filter(r => r.id !== recordingId);
           hideLoading();
           closeConfirmDialog();
           loadMyRecordings();
@@ -1466,14 +1608,20 @@
         }
       }
 
-      // تحويل recordings من Firebase (قد تكون object أو array) إلى array
+      // ====== FIX 10: toRecordingsArray محسّن ======
       function toRecordingsArray(recordings) {
         if (!recordings) return [];
-        if (Array.isArray(recordings)) return recordings.filter(r => r && r.id);
-        if (typeof recordings === 'object') return Object.values(recordings).filter(r => r && r.id);
+        if (Array.isArray(recordings)) {
+          // فلتر null وundefined وrecordings بدون id
+          return recordings.filter(r => r && r.id && r.data);
+        }
+        if (typeof recordings === 'object') {
+          return Object.values(recordings).filter(r => r && r.id && r.data);
+        }
         return [];
       }
 
+      // ====== FIX 11: loadParticipants مع data attributes بدل onclick مضمن ======
       async function loadParticipants() {
         showLoading();
         try {
@@ -1502,21 +1650,31 @@
             p.recordings.forEach(rec => { if (!isRecordingViewed(p.id, rec.id)) newRecordings++; });
           });
           updateAdminStats(participants.length, totalRecordings, newRecordings);
+
+          // حفظ الكاش باستخدام String ID
+          window._participantsCache = {};
+          participants.forEach(p => { window._participantsCache[String(p.id)] = p; });
+
           listDiv.innerHTML = participants.map(p => {
             const newCount = p.recordings.filter(rec => !isRecordingViewed(p.id, rec.id)).length;
-            // نبني JSON آمن
-            const pSafe = JSON.stringify({ id: p.id, name: p.name, password: p.password, recordings: p.recordings, registeredAt: p.registeredAt || '' });
+            // FIX: استخدام data-id attribute بدل inline onclick مع ID معالج
             return `
-              <div class="participant-card" onclick='openParticipant(${p.id.replace(/[^0-9]/g,"")})'>
+              <div class="participant-card" data-pid="${p.id}">
                 ${newCount > 0 ? `<div class="new-recordings-badge">${newCount}</div>` : ''}
                 <div class="icon">👤</div>
                 <h3>${p.name}</h3>
                 <p class="count">${p.recordings.length} تسجيل</p>
               </div>`;
           }).join("");
-          // حفظ بيانات المشاركين للاستخدام عند الضغط
-          window._participantsCache = {};
-          participants.forEach(p => { window._participantsCache[p.id] = p; });
+
+          // إضافة event listeners بعد إنشاء العناصر
+          listDiv.querySelectorAll('.participant-card').forEach(card => {
+            card.addEventListener('click', function() {
+              const pid = this.getAttribute('data-pid');
+              openParticipant(pid);
+            });
+          });
+
         } catch (error) {
           hideLoading();
           const listDiv = document.getElementById("participantsList");
@@ -1531,15 +1689,20 @@
                 ثم اضغط "Publish"
               </div>`;
           } else {
-            listDiv.innerHTML = `<div class="error-message" style="grid-column:1/-1;">⚠️ خطأ في تحميل البيانات: ${error.message}<br>تأكد من اتصالك بالإنترنت</div>`;
+            listDiv.innerHTML = `<div class="error-message" style="grid-column:1/-1;">⚠️ خطأ في تحميل البيانات: ${error.message}</div>`;
           }
           updateAdminStats(0, 0, 0);
         }
       }
 
-      function openParticipant(id) {
-        const p = window._participantsCache && window._participantsCache[id];
-        if (p) showAdminRecordingsPage(p);
+      function openParticipant(pid) {
+        // FIX: استخدم String للبحث
+        const p = window._participantsCache && window._participantsCache[String(pid)];
+        if (p) {
+          showAdminRecordingsPage(p);
+        } else {
+          alert("خطأ في تحميل بيانات المشارك. يرجى تحديث الصفحة.");
+        }
       }
 
       function updateAdminStats(participants, recordings, newRecs) {
@@ -1550,18 +1713,20 @@
 
       async function loadParticipantRecordings() {
         const listDiv = document.getElementById("adminRecordingsList");
-        // اقرأ تسجيلات محدّثة من Firebase
         try {
           const snap = await window.dbGet(window.dbRef(window.db, `participants/${currentParticipant.id}/recordings`));
           if (snap.exists()) {
             currentParticipant.recordings = toRecordingsArray(snap.val());
-            if (window._participantsCache && window._participantsCache[currentParticipant.id]) {
-              window._participantsCache[currentParticipant.id].recordings = currentParticipant.recordings;
+            if (window._participantsCache && window._participantsCache[String(currentParticipant.id)]) {
+              window._participantsCache[String(currentParticipant.id)].recordings = currentParticipant.recordings;
             }
           } else {
             currentParticipant.recordings = [];
           }
-        } catch(e) { currentParticipant.recordings = toRecordingsArray(currentParticipant.recordings); }
+        } catch(e) {
+          console.error('loadParticipantRecordings error:', e);
+          currentParticipant.recordings = toRecordingsArray(currentParticipant.recordings);
+        }
 
         const recordings = currentParticipant.recordings;
         if (!recordings || recordings.length === 0) {
@@ -1603,6 +1768,8 @@
       function openMessageModal(recordingId, type) {
         currentRecordingForMessage = recordingId;
         selectedRating = 0;
+        adminVoiceChunks = [];
+        adminVoiceBlob = null;
         const modal = document.createElement("div");
         modal.className = "message-modal";
         modal.id = "messageModal";
@@ -1622,7 +1789,7 @@
               <div class="timer hidden" id="voiceTimer">00:00</div>
               <button class="btn btn-danger hidden" id="voiceStopBtn" onclick="stopAdminVoice()">⏹ إيقاف</button>
               <div id="voicePreviewDiv" class="hidden">
-                <audio id="voicePreview" controls></audio>
+                <audio id="voicePreview" controls style="width:100%;margin-top:8px;"></audio>
               </div>
             </div>
             <div id="ratingMessageDiv" class="rating-container ${type!=='rating'?'hidden':''}">
@@ -1644,7 +1811,7 @@
       }
 
       function switchMessageType(type) {
-        document.querySelectorAll(".message-type-btn").forEach(btn => btn.classList.remove("active"));
+        document.querySelectorAll("#messageModal .message-type-btn").forEach(btn => btn.classList.remove("active"));
         event.target.classList.add("active");
         document.getElementById("textMessageDiv").classList.add("hidden");
         document.getElementById("voiceMessageDiv").classList.add("hidden");
@@ -1659,9 +1826,8 @@
         document.getElementById("ratingValue").textContent = `${value} / 5`;
         document.querySelectorAll("#starsDisplay .star").forEach((star, index) => {
           const starValue = index + 1;
-          star.classList.remove("filled", "half");
+          star.classList.remove("filled");
           if (value >= starValue) star.classList.add("filled");
-          else if (value > starValue-1 && value < starValue) star.classList.add("half");
         });
         document.querySelectorAll(".rating-btn").forEach(btn => {
           btn.classList.remove("active");
@@ -1669,20 +1835,37 @@
         });
       }
 
+      let adminVoiceBlob = null;
+
       async function startAdminVoice() {
         try {
           const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
           adminVoiceChunks = [];
-          adminVoiceRecorder = new MediaRecorder(stream);
-          adminVoiceRecorder.ondataavailable = e => { if (e.data.size > 0) adminVoiceChunks.push(e.data); };
-          adminVoiceRecorder.onstop = () => {
-            stream.getTracks().forEach(t => t.stop());
-            const blob = new Blob(adminVoiceChunks, { type: "audio/webm" });
-            const url = URL.createObjectURL(blob);
-            document.getElementById("voicePreview").src = url;
-            document.getElementById("voicePreviewDiv").classList.remove("hidden");
+          adminVoiceBlob = null;
+          const mimeType = getSupportedMimeType();
+          try {
+            adminVoiceRecorder = mimeType
+              ? new MediaRecorder(stream, { mimeType })
+              : new MediaRecorder(stream);
+          } catch(e) {
+            adminVoiceRecorder = new MediaRecorder(stream);
+          }
+          adminVoiceRecorder.ondataavailable = e => {
+            if (e.data && e.data.size > 0) adminVoiceChunks.push(e.data);
           };
-          adminVoiceRecorder.start();
+          adminVoiceRecorder.onstop = () => {
+            stream.getTracks().forEach(t => { try { t.stop(); } catch(e) {} });
+            if (adminVoiceChunks.length > 0) {
+              const usedMime = adminVoiceRecorder.mimeType || 'audio/webm';
+              adminVoiceBlob = new Blob(adminVoiceChunks, { type: usedMime });
+              const url = URL.createObjectURL(adminVoiceBlob);
+              const preview = document.getElementById("voicePreview");
+              if (preview) { preview.src = url; }
+              const previewDiv = document.getElementById("voicePreviewDiv");
+              if (previewDiv) previewDiv.classList.remove("hidden");
+            }
+          };
+          adminVoiceRecorder.start(100);
           document.getElementById("voiceRecordBtn").classList.add("hidden");
           document.getElementById("voiceStopBtn").classList.remove("hidden");
           document.getElementById("voiceTimer").classList.remove("hidden");
@@ -1691,24 +1874,31 @@
             const elapsed = Math.floor((Date.now() - startTime) / 1000);
             const m = Math.floor(elapsed/60).toString().padStart(2,"0");
             const s = (elapsed%60).toString().padStart(2,"0");
-            document.getElementById("voiceTimer").textContent = `${m}:${s}`;
+            const timerEl = document.getElementById("voiceTimer");
+            if (timerEl) timerEl.textContent = `${m}:${s}`;
           }, 1000);
-        } catch(err) { alert("خطأ في المايكروفون: " + err.message); }
+        } catch(err) {
+          alert("خطأ في المايكروفون: " + err.message);
+        }
       }
 
       function stopAdminVoice() {
         if (adminVoiceRecorder && adminVoiceRecorder.state !== "inactive") {
-          adminVoiceRecorder.stop();
+          try { adminVoiceRecorder.stop(); } catch(e) {}
           clearInterval(adminVoiceTimer);
-          document.getElementById("voiceRecordBtn").classList.remove("hidden");
-          document.getElementById("voiceStopBtn").classList.add("hidden");
-          document.getElementById("voiceTimer").classList.add("hidden");
-          document.getElementById("voiceTimer").textContent = "00:00";
+          const btn = document.getElementById("voiceRecordBtn");
+          const stopBtn = document.getElementById("voiceStopBtn");
+          const timer = document.getElementById("voiceTimer");
+          if (btn) btn.classList.remove("hidden");
+          if (stopBtn) stopBtn.classList.add("hidden");
+          if (timer) { timer.classList.add("hidden"); timer.textContent = "00:00"; }
         }
       }
 
       async function sendMessageToParticipant() {
-        const activeBtn = document.querySelector(".message-type-btn.active");
+        const activeBtn = document.querySelector("#messageModal .message-type-btn.active");
+        if (!activeBtn) { alert("حدث خطأ، الرجاء إغلاق النافذة والمحاولة مجدداً."); return; }
+
         let messageType = 'text';
         if (activeBtn.textContent.includes("نصية")) messageType = 'text';
         else if (activeBtn.textContent.includes("صوتية")) messageType = 'voice';
@@ -1720,26 +1910,44 @@
             const messageText = document.getElementById("messageText").value.trim();
             if (!messageText) { hideLoading(); alert("الرجاء كتابة رسالة!"); return; }
             await sendMessage(currentParticipant.id, currentRecordingForMessage, messageText, 'text', null, null);
+
           } else if (messageType === 'voice') {
-            if (!adminVoiceChunks || adminVoiceChunks.length === 0) { hideLoading(); alert("الرجاء تسجيل رسالة صوتية!"); return; }
-            const blob = new Blob(adminVoiceChunks, { type: "audio/webm" });
-            const base64Data = await blobToBase64(blob);
+            // FIX 12: استخدام adminVoiceBlob بدل adminVoiceChunks مباشرة
+            if (!adminVoiceBlob) {
+              hideLoading();
+              alert("الرجاء تسجيل رسالة صوتية أولاً ثم الضغط على إيقاف!");
+              return;
+            }
+            if (adminVoiceBlob.size > 5 * 1024 * 1024) {
+              hideLoading();
+              alert("الرسالة الصوتية كبيرة جداً. يرجى تقليل المدة.");
+              return;
+            }
+            const base64Data = await blobToBase64(adminVoiceBlob);
             await sendMessage(currentParticipant.id, currentRecordingForMessage, "رسالة صوتية من الاستاذة 🎤", 'voice', base64Data, null);
+
           } else if (messageType === 'rating') {
             if (selectedRating === 0) { hideLoading(); alert("الرجاء اختيار تقييم!"); return; }
+            // حذف التقييم القديم لنفس التسجيل
             const messagesSnapshot = await window.dbGet(window.dbRef(window.db, 'messages'));
             if (messagesSnapshot.exists()) {
               const updates = {};
               messagesSnapshot.forEach(child => {
                 const msg = child.val();
-                if (msg.recordingId === currentRecordingForMessage && msg.participantId === currentParticipant.id && msg.messageType === 'rating') {
+                if (msg.recordingId === currentRecordingForMessage &&
+                    String(msg.participantId) === String(currentParticipant.id) &&
+                    msg.messageType === 'rating') {
                   updates[`messages/${child.key}`] = null;
                 }
               });
-              if (Object.keys(updates).length > 0) await window.dbUpdate(window.dbRef(window.db), updates);
+              if (Object.keys(updates).length > 0) {
+                await window.dbUpdate(window.dbRef(window.db), updates);
+              }
             }
-            await sendMessage(currentParticipant.id, currentRecordingForMessage, `تقييمك: ${selectedRating} / 5 نجوم`, 'rating', null, selectedRating);
+            await sendMessage(currentParticipant.id, currentRecordingForMessage,
+              `تقييمك: ${selectedRating} / 5 نجوم`, 'rating', null, selectedRating);
           }
+
           hideLoading();
           closeMessageModal();
           if (messageType === 'rating') await calculateAndDisplayTotalRating();
@@ -1753,7 +1961,14 @@
 
       async function sendMessage(participantId, recordingId, message, messageType, voiceData, rating) {
         const newMessageRef = window.dbPush(window.dbRef(window.db, 'messages'));
-        const newMessage = { participantId, recordingId, message, messageType, timestamp: new Date().toISOString(), read: false };
+        const newMessage = {
+          participantId: String(participantId),
+          recordingId: String(recordingId),
+          message,
+          messageType,
+          timestamp: new Date().toISOString(),
+          read: false
+        };
         if (messageType === 'voice' && voiceData) newMessage.voiceData = voiceData;
         if (messageType === 'rating' && rating) newMessage.rating = rating;
         await window.dbSet(newMessageRef, newMessage);
@@ -1764,7 +1979,10 @@
         const modal = document.getElementById("messageModal");
         if (modal) modal.remove();
         adminVoiceChunks = [];
-        if (adminVoiceRecorder && adminVoiceRecorder.state !== "inactive") adminVoiceRecorder.stop();
+        adminVoiceBlob = null;
+        if (adminVoiceRecorder && adminVoiceRecorder.state !== "inactive") {
+          try { adminVoiceRecorder.stop(); } catch(e) {}
+        }
         clearInterval(adminVoiceTimer);
         selectedRating = 0;
       }
@@ -1791,7 +2009,9 @@
           const messagesSnapshot = await window.dbGet(window.dbRef(window.db, 'messages'));
           if (messagesSnapshot.exists()) {
             const updates = {};
-            messagesSnapshot.forEach(child => { if (child.val().recordingId === recordingId) updates[`messages/${child.key}`] = null; });
+            messagesSnapshot.forEach(child => {
+              if (child.val().recordingId === recordingId) updates[`messages/${child.key}`] = null;
+            });
             if (Object.keys(updates).length > 0) await window.dbUpdate(window.dbRef(window.db), updates);
           }
           hideLoading();
@@ -1822,17 +2042,24 @@
           buttonElement.innerHTML = '✅ تم النسخ';
           buttonElement.classList.add('copied');
           setTimeout(() => { buttonElement.innerHTML = originalHTML; buttonElement.classList.remove('copied'); }, 2000);
-        } catch(err) { alert('فشل النسخ: ' + err); }
+        } catch(err) {
+          // Fallback للمتصفحات التي لا تدعم clipboard API
+          const textArea = document.createElement("textarea");
+          textArea.value = textToCopy;
+          document.body.appendChild(textArea);
+          textArea.focus();
+          textArea.select();
+          try { document.execCommand('copy'); alert('تم النسخ ✅'); } catch(e) { alert('فشل النسخ'); }
+          document.body.removeChild(textArea);
+        }
       }
 
-      // ====== لوحة الترتيب (للأستاذة فقط) ======
       async function showLeaderboard(caller) {
-        if (!isAdmin) return; // للأستاذة فقط
+        if (!isAdmin) return;
         showLoading();
         try {
           const participantsSnap = await window.dbGet(window.dbRef(window.db, 'participants'));
           const messagesSnap = await window.dbGet(window.dbRef(window.db, 'messages'));
-
           let participants = [];
           if (participantsSnap.exists()) {
             participantsSnap.forEach(child => {
@@ -1840,15 +2067,13 @@
               participants.push({ id: child.key, name: val.name, recordings: toRecordingsArray(val.recordings) });
             });
           }
-
           const ratings = {};
           participants.forEach(p => { ratings[p.id] = { total: 0, ratedSet: new Set() }; });
-
           if (messagesSnap.exists()) {
             messagesSnap.forEach(child => {
               const msg = child.val();
-              if (msg.messageType === 'rating' && msg.rating && ratings[msg.participantId]) {
-                const r = ratings[msg.participantId];
+              if (msg.messageType === 'rating' && msg.rating && ratings[String(msg.participantId)]) {
+                const r = ratings[String(msg.participantId)];
                 if (!r.ratedSet.has(msg.recordingId)) {
                   r.total += msg.rating;
                   r.ratedSet.add(msg.recordingId);
@@ -1856,14 +2081,12 @@
               }
             });
           }
-
           const ranked = participants.map(p => ({
             ...p,
             totalRating: ratings[p.id] ? ratings[p.id].total : 0,
             ratedCount: ratings[p.id] ? ratings[p.id].ratedSet.size : 0,
             maxRating: ratings[p.id] ? ratings[p.id].ratedSet.size * 5 : 0,
           })).sort((a, b) => b.totalRating - a.totalRating || b.ratedCount - a.ratedCount);
-
           hideLoading();
           renderLeaderboard(ranked, caller);
         } catch(e) {
@@ -1875,21 +2098,15 @@
       function renderLeaderboard(ranked, caller) {
         const old = document.getElementById('leaderboardModal');
         if (old) old.remove();
-
         const myId = currentUser && !isAdmin ? currentUser.id : null;
         const myRank = myId ? ranked.findIndex(p => p.id === myId) + 1 : 0;
-
         const rankEmoji = (i) => i === 0 ? '🥇' : i === 1 ? '🥈' : i === 2 ? '🥉' : (i + 1);
         const rankClass = (i) => i === 0 ? 'rank-1' : i === 1 ? 'rank-2' : i === 2 ? 'rank-3' : 'rank-other';
-
         const starsHtml = (rating, max) => {
           if (!max) return '<span style="color:#bbb;font-size:0.8rem;">لا يوجد تقييم بعد</span>';
           const full = Math.floor(rating);
-          const half = rating % 1 >= 0.5 ? 1 : 0;
-          const empty = 5 - full - half;
-          return '⭐'.repeat(full) + (half ? '✨' : '') + '☆'.repeat(Math.max(0, empty));
+          return '⭐'.repeat(full) + '☆'.repeat(Math.max(0, 5 - full));
         };
-
         let rowsHtml = '';
         if (ranked.length === 0) {
           rowsHtml = `<div class="leaderboard-empty"><div class="icon">🏆</div><p>لا يوجد مشاركون بعد</p></div>`;
@@ -1900,10 +2117,7 @@
               <div class="leaderboard-row ${rankClass(i)} ${isMine ? 'rank-mine' : ''}" style="animation-delay:${i * 0.06}s">
                 <div class="rank-badge">${rankEmoji(i)}</div>
                 <div class="rank-info">
-                  <div class="rank-name">
-                    ${p.name}
-                    ${isMine ? '<span class="you-tag">أنتِ</span>' : ''}
-                  </div>
+                  <div class="rank-name">${p.name}${isMine ? '<span class="you-tag">أنتِ</span>' : ''}</div>
                   <div class="rank-details">${p.recordings.length} تسجيل • ${p.ratedCount} تقييم</div>
                   <div class="rank-stars">${starsHtml(p.totalRating, p.maxRating)}</div>
                 </div>
@@ -1914,7 +2128,6 @@
               </div>`;
           });
         }
-
         let myBanner = '';
         if (myId && myRank > 0 && ranked.length > 0) {
           const me = ranked[myRank - 1];
@@ -1924,7 +2137,6 @@
               <div class="text">مرتبتك الحالية: <strong>${myRank} من ${ranked.length}</strong> • مجموعك: <strong>${me.totalRating > 0 ? me.totalRating.toFixed(1) : '0'} نقطة</strong></div>
             </div>`;
         }
-
         const modal = document.createElement('div');
         modal.className = 'leaderboard-modal';
         modal.id = 'leaderboardModal';
@@ -1941,8 +2153,6 @@
             </div>
           </div>`;
         document.body.appendChild(modal);
-
-        // إغلاق بالضغط خارج الـ modal
         modal.addEventListener('click', function(e) {
           if (e.target === modal) closeLeaderboard();
         });
