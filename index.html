@@ -1542,21 +1542,9 @@
 
       // ====== نقل البيانات من Firebase إلى Supabase ======
       async function checkFirebaseData() {
-        try {
-          await new Promise(resolve => {
-            if (window.firebaseReady) { resolve(); return; }
-            const check = setInterval(() => { if (window.firebaseReady) { clearInterval(check); resolve(); } }, 100);
-            setTimeout(() => { clearInterval(check); resolve(); }, 4000);
-          });
-          if (!window.fbDb) return;
-          const snap = await window.fbGet(window.fbRef(window.fbDb, 'participants'));
-          if (snap.exists()) {
-            const { count } = await db.from('participants').select('id', { count: 'exact', head: true });
-            if (!count || count === 0) {
-              document.getElementById('migrationBanner').classList.remove('hidden');
-            }
-          }
-        } catch(e) { console.warn('checkFirebaseData:', e); }
+        // اعرض زر النقل دائماً ما لم يتم النقل مسبقاً
+        if (localStorage.getItem('migrationDone') === 'true') return;
+        document.getElementById('migrationBanner').classList.remove('hidden');
       }
 
       function migrateLog(msg, color) {
@@ -1647,6 +1635,7 @@
           migrateLog(`✅ ${bCount} إعلان`);
 
           migrateLog('🎉 تم بنجاح! سيتم تحديث الصفحة...', '#ffd700');
+          localStorage.setItem('migrationDone', 'true');
           btn.textContent = '✅ تم النقل!';
 
           setTimeout(() => {
