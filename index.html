@@ -983,38 +983,36 @@
         } catch(err) { hideLoading(); alert("حدث خطأ: " + err.message); }
       };
 
-      // ====== FIX: تسجيل دخول - مقارنة مرنة تحل مشكلة عدم الدخول ======
+      // ====== تسجيل دخول - يجيب كل المشاركين ويقارن يدوياً ======
       document.getElementById("loginForm").onsubmit = async function(e) {
         e.preventDefault();
-        // FIX: trim لإزالة المسافات وتوحيد المقارنة
         const nameRaw = document.getElementById("loginName").value.trim();
-        const passwordRaw = document.getElementById("loginPassword").value.trim();
+        const passwordRaw = document.getElementById("loginPassword").value;
         if (!nameRaw || !passwordRaw) { alert("الرجاء ملء جميع الحقول!"); return; }
         showLoading();
         try {
-          // FIX: جلب المشاركين بالاسم فقط أولاً (ilike = غير حساس لحالة الأحرف)
-          // ثم مقارنة كلمة المرور يدوياً بعد trim للطرفين
-          const { data: candidates, error: searchErr } = await db
-            .from('participants')
-            .select('*')
-            .ilike('name', nameRaw);
-
+          // نجيب كل المشاركين ونقارن يدوياً - يحل مشكلة الحسابات القديمة
+          const { data: allUsers, error } = await db.from('participants').select('*');
           hideLoading();
+          if (error || !allUsers) { showLoginError("خطأ في الاتصال. حاول مرة أخرى."); return; }
 
-          if (searchErr || !candidates || candidates.length === 0) {
-            showLoginError("الاسم أو كلمة المرور خاطئة!");
-            return;
-          }
+          // normalize للمقارنة المرنة (همزات، ة/ه، مسافات زائدة)
+          const normalize = str => (str || '').trim()
+            .replace(/[\u0622\u0623\u0625]/g, '\u0627')
+            .replace(/\u0629/g, '\u0647')
+            .replace(/\s+/g, ' ')
+            .toLowerCase();
 
-          // FIX: مقارنة كلمة المرور مع trim من الطرفين
-          const user = candidates.find(u =>
-            u.password && u.password.trim() === passwordRaw
-          );
+          const nameNorm = normalize(nameRaw);
 
-          if (!user) {
-            showLoginError("الاسم أو كلمة المرور خاطئة!");
-            return;
-          }
+          const user = allUsers.find(u => {
+            const nameMatch = normalize(u.name) === nameNorm;
+            const passMatch = (u.password === passwordRaw) ||
+                              ((u.password || '').trim() === passwordRaw.trim());
+            return nameMatch && passMatch;
+          });
+
+          if (!user) { showLoginError("الاسم أو كلمة المرور خاطئة!"); return; }
 
           currentUser = user;
           saveSession();
