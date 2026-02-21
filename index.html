@@ -457,11 +457,33 @@
         if (!data) return '<p style="color:#999;font-size:0.85rem;text-align:center;padding:10px;">⚠️ لا توجد بيانات صوتية</p>';
         const url = dataUriToObjectUrl(data);
         if (!url) return '<p style="color:#999;font-size:0.85rem;text-align:center;padding:10px;">⚠️ تعذّر تحميل الملف</p>';
+        // FIX duration: use preload="auto" so browser loads enough to know duration
+        // and set a unique id so we can fix duration after load via JS
+        const uid = 'media_' + Math.random().toString(36).slice(2,9);
         if (type === 'video') {
-          return `<video controls src="${url}" style="width:100%;border-radius:8px;background:#000;max-height:300px;" preload="metadata"></video>`;
+          return `<video id="${uid}" controls src="${url}" style="width:100%;border-radius:8px;background:#000;max-height:300px;" preload="auto"
+            onloadedmetadata="fixMediaDuration(this)"></video>`;
         } else {
-          return `<audio controls src="${url}" style="width:100%;" preload="metadata"></audio>`;
+          return `<audio id="${uid}" controls src="${url}" style="width:100%;" preload="auto"
+            onloadedmetadata="fixMediaDuration(this)"></audio>`;
         }
+      }
+
+      // FIX: إصلاح عرض المدة لعناصر الصوت/الفيديو
+      // بعض المتصفحات تُظهر 0:00 لأن المدة غير معروفة مع blob URLs
+      // الحل: تحميل الوسائط مسبقاً وإعادة تعيين currentTime
+      function fixMediaDuration(el) {
+        if (!el) return;
+        try {
+          if (!isFinite(el.duration) || el.duration === 0) {
+            // حيلة لإجبار المتصفح على معرفة المدة الكاملة
+            el.currentTime = 1e101;
+            el.addEventListener('timeupdate', function handler() {
+              el.removeEventListener('timeupdate', handler);
+              el.currentTime = 0;
+            }, { once: true });
+          }
+        } catch(e) {}
       }
 
       function blobToBase64(blob) {
@@ -638,9 +660,84 @@
           contactContent.classList.add("hidden");
           document.getElementById("contactToggleText").textContent = "عرض";
         }
-        await calculateAndDisplayTotalRating();
-        await loadParticipantRecordings();
-        await loadAdminSentMessages();
+        // إخفاء شارة التقييم أثناء التحميل
+        const badge = document.getElementById("totalRatingBadge");
+        if (badge) badge.style.display = 'none';
+
+        // FIX SPEED: تحميل كل شيء بالتوازي بدلاً من التسلسل
+        await Promise.all([
+          loadParticipantRecordingsAndRating(),
+          loadAdminSentMessages()
+        ]);
+      }
+
+      // FIX SPEED: دمج تحميل التسجيلات والتقييمات في طلب واحد متوازٍ
+      async function loadParticipantRecordingsAndRating() {
+        const listDiv = document.getElementById("adminRecordingsList");
+        if (!listDiv || !currentParticipant) return;
+        listDiv.innerHTML = '<div class="empty-state"><div class="icon">⏳</div><p>جاري التحميل...</p></div>';
+        try {
+          // تحميل التسجيلات والتقييمات في نفس الوقت
+          const [recResult, ratingResult] = await Promise.all([
+            db.from('recordings')
+              .select('id, type, data, created_at')
+              .eq('participant_id', currentParticipant.id)
+              .order('created_at', { ascending: true }),
+            db.from('messages')
+              .select('rating, recording_id')
+              .eq('participant_id', currentParticipant.id)
+              .eq('message_type', 'rating')
+              .not('rating', 'is', null)
+          ]);
+
+          // عرض التقييم
+          const ratings = ratingResult.data || [];
+          let total = 0;
+          const ratedSet = new Set();
+          ratings.forEach(r => {
+            if (!ratedSet.has(r.recording_id)) {
+              total += r.rating;
+              ratedSet.add(r.recording_id);
+            }
+          });
+          const badge = document.getElementById("totalRatingBadge");
+          document.getElementById("totalRatingValue").textContent = total.toFixed(1);
+          document.getElementById("totalRatingMax").textContent = ratedSet.size * 5;
+          if (badge) badge.style.display = ratedSet.size === 0 ? 'none' : 'inline-flex';
+
+          // عرض التسجيلات
+          const recordings = recResult.data || [];
+          if (recResult.error) throw recResult.error;
+
+          if (recordings.length === 0) {
+            listDiv.innerHTML = '<div class="empty-state"><div class="icon">🎙️</div><p>لا توجد تسجيلات لهذا المشارك</p></div>';
+            return;
+          }
+
+          const uniqueRecordings = [];
+          const seenIds = new Set();
+          for (const rec of recordings) {
+            if (!seenIds.has(rec.id)) {
+              seenIds.add(rec.id);
+              uniqueRecordings.push(rec);
+              markRecordingAsViewed(currentParticipant.id, rec.id);
+            }
+          }
+
+          listDiv.innerHTML = uniqueRecordings.map((rec, index) => `
+            <div class="recording-item" data-rec-id="${rec.id}">
+              <div class="three-dots" onclick="showAdminRecordingMenu(event, ${rec.id})">⋮</div>
+              <p style="color:var(--dark-green);font-weight:700;font-size:1rem;margin-bottom:4px;">
+                التسجيل ${index + 1} - ${rec.type === "video" ? "🎥 فيديو" : "🎤 صوت"}
+              </p>
+              <p class="recording-date">${new Date(rec.created_at).toLocaleDateString("ar-SA")}</p>
+              ${createMediaElement(rec.data, rec.type)}
+            </div>`).join("");
+
+        } catch(err) {
+          console.error('خطأ في تحميل التسجيلات:', err);
+          listDiv.innerHTML = '<div class="empty-state"><div class="icon">⚠️</div><p>خطأ في التحميل</p></div>';
+        }
       }
 
       function backToParticipants() {
@@ -1434,50 +1531,9 @@
         document.getElementById("newRecordings").textContent = n;
       }
 
-      // FIX: تحميل تسجيلات المشارك مع منع التكرار
+      // للتوافق مع استدعاءات أخرى (الحذف وما إلى ذلك)
       async function loadParticipantRecordings() {
-        const listDiv = document.getElementById("adminRecordingsList");
-        if (!listDiv || !currentParticipant) return;
-        listDiv.innerHTML = '<div class="empty-state"><div class="icon">⏳</div><p>جاري التحميل...</p></div>';
-        try {
-          const { data: recordings, error } = await db
-            .from('recordings')
-            .select('id, type, data, created_at')
-            .eq('participant_id', currentParticipant.id)
-            .order('created_at', { ascending: true });
-
-          if (error) throw error;
-
-          if (!recordings || recordings.length === 0) {
-            listDiv.innerHTML = '<div class="empty-state"><div class="icon">🎙️</div><p>لا توجد تسجيلات لهذا المشارك</p></div>';
-            return;
-          }
-
-          // FIX: منع التكرار باستخدام Set للـ IDs
-          const uniqueRecordings = [];
-          const seenIds = new Set();
-          for (const rec of recordings) {
-            if (!seenIds.has(rec.id)) {
-              seenIds.add(rec.id);
-              uniqueRecordings.push(rec);
-              markRecordingAsViewed(currentParticipant.id, rec.id);
-            }
-          }
-
-          listDiv.innerHTML = uniqueRecordings.map((rec, index) => `
-            <div class="recording-item" data-rec-id="${rec.id}">
-              <div class="three-dots" onclick="showAdminRecordingMenu(event, ${rec.id})">⋮</div>
-              <p style="color:var(--dark-green);font-weight:700;font-size:1rem;margin-bottom:4px;">
-                التسجيل ${index + 1} - ${rec.type === "video" ? "🎥 فيديو" : "🎤 صوت"}
-              </p>
-              <p class="recording-date">${new Date(rec.created_at).toLocaleDateString("ar-SA")}</p>
-              ${createMediaElement(rec.data, rec.type)}
-            </div>`).join("");
-
-        } catch(err) {
-          console.error('خطأ في تحميل تسجيلات المشارك:', err);
-          listDiv.innerHTML = '<div class="empty-state"><div class="icon">⚠️</div><p>خطأ في التحميل</p></div>';
-        }
+        await loadParticipantRecordingsAndRating();
       }
 
       function showAdminRecordingMenu(e, recordingId) {
@@ -1555,14 +1611,12 @@
           const ratedSet = new Set();
           if (ratings) {
             ratings.forEach(r => {
-              // حساب تقييم واحد فقط لكل تسجيل
               if (!ratedSet.has(r.recording_id)) {
                 total += r.rating;
                 ratedSet.add(r.recording_id);
               }
             });
           }
-
           const badge = document.getElementById("totalRatingBadge");
           document.getElementById("totalRatingValue").textContent = total.toFixed(1);
           document.getElementById("totalRatingMax").textContent = ratedSet.size * 5;
