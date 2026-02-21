@@ -191,7 +191,10 @@
       .confirm-content h3 { color: var(--dark-green); font-size: 1.2rem; margin-bottom: 12px; }
       .confirm-content p { font-size: 0.95rem; margin-bottom: 20px; line-height: 1.5; }
       .confirm-buttons { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
-      @keyframes popIn { 0% { transform: scale(0.8); opacity: 0; } 100% { transform: scale(1); opacity: 1; } }
+      .lazy-player { background: linear-gradient(135deg, #f8fafc, #f1f5f9); border-radius: 8px; padding: 4px; margin-top: 8px; border: 2px dashed #cbd5e1; }
+      .lazy-play-btn { width: 100%; background: none; border: none; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 10px; padding: 14px 10px; border-radius: 6px; font-family: "Cairo", sans-serif; font-size: 0.95rem; font-weight: 700; color: var(--dark-green); transition: background 0.2s ease; }
+      .lazy-play-btn:hover { background: rgba(212,175,55,0.12); }
+      .lazy-play-btn:active { transform: scale(0.98); }
       @media (max-width: 768px) {
         h1 { font-size: 1.3rem; }
         .card { padding: 12px 10px; }
@@ -453,37 +456,90 @@
         }
       }
 
+      // ====== نظام التشغيل الكسول (Lazy Load Player) ======
+      // لا يتم جلب بيانات الصوت/الفيديو إلا عند الضغط على زر التشغيل
+      // هذا يجعل التحميل فورياً بغض النظر عن عدد التسجيلات
+
+      // يُنشئ بطاقة تشغيل بدون data — تجلب الـ data عند الضغط فقط
+      function createLazyPlayer(recId, type) {
+        const icon = type === 'video' ? '🎥' : '🎤';
+        const label = type === 'video' ? 'اضغط لتحميل الفيديو' : 'اضغط لتحميل الصوت';
+        return `
+          <div class="lazy-player" id="lazy_${recId}" data-rec-id="${recId}" data-type="${type}">
+            <button class="lazy-play-btn" onclick="loadAndPlayRecording(${recId}, '${type}')">
+              <span style="font-size:1.6rem;">${icon}</span>
+              <span>${label}</span>
+            </button>
+          </div>`;
+      }
+
+      // يُنشئ مشغّل للبيانات الموجودة مسبقاً (مثل معاينة التسجيل أو رسائل الاستاذة)
       function createMediaElement(data, type) {
-        if (!data) return '<p style="color:#999;font-size:0.85rem;text-align:center;padding:10px;">⚠️ لا توجد بيانات صوتية</p>';
+        if (!data) return '<p style="color:#999;font-size:0.85rem;text-align:center;padding:10px;">⚠️ لا توجد بيانات</p>';
         const url = dataUriToObjectUrl(data);
         if (!url) return '<p style="color:#999;font-size:0.85rem;text-align:center;padding:10px;">⚠️ تعذّر تحميل الملف</p>';
-        // FIX duration: use preload="auto" so browser loads enough to know duration
-        // and set a unique id so we can fix duration after load via JS
-        const uid = 'media_' + Math.random().toString(36).slice(2,9);
         if (type === 'video') {
-          return `<video id="${uid}" controls src="${url}" style="width:100%;border-radius:8px;background:#000;max-height:300px;" preload="auto"
-            onloadedmetadata="fixMediaDuration(this)"></video>`;
+          return `<video controls src="${url}" style="width:100%;border-radius:8px;background:#000;max-height:300px;"
+            onloadedmetadata="fixDuration(this)" preload="metadata"></video>`;
         } else {
-          return `<audio id="${uid}" controls src="${url}" style="width:100%;" preload="auto"
-            onloadedmetadata="fixMediaDuration(this)"></audio>`;
+          return `<audio controls src="${url}" style="width:100%;"
+            onloadedmetadata="fixDuration(this)" preload="metadata"></audio>`;
         }
       }
 
-      // FIX: إصلاح عرض المدة لعناصر الصوت/الفيديو
-      // بعض المتصفحات تُظهر 0:00 لأن المدة غير معروفة مع blob URLs
-      // الحل: تحميل الوسائط مسبقاً وإعادة تعيين currentTime
-      function fixMediaDuration(el) {
-        if (!el) return;
+      // إصلاح مشكلة المدة = 0:00
+      function fixDuration(el) {
+        if (!el || isFinite(el.duration)) return;
         try {
-          if (!isFinite(el.duration) || el.duration === 0) {
-            // حيلة لإجبار المتصفح على معرفة المدة الكاملة
-            el.currentTime = 1e101;
-            el.addEventListener('timeupdate', function handler() {
-              el.removeEventListener('timeupdate', handler);
-              el.currentTime = 0;
-            }, { once: true });
-          }
+          el.currentTime = 1e101;
+          el.addEventListener('timeupdate', function h() {
+            el.removeEventListener('timeupdate', h);
+            el.currentTime = 0;
+          }, { once: true });
         } catch(e) {}
+      }
+
+      // جلب بيانات التسجيل من Supabase عند الضغط وتشغيله
+      async function loadAndPlayRecording(recId, type) {
+        const container = document.getElementById('lazy_' + recId);
+        if (!container) return;
+
+        // أظهر مؤشر تحميل
+        container.innerHTML = `<div style="text-align:center;padding:12px;color:#888;">
+          <div class="spinner" style="width:24px;height:24px;margin:0 auto 6px;border-width:2px;"></div>
+          <span style="font-size:0.85rem;">جاري التحميل...</span>
+        </div>`;
+
+        try {
+          const { data: rec, error } = await db
+            .from('recordings')
+            .select('data, type')
+            .eq('id', recId)
+            .single();
+
+          if (error || !rec || !rec.data) {
+            container.innerHTML = '<p style="color:#dc2626;font-size:0.85rem;text-align:center;padding:10px;">⚠️ تعذّر تحميل التسجيل</p>';
+            return;
+          }
+
+          const url = dataUriToObjectUrl(rec.data);
+          if (!url) {
+            container.innerHTML = '<p style="color:#dc2626;font-size:0.85rem;text-align:center;padding:10px;">⚠️ تعذّر تحميل التسجيل</p>';
+            return;
+          }
+
+          const actualType = rec.type || type;
+          if (actualType === 'video') {
+            container.innerHTML = `<video controls autoplay src="${url}"
+              style="width:100%;border-radius:8px;background:#000;max-height:300px;"
+              onloadedmetadata="fixDuration(this)" preload="auto"></video>`;
+          } else {
+            container.innerHTML = `<audio controls autoplay src="${url}"
+              style="width:100%;" onloadedmetadata="fixDuration(this)" preload="auto"></audio>`;
+          }
+        } catch(e) {
+          container.innerHTML = '<p style="color:#dc2626;font-size:0.85rem;text-align:center;padding:10px;">⚠️ خطأ في التحميل</p>';
+        }
       }
 
       function blobToBase64(blob) {
@@ -671,16 +727,15 @@
         ]);
       }
 
-      // FIX SPEED: دمج تحميل التسجيلات والتقييمات في طلب واحد متوازٍ
+      // SPEED: تحميل القائمة بدون بيانات الصوت + التقييمات بالتوازي
       async function loadParticipantRecordingsAndRating() {
         const listDiv = document.getElementById("adminRecordingsList");
         if (!listDiv || !currentParticipant) return;
         listDiv.innerHTML = '<div class="empty-state"><div class="icon">⏳</div><p>جاري التحميل...</p></div>';
         try {
-          // تحميل التسجيلات والتقييمات في نفس الوقت
           const [recResult, ratingResult] = await Promise.all([
             db.from('recordings')
-              .select('id, type, data, created_at')
+              .select('id, type, created_at')        // بدون data
               .eq('participant_id', currentParticipant.id)
               .order('created_at', { ascending: true }),
             db.from('messages')
@@ -690,22 +745,19 @@
               .not('rating', 'is', null)
           ]);
 
-          // عرض التقييم
+          // تقييمات
           const ratings = ratingResult.data || [];
           let total = 0;
           const ratedSet = new Set();
           ratings.forEach(r => {
-            if (!ratedSet.has(r.recording_id)) {
-              total += r.rating;
-              ratedSet.add(r.recording_id);
-            }
+            if (!ratedSet.has(r.recording_id)) { total += r.rating; ratedSet.add(r.recording_id); }
           });
           const badge = document.getElementById("totalRatingBadge");
           document.getElementById("totalRatingValue").textContent = total.toFixed(1);
           document.getElementById("totalRatingMax").textContent = ratedSet.size * 5;
           if (badge) badge.style.display = ratedSet.size === 0 ? 'none' : 'inline-flex';
 
-          // عرض التسجيلات
+          // تسجيلات
           const recordings = recResult.data || [];
           if (recResult.error) throw recResult.error;
 
@@ -714,28 +766,21 @@
             return;
           }
 
-          const uniqueRecordings = [];
           const seenIds = new Set();
-          for (const rec of recordings) {
-            if (!seenIds.has(rec.id)) {
-              seenIds.add(rec.id);
-              uniqueRecordings.push(rec);
-              markRecordingAsViewed(currentParticipant.id, rec.id);
-            }
-          }
+          const unique = recordings.filter(r => { if (seenIds.has(r.id)) return false; seenIds.add(r.id); markRecordingAsViewed(currentParticipant.id, r.id); return true; });
 
-          listDiv.innerHTML = uniqueRecordings.map((rec, index) => `
+          listDiv.innerHTML = unique.map((rec, i) => `
             <div class="recording-item" data-rec-id="${rec.id}">
               <div class="three-dots" onclick="showAdminRecordingMenu(event, ${rec.id})">⋮</div>
               <p style="color:var(--dark-green);font-weight:700;font-size:1rem;margin-bottom:4px;">
-                التسجيل ${index + 1} - ${rec.type === "video" ? "🎥 فيديو" : "🎤 صوت"}
+                التسجيل ${i + 1} — ${rec.type === 'video' ? '🎥 فيديو' : '🎤 صوت'}
               </p>
-              <p class="recording-date">${new Date(rec.created_at).toLocaleDateString("ar-SA")}</p>
-              ${createMediaElement(rec.data, rec.type)}
-            </div>`).join("");
+              <p class="recording-date">${new Date(rec.created_at).toLocaleDateString('ar-SA')}</p>
+              ${createLazyPlayer(rec.id, rec.type)}
+            </div>`).join('');
 
         } catch(err) {
-          console.error('خطأ في تحميل التسجيلات:', err);
+          console.error('خطأ:', err);
           listDiv.innerHTML = '<div class="empty-state"><div class="icon">⚠️</div><p>خطأ في التحميل</p></div>';
         }
       }
@@ -1243,7 +1288,7 @@
         }
       }
 
-      // FIX: تحميل التسجيلات مع منع التكرار باستخدام ID فريد
+      // SPEED: تحميل القائمة بدون بيانات الصوت — فقط metadata
       async function loadMyRecordings() {
         const listDiv = document.getElementById("myRecordingsList");
         if (!listDiv) return;
@@ -1251,7 +1296,7 @@
         try {
           const { data: recordings, error } = await db
             .from('recordings')
-            .select('id, type, data, created_at')
+            .select('id, type, created_at')          // بدون data
             .eq('participant_id', currentUser.id)
             .order('created_at', { ascending: true });
 
@@ -1262,29 +1307,22 @@
             return;
           }
 
-          // FIX: استخدام ID الفريد لكل تسجيل لمنع التكرار
-          const uniqueRecordings = [];
           const seenIds = new Set();
-          for (const rec of recordings) {
-            if (!seenIds.has(rec.id)) {
-              seenIds.add(rec.id);
-              uniqueRecordings.push(rec);
-            }
-          }
+          const unique = recordings.filter(r => { if (seenIds.has(r.id)) return false; seenIds.add(r.id); return true; });
 
-          listDiv.innerHTML = uniqueRecordings.map((rec, index) => `
+          listDiv.innerHTML = unique.map((rec, i) => `
             <div class="recording-item" data-rec-id="${rec.id}">
               <div class="three-dots" onclick="showRecordingMenu(event, ${rec.id})">⋮</div>
               <p style="color:var(--dark-green);font-weight:700;font-size:1rem;margin-bottom:4px;">
-                التسجيل ${index + 1} - ${rec.type === "video" ? "🎥 فيديو" : "🎤 صوت"}
+                التسجيل ${i + 1} — ${rec.type === 'video' ? '🎥 فيديو' : '🎤 صوت'}
               </p>
-              <p class="recording-date">${new Date(rec.created_at).toLocaleDateString("ar-SA")}</p>
-              ${createMediaElement(rec.data, rec.type)}
-            </div>`).join("");
+              <p class="recording-date">${new Date(rec.created_at).toLocaleDateString('ar-SA')}</p>
+              ${createLazyPlayer(rec.id, rec.type)}
+            </div>`).join('');
 
         } catch(err) {
-          console.error('خطأ في تحميل التسجيلات:', err);
-          listDiv.innerHTML = '<div class="empty-state"><div class="icon">⚠️</div><p>خطأ في التحميل. يرجى المحاولة مرة أخرى.</p></div>';
+          console.error('خطأ:', err);
+          listDiv.innerHTML = '<div class="empty-state"><div class="icon">⚠️</div><p>خطأ في التحميل. حاول مرة أخرى.</p></div>';
         }
       }
 
@@ -1382,9 +1420,10 @@
         if (!listDiv) return;
         listDiv.innerHTML = '<div class="empty-state"><div class="icon">⏳</div><p>جاري التحميل...</p></div>';
         try {
+          // جلب الرسائل بدون voice_data
           const { data: messages, error } = await db
             .from('messages')
-            .select('*')
+            .select('id, message, message_type, rating, read, created_at, recording_id')
             .eq('participant_id', currentUser.id)
             .order('created_at', { ascending: false });
 
@@ -1395,47 +1434,26 @@
             return;
           }
 
-          // جلب تسجيلاتي لعرض التسجيل المرتبط
-          const { data: myRecordings } = await db
-            .from('recordings')
-            .select('id, type, data')
-            .eq('participant_id', currentUser.id);
-
-          // FIX: إنشاء خريطة سريعة للتسجيلات
-          const recMap = {};
-          if (myRecordings) {
-            myRecordings.forEach(r => { recMap[r.id] = r; });
-          }
-
           let html = '';
           for (const msg of messages) {
-            let typeIcon = '✉️';
-            if (msg.message_type === 'voice') typeIcon = '🎤';
-            if (msg.message_type === 'rating') typeIcon = '⭐';
-
-            let linkedHtml = '';
-            if (msg.recording_id && recMap[msg.recording_id]) {
-              const linkedRec = recMap[msg.recording_id];
-              if (linkedRec.data) {
-                linkedHtml = `
-                  <div class="linked-recording">
-                    <p>🔗 التسجيل الذي علّقت عليه الاستاذة:</p>
-                    ${createMediaElement(linkedRec.data, linkedRec.type)}
-                  </div>`;
-              }
-            }
+            let typeIcon = msg.message_type === 'voice' ? '🎤' : msg.message_type === 'rating' ? '⭐' : '✉️';
 
             html += `
-              <div class="message-item ${!msg.read ? "unread" : ""}">
+              <div class="message-item ${!msg.read ? 'unread' : ''}">
                 <div class="message-header">
                   <span style="color:var(--primary-gold);font-weight:700;font-size:1rem;">${typeIcon} رسالة من الاستاذة</span>
-                  <span style="color:#666;font-size:0.75rem;">${new Date(msg.created_at).toLocaleDateString("ar-SA")}</span>
+                  <span style="color:#666;font-size:0.75rem;">${new Date(msg.created_at).toLocaleDateString('ar-SA')}</span>
                 </div>
                 <div class="message-content">${escapeHtml(msg.message || '')}</div>
-                ${msg.message_type === 'voice' && msg.voice_data ? `
+                ${msg.message_type === 'voice' ? `
                   <div class="message-recording">
                     <p style="color:var(--dark-green);font-weight:600;margin-bottom:6px;font-size:0.9rem;">🎤 رسالة صوتية</p>
-                    ${createMediaElement(msg.voice_data, 'audio')}
+                    <div class="lazy-player" id="vmsgp_${msg.id}">
+                      <button class="lazy-play-btn" onclick="loadVoiceMessageParticipant(${msg.id})">
+                        <span style="font-size:1.4rem;">🎤</span>
+                        <span>اضغط لتحميل الرسالة الصوتية</span>
+                      </button>
+                    </div>
                   </div>` : ''}
                 ${msg.message_type === 'rating' && msg.rating ? `
                   <div class="message-rating">
@@ -1443,7 +1461,11 @@
                     <div class="message-stars">${generateStarsDisplay(msg.rating)}</div>
                     <p style="color:var(--dark-green);font-weight:700;font-size:1.3rem;margin-top:6px;">${msg.rating} / 5</p>
                   </div>` : ''}
-                ${linkedHtml}
+                ${msg.recording_id ? `
+                  <div class="linked-recording">
+                    <p>🔗 التسجيل الذي علّقت عليه الاستاذة:</p>
+                    ${createLazyPlayer(msg.recording_id, 'audio')}
+                  </div>` : ''}
               </div>`;
           }
           listDiv.innerHTML = html;
@@ -1451,6 +1473,19 @@
           console.error('خطأ في تحميل الرسائل:', err);
           listDiv.innerHTML = '<div class="empty-state"><div class="icon">⚠️</div><p>خطأ في التحميل</p></div>';
         }
+      }
+
+      // جلب رسالة صوتية للمشارك
+      async function loadVoiceMessageParticipant(msgId) {
+        const container = document.getElementById('vmsgp_' + msgId);
+        if (!container) return;
+        container.innerHTML = `<div style="text-align:center;padding:10px;color:#888;"><div class="spinner" style="width:20px;height:20px;margin:0 auto 4px;border-width:2px;"></div></div>`;
+        try {
+          const { data: msg } = await db.from('messages').select('voice_data').eq('id', msgId).single();
+          if (!msg || !msg.voice_data) { container.innerHTML = '<p style="color:#dc2626;font-size:0.85rem;padding:8px;">⚠️ لا توجد بيانات</p>'; return; }
+          const url = dataUriToObjectUrl(msg.voice_data);
+          container.innerHTML = `<audio controls autoplay src="${url}" style="width:100%;margin-top:8px;" onloadedmetadata="fixDuration(this)" preload="auto"></audio>`;
+        } catch(e) { container.innerHTML = '<p style="color:#dc2626;font-size:0.85rem;padding:8px;">⚠️ خطأ في التحميل</p>'; }
       }
 
       function generateStarsDisplay(rating) {
@@ -1561,9 +1596,10 @@
         const div = document.getElementById("adminSentMessages");
         if (!div || !currentParticipant) return;
         try {
+          // جلب الرسائل بدون voice_data أولاً للسرعة
           const { data: messages, error } = await db
             .from('messages')
-            .select('*')
+            .select('id, message, message_type, rating, created_at, recording_id')
             .eq('participant_id', currentParticipant.id)
             .order('created_at', { ascending: false });
 
@@ -1576,13 +1612,32 @@
               <div class="admin-msg-item">
                 <button class="msg-delete-btn" onclick="deleteMessage(${msg.id})">🗑️ حذف</button>
                 <p style="color:var(--dark-green);font-weight:700;font-size:0.9rem;margin-bottom:4px;margin-left:55px;">${typeIcon} ${escapeHtml(msg.message || '')}</p>
-                <p style="color:#888;font-size:0.78rem;">${new Date(msg.created_at).toLocaleString("ar-SA")}</p>
-                ${msg.message_type === 'voice' && msg.voice_data ? `<div style="margin-top:8px;">${createMediaElement(msg.voice_data, 'audio')}</div>` : ''}
+                <p style="color:#888;font-size:0.78rem;">${new Date(msg.created_at).toLocaleString('ar-SA')}</p>
+                ${msg.message_type === 'voice' ? `
+                  <div class="lazy-player" id="vmsg_${msg.id}">
+                    <button class="lazy-play-btn" onclick="loadVoiceMessage(${msg.id})">
+                      <span style="font-size:1.4rem;">🎤</span>
+                      <span>اضغط لتحميل الرسالة الصوتية</span>
+                    </button>
+                  </div>` : ''}
                 ${msg.message_type === 'rating' && msg.rating ? `<div style="margin-top:6px;color:var(--dark-green);font-weight:700;">التقييم: ${msg.rating} / 5 ⭐</div>` : ''}
               </div>`;
           }
           div.innerHTML = html;
         } catch(err) { console.error('خطأ في تحميل الرسائل المرسلة:', err); }
+      }
+
+      // جلب بيانات رسالة صوتية عند الطلب
+      async function loadVoiceMessage(msgId) {
+        const container = document.getElementById('vmsg_' + msgId);
+        if (!container) return;
+        container.innerHTML = `<div style="text-align:center;padding:10px;color:#888;"><div class="spinner" style="width:20px;height:20px;margin:0 auto 4px;border-width:2px;"></div></div>`;
+        try {
+          const { data: msg } = await db.from('messages').select('voice_data').eq('id', msgId).single();
+          if (!msg || !msg.voice_data) { container.innerHTML = '<p style="color:#dc2626;font-size:0.85rem;padding:8px;">⚠️ لا توجد بيانات</p>'; return; }
+          const url = dataUriToObjectUrl(msg.voice_data);
+          container.innerHTML = `<audio controls autoplay src="${url}" style="width:100%;margin-top:8px;" onloadedmetadata="fixDuration(this)" preload="auto"></audio>`;
+        } catch(e) { container.innerHTML = '<p style="color:#dc2626;font-size:0.85rem;padding:8px;">⚠️ خطأ في التحميل</p>'; }
       }
 
       async function deleteMessage(msgId) {
