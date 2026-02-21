@@ -1,1523 +1,349 @@
 <!DOCTYPE html>
 <html lang="ar" dir="rtl">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>مسابقة حفظ جزء عم - رمضان المبارك</title>
-    <link rel="preconnect" href="https://fonts.googleapis.com" />
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link href="https://fonts.googleapis.com/css2?family=Amiri:wght@400;700&family=Cairo:wght@400;600;700;900&display=swap" rel="stylesheet" />
-    <style>
-      * { margin: 0; padding: 0; box-sizing: border-box; }
-      :root {
-        --primary-gold: #d4af37;
-        --dark-green: #0d4d3f;
-        --medium-green: #1a6b54;
-        --light-green: #e8f5e9;
-        --cream: #fefdf8;
-        --white: #ffffff;
-        --text-dark: #2c2c2c;
-        --border-light: #e0dfd5;
-        --accent-gold: #f0c850;
-      }
-      body {
-        font-family: "Cairo", sans-serif;
-        background: linear-gradient(135deg, #0d4d3f 0%, #1a6b54 100%);
-        min-height: 100vh;
-        padding: 8px;
-        position: relative;
-        overflow-x: hidden;
-      }
-      .container { max-width: 900px; margin: 0 auto; }
-      .header { text-align: center; margin-bottom: 8px; }
-      .logo {
-        width: 50px; height: 50px; margin: 0 auto 8px;
-        background: linear-gradient(135deg, var(--primary-gold), var(--accent-gold));
-        border-radius: 50%; display: flex; align-items: center; justify-content: center;
-        box-shadow: 0 4px 15px rgba(0,0,0,0.2); border: 2px solid rgba(255,255,255,0.5);
-      }
-      .logo img { width: 100%; height: 100%; object-fit: cover; border-radius: 50%; }
-      h1 { font-family: "Amiri", serif; color: var(--white); font-size: 1.4rem; font-weight: 700; margin-bottom: 4px; text-shadow: 0 2px 10px rgba(0,0,0,0.3); }
-      .subtitle { color: var(--primary-gold); font-size: 0.9rem; font-weight: 600; }
-      .card { background: var(--white); border-radius: 12px; padding: 15px 12px; box-shadow: 0 6px 25px rgba(0,0,0,0.15); margin-bottom: 8px; }
-      .form-group { margin-bottom: 12px; position: relative; }
-      .password-toggle { position: absolute; left: 10px; top: 50%; transform: translateY(-50%); cursor: pointer; font-size: 1.1rem; color: #666; transition: color 0.3s ease; user-select: none; }
-      .password-input-wrapper { position: relative; }
-      label { display: block; color: var(--dark-green); font-weight: 700; margin-bottom: 6px; font-size: 0.95rem; }
-      input[type="text"], input[type="password"] { width: 100%; padding: 10px; border: 2px solid var(--border-light); border-radius: 8px; font-size: 0.95rem; font-family: "Cairo", sans-serif; transition: all 0.3s ease; background: var(--cream); }
-      input:focus { outline: none; border-color: var(--primary-gold); background: var(--white); }
-      .btn { width: 100%; padding: 12px; border: none; border-radius: 10px; font-size: 1rem; font-weight: 700; font-family: "Cairo", sans-serif; cursor: pointer; transition: all 0.3s ease; margin-bottom: 8px; }
-      .btn-primary { background: linear-gradient(135deg, var(--primary-gold), var(--accent-gold)); color: var(--dark-green); box-shadow: 0 4px 15px rgba(212,175,55,0.4); }
-      .btn-primary:hover { transform: translateY(-2px); box-shadow: 0 6px 20px rgba(212,175,55,0.5); }
-      .btn-secondary { background: var(--dark-green); color: var(--white); box-shadow: 0 4px 15px rgba(13,77,63,0.3); }
-      .btn-secondary:hover { background: var(--medium-green); transform: translateY(-2px); }
-      .btn-danger { background: #dc2626; color: white; }
-      .btn-danger:hover { background: #b91c1c; }
-      .big-icon-btn { font-size: 1.3rem; padding: 15px; margin: 6px 0; }
-      .stats-container { display: grid; grid-template-columns: repeat(auto-fit, minmax(100px, 1fr)); gap: 8px; margin-bottom: 12px; }
-      .stat-card { background: linear-gradient(135deg, var(--primary-gold), var(--accent-gold)); padding: 10px; border-radius: 10px; text-align: center; box-shadow: 0 3px 12px rgba(212,175,55,0.3); }
-      .stat-card .icon { font-size: 1.4rem; margin-bottom: 3px; }
-      .stat-card .number { font-size: 1.5rem; font-weight: 900; color: var(--dark-green); margin-bottom: 2px; }
-      .stat-card .label { font-size: 0.75rem; color: var(--dark-green); font-weight: 600; }
-      .record-type-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin: 12px 0; }
-      .type-card { background: white; border: 2px solid var(--border-light); border-radius: 12px; padding: 15px 10px; text-align: center; cursor: pointer; transition: all 0.3s ease; }
-      .type-card:hover { border-color: var(--primary-gold); transform: translateY(-2px); }
-      .type-card.selected { border-color: var(--primary-gold); background: linear-gradient(to bottom, #fff9e6, white); }
-      .type-card .icon { font-size: 2.5rem; margin-bottom: 6px; }
-      .type-card h3 { font-size: 1rem; color: var(--dark-green); }
-      .recording-controls { margin-top: 12px; }
-      .timer { text-align: center; font-size: 1.8rem; font-weight: 700; color: var(--dark-green); margin: 12px 0; font-family: "Courier New", monospace; }
-      .live-preview { margin: 12px 0; padding: 10px; background: linear-gradient(135deg, #f0f9ff, #e0f2fe); border-radius: 10px; border: 2px solid var(--primary-gold); }
-      .live-preview.recording { background: linear-gradient(135deg, #fef3c7, #fde68a); border-color: #dc2626; }
-      .live-preview video { width: 100%; border-radius: 8px; background: #000; }
-      .recording-preview { margin: 12px 0; padding: 12px; background: linear-gradient(to bottom, #fff9e6, white); border-radius: 10px; border: 2px solid var(--primary-gold); }
-      .recording-preview video, .recording-preview audio { width: 100%; border-radius: 8px; margin-top: 10px; }
-      .recording-item { background: white; padding: 12px; border-radius: 10px; border: 2px solid var(--border-light); margin-bottom: 10px; position: relative; }
-      .recording-item video, .recording-item audio { width: 100%; margin-top: 8px; border-radius: 8px; }
-      .recording-date { color: #666; font-size: 0.8rem; margin-bottom: 8px; }
-      .three-dots { position: absolute; top: 10px; left: 10px; font-size: 1.5rem; cursor: pointer; color: #666; padding: 5px; }
-      .three-dots:hover { color: var(--dark-green); }
-      .menu-popup { position: absolute; top: 40px; left: 10px; background: white; border: 2px solid var(--primary-gold); border-radius: 8px; box-shadow: 0 3px 15px rgba(0,0,0,0.2); z-index: 100; min-width: 160px; }
-      .menu-item { padding: 10px; border-bottom: 1px solid var(--border-light); cursor: pointer; font-size: 0.9rem; transition: all 0.3s ease; }
-      .menu-item:last-child { border-bottom: none; }
-      .menu-item:hover { background: var(--cream); }
-      .menu-item.danger { color: #dc2626; }
-      .logout-btn { position: fixed; top: 10px; left: 10px; background: rgba(255,255,255,0.95); color: var(--dark-green); padding: 8px 14px; border: 2px solid var(--primary-gold); border-radius: 15px; cursor: pointer; font-weight: 700; font-size: 0.85rem; transition: all 0.3s ease; z-index: 1000; box-shadow: 0 3px 12px rgba(0,0,0,0.15); }
-      .logout-btn:hover { background: var(--primary-gold); color: var(--white); }
-      .back-btn { position: fixed; top: 10px; right: 10px; background: rgba(255,255,255,0.95); color: var(--dark-green); padding: 8px 14px; border: 2px solid var(--primary-gold); border-radius: 15px; cursor: pointer; font-weight: 700; font-size: 0.85rem; transition: all 0.3s ease; z-index: 1000; box-shadow: 0 3px 12px rgba(0,0,0,0.15); }
-      .back-btn:hover { background: var(--primary-gold); color: var(--white); }
-      .hidden { display: none !important; }
-      .error-message { background: #fee2e2; color: #991b1b; padding: 10px; border-radius: 8px; margin-bottom: 10px; font-size: 0.9rem; font-weight: 600; }
-      .participants-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(120px, 1fr)); gap: 8px; margin-top: 12px; }
-      .participant-card { background: white; padding: 12px 8px; border-radius: 10px; border: 2px solid var(--border-light); cursor: pointer; transition: all 0.3s ease; text-align: center; position: relative; }
-      .participant-card:hover { border-color: var(--primary-gold); transform: translateY(-2px); box-shadow: 0 4px 15px rgba(0,0,0,0.15); }
-      .participant-card .icon { font-size: 2.2rem; margin-bottom: 6px; }
-      .participant-card h3 { color: var(--dark-green); font-size: 0.95rem; margin-bottom: 5px; word-break: break-word; }
-      .participant-card .count { color: #666; font-size: 0.8rem; }
-      .new-recordings-badge { position: absolute; top: -6px; right: -6px; background: #dc2626; color: white; border-radius: 50%; width: 24px; height: 24px; display: flex; align-items: center; justify-content: center; font-size: 0.8rem; font-weight: 700; box-shadow: 0 2px 6px rgba(220,38,38,0.4); border: 2px solid white; }
-      .empty-state { text-align: center; padding: 25px 15px; color: #999; }
-      .empty-state .icon { font-size: 3rem; margin-bottom: 10px; opacity: 0.5; }
-      .empty-state p { font-size: 0.95rem; }
-      .loading-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.7); display: flex; align-items: center; justify-content: center; z-index: 3000; }
-      .spinner { border: 3px solid rgba(255,255,255,0.3); border-top: 3px solid var(--primary-gold); border-radius: 50%; width: 40px; height: 40px; animation: spin 1s linear infinite; margin: 0 auto 10px; }
-      @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
-      .loading-spinner { text-align: center; color: white; }
-      .loading-spinner p { font-size: 0.95rem; font-weight: 600; }
-      .message-modal { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.7); display: flex; align-items: center; justify-content: center; z-index: 2000; padding: 15px; }
-      .message-modal-content { background: white; padding: 20px; border-radius: 12px; max-width: 450px; width: 100%; max-height: 80vh; overflow-y: auto; }
-      .message-modal h3 { color: var(--dark-green); font-size: 1.2rem; margin-bottom: 12px; }
-      .message-type-btns { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 8px; margin-bottom: 12px; }
-      .message-type-btn { padding: 10px; border: 2px solid var(--border-light); border-radius: 8px; background: white; cursor: pointer; font-size: 0.85rem; font-weight: 600; transition: all 0.3s ease; }
-      .message-type-btn.active { background: linear-gradient(135deg, var(--primary-gold), var(--accent-gold)); border-color: var(--primary-gold); color: var(--dark-green); }
-      .message-modal textarea { width: 100%; padding: 12px; border: 2px solid var(--border-light); border-radius: 8px; font-family: "Cairo", sans-serif; font-size: 0.95rem; min-height: 100px; resize: vertical; }
-      .voice-recorder { background: linear-gradient(to bottom, #f0f9ff, white); padding: 15px; border-radius: 8px; border: 2px solid var(--primary-gold); }
-      .voice-recorder audio { width: 100%; margin-top: 10px; }
-      .modal-buttons { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-top: 12px; }
-      .unread-badge { position: absolute; top: -6px; left: -6px; background: #dc2626; color: white; border-radius: 50%; width: 24px; height: 24px; display: flex; align-items: center; justify-content: center; font-size: 0.8rem; font-weight: 700; box-shadow: 0 2px 6px rgba(220,38,38,0.4); }
-      .message-item { background: linear-gradient(135deg, #fff9e6, white); padding: 12px; border-radius: 10px; margin-bottom: 10px; border-right: 3px solid var(--primary-gold); }
-      .message-item.unread { background: linear-gradient(135deg, #fff4d6, #fff9e6); box-shadow: 0 3px 15px rgba(212,175,55,0.2); }
-      .message-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px; padding-bottom: 8px; border-bottom: 2px solid var(--border-light); }
-      .message-content { font-size: 0.95rem; line-height: 1.6; margin-bottom: 8px; }
-      .message-recording { background: white; padding: 10px; border-radius: 8px; margin-top: 8px; border: 1px solid var(--border-light); }
-      .message-recording audio { width: 100%; margin-top: 6px; }
-      .linked-recording { background: linear-gradient(135deg, #e8f5e9, #f0fff4); padding: 12px; border-radius: 8px; margin-top: 10px; border: 2px solid #4caf50; }
-      .linked-recording p { color: var(--dark-green); font-weight: 700; margin-bottom: 8px; font-size: 0.9rem; }
-      .linked-recording audio, .linked-recording video { width: 100%; border-radius: 6px; }
-      .rating-container { background: linear-gradient(to bottom, #fff9e6, white); padding: 15px; border-radius: 8px; border: 2px solid var(--primary-gold); text-align: center; }
-      .stars-display { display: flex; justify-content: center; align-items: center; gap: 8px; margin: 15px 0; font-size: 2.5rem; }
-      .star { cursor: pointer; transition: all 0.2s ease; color: #d1d5db; }
-      .star:hover { transform: scale(1.2); }
-      .star.filled { color: #fbbf24; }
-      .rating-value { font-size: 1.5rem; font-weight: 700; color: var(--dark-green); margin-top: 10px; }
-      .rating-buttons { display: grid; grid-template-columns: repeat(5, 1fr); gap: 6px; margin-top: 12px; }
-      .rating-btn { padding: 8px; border: 2px solid var(--border-light); border-radius: 6px; background: white; cursor: pointer; font-size: 0.85rem; font-weight: 600; transition: all 0.3s ease; }
-      .rating-btn:hover { background: var(--cream); border-color: var(--primary-gold); }
-      .rating-btn.active { background: linear-gradient(135deg, var(--primary-gold), var(--accent-gold)); border-color: var(--primary-gold); color: var(--dark-green); }
-      .message-rating { background: linear-gradient(135deg, #fef3c7, #fde68a); padding: 12px; border-radius: 8px; margin-top: 8px; text-align: center; border: 2px solid #fbbf24; }
-      .message-stars { font-size: 2rem; margin: 8px 0; }
-      .message-stars .star { cursor: default; }
-      .contact-info-section { background: linear-gradient(135deg, #dbeafe, #e0f2fe); padding: 12px; border-radius: 10px; margin-bottom: 15px; border: 2px solid var(--primary-gold); }
-      .contact-info-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px; }
-      .contact-info-title { color: var(--dark-green); font-weight: 700; font-size: 1rem; }
-      .toggle-contact-btn { background: var(--primary-gold); color: var(--dark-green); padding: 6px 12px; border: none; border-radius: 6px; cursor: pointer; font-size: 0.85rem; font-weight: 600; transition: all 0.3s ease; }
-      .toggle-contact-btn:hover { background: var(--accent-gold); transform: scale(1.05); }
-      .contact-info-content { margin-top: 10px; }
-      .info-row { background: white; padding: 10px; border-radius: 8px; margin-bottom: 8px; display: flex; justify-content: space-between; align-items: center; border: 1px solid var(--border-light); }
-      .info-label { color: #666; font-size: 0.85rem; margin-bottom: 4px; }
-      .info-value { color: var(--dark-green); font-size: 1rem; font-weight: 700; word-break: break-all; }
-      .copy-btn { background: var(--dark-green); color: white; border: none; padding: 8px 12px; border-radius: 6px; cursor: pointer; font-size: 0.85rem; font-weight: 600; transition: all 0.3s ease; display: flex; align-items: center; gap: 4px; }
-      .copy-btn:hover { background: var(--medium-green); transform: scale(1.05); }
-      .copy-btn.copied { background: #10b981; }
-      .total-rating-badge { background: linear-gradient(135deg, #fef3c7, #fde68a); padding: 8px 12px; border-radius: 8px; display: inline-flex; align-items: center; gap: 6px; margin-bottom: 12px; border: 2px solid #fbbf24; box-shadow: 0 2px 8px rgba(251,191,36,0.3); }
-      .total-rating-badge .icon { font-size: 1.2rem; }
-      .total-rating-badge .text { color: var(--dark-green); font-weight: 700; font-size: 0.9rem; }
-      .total-rating-badge .value { color: var(--dark-green); font-weight: 900; font-size: 1.1rem; }
-      .broadcast-banner { background: linear-gradient(135deg, #fef3c7, #fde68a); padding: 14px; border-radius: 12px; margin-bottom: 12px; border: 2px solid #fbbf24; position: relative; box-shadow: 0 3px 12px rgba(251,191,36,0.3); }
-      .broadcast-banner .broadcast-icon { font-size: 1.5rem; margin-bottom: 6px; }
-      .broadcast-banner .broadcast-title { color: var(--dark-green); font-weight: 700; font-size: 1rem; margin-bottom: 6px; }
-      .broadcast-banner .broadcast-text { color: var(--text-dark); font-size: 0.95rem; line-height: 1.6; }
-      .broadcast-banner audio { width: 100%; margin-top: 8px; border-radius: 6px; }
-      .broadcast-delete-btn { position: absolute; top: 8px; left: 8px; background: #dc2626; color: white; border: none; border-radius: 50%; width: 28px; height: 28px; cursor: pointer; font-size: 0.8rem; display: flex; align-items: center; justify-content: center; transition: all 0.3s ease; }
-      .broadcast-delete-btn:hover { background: #b91c1c; transform: scale(1.1); }
-      .admin-msg-item { background: white; padding: 12px; border-radius: 10px; border: 2px solid var(--border-light); margin-bottom: 10px; position: relative; }
-      .admin-msg-item .msg-delete-btn { position: absolute; top: 8px; left: 8px; background: #dc2626; color: white; border: none; border-radius: 6px; padding: 4px 8px; cursor: pointer; font-size: 0.8rem; font-weight: 600; }
-      .admin-msg-item .msg-delete-btn:hover { background: #b91c1c; }
-      .leaderboard-modal { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.75); display: flex; align-items: flex-start; justify-content: center; z-index: 2000; padding: 15px; overflow-y: auto; }
-      .leaderboard-content { background: var(--white); border-radius: 16px; width: 100%; max-width: 500px; margin: auto; overflow: hidden; box-shadow: 0 10px 40px rgba(0,0,0,0.3); }
-      .leaderboard-header { background: linear-gradient(135deg, var(--dark-green), var(--medium-green)); padding: 20px 15px; text-align: center; position: relative; }
-      .leaderboard-header h2 { color: var(--white); font-family: "Amiri", serif; font-size: 1.5rem; margin-bottom: 4px; }
-      .leaderboard-header p { color: var(--primary-gold); font-size: 0.85rem; }
-      .leaderboard-close { position: absolute; top: 12px; left: 12px; background: rgba(255,255,255,0.2); color: white; border: none; border-radius: 50%; width: 32px; height: 32px; cursor: pointer; font-size: 1rem; display: flex; align-items: center; justify-content: center; }
-      .leaderboard-body { padding: 15px; }
-      .leaderboard-row { display: flex; align-items: center; gap: 12px; padding: 12px; border-radius: 12px; margin-bottom: 8px; border: 2px solid transparent; animation: popIn 0.3s ease both; }
-      .leaderboard-row.rank-1 { background: linear-gradient(135deg, #fffbeb, #fef3c7); border-color: #f59e0b; }
-      .leaderboard-row.rank-2 { background: linear-gradient(135deg, #f8fafc, #e2e8f0); border-color: #94a3b8; }
-      .leaderboard-row.rank-3 { background: linear-gradient(135deg, #fff7ed, #ffedd5); border-color: #f97316; }
-      .leaderboard-row.rank-other { background: var(--cream); border-color: var(--border-light); }
-      .leaderboard-row.rank-mine { border-color: var(--primary-gold) !important; box-shadow: 0 0 0 3px rgba(212,175,55,0.25); }
-      .rank-badge { width: 42px; height: 42px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 1.3rem; font-weight: 900; flex-shrink: 0; }
-      .rank-1 .rank-badge { background: linear-gradient(135deg, #f59e0b, #fbbf24); color: white; }
-      .rank-2 .rank-badge { background: linear-gradient(135deg, #94a3b8, #cbd5e1); color: white; }
-      .rank-3 .rank-badge { background: linear-gradient(135deg, #f97316, #fb923c); color: white; }
-      .rank-other .rank-badge { background: var(--light-green); color: var(--dark-green); font-size: 1rem; }
-      .rank-info { flex: 1; }
-      .rank-name { color: var(--dark-green); font-weight: 700; font-size: 1rem; margin-bottom: 3px; }
-      .rank-name .you-tag { background: var(--primary-gold); color: var(--dark-green); border-radius: 8px; padding: 1px 7px; font-size: 0.72rem; font-weight: 700; margin-right: 6px; }
-      .rank-details { color: #777; font-size: 0.8rem; }
-      .rank-score { text-align: center; }
-      .rank-score .score-num { font-size: 1.4rem; font-weight: 900; color: var(--dark-green); line-height: 1; }
-      .rank-score .score-label { font-size: 0.7rem; color: #888; }
-      .rank-stars { color: #fbbf24; font-size: 0.85rem; margin-top: 2px; }
-      .confirm-dialog { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.7); display: flex; align-items: center; justify-content: center; z-index: 2500; padding: 15px; }
-      .confirm-content { background: white; padding: 20px; border-radius: 12px; max-width: 400px; width: 100%; text-align: center; }
-      .confirm-content h3 { color: var(--dark-green); font-size: 1.2rem; margin-bottom: 12px; }
-      .confirm-content p { font-size: 0.95rem; margin-bottom: 20px; line-height: 1.5; }
-      .confirm-buttons { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
-      @keyframes popIn { 0% { transform: scale(0.8); opacity: 0; } 100% { transform: scale(1); opacity: 1; } }
-      @media (max-width: 768px) {
-        h1 { font-size: 1.3rem; }
-        .card { padding: 12px 10px; }
-        .btn { font-size: 0.95rem; padding: 10px; }
-        .record-type-grid { grid-template-columns: 1fr; }
-        .participants-grid { grid-template-columns: repeat(auto-fill, minmax(100px, 1fr)); }
-        .logout-btn, .back-btn { padding: 6px 12px; font-size: 0.75rem; }
-        .message-type-btns { grid-template-columns: 1fr; }
-      }
-    </style>
-  </head>
-  <body>
-    <div class="container">
-      <div class="header">
-        <div class="logo">
-          <img src="360_F_498618110_CmzpqAOH4xxhBFqXKEx5cOwYhvHpnmDH.jpg" alt="شعار رمضان" onerror="this.style.display='none'" />
-        </div>
-        <h1>مسابقة حفظ جزء عم</h1>
-        <p class="subtitle">رمضان المبارك 1446</p>
-      </div>
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>نقل البيانات - Firebase → Supabase</title>
+  <style>
+    body { font-family: Arial, sans-serif; background: #0d4d3f; min-height: 100vh; display: flex; align-items: center; justify-content: center; padding: 20px; }
+    .box { background: white; border-radius: 16px; padding: 30px; max-width: 600px; width: 100%; box-shadow: 0 10px 40px rgba(0,0,0,0.3); }
+    h1 { color: #0d4d3f; text-align: center; margin-bottom: 8px; font-size: 1.5rem; }
+    .subtitle { text-align: center; color: #888; margin-bottom: 25px; font-size: 0.9rem; }
+    .btn { width: 100%; padding: 15px; border: none; border-radius: 10px; font-size: 1.1rem; font-weight: 700; cursor: pointer; background: linear-gradient(135deg, #d4af37, #f0c850); color: #0d4d3f; margin-top: 15px; }
+    .btn:hover { opacity: 0.9; transform: translateY(-2px); }
+    .btn:disabled { opacity: 0.5; cursor: not-allowed; transform: none; }
+    .log { background: #1a1a2e; color: #00ff88; padding: 15px; border-radius: 10px; margin-top: 20px; min-height: 200px; max-height: 400px; overflow-y: auto; font-family: monospace; font-size: 0.85rem; line-height: 1.8; }
+    .log .error { color: #ff4444; }
+    .log .success { color: #00ff88; }
+    .log .info { color: #88ccff; }
+    .log .warn { color: #ffaa00; }
+    .stats { display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px; margin-top: 15px; }
+    .stat { background: #f0fff4; border: 2px solid #4caf50; border-radius: 10px; padding: 12px; text-align: center; }
+    .stat .num { font-size: 1.8rem; font-weight: 900; color: #0d4d3f; }
+    .stat .lbl { font-size: 0.75rem; color: #666; }
+    .progress-bar { background: #e0e0e0; border-radius: 10px; height: 12px; margin-top: 15px; overflow: hidden; }
+    .progress-fill { background: linear-gradient(90deg, #d4af37, #4caf50); height: 100%; border-radius: 10px; transition: width 0.3s; width: 0%; }
+    .done-banner { background: linear-gradient(135deg, #e8f5e9, #f0fff4); border: 2px solid #4caf50; border-radius: 12px; padding: 20px; text-align: center; margin-top: 20px; display: none; }
+    .done-banner h2 { color: #0d4d3f; font-size: 1.3rem; margin-bottom: 8px; }
+    .done-banner p { color: #555; font-size: 0.95rem; }
+  </style>
+</head>
+<body>
+<div class="box">
+  <h1>🔄 نقل البيانات</h1>
+  <p class="subtitle">من Firebase إلى Supabase تلقائياً</p>
 
-      <div id="globalBroadcastsBar"></div>
+  <div class="stats">
+    <div class="stat"><div class="num" id="sParticipants">0</div><div class="lbl">مشارك</div></div>
+    <div class="stat"><div class="num" id="sRecordings">0</div><div class="lbl">تسجيل</div></div>
+    <div class="stat"><div class="num" id="sMessages">0</div><div class="lbl">رسالة</div></div>
+    <div class="stat"><div class="num" id="sBroadcasts">0</div><div class="lbl">إعلان</div></div>
+  </div>
 
-      <!-- الصفحة الرئيسية -->
-      <div id="homePage" class="card">
-        <button class="btn btn-primary big-icon-btn" onclick="showRegisterPage()">🆕 تسجيل جديد</button>
-        <button class="btn btn-secondary big-icon-btn" onclick="showLoginPage()">🔑 دخول</button>
-        <button class="btn btn-secondary" onclick="showAdminLogin()" style="margin-top: 20px;">👩‍🏫 دخول الاستاذة</button>
-      </div>
+  <div class="progress-bar"><div class="progress-fill" id="progressFill"></div></div>
 
-      <!-- صفحة التسجيل -->
-      <div id="registerPage" class="card hidden">
-        <h2 style="color:var(--dark-green);margin-bottom:15px;text-align:center;font-size:1.3rem;">تسجيل جديد</h2>
-        <form id="registerForm">
-          <div class="form-group">
-            <label>الاسم</label>
-            <input type="text" id="participantName" required placeholder="اكتب اسمك" />
-          </div>
-          <div class="form-group">
-            <label>كلمة المرور</label>
-            <div class="password-input-wrapper">
-              <input type="password" id="password" required placeholder="اختر كلمة مرور" />
-              <span class="password-toggle" onclick="togglePassword('password')">👁️</span>
-            </div>
-          </div>
-          <button type="submit" class="btn btn-primary">تسجيل 🌟</button>
-        </form>
-        <button class="btn btn-secondary" onclick="showHomePage()">رجوع</button>
-      </div>
+  <button class="btn" id="startBtn" onclick="startMigration()">🚀 ابدأ نقل البيانات</button>
 
-      <!-- صفحة تسجيل الدخول -->
-      <div id="loginPage" class="card hidden">
-        <h2 style="color:var(--dark-green);margin-bottom:15px;text-align:center;font-size:1.3rem;">تسجيل دخول</h2>
-        <div id="loginError" class="error-message hidden"></div>
-        <form id="loginForm">
-          <div class="form-group">
-            <label>الاسم</label>
-            <input type="text" id="loginName" required placeholder="اسمك" />
-          </div>
-          <div class="form-group">
-            <label>كلمة المرور</label>
-            <div class="password-input-wrapper">
-              <input type="password" id="loginPassword" required placeholder="كلمة المرور" />
-              <span class="password-toggle" onclick="togglePassword('loginPassword')">👁️</span>
-            </div>
-          </div>
-          <button type="submit" class="btn btn-primary">دخول 🔓</button>
-        </form>
-        <button class="btn btn-secondary" onclick="showHomePage()">رجوع</button>
-      </div>
+  <div class="log" id="log"><span class="info">⏳ اضغط الزر لبدء نقل البيانات من Firebase إلى Supabase...</span></div>
 
-      <!-- صفحة دخول الاستاذة -->
-      <div id="adminLoginPage" class="card hidden">
-        <h2 style="color:var(--dark-green);margin-bottom:15px;text-align:center;font-size:1.3rem;">دخول الاستاذة</h2>
-        <div id="adminError" class="error-message hidden"></div>
-        <form id="adminLoginForm">
-          <div class="form-group">
-            <label>كلمة المرور</label>
-            <div class="password-input-wrapper">
-              <input type="password" id="adminPassword" required placeholder="كلمة المرور" />
-              <span class="password-toggle" onclick="togglePassword('adminPassword')">👁️</span>
-            </div>
-          </div>
-          <button type="submit" class="btn btn-primary">دخول</button>
-        </form>
-        <button class="btn btn-secondary" onclick="showHomePage()">رجوع</button>
-      </div>
+  <div class="done-banner" id="doneBanner">
+    <h2>✅ تم نقل البيانات بنجاح!</h2>
+    <p>الآن يمكنك فتح الملف الجديد (Supabase) وستجد كل بياناتك موجودة</p>
+  </div>
+</div>
 
-      <!-- صفحة المشارك -->
-      <div id="participantPage" class="card hidden">
-        <button class="logout-btn" onclick="logout()">خروج</button>
-        <h2 style="color:var(--dark-green);margin-bottom:8px;text-align:center;font-size:1.3rem;">
-          أهلاً <span id="participantDisplayName"></span> 🌙
-        </h2>
-        <div style="display:flex;gap:8px;margin:12px 0;">
-          <button class="btn btn-secondary" onclick="showRecordingSection()" style="flex:1;">🎤 تسجيل</button>
-          <button class="btn btn-secondary" onclick="showMessagesSection()" style="flex:1;position:relative;">
-            📬 رسائل
-            <span id="unreadBadge" class="unread-badge hidden"></span>
-          </button>
-        </div>
-        <div id="recordingSection">
-          <h3 style="color:var(--dark-green);margin-bottom:10px;font-size:1.1rem;text-align:center;">اختر نوع التسجيل</h3>
-          <div class="record-type-grid">
-            <div class="type-card selected" onclick="selectType('audio')">
-              <div class="icon">🎤</div><h3>صوت</h3>
-            </div>
-            <div class="type-card" onclick="selectType('video')">
-              <div class="icon">🎥</div><h3>فيديو</h3>
-            </div>
-          </div>
-          <div id="livePreview" class="live-preview hidden">
-            <video id="liveVideo" autoplay muted playsinline></video>
-          </div>
-          <div class="recording-controls">
-            <button class="btn btn-primary big-icon-btn" id="recordBtn" onclick="startRecording()">🔴 ابدأ التسجيل</button>
-            <div class="timer hidden" id="timer">00:00</div>
-            <button class="btn btn-danger big-icon-btn hidden" id="stopBtn" onclick="stopRecording()">⏹ إيقاف</button>
-          </div>
-          <div id="recordingPreview" class="recording-preview hidden">
-            <h3 style="color:var(--dark-green);margin-bottom:10px;font-size:1.1rem;">المعاينة</h3>
-            <div id="previewMedia"></div>
-            <button class="btn btn-primary" onclick="saveRecording()" style="margin-top:12px;">💾 حفظ</button>
-            <button class="btn btn-secondary" onclick="cancelRecording()">🔄 إلغاء</button>
-          </div>
-          <div style="margin-top:20px;">
-            <h3 style="color:var(--dark-green);margin-bottom:10px;font-size:1.1rem;">تسجيلاتي</h3>
-            <div id="myRecordingsList"></div>
-          </div>
-        </div>
-        <div id="messagesSection" class="hidden">
-          <h3 style="color:var(--dark-green);margin-bottom:12px;font-size:1.1rem;">📬 رسائل الاستاذة</h3>
-          <div id="messagesList"></div>
-        </div>
-      </div>
+<!-- Firebase -->
+<script type="module">
+  import { initializeApp } from "https://www.gstatic.com/firebasejs/12.9.0/firebase-app.js";
+  import { getDatabase, ref, get } from 'https://www.gstatic.com/firebasejs/12.9.0/firebase-database.js';
 
-      <!-- صفحة المشاركين للاستاذة -->
-      <div id="adminParticipantsPage" class="card hidden">
-        <button class="logout-btn" onclick="logout()">خروج</button>
-        <h2 style="color:var(--dark-green);margin-bottom:12px;text-align:center;font-size:1.3rem;">إدارة المشاركين</h2>
-        <div class="stats-container">
-          <div class="stat-card">
-            <div class="icon">👥</div>
-            <div class="number" id="totalParticipants">0</div>
-            <div class="label">مشارك</div>
-          </div>
-          <div class="stat-card">
-            <div class="icon">🎙️</div>
-            <div class="number" id="totalRecordings">0</div>
-            <div class="label">تسجيل كلي</div>
-          </div>
-          <div class="stat-card">
-            <div class="icon">🆕</div>
-            <div class="number" id="newRecordings">0</div>
-            <div class="label">جديد</div>
-          </div>
-        </div>
-        <button class="btn btn-primary" onclick="showBroadcastModal()" style="margin-bottom:8px;">📢 إرسال إعلان عام</button>
-        <button class="btn btn-secondary" onclick="showLeaderboard()" style="margin-bottom:10px;">🏆 عرض لوحة الترتيب</button>
-        <div id="adminBroadcastsList" style="margin-bottom:12px;"></div>
-        <div id="participantsList" class="participants-grid"></div>
-      </div>
+  const firebaseConfig = {
+    apiKey: "AIzaSyAfhQL5spF3KcrbngSzunLaHT_7cieHkUk",
+    authDomain: "opject-e223d.firebaseapp.com",
+    databaseURL: "https://opject-e223d-default-rtdb.firebaseio.com/",
+    projectId: "opject-e223d",
+    storageBucket: "opject-e223d.firebasestorage.app",
+    messagingSenderId: "607939195786",
+    appId: "1:607939195786:web:c264710387d50fc2990e73"
+  };
 
-      <!-- صفحة تسجيلات مشارك للاستاذة -->
-      <div id="adminRecordingsPage" class="card hidden">
-        <button class="logout-btn" onclick="logout()">خروج</button>
-        <button class="back-btn" onclick="backToParticipants()">← رجوع</button>
-        <h2 id="participantTitle" style="color:var(--dark-green);margin-bottom:12px;text-align:center;font-size:1.3rem;"></h2>
-        <div style="text-align:center;margin-bottom:12px;">
-          <div class="total-rating-badge" id="totalRatingBadge">
-            <span class="icon">⭐</span>
-            <span class="text">المجموع الكلي:</span>
-            <span class="value" id="totalRatingValue">0</span>
-            <span class="text">/</span>
-            <span class="value" id="totalRatingMax">0</span>
-          </div>
-        </div>
-        <div style="text-align:center;margin-bottom:12px;">
-          <button class="btn btn-danger" onclick="confirmDeleteAccount()" style="width:auto;padding:10px 20px;font-size:0.9rem;">🗑️ حذف حساب هذا المشارك نهائياً</button>
-        </div>
-        <div class="contact-info-section">
-          <div class="contact-info-header">
-            <span class="contact-info-title">📞 معلومات التواصل</span>
-            <button class="toggle-contact-btn" onclick="toggleContactInfo()"><span id="contactToggleText">عرض</span></button>
-          </div>
-          <div id="contactInfoContent" class="contact-info-content hidden">
-            <div class="info-row">
-              <div><div class="info-label">الاسم</div><div class="info-value" id="contactName">-</div></div>
-              <button class="copy-btn" onclick="copyToClipboard('name')">📋 نسخ</button>
-            </div>
-            <div class="info-row">
-              <div><div class="info-label">كلمة المرور</div><div class="info-value" id="contactPassword">-</div></div>
-              <button class="copy-btn" onclick="copyToClipboard('password')">📋 نسخ</button>
-            </div>
-          </div>
-        </div>
-        <div id="adminSentMessages" style="margin-bottom:12px;"></div>
-        <div id="adminRecordingsList"></div>
-      </div>
-    </div>
+  const app = initializeApp(firebaseConfig);
+  const database = getDatabase(app);
+  window.fbDb = database;
+  window.fbRef = ref;
+  window.fbGet = get;
+  window.firebaseReady = true;
+</script>
 
-    <!-- Supabase SDK -->
-    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-    <script>
-      // ====== إعداد Supabase ======
-      const SUPABASE_URL = 'https://jimrkqewuafaoxmpmhbp.supabase.co';
-      const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImppbXJrcWV3dWFmYW94bXBtaGJwIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzE2ODM1NzUsImV4cCI6MjA4NzI1OTU3NX0.Qihj4BnB0FErseE0j8Gq8ydbOf8Bu7lW2sRTfTudZ7Q';
-      const db = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+<!-- Supabase -->
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 
-      // ====== متغيرات عامة ======
-      let currentUser = null;
-      let isAdmin = false;
-      let mediaRecorder = null;
-      let recordedChunks = [];
-      let recordingType = "audio";
-      let timerInterval = null;
-      let recordingStartTime = null;
-      let previewStream = null;
-      let currentParticipant = null;
-      let adminVoiceRecorder = null;
-      let adminVoiceChunks = [];
-      let adminVoiceTimer = null;
-      let adminVoiceBlob = null;
-      let currentRecordingForMessage = null;
-      let viewedRecordings = new Set();
-      let selectedRating = 0;
-      let broadcastVoiceRecorder = null;
-      let broadcastVoiceChunks = [];
-      let broadcastVoiceTimerInterval = null;
-      let broadcastVoiceBlob = null;
+<script>
+  const SUPABASE_URL = 'https://jimrkqewuafaoxmpmhbp.supabase.co';
+  const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImppbXJrcWV3dWFmYW94bXBtaGJwIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzE2ODM1NzUsImV4cCI6MjA4NzI1OTU3NX0.Qihj4BnB0FErseE0j8Gq8ydbOf8Bu7lW2sRTfTudZ7Q';
+  const sb = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
 
-      // ====== تحويل base64 ======
-      function dataUriToObjectUrl(dataUri) {
-        if (!dataUri) return '';
-        if (!dataUri.startsWith('data:')) return dataUri;
-        try {
-          const [header, base64] = dataUri.split(',');
-          if (!header || !base64) return dataUri;
-          const mimeMatch = header.match(/:(.*?);/);
-          const mimeType = mimeMatch ? mimeMatch[1] : 'audio/webm';
-          const binary = atob(base64);
-          const array = new Uint8Array(binary.length);
-          for (let i = 0; i < binary.length; i++) array[i] = binary.charCodeAt(i);
-          const blob = new Blob([array], { type: mimeType });
-          return URL.createObjectURL(blob);
-        } catch(e) { return dataUri; }
-      }
+  let totalSteps = 0;
+  let doneSteps = 0;
 
-      function createMediaElement(data, type) {
-        if (!data) return '<p style="color:#999;font-size:0.85rem;">⚠️ لا توجد بيانات</p>';
-        const url = dataUriToObjectUrl(data);
-        if (type === 'video') {
-          return `<video controls src="${url}" style="width:100%;border-radius:8px;background:#000;"></video>`;
-        } else {
-          return `<audio controls src="${url}" style="width:100%;"></audio>`;
-        }
-      }
+  function log(msg, type = 'info') {
+    const el = document.getElementById('log');
+    const span = document.createElement('div');
+    span.className = type;
+    span.innerHTML = msg;
+    el.appendChild(span);
+    el.scrollTop = el.scrollHeight;
+  }
 
-      function blobToBase64(blob) {
-        return new Promise((resolve, reject) => {
-          const reader = new FileReader();
-          reader.onloadend = () => resolve(reader.result);
-          reader.onerror = reject;
-          reader.readAsDataURL(blob);
+  function updateProgress() {
+    doneSteps++;
+    const pct = totalSteps > 0 ? Math.round((doneSteps / totalSteps) * 100) : 0;
+    document.getElementById('progressFill').style.width = pct + '%';
+  }
+
+  function updateStat(id, val) {
+    document.getElementById(id).textContent = val;
+  }
+
+  async function waitForFirebase() {
+    return new Promise((resolve) => {
+      if (window.firebaseReady) { resolve(); return; }
+      const check = setInterval(() => {
+        if (window.firebaseReady) { clearInterval(check); resolve(); }
+      }, 100);
+      setTimeout(() => { clearInterval(check); resolve(); }, 5000);
+    });
+  }
+
+  async function startMigration() {
+    document.getElementById('startBtn').disabled = true;
+    document.getElementById('log').innerHTML = '';
+    doneSteps = 0;
+
+    log('⏳ جاري الاتصال بـ Firebase...', 'info');
+    await waitForFirebase();
+
+    if (!window.fbDb) {
+      log('❌ فشل الاتصال بـ Firebase!', 'error');
+      document.getElementById('startBtn').disabled = false;
+      return;
+    }
+
+    log('✅ تم الاتصال بـ Firebase', 'success');
+    log('⏳ جاري قراءة البيانات...', 'info');
+
+    try {
+      // قراءة كل البيانات من Firebase
+      const [participantsSnap, messagesSnap, broadcastsSnap] = await Promise.all([
+        window.fbGet(window.fbRef(window.fbDb, 'participants')),
+        window.fbGet(window.fbRef(window.fbDb, 'messages')),
+        window.fbGet(window.fbRef(window.fbDb, 'broadcasts'))
+      ]);
+
+      // تحليل البيانات
+      const participants = [];
+      const allRecordings = [];
+      const messages = [];
+      const broadcasts = [];
+
+      // المشاركون والتسجيلات
+      if (participantsSnap.exists()) {
+        participantsSnap.forEach(child => {
+          const p = child.val();
+          const fbId = child.key;
+          participants.push({ fbId, name: p.name, password: p.password, registeredAt: p.registeredAt });
+          
+          // التسجيلات المدمجة داخل المشارك
+          if (p.recordings) {
+            const recs = typeof p.recordings === 'object' && !Array.isArray(p.recordings)
+              ? Object.values(p.recordings)
+              : (Array.isArray(p.recordings) ? p.recordings : []);
+            recs.forEach(rec => {
+              if (rec && rec.id && rec.data) {
+                allRecordings.push({ fbId: rec.id, participantFbId: fbId, type: rec.type || 'audio', data: rec.data, timestamp: rec.timestamp });
+              }
+            });
+          }
         });
       }
 
-      function getSupportedMimeType() {
-        const types = ['audio/webm;codecs=opus','audio/webm','audio/ogg;codecs=opus','audio/ogg','audio/mp4',''];
-        for (const t of types) { if (!t || MediaRecorder.isTypeSupported(t)) return t; }
-        return '';
-      }
-
-      function getSupportedVideoMimeType() {
-        const types = ['video/webm;codecs=vp9,opus','video/webm;codecs=vp8,opus','video/webm','video/mp4',''];
-        for (const t of types) { if (!t || MediaRecorder.isTypeSupported(t)) return t; }
-        return '';
-      }
-
-      // ====== تحميل/حفظ الجلسة ======
-      function saveSession() {
-        const session = isAdmin ? { isAdmin: true } : { isAdmin: false, userId: currentUser.id };
-        localStorage.setItem("currentSession", JSON.stringify(session));
-      }
-
-      async function loadCurrentSession() {
-        try {
-          const session = localStorage.getItem("currentSession");
-          if (!session) { showHomePage(); return; }
-          const data = JSON.parse(session);
-          if (data.isAdmin) {
-            isAdmin = true;
-            showAdminParticipantsPage();
-          } else {
-            showLoading();
-            const { data: user, error } = await db.from('participants').select('*').eq('id', data.userId).single();
-            hideLoading();
-            if (error || !user) { localStorage.removeItem("currentSession"); showHomePage(); return; }
-            currentUser = user;
-            showParticipantPage();
-          }
-        } catch(e) {
-          localStorage.removeItem("currentSession");
-          showHomePage();
-        }
-      }
-
-      function loadViewedRecordings() {
-        try {
-          const stored = localStorage.getItem('viewedRecordings');
-          if (stored) viewedRecordings = new Set(JSON.parse(stored));
-        } catch(e) { viewedRecordings = new Set(); }
-      }
-
-      function saveViewedRecordings() {
-        try { localStorage.setItem('viewedRecordings', JSON.stringify([...viewedRecordings])); } catch(e) {}
-      }
-
-      function markRecordingAsViewed(participantId, recordingId) {
-        viewedRecordings.add(`${participantId}_${recordingId}`);
-        saveViewedRecordings();
-      }
-
-      function isRecordingViewed(participantId, recordingId) {
-        return viewedRecordings.has(`${participantId}_${recordingId}`);
-      }
-
-      // ====== Loading ======
-      function showLoading() {
-        if (document.getElementById('loadingOverlay')) return;
-        const overlay = document.createElement('div');
-        overlay.className = 'loading-overlay';
-        overlay.id = 'loadingOverlay';
-        overlay.innerHTML = `<div class="loading-spinner"><div class="spinner"></div><p>جاري التحميل...</p></div>`;
-        document.body.appendChild(overlay);
-      }
-      function hideLoading() {
-        const overlay = document.getElementById('loadingOverlay');
-        if (overlay) overlay.remove();
-      }
-
-      // ====== عرض الصفحات ======
-      function hideAllPages() {
-        ["homePage","registerPage","loginPage","adminLoginPage","participantPage","adminParticipantsPage","adminRecordingsPage"].forEach(id => {
-          const el = document.getElementById(id);
-          if (el) el.classList.add("hidden");
+      // الرسائل
+      if (messagesSnap.exists()) {
+        messagesSnap.forEach(child => {
+          const m = child.val();
+          messages.push({ fbId: child.key, ...m });
         });
       }
 
-      function showHomePage() { hideAllPages(); document.getElementById("homePage").classList.remove("hidden"); }
-      function showRegisterPage() { hideAllPages(); document.getElementById("registerPage").classList.remove("hidden"); }
-      function showLoginPage() { hideAllPages(); document.getElementById("loginPage").classList.remove("hidden"); }
-      function showAdminLogin() { hideAllPages(); document.getElementById("adminLoginPage").classList.remove("hidden"); }
-
-      function showParticipantPage() {
-        hideAllPages();
-        document.getElementById("participantPage").classList.remove("hidden");
-        document.getElementById("participantDisplayName").textContent = currentUser.name;
-        showRecordingSection();
-        loadMyRecordings();
-        updateUnreadBadge();
+      // الإعلانات
+      if (broadcastsSnap.exists()) {
+        broadcastsSnap.forEach(child => {
+          const b = child.val();
+          broadcasts.push({ fbId: child.key, ...b });
+        });
       }
 
-      async function showAdminParticipantsPage() {
-        hideAllPages();
-        document.getElementById("adminParticipantsPage").classList.remove("hidden");
-        await loadParticipants();
-        await loadAdminBroadcasts();
+      log(`📊 وجدت: ${participants.length} مشارك، ${allRecordings.length} تسجيل، ${messages.length} رسالة، ${broadcasts.length} إعلان`, 'info');
+
+      // حساب الخطوات الكلية
+      totalSteps = participants.length + allRecordings.length + messages.length + broadcasts.length;
+      if (totalSteps === 0) {
+        log('⚠️ لا توجد بيانات في Firebase للنقل!', 'warn');
+        document.getElementById('startBtn').disabled = false;
+        return;
       }
 
-      async function showAdminRecordingsPage(participant) {
-        hideAllPages();
-        currentParticipant = participant;
-        document.getElementById("adminRecordingsPage").classList.remove("hidden");
-        document.getElementById("participantTitle").textContent = "تسجيلات: " + participant.name;
-        document.getElementById("contactName").textContent = participant.name;
-        document.getElementById("contactPassword").textContent = participant.password;
-        await calculateAndDisplayTotalRating();
-        await loadParticipantRecordings();
-        await loadAdminSentMessages();
-      }
+      // ===== خطوة 1: نقل المشاركين =====
+      log('', 'info');
+      log('👥 جاري نقل المشاركين...', 'info');
 
-      function backToParticipants() {
-        currentParticipant = null;
-        const contactContent = document.getElementById("contactInfoContent");
-        if (contactContent && !contactContent.classList.contains("hidden")) toggleContactInfo();
-        showAdminParticipantsPage();
-      }
+      // خريطة fbId → supabase id
+      const participantIdMap = {};
 
-      function showRecordingSection() {
-        document.getElementById("recordingSection").classList.remove("hidden");
-        document.getElementById("messagesSection").classList.add("hidden");
-        if (recordingType === "video" && !previewStream) startVideoPreview();
-      }
+      // التحقق من المشاركين الموجودين
+      const { data: existingParticipants } = await sb.from('participants').select('id, name');
+      const existingNames = new Map((existingParticipants || []).map(p => [p.name, p.id]));
 
-      async function showMessagesSection() {
-        document.getElementById("recordingSection").classList.add("hidden");
-        document.getElementById("messagesSection").classList.remove("hidden");
-        stopVideoPreview();
-        await loadMessages();
-        await markMessagesAsRead();
-      }
-
-      function logout() {
-        stopVideoPreview();
-        if (mediaRecorder && mediaRecorder.state !== "inactive") { try { mediaRecorder.stop(); } catch(e) {} }
-        clearInterval(timerInterval);
-        localStorage.removeItem("currentSession");
-        currentUser = null; isAdmin = false; currentParticipant = null; recordedChunks = [];
-        showHomePage();
-      }
-
-      function togglePassword(inputId) {
-        const input = document.getElementById(inputId);
-        const icon = event.target;
-        if (input.type === "password") { input.type = "text"; icon.textContent = "🙈"; }
-        else { input.type = "password"; icon.textContent = "👁️"; }
-      }
-
-      // ====== Broadcasts (إعلانات عامة) ======
-      async function loadGlobalBroadcasts() {
-        const bar = document.getElementById("globalBroadcastsBar");
-        if (!bar) return;
-        const { data, error } = await db.from('broadcasts').select('*').order('created_at', { ascending: false });
-        if (error || !data || data.length === 0) { bar.innerHTML = ''; return; }
-        bar.innerHTML = data.map(b => `
-          <div class="broadcast-banner" style="margin-bottom:8px;">
-            <div style="display:flex;align-items:center;gap:8px;margin-bottom:6px;">
-              <span style="font-size:1.3rem;">📢</span>
-              <span style="color:var(--dark-green);font-weight:700;font-size:0.95rem;">إعلان من الاستاذة</span>
-              <span style="color:#888;font-size:0.75rem;margin-right:auto;">${new Date(b.created_at).toLocaleDateString("ar-SA")}</span>
-            </div>
-            <div style="color:var(--text-dark);font-size:0.95rem;line-height:1.7;">${b.message || ''}</div>
-            ${b.type === 'voice' && b.voice_data ? createMediaElement(b.voice_data, 'audio') : ''}
-          </div>`).join("");
-      }
-
-      async function loadAdminBroadcasts() {
-        const div = document.getElementById("adminBroadcastsList");
-        const { data, error } = await db.from('broadcasts').select('*').order('created_at', { ascending: false });
-        if (error || !data || data.length === 0) { div.innerHTML = ''; return; }
-        let html = `<h3 style="color:var(--dark-green);margin-bottom:8px;font-size:1rem;">📢 الإعلانات العامة الحالية</h3>`;
-        for (const b of data) {
-          html += `
-            <div class="broadcast-banner" style="position:relative;">
-              <button class="broadcast-delete-btn" onclick="deleteBroadcast(${b.id})">🗑️</button>
-              <div class="broadcast-icon">📢</div>
-              <div class="broadcast-title">إعلان عام</div>
-              <div class="broadcast-text">${b.message || ''}</div>
-              ${b.type === 'voice' && b.voice_data ? createMediaElement(b.voice_data, 'audio') : ''}
-              <div style="color:#888;font-size:0.78rem;margin-top:6px;">${new Date(b.created_at).toLocaleString("ar-SA")}</div>
-            </div>`;
-        }
-        div.innerHTML = html;
-      }
-
-      async function deleteBroadcast(id) {
-        if (!confirm("هل تريد حذف هذا الإعلان؟")) return;
-        showLoading();
-        await db.from('broadcasts').delete().eq('id', id);
-        hideLoading();
-        await loadAdminBroadcasts();
-        await loadGlobalBroadcasts();
-      }
-
-      function showBroadcastModal() {
-        const modal = document.createElement("div");
-        modal.className = "message-modal";
-        modal.id = "broadcastModal";
-        modal.innerHTML = `
-          <div class="message-modal-content">
-            <h3>📢 إعلان عام لجميع المشاركين</h3>
-            <div class="message-type-btns" style="grid-template-columns:1fr 1fr;">
-              <button class="message-type-btn active" onclick="switchBroadcastType('text', this)">✍️ نصي</button>
-              <button class="message-type-btn" onclick="switchBroadcastType('voice', this)">🎤 صوتي</button>
-            </div>
-            <div id="broadcastTextDiv"><textarea id="broadcastText" placeholder="اكتب الإعلان هنا..."></textarea></div>
-            <div id="broadcastVoiceDiv" class="voice-recorder hidden">
-              <button class="btn btn-primary" id="bVoiceRecordBtn" onclick="startBroadcastVoice()">🎤 ابدأ التسجيل</button>
-              <div class="timer hidden" id="bVoiceTimer">00:00</div>
-              <button class="btn btn-danger hidden" id="bVoiceStopBtn" onclick="stopBroadcastVoice()">⏹ إيقاف</button>
-              <div id="bVoicePreviewDiv" class="hidden"><audio id="bVoicePreview" controls style="width:100%;margin-top:8px;"></audio></div>
-            </div>
-            <div class="modal-buttons">
-              <button class="btn btn-primary" onclick="sendBroadcast()">📢 إرسال للجميع</button>
-              <button class="btn btn-secondary" onclick="closeBroadcastModal()">إلغاء</button>
-            </div>
-          </div>`;
-        document.body.appendChild(modal);
-      }
-
-      function switchBroadcastType(type, btn) {
-        document.querySelectorAll("#broadcastModal .message-type-btn").forEach(b => b.classList.remove("active"));
-        btn.classList.add("active");
-        document.getElementById("broadcastTextDiv").classList.toggle("hidden", type !== 'text');
-        document.getElementById("broadcastVoiceDiv").classList.toggle("hidden", type !== 'voice');
-      }
-
-      async function startBroadcastVoice() {
-        try {
-          const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
-          broadcastVoiceChunks = []; broadcastVoiceBlob = null;
-          const mimeType = getSupportedMimeType();
-          broadcastVoiceRecorder = mimeType ? new MediaRecorder(stream, { mimeType }) : new MediaRecorder(stream);
-          broadcastVoiceRecorder.ondataavailable = e => { if (e.data && e.data.size > 0) broadcastVoiceChunks.push(e.data); };
-          broadcastVoiceRecorder.onstop = () => {
-            stream.getTracks().forEach(t => t.stop());
-            if (broadcastVoiceChunks.length > 0) {
-              broadcastVoiceBlob = new Blob(broadcastVoiceChunks, { type: broadcastVoiceRecorder.mimeType || 'audio/webm' });
-              const url = URL.createObjectURL(broadcastVoiceBlob);
-              document.getElementById("bVoicePreview").src = url;
-              document.getElementById("bVoicePreviewDiv").classList.remove("hidden");
-            }
-          };
-          broadcastVoiceRecorder.start(100);
-          document.getElementById("bVoiceRecordBtn").classList.add("hidden");
-          document.getElementById("bVoiceStopBtn").classList.remove("hidden");
-          document.getElementById("bVoiceTimer").classList.remove("hidden");
-          const startTime = Date.now();
-          broadcastVoiceTimerInterval = setInterval(() => {
-            const elapsed = Math.floor((Date.now() - startTime) / 1000);
-            const el = document.getElementById("bVoiceTimer");
-            if (el) el.textContent = `${Math.floor(elapsed/60).toString().padStart(2,"0")}:${(elapsed%60).toString().padStart(2,"0")}`;
-          }, 1000);
-        } catch(err) { alert("خطأ في المايكروفون: " + err.message); }
-      }
-
-      function stopBroadcastVoice() {
-        if (broadcastVoiceRecorder && broadcastVoiceRecorder.state !== "inactive") {
-          broadcastVoiceRecorder.stop();
-          clearInterval(broadcastVoiceTimerInterval);
-          document.getElementById("bVoiceRecordBtn").classList.remove("hidden");
-          document.getElementById("bVoiceStopBtn").classList.add("hidden");
-          document.getElementById("bVoiceTimer").classList.add("hidden");
-        }
-      }
-
-      async function sendBroadcast() {
-        const activeBtn = document.querySelector("#broadcastModal .message-type-btn.active");
-        const isVoice = activeBtn && activeBtn.textContent.includes("صوتي");
-        showLoading();
-        try {
-          let broadcastData = { type: isVoice ? 'voice' : 'text' };
-          if (isVoice) {
-            if (!broadcastVoiceBlob) { hideLoading(); alert("الرجاء تسجيل رسالة صوتية!"); return; }
-            broadcastData.message = "رسالة صوتية من الاستاذة 📢";
-            broadcastData.voice_data = await blobToBase64(broadcastVoiceBlob);
-          } else {
-            const text = document.getElementById("broadcastText").value.trim();
-            if (!text) { hideLoading(); alert("الرجاء كتابة الإعلان!"); return; }
-            broadcastData.message = text;
-          }
-          const { error } = await db.from('broadcasts').insert(broadcastData);
-          if (error) throw error;
-          hideLoading();
-          closeBroadcastModal();
-          await loadAdminBroadcasts();
-          await loadGlobalBroadcasts();
-          alert("تم إرسال الإعلان ✅");
-        } catch(e) { hideLoading(); alert("خطأ: " + e.message); }
-      }
-
-      function closeBroadcastModal() {
-        const modal = document.getElementById("broadcastModal");
-        if (modal) modal.remove();
-        broadcastVoiceChunks = []; broadcastVoiceBlob = null;
-        if (broadcastVoiceRecorder && broadcastVoiceRecorder.state !== "inactive") { try { broadcastVoiceRecorder.stop(); } catch(e) {} }
-        clearInterval(broadcastVoiceTimerInterval);
-      }
-
-      // ====== تسجيل مشارك جديد ======
-      document.getElementById("registerForm").onsubmit = async function(e) {
-        e.preventDefault();
-        const name = document.getElementById("participantName").value.trim();
-        const password = document.getElementById("password").value;
-        if (!name || !password) { alert("الرجاء ملء جميع الحقول!"); return; }
-        showLoading();
-        try {
-          // تحقق من وجود الاسم
-          const { data: existing } = await db.from('participants').select('id').eq('name', name);
-          if (existing && existing.length > 0) { hideLoading(); alert("هذا الاسم مسجل مسبقاً!"); return; }
-          // إنشاء المشارك
-          const { data: newUser, error } = await db.from('participants').insert({ name, password }).select().single();
-          if (error) throw error;
-          currentUser = newUser;
-          saveSession();
-          hideLoading();
-          showParticipantPage();
-        } catch(err) { hideLoading(); alert("حدث خطأ: " + err.message); }
-      };
-
-      // ====== تسجيل دخول ======
-      document.getElementById("loginForm").onsubmit = async function(e) {
-        e.preventDefault();
-        const name = document.getElementById("loginName").value.trim();
-        const password = document.getElementById("loginPassword").value;
-        if (!name || !password) { alert("الرجاء ملء جميع الحقول!"); return; }
-        showLoading();
-        const { data, error } = await db.from('participants').select('*').eq('name', name).eq('password', password).single();
-        hideLoading();
-        if (error || !data) {
-          const err = document.getElementById("loginError");
-          err.textContent = "الاسم أو كلمة المرور خاطئة!";
-          err.classList.remove("hidden");
-          setTimeout(() => err.classList.add("hidden"), 3000);
-          return;
-        }
-        currentUser = data;
-        saveSession();
-        showParticipantPage();
-      };
-
-      // ====== دخول الاستاذة ======
-      document.getElementById("adminLoginForm").onsubmit = function(e) {
-        e.preventDefault();
-        const password = document.getElementById("adminPassword").value;
-        if (password === "Qur@n2025#Admin$Ramadan") {
-          isAdmin = true;
-          saveSession();
-          showAdminParticipantsPage();
+      let pCount = 0;
+      for (const p of participants) {
+        if (existingNames.has(p.name)) {
+          // المشارك موجود مسبقاً - استخدم ID الموجود
+          participantIdMap[p.fbId] = existingNames.get(p.name);
+          log(`⏭️ مشارك موجود مسبقاً: ${p.name}`, 'warn');
         } else {
-          const err = document.getElementById("adminError");
-          err.textContent = "كلمة المرور خاطئة!";
-          err.classList.remove("hidden");
-          setTimeout(() => err.classList.add("hidden"), 3000);
-        }
-      };
-
-      // ====== التسجيل الصوتي/المرئي ======
-      function selectType(type) {
-        recordingType = type;
-        document.querySelectorAll(".type-card").forEach(el => el.classList.remove("selected"));
-        event.target.closest(".type-card").classList.add("selected");
-        if (type === "video") startVideoPreview();
-        else stopVideoPreview();
-      }
-
-      async function startVideoPreview() {
-        try {
-          if (previewStream) return;
-          const stream = await navigator.mediaDevices.getUserMedia({ video: true, audio: false });
-          previewStream = stream;
-          const liveVideo = document.getElementById("liveVideo");
-          liveVideo.srcObject = stream;
-          document.getElementById("livePreview").classList.remove("hidden");
-        } catch(err) { alert("خطأ في الكاميرا: " + err.message); }
-      }
-
-      function stopVideoPreview() {
-        if (previewStream) {
-          previewStream.getTracks().forEach(t => { try { t.stop(); } catch(e) {} });
-          previewStream = null;
-          const liveVideo = document.getElementById("liveVideo");
-          if (liveVideo) liveVideo.srcObject = null;
-          const livePreview = document.getElementById("livePreview");
-          if (livePreview) livePreview.classList.add("hidden");
-        }
-      }
-
-      async function startRecording() {
-        try {
-          let stream;
-          if (recordingType === "video") {
-            if (previewStream) {
-              const audioStream = await navigator.mediaDevices.getUserMedia({ audio: true });
-              stream = new MediaStream([...previewStream.getVideoTracks(), ...audioStream.getAudioTracks()]);
-            } else {
-              stream = await navigator.mediaDevices.getUserMedia({ video: true, audio: true });
-            }
-          } else {
-            stream = await navigator.mediaDevices.getUserMedia({ audio: true });
-          }
-          recordedChunks = [];
-          const mimeType = recordingType === "video" ? getSupportedVideoMimeType() : getSupportedMimeType();
-          try { mediaRecorder = mimeType ? new MediaRecorder(stream, { mimeType }) : new MediaRecorder(stream); }
-          catch(e) { mediaRecorder = new MediaRecorder(stream); }
-          mediaRecorder.ondataavailable = e => { if (e.data && e.data.size > 0) recordedChunks.push(e.data); };
-          mediaRecorder.onstop = () => {
-            if (recordingType === "audio") stream.getTracks().forEach(t => { try { t.stop(); } catch(e) {} });
-            showPreview();
-          };
-          mediaRecorder.start(100);
-          document.getElementById("recordBtn").classList.add("hidden");
-          document.getElementById("stopBtn").classList.remove("hidden");
-          document.getElementById("timer").classList.remove("hidden");
-          if (recordingType === "video") document.getElementById("livePreview").classList.add("recording");
-          recordingStartTime = Date.now();
-          timerInterval = setInterval(() => {
-            const elapsed = Math.floor((Date.now() - recordingStartTime) / 1000);
-            const el = document.getElementById("timer");
-            if (el) el.textContent = `${Math.floor(elapsed/60).toString().padStart(2,"0")}:${(elapsed%60).toString().padStart(2,"0")}`;
-          }, 1000);
-        } catch(err) { alert("خطأ: " + err.message); }
-      }
-
-      function stopRecording() {
-        if (mediaRecorder && mediaRecorder.state !== "inactive") {
-          try { mediaRecorder.stop(); } catch(e) {}
-          clearInterval(timerInterval);
-        }
-      }
-
-      function cancelRecording() {
-        if (mediaRecorder && mediaRecorder.state !== "inactive") { try { mediaRecorder.stop(); } catch(e) {} }
-        document.getElementById("livePreview").classList.remove("recording");
-        clearInterval(timerInterval);
-        recordedChunks = [];
-        document.getElementById("recordBtn").classList.remove("hidden");
-        document.getElementById("stopBtn").classList.add("hidden");
-        document.getElementById("timer").classList.add("hidden");
-        document.getElementById("timer").textContent = "00:00";
-        document.getElementById("recordingPreview").classList.add("hidden");
-      }
-
-      function showPreview() {
-        if (recordedChunks.length === 0) { alert("لم يتم تسجيل أي بيانات."); cancelRecording(); return; }
-        const mimeType = mediaRecorder && mediaRecorder.mimeType ? mediaRecorder.mimeType : (recordingType === "video" ? "video/webm" : "audio/webm");
-        const blob = new Blob(recordedChunks, { type: mimeType });
-        const url = URL.createObjectURL(blob);
-        const previewDiv = document.getElementById("previewMedia");
-        previewDiv.innerHTML = recordingType === "video"
-          ? `<video controls src="${url}" style="width:100%;border-radius:8px;"></video>`
-          : `<audio controls src="${url}" style="width:100%;"></audio>`;
-        document.getElementById("recordingPreview").classList.remove("hidden");
-        document.getElementById("livePreview").classList.remove("recording");
-        document.getElementById("recordBtn").classList.remove("hidden");
-        document.getElementById("stopBtn").classList.add("hidden");
-        document.getElementById("timer").classList.add("hidden");
-      }
-
-      async function saveRecording() {
-        if (recordedChunks.length === 0) { alert("لا توجد بيانات للحفظ."); return; }
-        showLoading();
-        try {
-          const mimeType = mediaRecorder && mediaRecorder.mimeType ? mediaRecorder.mimeType : (recordingType === "video" ? "video/webm" : "audio/webm");
-          const blob = new Blob(recordedChunks, { type: mimeType });
-          if (blob.size > 8 * 1024 * 1024) { hideLoading(); alert("التسجيل كبير جداً (أكثر من 8MB). يرجى تقليل المدة."); return; }
-          const base64Data = await blobToBase64(blob);
-          const { data: saved, error } = await db.from('recordings').insert({
-            participant_id: currentUser.id,
-            type: recordingType,
-            data: base64Data
+          // إضافة مشارك جديد
+          const { data: newP, error } = await sb.from('participants').insert({
+            name: p.name,
+            password: p.password
           }).select().single();
-          if (error) throw error;
-          hideLoading();
-          alert("تم الحفظ بنجاح! ✅");
-          recordedChunks = [];
-          document.getElementById("recordingPreview").classList.add("hidden");
-          document.getElementById("timer").textContent = "00:00";
-          loadMyRecordings();
-        } catch(err) {
-          hideLoading();
-          alert("خطأ في الحفظ: " + err.message);
-        }
-      }
 
-      async function loadMyRecordings() {
-        const { data: recordings, error } = await db.from('recordings').select('*').eq('participant_id', currentUser.id).order('created_at', { ascending: true });
-        const listDiv = document.getElementById("myRecordingsList");
-        if (!recordings || recordings.length === 0) {
-          listDiv.innerHTML = '<div class="empty-state"><div class="icon">🎙️</div><p>لا توجد تسجيلات</p></div>';
-          return;
-        }
-        listDiv.innerHTML = recordings.map((rec, index) => `
-          <div class="recording-item">
-            <div class="three-dots" onclick="showRecordingMenu(event, ${rec.id})">⋮</div>
-            <p style="color:var(--dark-green);font-weight:700;font-size:1rem;margin-bottom:4px;">
-              التسجيل ${index+1} - ${rec.type === "video" ? "🎥 فيديو" : "🎤 صوت"}
-            </p>
-            <p class="recording-date">${new Date(rec.created_at).toLocaleDateString("ar-SA")}</p>
-            ${createMediaElement(rec.data, rec.type)}
-          </div>`).join("");
-      }
-
-      function showRecordingMenu(e, recordingId) {
-        e.stopPropagation();
-        const existingMenu = document.querySelector(".menu-popup");
-        if (existingMenu) existingMenu.remove();
-        const menu = document.createElement("div");
-        menu.className = "menu-popup";
-        menu.innerHTML = `<div class="menu-item danger" onclick="confirmDeleteRecording(${recordingId})">🗑️ حذف التسجيل</div>`;
-        e.target.parentElement.appendChild(menu);
-        setTimeout(() => {
-          document.addEventListener("click", function closeMenu(e) {
-            if (!menu.contains(e.target)) { menu.remove(); document.removeEventListener("click", closeMenu); }
-          });
-        }, 10);
-      }
-
-      function confirmDeleteRecording(recordingId) {
-        const dialog = document.createElement("div");
-        dialog.className = "confirm-dialog";
-        dialog.innerHTML = `
-          <div class="confirm-content">
-            <h3>⚠️ تأكيد الحذف</h3>
-            <p>هل تريد حذف هذا التسجيل؟<br>لن يمكن استرجاعه.</p>
-            <div class="confirm-buttons">
-              <button class="btn btn-danger" onclick="deleteRecording(${recordingId})">حذف</button>
-              <button class="btn btn-secondary" onclick="closeConfirmDialog()">إلغاء</button>
-            </div>
-          </div>`;
-        document.body.appendChild(dialog);
-      }
-
-      function closeConfirmDialog() {
-        document.querySelectorAll(".confirm-dialog").forEach(d => d.remove());
-      }
-
-      async function deleteRecording(recordingId) {
-        showLoading();
-        try {
-          await db.from('messages').delete().eq('recording_id', recordingId);
-          await db.from('recordings').delete().eq('id', recordingId);
-          hideLoading();
-          closeConfirmDialog();
-          loadMyRecordings();
-          updateUnreadBadge();
-          alert("تم الحذف! ✅");
-        } catch(e) { hideLoading(); alert("خطأ: " + e.message); }
-      }
-
-      // ====== الرسائل (للمشارك) ======
-      async function updateUnreadBadge() {
-        const { count } = await db.from('messages').select('id', { count: 'exact', head: true })
-          .eq('participant_id', currentUser.id).eq('read', false);
-        const badge = document.getElementById("unreadBadge");
-        if (badge) {
-          if (count > 0) { badge.textContent = count; badge.classList.remove("hidden"); }
-          else { badge.classList.add("hidden"); }
-        }
-      }
-
-      async function markMessagesAsRead() {
-        await db.from('messages').update({ read: true }).eq('participant_id', currentUser.id).eq('read', false);
-        updateUnreadBadge();
-      }
-
-      async function loadMessages() {
-        const listDiv = document.getElementById("messagesList");
-        const { data: messages, error } = await db.from('messages').select('*').eq('participant_id', currentUser.id).order('created_at', { ascending: false });
-        if (error || !messages || messages.length === 0) {
-          listDiv.innerHTML = '<div class="empty-state"><div class="icon">📭</div><p>لا توجد رسائل</p></div>';
-          return;
-        }
-        // جلب التسجيلات المرتبطة
-        const { data: myRecordings } = await db.from('recordings').select('*').eq('participant_id', currentUser.id);
-
-        let html = '';
-        for (const msg of messages) {
-          let typeIcon = '✉️';
-          if (msg.message_type === 'voice') typeIcon = '🎤';
-          if (msg.message_type === 'rating') typeIcon = '⭐';
-          let linkedHtml = '';
-          if (msg.recording_id && myRecordings) {
-            const linkedRec = myRecordings.find(r => r.id === msg.recording_id);
-            if (linkedRec && linkedRec.data) {
-              linkedHtml = `
-                <div class="linked-recording">
-                  <p>🔗 التسجيل الذي ردّت عليه الاستاذة:</p>
-                  ${createMediaElement(linkedRec.data, linkedRec.type)}
-                </div>`;
-            }
+          if (error) {
+            log(`❌ خطأ في نقل مشارك "${p.name}": ${error.message}`, 'error');
+          } else {
+            participantIdMap[p.fbId] = newP.id;
+            pCount++;
+            log(`✅ نُقل مشارك: ${p.name}`, 'success');
           }
-          html += `
-            <div class="message-item ${!msg.read ? "unread" : ""}">
-              <div class="message-header">
-                <span style="color:var(--primary-gold);font-weight:700;font-size:1rem;">${typeIcon} رسالة من الاستاذة</span>
-                <span style="color:#666;font-size:0.75rem;">${new Date(msg.created_at).toLocaleDateString("ar-SA")}</span>
-              </div>
-              <div class="message-content">${msg.message || ''}</div>
-              ${msg.message_type === 'voice' && msg.voice_data ? `
-                <div class="message-recording">
-                  <p style="color:var(--dark-green);font-weight:600;margin-bottom:6px;font-size:0.9rem;">🎤 رسالة صوتية</p>
-                  ${createMediaElement(msg.voice_data, 'audio')}
-                </div>` : ''}
-              ${msg.message_type === 'rating' && msg.rating ? `
-                <div class="message-rating">
-                  <p style="color:var(--dark-green);font-weight:700;margin-bottom:6px;font-size:1rem;">تقييمك</p>
-                  <div class="message-stars">${generateStarsDisplay(msg.rating)}</div>
-                  <p style="color:var(--dark-green);font-weight:700;font-size:1.3rem;margin-top:6px;">${msg.rating} / 5</p>
-                </div>` : ''}
-              ${linkedHtml}
-            </div>`;
         }
-        listDiv.innerHTML = html;
+        updateProgress();
+        updateStat('sParticipants', ++pCount > participants.length ? participants.length : pCount);
       }
+      updateStat('sParticipants', participants.length);
 
-      function generateStarsDisplay(rating) {
-        let html = '';
-        for (let i = 1; i <= 5; i++) {
-          html += rating >= i ? '<span class="star filled">⭐</span>' : '<span class="star" style="color:#ddd;">⭐</span>';
+      // ===== خطوة 2: نقل التسجيلات =====
+      log('', 'info');
+      log('🎤 جاري نقل التسجيلات...', 'info');
+
+      // التحقق من التسجيلات الموجودة
+      const { data: existingRecs } = await sb.from('recordings').select('id, participant_id, created_at');
+      
+      const recordingIdMap = {};
+      let rCount = 0;
+
+      for (const rec of allRecordings) {
+        const supParticipantId = participantIdMap[rec.participantFbId];
+        if (!supParticipantId) {
+          log(`⚠️ تسجيل بدون مشارك معروف - تخطي`, 'warn');
+          updateProgress();
+          continue;
         }
-        return html;
-      }
 
-      // ====== إدارة المشاركين (للاستاذة) ======
-      async function loadParticipants() {
-        showLoading();
-        const { data: participants, error } = await db.from('participants').select('*');
-        const { data: allRecordings } = await db.from('recordings').select('id, participant_id, created_at');
-        hideLoading();
-        const listDiv = document.getElementById("participantsList");
-        if (error || !participants || participants.length === 0) {
-          listDiv.innerHTML = '<div class="empty-state"><div class="icon">👥</div><p>لا يوجد مشاركون بعد</p></div>';
-          updateAdminStats(0, 0, 0);
-          return;
+        const { data: newRec, error } = await sb.from('recordings').insert({
+          participant_id: supParticipantId,
+          type: rec.type,
+          data: rec.data
+        }).select().single();
+
+        if (error) {
+          log(`❌ خطأ في تسجيل: ${error.message}`, 'error');
+        } else {
+          recordingIdMap[rec.fbId] = newRec.id;
+          rCount++;
+          log(`✅ نُقل تسجيل ${rCount}/${allRecordings.length}`, 'success');
+          updateStat('sRecordings', rCount);
         }
-        let totalRec = 0, newRec = 0;
-        window._participantsCache = {};
-        participants.forEach(p => {
-          p.recordings = (allRecordings || []).filter(r => r.participant_id === p.id);
-          totalRec += p.recordings.length;
-          p.recordings.forEach(rec => { if (!isRecordingViewed(p.id, rec.id)) newRec++; });
-          window._participantsCache[p.id] = p;
-        });
-        updateAdminStats(participants.length, totalRec, newRec);
-        listDiv.innerHTML = participants.map(p => {
-          const newCount = p.recordings.filter(rec => !isRecordingViewed(p.id, rec.id)).length;
-          return `
-            <div class="participant-card" data-pid="${p.id}">
-              ${newCount > 0 ? `<div class="new-recordings-badge">${newCount}</div>` : ''}
-              <div class="icon">👤</div>
-              <h3>${p.name}</h3>
-              <p class="count">${p.recordings.length} تسجيل</p>
-            </div>`;
-        }).join("");
-        listDiv.querySelectorAll('.participant-card').forEach(card => {
-          card.addEventListener('click', function() {
-            const pid = parseInt(this.getAttribute('data-pid'));
-            const p = window._participantsCache[pid];
-            if (p) showAdminRecordingsPage(p);
-          });
-        });
+        updateProgress();
       }
 
-      function updateAdminStats(p, r, n) {
-        document.getElementById("totalParticipants").textContent = p;
-        document.getElementById("totalRecordings").textContent = r;
-        document.getElementById("newRecordings").textContent = n;
-      }
+      // ===== خطوة 3: نقل الرسائل =====
+      log('', 'info');
+      log('📬 جاري نقل الرسائل...', 'info');
 
-      async function loadParticipantRecordings() {
-        const listDiv = document.getElementById("adminRecordingsList");
-        const { data: recordings, error } = await db.from('recordings').select('*').eq('participant_id', currentParticipant.id).order('created_at', { ascending: true });
-        if (!recordings || recordings.length === 0) {
-          listDiv.innerHTML = '<div class="empty-state"><div class="icon">🎙️</div><p>لا توجد تسجيلات</p></div>';
-          return;
+      let mCount = 0;
+      for (const msg of messages) {
+        const supParticipantId = participantIdMap[msg.participantId];
+        const supRecordingId = recordingIdMap[msg.recordingId];
+
+        if (!supParticipantId) {
+          log(`⚠️ رسالة بدون مشارك - تخطي`, 'warn');
+          updateProgress();
+          continue;
         }
-        recordings.forEach(rec => markRecordingAsViewed(currentParticipant.id, rec.id));
-        listDiv.innerHTML = recordings.map((rec, index) => `
-          <div class="recording-item">
-            <div class="three-dots" onclick="showAdminRecordingMenu(event, ${rec.id})">⋮</div>
-            <p style="color:var(--dark-green);font-weight:700;font-size:1rem;margin-bottom:4px;">
-              التسجيل ${index+1} - ${rec.type === "video" ? "🎥 فيديو" : "🎤 صوت"}
-            </p>
-            <p class="recording-date">${new Date(rec.created_at).toLocaleDateString("ar-SA")}</p>
-            ${createMediaElement(rec.data, rec.type)}
-          </div>`).join("");
-      }
 
-      function showAdminRecordingMenu(e, recordingId) {
-        e.stopPropagation();
-        const existingMenu = document.querySelector(".menu-popup");
-        if (existingMenu) existingMenu.remove();
-        const menu = document.createElement("div");
-        menu.className = "menu-popup";
-        menu.innerHTML = `
-          <div class="menu-item" onclick="openMessageModal(${recordingId}, 'text')">✍️ رسالة نصية</div>
-          <div class="menu-item" onclick="openMessageModal(${recordingId}, 'voice')">🎤 رسالة صوتية</div>
-          <div class="menu-item" onclick="openMessageModal(${recordingId}, 'rating')">⭐ تقييم</div>
-          <div class="menu-item danger" onclick="confirmDeleteRecordingAdmin(${recordingId})">🗑️ حذف التسجيل</div>`;
-        e.target.parentElement.appendChild(menu);
-        setTimeout(() => {
-          document.addEventListener("click", function closeMenu(e) {
-            if (!menu.contains(e.target)) { menu.remove(); document.removeEventListener("click", closeMenu); }
-          });
-        }, 10);
-      }
-
-      async function loadAdminSentMessages() {
-        const div = document.getElementById("adminSentMessages");
-        const { data: messages, error } = await db.from('messages').select('*').eq('participant_id', currentParticipant.id).order('created_at', { ascending: false });
-        if (!messages || messages.length === 0) { div.innerHTML = ''; return; }
-        let html = `<h3 style="color:var(--dark-green);margin-bottom:10px;font-size:1rem;">📨 رسائلك المرسلة لهذا المشارك</h3>`;
-        for (const msg of messages) {
-          let typeIcon = msg.message_type === 'voice' ? '🎤' : msg.message_type === 'rating' ? '⭐' : '✉️';
-          html += `
-            <div class="admin-msg-item">
-              <button class="msg-delete-btn" onclick="deleteMessage(${msg.id})">🗑️ حذف</button>
-              <p style="color:var(--dark-green);font-weight:700;font-size:0.9rem;margin-bottom:4px;margin-left:55px;">${typeIcon} ${msg.message || ''}</p>
-              <p style="color:#888;font-size:0.78rem;">${new Date(msg.created_at).toLocaleString("ar-SA")}</p>
-              ${msg.message_type === 'voice' && msg.voice_data ? `<div style="margin-top:8px;">${createMediaElement(msg.voice_data, 'audio')}</div>` : ''}
-              ${msg.message_type === 'rating' && msg.rating ? `<div style="margin-top:6px;color:var(--dark-green);font-weight:700;">التقييم: ${msg.rating} / 5 ⭐</div>` : ''}
-            </div>`;
-        }
-        div.innerHTML = html;
-      }
-
-      async function deleteMessage(msgId) {
-        if (!confirm("هل تريد حذف هذه الرسالة؟")) return;
-        showLoading();
-        await db.from('messages').delete().eq('id', msgId);
-        hideLoading();
-        await loadAdminSentMessages();
-        await calculateAndDisplayTotalRating();
-        alert("تم الحذف ✅");
-      }
-
-      async function calculateAndDisplayTotalRating() {
-        const { data: ratings } = await db.from('messages').select('rating, recording_id')
-          .eq('participant_id', currentParticipant.id).eq('message_type', 'rating').not('rating', 'is', null);
-        let total = 0;
-        const ratedSet = new Set();
-        if (ratings) {
-          ratings.forEach(r => {
-            if (!ratedSet.has(r.recording_id)) { total += r.rating; ratedSet.add(r.recording_id); }
-          });
-        }
-        document.getElementById("totalRatingValue").textContent = total.toFixed(1);
-        document.getElementById("totalRatingMax").textContent = ratedSet.size * 5;
-        document.getElementById("totalRatingBadge").style.display = ratedSet.size === 0 ? 'none' : 'inline-flex';
-      }
-
-      // ====== إرسال رسالة للمشارك ======
-      function openMessageModal(recordingId, type) {
-        currentRecordingForMessage = recordingId;
-        selectedRating = 0; adminVoiceChunks = []; adminVoiceBlob = null;
-        const modal = document.createElement("div");
-        modal.className = "message-modal";
-        modal.id = "messageModal";
-        modal.innerHTML = `
-          <div class="message-modal-content">
-            <h3>إرسال رسالة للمشارك</h3>
-            <div class="message-type-btns">
-              <button class="message-type-btn ${type==='text'?'active':''}" onclick="switchMessageType('text')">✍️ نصية</button>
-              <button class="message-type-btn ${type==='voice'?'active':''}" onclick="switchMessageType('voice')">🎤 صوتية</button>
-              <button class="message-type-btn ${type==='rating'?'active':''}" onclick="switchMessageType('rating')">⭐ تقييم</button>
-            </div>
-            <div id="textMessageDiv" class="${type!=='text'?'hidden':''}">
-              <textarea id="messageText" placeholder="اكتب رسالتك هنا..."></textarea>
-            </div>
-            <div id="voiceMessageDiv" class="voice-recorder ${type!=='voice'?'hidden':''}">
-              <button class="btn btn-primary" id="voiceRecordBtn" onclick="startAdminVoice()">🎤 ابدأ التسجيل</button>
-              <div class="timer hidden" id="voiceTimer">00:00</div>
-              <button class="btn btn-danger hidden" id="voiceStopBtn" onclick="stopAdminVoice()">⏹ إيقاف</button>
-              <div id="voicePreviewDiv" class="hidden"><audio id="voicePreview" controls style="width:100%;margin-top:8px;"></audio></div>
-            </div>
-            <div id="ratingMessageDiv" class="rating-container ${type!=='rating'?'hidden':''}">
-              <p style="color:var(--dark-green);font-weight:700;font-size:1.1rem;margin-bottom:10px;">اختر التقييم</p>
-              <div class="stars-display" id="starsDisplay">
-                ${[1,2,3,4,5].map(i => `<span class="star" onclick="setRating(${i})" data-value="${i}">⭐</span>`).join('')}
-              </div>
-              <div class="rating-value" id="ratingValue">0 / 5</div>
-              <div class="rating-buttons">
-                ${[0.5,1,1.5,2,2.5,3,3.5,4,4.5,5].map(val => `<button class="rating-btn" onclick="setRating(${val})">${val}</button>`).join('')}
-              </div>
-            </div>
-            <div class="modal-buttons">
-              <button class="btn btn-primary" onclick="sendMessageToParticipant()">إرسال</button>
-              <button class="btn btn-secondary" onclick="closeMessageModal()">إلغاء</button>
-            </div>
-          </div>`;
-        document.body.appendChild(modal);
-      }
-
-      function switchMessageType(type) {
-        document.querySelectorAll("#messageModal .message-type-btn").forEach(btn => btn.classList.remove("active"));
-        event.target.classList.add("active");
-        ["textMessageDiv","voiceMessageDiv","ratingMessageDiv"].forEach(id => document.getElementById(id).classList.add("hidden"));
-        if (type === 'text') document.getElementById("textMessageDiv").classList.remove("hidden");
-        else if (type === 'voice') document.getElementById("voiceMessageDiv").classList.remove("hidden");
-        else if (type === 'rating') document.getElementById("ratingMessageDiv").classList.remove("hidden");
-      }
-
-      function setRating(value) {
-        selectedRating = value;
-        document.getElementById("ratingValue").textContent = `${value} / 5`;
-        document.querySelectorAll("#starsDisplay .star").forEach((star, index) => {
-          star.classList.toggle("filled", value >= index + 1);
-        });
-        document.querySelectorAll(".rating-btn").forEach(btn => {
-          btn.classList.toggle("active", parseFloat(btn.textContent) === value);
-        });
-      }
-
-      async function startAdminVoice() {
-        try {
-          const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
-          adminVoiceChunks = []; adminVoiceBlob = null;
-          const mimeType = getSupportedMimeType();
-          try { adminVoiceRecorder = mimeType ? new MediaRecorder(stream, { mimeType }) : new MediaRecorder(stream); }
-          catch(e) { adminVoiceRecorder = new MediaRecorder(stream); }
-          adminVoiceRecorder.ondataavailable = e => { if (e.data && e.data.size > 0) adminVoiceChunks.push(e.data); };
-          adminVoiceRecorder.onstop = () => {
-            stream.getTracks().forEach(t => { try { t.stop(); } catch(e) {} });
-            if (adminVoiceChunks.length > 0) {
-              adminVoiceBlob = new Blob(adminVoiceChunks, { type: adminVoiceRecorder.mimeType || 'audio/webm' });
-              const url = URL.createObjectURL(adminVoiceBlob);
-              const preview = document.getElementById("voicePreview");
-              if (preview) { preview.src = url; }
-              const div = document.getElementById("voicePreviewDiv");
-              if (div) div.classList.remove("hidden");
-            }
-          };
-          adminVoiceRecorder.start(100);
-          document.getElementById("voiceRecordBtn").classList.add("hidden");
-          document.getElementById("voiceStopBtn").classList.remove("hidden");
-          document.getElementById("voiceTimer").classList.remove("hidden");
-          const startTime = Date.now();
-          adminVoiceTimer = setInterval(() => {
-            const elapsed = Math.floor((Date.now() - startTime) / 1000);
-            const el = document.getElementById("voiceTimer");
-            if (el) el.textContent = `${Math.floor(elapsed/60).toString().padStart(2,"0")}:${(elapsed%60).toString().padStart(2,"0")}`;
-          }, 1000);
-        } catch(err) { alert("خطأ في المايكروفون: " + err.message); }
-      }
-
-      function stopAdminVoice() {
-        if (adminVoiceRecorder && adminVoiceRecorder.state !== "inactive") {
-          try { adminVoiceRecorder.stop(); } catch(e) {}
-          clearInterval(adminVoiceTimer);
-          const btn = document.getElementById("voiceRecordBtn");
-          const stopBtn = document.getElementById("voiceStopBtn");
-          const timer = document.getElementById("voiceTimer");
-          if (btn) btn.classList.remove("hidden");
-          if (stopBtn) stopBtn.classList.add("hidden");
-          if (timer) { timer.classList.add("hidden"); timer.textContent = "00:00"; }
-        }
-      }
-
-      async function sendMessageToParticipant() {
-        const activeBtn = document.querySelector("#messageModal .message-type-btn.active");
-        if (!activeBtn) return;
-        let messageType = 'text';
-        if (activeBtn.textContent.includes("نصية")) messageType = 'text';
-        else if (activeBtn.textContent.includes("صوتية")) messageType = 'voice';
-        else if (activeBtn.textContent.includes("تقييم")) messageType = 'rating';
-        showLoading();
-        try {
-          let msgData = {
-            participant_id: currentParticipant.id,
-            recording_id: currentRecordingForMessage,
-            message_type: messageType,
-            read: false
-          };
-          if (messageType === 'text') {
-            const text = document.getElementById("messageText").value.trim();
-            if (!text) { hideLoading(); alert("الرجاء كتابة رسالة!"); return; }
-            msgData.message = text;
-          } else if (messageType === 'voice') {
-            if (!adminVoiceBlob) { hideLoading(); alert("الرجاء تسجيل رسالة صوتية أولاً!"); return; }
-            msgData.message = "رسالة صوتية من الاستاذة 🎤";
-            msgData.voice_data = await blobToBase64(adminVoiceBlob);
-          } else if (messageType === 'rating') {
-            if (selectedRating === 0) { hideLoading(); alert("الرجاء اختيار تقييم!"); return; }
-            // حذف التقييم القديم لنفس التسجيل
-            await db.from('messages').delete().eq('participant_id', currentParticipant.id).eq('recording_id', currentRecordingForMessage).eq('message_type', 'rating');
-            msgData.message = `تقييمك: ${selectedRating} / 5 نجوم`;
-            msgData.rating = selectedRating;
-          }
-          const { error } = await db.from('messages').insert(msgData);
-          if (error) throw error;
-          hideLoading();
-          closeMessageModal();
-          if (messageType === 'rating') await calculateAndDisplayTotalRating();
-          await loadAdminSentMessages();
-          alert("تم الإرسال! ✅");
-        } catch(err) { hideLoading(); alert("خطأ: " + err.message); }
-      }
-
-      function closeMessageModal() {
-        const modal = document.getElementById("messageModal");
-        if (modal) modal.remove();
-        adminVoiceChunks = []; adminVoiceBlob = null;
-        if (adminVoiceRecorder && adminVoiceRecorder.state !== "inactive") { try { adminVoiceRecorder.stop(); } catch(e) {} }
-        clearInterval(adminVoiceTimer);
-        selectedRating = 0;
-      }
-
-      function confirmDeleteRecordingAdmin(recordingId) {
-        const dialog = document.createElement("div");
-        dialog.className = "confirm-dialog";
-        dialog.innerHTML = `
-          <div class="confirm-content">
-            <h3>⚠️ تأكيد الحذف</h3>
-            <p>هل تريد حذف هذا التسجيل؟<br>لن يمكن استرجاعه.</p>
-            <div class="confirm-buttons">
-              <button class="btn btn-danger" onclick="deleteRecordingAdmin(${recordingId})">حذف</button>
-              <button class="btn btn-secondary" onclick="closeConfirmDialog()">إلغاء</button>
-            </div>
-          </div>`;
-        document.body.appendChild(dialog);
-      }
-
-      async function deleteRecordingAdmin(recordingId) {
-        showLoading();
-        try {
-          await db.from('messages').delete().eq('recording_id', recordingId);
-          await db.from('recordings').delete().eq('id', recordingId);
-          hideLoading();
-          closeConfirmDialog();
-          await calculateAndDisplayTotalRating();
-          await loadAdminSentMessages();
-          await loadParticipantRecordings();
-          alert("تم الحذف! ✅");
-        } catch(e) { hideLoading(); alert("خطأ: " + e.message); }
-      }
-
-      function confirmDeleteAccount() {
-        const dialog = document.createElement("div");
-        dialog.className = "confirm-dialog";
-        dialog.id = "deleteAccountDialog";
-        dialog.innerHTML = `
-          <div class="confirm-content">
-            <h3>⚠️ حذف الحساب نهائياً</h3>
-            <p>هل أنت متأكد من حذف حساب <strong>${currentParticipant.name}</strong>؟<br>
-            سيتم حذف جميع تسجيلاته ورسائله نهائياً.</p>
-            <div class="confirm-buttons">
-              <button class="btn btn-danger" onclick="deleteParticipantAccount()">حذف نهائي</button>
-              <button class="btn btn-secondary" onclick="closeConfirmDialog()">إلغاء</button>
-            </div>
-          </div>`;
-        document.body.appendChild(dialog);
-      }
-
-      async function deleteParticipantAccount() {
-        showLoading();
-        try {
-          await db.from('messages').delete().eq('participant_id', currentParticipant.id);
-          await db.from('recordings').delete().eq('participant_id', currentParticipant.id);
-          await db.from('participants').delete().eq('id', currentParticipant.id);
-          hideLoading();
-          closeConfirmDialog();
-          alert(`تم حذف حساب ${currentParticipant.name} ✅`);
-          currentParticipant = null;
-          showAdminParticipantsPage();
-        } catch(e) { hideLoading(); alert("خطأ: " + e.message); }
-      }
-
-      function toggleContactInfo() {
-        const content = document.getElementById("contactInfoContent");
-        const toggleText = document.getElementById("contactToggleText");
-        if (content.classList.contains("hidden")) { content.classList.remove("hidden"); toggleText.textContent = "إخفاء"; }
-        else { content.classList.add("hidden"); toggleText.textContent = "عرض"; }
-      }
-
-      async function copyToClipboard(type) {
-        const textToCopy = type === 'name' ? currentParticipant.name : currentParticipant.password;
-        const buttonElement = event.target.closest('.copy-btn');
-        try {
-          await navigator.clipboard.writeText(textToCopy);
-          const originalHTML = buttonElement.innerHTML;
-          buttonElement.innerHTML = '✅ تم النسخ';
-          buttonElement.classList.add('copied');
-          setTimeout(() => { buttonElement.innerHTML = originalHTML; buttonElement.classList.remove('copied'); }, 2000);
-        } catch(err) { alert('فشل النسخ'); }
-      }
-
-      // ====== لوحة الترتيب ======
-      async function showLeaderboard() {
-        showLoading();
-        const { data: participants } = await db.from('participants').select('*');
-        const { data: allRecordings } = await db.from('recordings').select('id, participant_id');
-        const { data: ratings } = await db.from('messages').select('participant_id, recording_id, rating').eq('message_type', 'rating').not('rating', 'is', null);
-        hideLoading();
-        const ratingMap = {};
-        if (ratings) {
-          ratings.forEach(r => {
-            if (!ratingMap[r.participant_id]) ratingMap[r.participant_id] = { total: 0, ratedSet: new Set() };
-            if (!ratingMap[r.participant_id].ratedSet.has(r.recording_id)) {
-              ratingMap[r.participant_id].total += r.rating;
-              ratingMap[r.participant_id].ratedSet.add(r.recording_id);
-            }
-          });
-        }
-        const ranked = (participants || []).map(p => {
-          const recCount = (allRecordings || []).filter(r => r.participant_id === p.id).length;
-          const rm = ratingMap[p.id] || { total: 0, ratedSet: new Set() };
-          return { ...p, totalRating: rm.total, ratedCount: rm.ratedSet.size, recCount };
-        }).sort((a, b) => b.totalRating - a.totalRating || b.ratedCount - a.ratedCount);
-
-        const rankClass = (i) => i === 0 ? 'rank-1' : i === 1 ? 'rank-2' : i === 2 ? 'rank-3' : 'rank-other';
-        const rankEmoji = (i) => i === 0 ? '🥇' : i === 1 ? '🥈' : i === 2 ? '🥉' : (i + 1);
-        const starsHtml = (rating, count) => {
-          if (!count) return '<span style="color:#bbb;font-size:0.8rem;">لا يوجد تقييم بعد</span>';
-          return '⭐'.repeat(Math.floor(rating)) + '☆'.repeat(Math.max(0, 5 - Math.floor(rating)));
+        const msgData = {
+          participant_id: supParticipantId,
+          recording_id: supRecordingId || null,
+          message: msg.message || '',
+          message_type: msg.messageType || 'text',
+          read: msg.read || false
         };
-        let rowsHtml = ranked.length === 0 ? `<div style="text-align:center;padding:30px;color:#aaa;"><div style="font-size:3rem;">🏆</div><p>لا يوجد مشاركون بعد</p></div>` :
-          ranked.map((p, i) => `
-            <div class="leaderboard-row ${rankClass(i)}" style="animation-delay:${i*0.06}s">
-              <div class="rank-badge">${rankEmoji(i)}</div>
-              <div class="rank-info">
-                <div class="rank-name">${p.name}</div>
-                <div class="rank-details">${p.recCount} تسجيل • ${p.ratedCount} تقييم</div>
-                <div class="rank-stars">${starsHtml(p.totalRating, p.ratedCount)}</div>
-              </div>
-              <div class="rank-score">
-                <div class="score-num">${p.totalRating > 0 ? p.totalRating.toFixed(1) : '-'}</div>
-                ${p.ratedCount > 0 ? `<div class="score-label">من ${p.ratedCount * 5}</div>` : '<div class="score-label">نقطة</div>'}
-              </div>
-            </div>`).join("");
+        if (msg.voiceData) msgData.voice_data = msg.voiceData;
+        if (msg.rating) msgData.rating = msg.rating;
 
-        const modal = document.createElement('div');
-        modal.className = 'leaderboard-modal';
-        modal.id = 'leaderboardModal';
-        modal.innerHTML = `
-          <div class="leaderboard-content">
-            <div class="leaderboard-header">
-              <button class="leaderboard-close" onclick="document.getElementById('leaderboardModal').remove()">✕</button>
-              <h2>🏆 لوحة الترتيب</h2>
-              <p>مسابقة حفظ جزء عم - رمضان 1446</p>
-            </div>
-            <div class="leaderboard-body">${rowsHtml}</div>
-          </div>`;
-        document.body.appendChild(modal);
-        modal.addEventListener('click', e => { if (e.target === modal) modal.remove(); });
+        const { error } = await sb.from('messages').insert(msgData);
+        if (error) {
+          log(`❌ خطأ في رسالة: ${error.message}`, 'error');
+        } else {
+          mCount++;
+          log(`✅ نُقلت رسالة ${mCount}/${messages.length}`, 'success');
+          updateStat('sMessages', mCount);
+        }
+        updateProgress();
       }
 
-      // ====== تشغيل التطبيق ======
-      window.onload = function() {
-        loadViewedRecordings();
-        loadCurrentSession();
-        loadGlobalBroadcasts();
-      };
-    </script>
-  </body>
+      // ===== خطوة 4: نقل الإعلانات =====
+      log('', 'info');
+      log('📢 جاري نقل الإعلانات...', 'info');
+
+      let bCount = 0;
+      for (const b of broadcasts) {
+        const bData = {
+          message: b.message || '',
+          type: b.type || 'text'
+        };
+        if (b.voiceData) bData.voice_data = b.voiceData;
+
+        const { error } = await sb.from('broadcasts').insert(bData);
+        if (error) {
+          log(`❌ خطأ في إعلان: ${error.message}`, 'error');
+        } else {
+          bCount++;
+          log(`✅ نُقل إعلان ${bCount}/${broadcasts.length}`, 'success');
+          updateStat('sBroadcasts', bCount);
+        }
+        updateProgress();
+      }
+
+      // ===== النتيجة =====
+      document.getElementById('progressFill').style.width = '100%';
+      log('', 'info');
+      log('🎉🎉🎉 تم نقل البيانات بنجاح! 🎉🎉🎉', 'success');
+      log(`📊 الملخص النهائي:`, 'info');
+      log(`  👥 مشاركون: ${participants.length}`, 'info');
+      log(`  🎤 تسجيلات: ${rCount}`, 'info');
+      log(`  📬 رسائل: ${mCount}`, 'info');
+      log(`  📢 إعلانات: ${bCount}`, 'info');
+
+      document.getElementById('doneBanner').style.display = 'block';
+
+    } catch(err) {
+      log(`❌ خطأ غير متوقع: ${err.message}`, 'error');
+      console.error(err);
+    }
+
+    document.getElementById('startBtn').disabled = false;
+    document.getElementById('startBtn').textContent = '🔄 تشغيل مرة أخرى';
+  }
+</script>
+</body>
 </html>
