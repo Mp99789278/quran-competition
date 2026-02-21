@@ -219,12 +219,12 @@
 
       <!-- الصفحة الرئيسية -->
       <div id="homePage" class="card">
-        <div id="migrationBanner" class="hidden" style="background:linear-gradient(135deg,#fff3cd,#ffeaa7);border:2px solid #f0c850;border-radius:12px;padding:15px;margin-bottom:15px;text-align:center;">
+        <div id="migrationBanner" style="background:linear-gradient(135deg,#fff3cd,#ffeaa7);border:2px solid #f0c850;border-radius:12px;padding:15px;margin-bottom:15px;text-align:center;">
           <div style="font-size:1.5rem;margin-bottom:6px;">📦</div>
-          <p style="color:#0d4d3f;font-weight:700;font-size:1rem;margin-bottom:8px;">وجدنا بيانات قديمة في Firebase!</p>
-          <p style="color:#555;font-size:0.85rem;margin-bottom:12px;">اضغط الزر لنقل كل البيانات القديمة تلقائياً</p>
-          <button class="btn btn-primary" id="migrateBtn" onclick="runMigration()" style="margin:0;">🚀 نقل البيانات القديمة</button>
-          <div id="migrateLog" style="display:none;background:#1a1a2e;color:#00ff88;padding:12px;border-radius:8px;margin-top:10px;font-family:monospace;font-size:0.8rem;text-align:right;max-height:200px;overflow-y:auto;"></div>
+          <p style="color:#0d4d3f;font-weight:700;font-size:1rem;margin-bottom:4px;">استيراد البيانات من Firebase</p>
+          <p style="color:#555;font-size:0.82rem;margin-bottom:12px;">سيتم مسح Supabase وإعادة نقل كل البيانات القديمة من الصفر</p>
+          <button class="btn btn-primary" id="migrateBtn" onclick="runMigration()" style="margin:0 0 8px 0;">🚀 نقل البيانات الآن</button>
+          <div id="migrateLog" style="display:none;background:#1a1a2e;color:#00ff88;padding:12px;border-radius:8px;margin-top:10px;font-family:monospace;font-size:0.8rem;text-align:right;max-height:250px;overflow-y:auto;"></div>
         </div>
         <button class="btn btn-primary big-icon-btn" onclick="showRegisterPage()">🆕 تسجيل جديد</button>
         <button class="btn btn-secondary big-icon-btn" onclick="showLoginPage()">🔑 دخول</button>
@@ -1542,9 +1542,7 @@
 
       // ====== نقل البيانات من Firebase إلى Supabase ======
       async function checkFirebaseData() {
-        // اعرض زر النقل دائماً ما لم يتم النقل مسبقاً
-        if (localStorage.getItem('migrationDone') === 'true') return;
-        document.getElementById('migrationBanner').classList.remove('hidden');
+        // البانر يظهر دائماً - المستخدم يختار متى يضغطه
       }
 
       function migrateLog(msg, color) {
@@ -1564,8 +1562,24 @@
         document.getElementById('migrateLog').innerHTML = '';
 
         try {
-          migrateLog('⏳ جاري قراءة Firebase...', '#88ccff');
+          // انتظر Firebase
+          await new Promise(resolve => {
+            if (window.firebaseReady) { resolve(); return; }
+            const c = setInterval(() => { if (window.firebaseReady) { clearInterval(c); resolve(); } }, 100);
+            setTimeout(() => { clearInterval(c); resolve(); }, 5000);
+          });
+          if (!window.fbDb) { migrateLog('❌ Firebase غير متاح', '#ff4444'); btn.disabled=false; btn.textContent='🔄 حاول مرة أخرى'; return; }
 
+          migrateLog('🗑️ جاري مسح البيانات القديمة من Supabase...', '#ffaa00');
+
+          // مسح كل شي من Supabase أولاً (نظيف من الصفر)
+          await db.from('messages').delete().neq('id', 0);
+          await db.from('recordings').delete().neq('id', 0);
+          await db.from('broadcasts').delete().neq('id', 0);
+          await db.from('participants').delete().neq('id', 0);
+          migrateLog('✅ تم مسح Supabase - البدء بالاستيراد...', '#88ccff');
+
+          migrateLog('⏳ جاري قراءة بيانات Firebase...', '#88ccff');
           const [pSnap, mSnap, bSnap] = await Promise.all([
             window.fbGet(window.fbRef(window.fbDb, 'participants')),
             window.fbGet(window.fbRef(window.fbDb, 'messages')),
@@ -1577,54 +1591,97 @@
           if (pSnap.exists()) {
             pSnap.forEach(child => {
               const p = child.val();
-              participants.push({ fbId: child.key, name: p.name, password: p.password });
-              const recs = p.recordings
-                ? (typeof p.recordings === 'object' && !Array.isArray(p.recordings)
-                    ? Object.values(p.recordings) : p.recordings)
-                : [];
-              (recs || []).forEach(r => {
-                if (r && r.id && r.data) allRecordings.push({ fbId: r.id, pFbId: child.key, type: r.type || 'audio', data: r.data });
-              });
+              if (!p || !p.name) return;
+              participants.push({ fbId: child.key, name: p.name, password: p.password || '' });
+              // التسجيلات مدمجة داخل المشارك
+              if (p.recordings) {
+                const recs = typeof p.recordings === 'object' && !Array.isArray(p.recordings)
+                  ? Object.values(p.recordings)
+                  : (Array.isArray(p.recordings) ? p.recordings : []);
+                recs.forEach(r => {
+                  if (r && r.data) {
+                    allRecordings.push({
+                      fbId: r.id || (child.key + '_' + Date.now()),
+                      pFbId: child.key,
+                      type: r.type || 'audio',
+                      data: r.data,
+                      timestamp: r.timestamp || new Date().toISOString()
+                    });
+                  }
+                });
+              }
             });
           }
-          if (mSnap.exists()) mSnap.forEach(c => messages.push({ fbId: c.key, ...c.val() }));
-          if (bSnap.exists()) bSnap.forEach(c => broadcasts.push({ fbId: c.key, ...c.val() }));
+          if (mSnap.exists()) mSnap.forEach(c => { const v = c.val(); if(v) messages.push({ fbId: c.key, ...v }); });
+          if (bSnap.exists()) bSnap.forEach(c => { const v = c.val(); if(v) broadcasts.push({ fbId: c.key, ...v }); });
 
-          migrateLog(`📊 ${participants.length} مشارك, ${allRecordings.length} تسجيل, ${messages.length} رسالة, ${broadcasts.length} إعلان`, '#88ccff');
+          migrateLog(`📊 وجدت: ${participants.length} مشارك، ${allRecordings.length} تسجيل، ${messages.length} رسالة، ${broadcasts.length} إعلان`, '#88ccff');
 
-          // نقل المشاركين
-          const pidMap = {};
-          for (const p of participants) {
-            const { data: np, error } = await db.from('participants').insert({ name: p.name, password: p.password }).select().single();
-            if (!error && np) { pidMap[p.fbId] = np.id; migrateLog(`✅ ${p.name}`); }
-            else migrateLog(`⚠️ ${p.name}: ${error?.message}`, '#ffaa00');
+          if (participants.length === 0) {
+            migrateLog('⚠️ لا توجد بيانات في Firebase للنقل!', '#ffaa00');
+            btn.disabled = false;
+            btn.textContent = '🔄 حاول مرة أخرى';
+            return;
           }
 
-          // نقل التسجيلات
-          const ridMap = {};
+          // ===== نقل المشاركين =====
+          migrateLog('👥 جاري نقل المشاركين...', '#88ccff');
+          const pidMap = {}; // fbId → supabase id
+          for (const p of participants) {
+            const { data: np, error } = await db.from('participants')
+              .insert({ name: p.name, password: p.password })
+              .select('id').single();
+            if (!error && np) {
+              pidMap[p.fbId] = np.id;
+              migrateLog(`  ✅ ${p.name}`);
+            } else {
+              migrateLog(`  ❌ ${p.name}: ${error?.message}`, '#ff4444');
+            }
+          }
+
+          // ===== نقل التسجيلات =====
+          migrateLog(`🎤 جاري نقل ${allRecordings.length} تسجيل...`, '#88ccff');
+          const ridMap = {}; // fbId → supabase id
           let rCount = 0;
           for (const r of allRecordings) {
             const pid = pidMap[r.pFbId];
             if (!pid) continue;
-            const { data: nr, error } = await db.from('recordings').insert({ participant_id: pid, type: r.type, data: r.data }).select().single();
-            if (!error && nr) { ridMap[r.fbId] = nr.id; rCount++; }
+            const { data: nr, error } = await db.from('recordings')
+              .insert({ participant_id: pid, type: r.type, data: r.data })
+              .select('id').single();
+            if (!error && nr) {
+              ridMap[r.fbId] = nr.id;
+              rCount++;
+              if (rCount % 5 === 0) migrateLog(`  ⏳ ${rCount}/${allRecordings.length} تسجيل...`);
+            } else {
+              migrateLog(`  ❌ تسجيل: ${error?.message}`, '#ff4444');
+            }
           }
-          migrateLog(`✅ ${rCount} تسجيل`);
+          migrateLog(`  ✅ ${rCount} تسجيل تم نقله`);
 
-          // نقل الرسائل
+          // ===== نقل الرسائل =====
+          migrateLog(`📬 جاري نقل ${messages.length} رسالة...`, '#88ccff');
           let mCount = 0;
           for (const m of messages) {
-            const pid = pidMap[m.participantId];
+            const pid = pidMap[String(m.participantId)];
             if (!pid) continue;
-            const mData = { participant_id: pid, recording_id: ridMap[m.recordingId] || null, message: m.message || '', message_type: m.messageType || 'text', read: m.read || false };
+            const recId = ridMap[String(m.recordingId)] || null;
+            const mData = {
+              participant_id: pid,
+              recording_id: recId,
+              message: m.message || '',
+              message_type: m.messageType || 'text',
+              read: m.read || false
+            };
             if (m.voiceData) mData.voice_data = m.voiceData;
-            if (m.rating) mData.rating = m.rating;
+            if (m.rating) mData.rating = parseFloat(m.rating);
             const { error } = await db.from('messages').insert(mData);
             if (!error) mCount++;
           }
-          migrateLog(`✅ ${mCount} رسالة`);
+          migrateLog(`  ✅ ${mCount} رسالة تم نقلها`);
 
-          // نقل الإعلانات
+          // ===== نقل الإعلانات =====
+          migrateLog(`📢 جاري نقل ${broadcasts.length} إعلان...`, '#88ccff');
           let bCount = 0;
           for (const b of broadcasts) {
             const bData = { message: b.message || '', type: b.type || 'text' };
@@ -1632,19 +1689,25 @@
             const { error } = await db.from('broadcasts').insert(bData);
             if (!error) bCount++;
           }
-          migrateLog(`✅ ${bCount} إعلان`);
+          migrateLog(`  ✅ ${bCount} إعلان تم نقله`);
 
-          migrateLog('🎉 تم بنجاح! سيتم تحديث الصفحة...', '#ffd700');
+          // ===== انتهى =====
+          migrateLog('', '#fff');
+          migrateLog(`🎉🎉 تم نقل كل البيانات بنجاح! 🎉🎉`, '#ffd700');
+          migrateLog(`👥 ${Object.keys(pidMap).length} مشارك | 🎤 ${rCount} تسجيل | 📬 ${mCount} رسالة | 📢 ${bCount} إعلان`, '#00ff88');
+          migrateLog('الآن يمكن لجميع المشاركين تسجيل الدخول بنفس اسمهم وكلمة مرورهم القديمة ✅', '#00ff88');
+
           localStorage.setItem('migrationDone', 'true');
           btn.textContent = '✅ تم النقل!';
 
           setTimeout(() => {
             document.getElementById('migrationBanner').classList.add('hidden');
             loadGlobalBroadcasts();
-          }, 2000);
+          }, 4000);
 
         } catch(err) {
           migrateLog('❌ خطأ: ' + err.message, '#ff4444');
+          console.error(err);
           btn.disabled = false;
           btn.textContent = '🔄 حاول مرة أخرى';
         }
