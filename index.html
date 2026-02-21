@@ -174,6 +174,7 @@
       .leaderboard-row.rank-2 { background: linear-gradient(135deg, #f8fafc, #e2e8f0); border-color: #94a3b8; }
       .leaderboard-row.rank-3 { background: linear-gradient(135deg, #fff7ed, #ffedd5); border-color: #f97316; }
       .leaderboard-row.rank-other { background: var(--cream); border-color: var(--border-light); }
+      .leaderboard-row.rank-mine { border-color: var(--primary-gold) !important; box-shadow: 0 0 0 3px rgba(212,175,55,0.25); }
       .rank-badge { width: 42px; height: 42px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 1.3rem; font-weight: 900; flex-shrink: 0; }
       .rank-1 .rank-badge { background: linear-gradient(135deg, #f59e0b, #fbbf24); color: white; }
       .rank-2 .rank-badge { background: linear-gradient(135deg, #94a3b8, #cbd5e1); color: white; }
@@ -181,6 +182,7 @@
       .rank-other .rank-badge { background: var(--light-green); color: var(--dark-green); font-size: 1rem; }
       .rank-info { flex: 1; }
       .rank-name { color: var(--dark-green); font-weight: 700; font-size: 1rem; margin-bottom: 3px; }
+      .rank-name .you-tag { background: var(--primary-gold); color: var(--dark-green); border-radius: 8px; padding: 1px 7px; font-size: 0.72rem; font-weight: 700; margin-right: 6px; }
       .rank-details { color: #777; font-size: 0.8rem; }
       .rank-score { text-align: center; }
       .rank-score .score-num { font-size: 1.4rem; font-weight: 900; color: var(--dark-green); line-height: 1; }
@@ -217,6 +219,13 @@
 
       <!-- الصفحة الرئيسية -->
       <div id="homePage" class="card">
+        <div id="migrationBanner" style="background:linear-gradient(135deg,#fff3cd,#ffeaa7);border:2px solid #f0c850;border-radius:12px;padding:15px;margin-bottom:15px;text-align:center;">
+          <div style="font-size:1.5rem;margin-bottom:6px;">📦</div>
+          <p style="color:#0d4d3f;font-weight:700;font-size:1rem;margin-bottom:4px;">استيراد البيانات من Firebase</p>
+          <p style="color:#555;font-size:0.82rem;margin-bottom:12px;">سيتم مسح Supabase وإعادة نقل كل البيانات القديمة من الصفر</p>
+          <button class="btn btn-primary" id="migrateBtn" onclick="runMigration()" style="margin:0 0 8px 0;">🚀 نقل البيانات الآن</button>
+          <div id="migrateLog" style="display:none;background:#1a1a2e;color:#00ff88;padding:12px;border-radius:8px;margin-top:10px;font-family:monospace;font-size:0.8rem;text-align:right;max-height:250px;overflow-y:auto;"></div>
+        </div>
         <button class="btn btn-primary big-icon-btn" onclick="showRegisterPage()">🆕 تسجيل جديد</button>
         <button class="btn btn-secondary big-icon-btn" onclick="showLoginPage()">🔑 دخول</button>
         <button class="btn btn-secondary" onclick="showAdminLogin()" style="margin-top: 20px;">👩‍🏫 دخول الاستاذة</button>
@@ -296,10 +305,10 @@
         <div id="recordingSection">
           <h3 style="color:var(--dark-green);margin-bottom:10px;font-size:1.1rem;text-align:center;">اختر نوع التسجيل</h3>
           <div class="record-type-grid">
-            <div class="type-card selected" onclick="selectType('audio', event)">
+            <div class="type-card selected" onclick="selectType('audio')">
               <div class="icon">🎤</div><h3>صوت</h3>
             </div>
-            <div class="type-card" onclick="selectType('video', event)">
+            <div class="type-card" onclick="selectType('video')">
               <div class="icon">🎥</div><h3>فيديو</h3>
             </div>
           </div>
@@ -314,8 +323,8 @@
           <div id="recordingPreview" class="recording-preview hidden">
             <h3 style="color:var(--dark-green);margin-bottom:10px;font-size:1.1rem;">المعاينة</h3>
             <div id="previewMedia"></div>
-            <button class="btn btn-primary" onclick="saveRecording()" style="margin-top:12px;">💾 حفظ التسجيل</button>
-            <button class="btn btn-secondary" onclick="cancelRecording()">🔄 تسجيل جديد</button>
+            <button class="btn btn-primary" onclick="saveRecording()" style="margin-top:12px;">💾 حفظ</button>
+            <button class="btn btn-secondary" onclick="cancelRecording()">🔄 إلغاء</button>
           </div>
           <div style="margin-top:20px;">
             <h3 style="color:var(--dark-green);margin-bottom:10px;font-size:1.1rem;">تسجيلاتي</h3>
@@ -380,11 +389,11 @@
           <div id="contactInfoContent" class="contact-info-content hidden">
             <div class="info-row">
               <div><div class="info-label">الاسم</div><div class="info-value" id="contactName">-</div></div>
-              <button class="copy-btn" onclick="copyToClipboard('name', event)">📋 نسخ</button>
+              <button class="copy-btn" onclick="copyToClipboard('name')">📋 نسخ</button>
             </div>
             <div class="info-row">
               <div><div class="info-label">كلمة المرور</div><div class="info-value" id="contactPassword">-</div></div>
-              <button class="copy-btn" onclick="copyToClipboard('password', event)">📋 نسخ</button>
+              <button class="copy-btn" onclick="copyToClipboard('password')">📋 نسخ</button>
             </div>
           </div>
         </div>
@@ -392,6 +401,27 @@
         <div id="adminRecordingsList"></div>
       </div>
     </div>
+
+    <!-- Firebase (للنقل فقط) -->
+    <script type="module">
+      import { initializeApp } from "https://www.gstatic.com/firebasejs/12.9.0/firebase-app.js";
+      import { getDatabase, ref, get } from 'https://www.gstatic.com/firebasejs/12.9.0/firebase-database.js';
+      const firebaseConfig = {
+        apiKey: "AIzaSyAfhQL5spF3KcrbngSzunLaHT_7cieHkUk",
+        authDomain: "opject-e223d.firebaseapp.com",
+        databaseURL: "https://opject-e223d-default-rtdb.firebaseio.com/",
+        projectId: "opject-e223d",
+        storageBucket: "opject-e223d.firebasestorage.app",
+        messagingSenderId: "607939195786",
+        appId: "1:607939195786:web:c264710387d50fc2990e73"
+      };
+      const app = initializeApp(firebaseConfig);
+      const database = getDatabase(app);
+      window.fbDb = database;
+      window.fbRef = ref;
+      window.fbGet = get;
+      window.firebaseReady = true;
+    </script>
 
     <!-- Supabase SDK -->
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
@@ -422,11 +452,6 @@
       let broadcastVoiceChunks = [];
       let broadcastVoiceTimerInterval = null;
       let broadcastVoiceBlob = null;
-      // حالة التسجيل الحالية - لمنع التكرار
-      let isRecording = false;
-      let isSaving = false;
-      let currentPreviewBlob = null;
-      let currentPreviewMime = null;
 
       // ====== تحويل base64 ======
       function dataUriToObjectUrl(dataUri) {
@@ -449,9 +474,9 @@
         if (!data) return '<p style="color:#999;font-size:0.85rem;">⚠️ لا توجد بيانات</p>';
         const url = dataUriToObjectUrl(data);
         if (type === 'video') {
-          return `<video controls src="${url}" style="width:100%;border-radius:8px;background:#000;" preload="metadata"></video>`;
+          return `<video controls src="${url}" style="width:100%;border-radius:8px;background:#000;"></video>`;
         } else {
-          return `<audio controls src="${url}" style="width:100%;" preload="metadata"></audio>`;
+          return `<audio controls src="${url}" style="width:100%;"></audio>`;
         }
       }
 
@@ -602,21 +627,11 @@
 
       function logout() {
         stopVideoPreview();
-        stopAllRecording();
-        localStorage.removeItem("currentSession");
-        currentUser = null; isAdmin = false; currentParticipant = null;
-        recordedChunks = []; currentPreviewBlob = null; currentPreviewMime = null;
-        isRecording = false; isSaving = false;
-        showHomePage();
-      }
-
-      function stopAllRecording() {
         if (mediaRecorder && mediaRecorder.state !== "inactive") { try { mediaRecorder.stop(); } catch(e) {} }
         clearInterval(timerInterval);
-        if (adminVoiceRecorder && adminVoiceRecorder.state !== "inactive") { try { adminVoiceRecorder.stop(); } catch(e) {} }
-        clearInterval(adminVoiceTimer);
-        if (broadcastVoiceRecorder && broadcastVoiceRecorder.state !== "inactive") { try { broadcastVoiceRecorder.stop(); } catch(e) {} }
-        clearInterval(broadcastVoiceTimerInterval);
+        localStorage.removeItem("currentSession");
+        currentUser = null; isAdmin = false; currentParticipant = null; recordedChunks = [];
+        showHomePage();
       }
 
       function togglePassword(inputId) {
@@ -626,7 +641,7 @@
         else { input.type = "password"; icon.textContent = "👁️"; }
       }
 
-      // ====== Broadcasts ======
+      // ====== Broadcasts (إعلانات عامة) ======
       async function loadGlobalBroadcasts() {
         const bar = document.getElementById("globalBroadcastsBar");
         if (!bar) return;
@@ -785,8 +800,10 @@
         if (!name || !password) { alert("الرجاء ملء جميع الحقول!"); return; }
         showLoading();
         try {
+          // تحقق من وجود الاسم
           const { data: existing } = await db.from('participants').select('id').eq('name', name);
           if (existing && existing.length > 0) { hideLoading(); alert("هذا الاسم مسجل مسبقاً!"); return; }
+          // إنشاء المشارك
           const { data: newUser, error } = await db.from('participants').insert({ name, password }).select().single();
           if (error) throw error;
           currentUser = newUser;
@@ -834,10 +851,10 @@
       };
 
       // ====== التسجيل الصوتي/المرئي ======
-      function selectType(type, e) {
+      function selectType(type) {
         recordingType = type;
         document.querySelectorAll(".type-card").forEach(el => el.classList.remove("selected"));
-        e.target.closest(".type-card").classList.add("selected");
+        event.target.closest(".type-card").classList.add("selected");
         if (type === "video") startVideoPreview();
         else stopVideoPreview();
       }
@@ -865,16 +882,6 @@
       }
 
       async function startRecording() {
-        // منع التكرار - لو في تسجيل شغال لا تبدأ ثاني
-        if (isRecording) return;
-
-        // إخفاء المعاينة القديمة ومسح البيانات
-        document.getElementById("recordingPreview").classList.add("hidden");
-        document.getElementById("previewMedia").innerHTML = '';
-        recordedChunks = [];
-        currentPreviewBlob = null;
-        currentPreviewMime = null;
-
         try {
           let stream;
           if (recordingType === "video") {
@@ -887,207 +894,119 @@
           } else {
             stream = await navigator.mediaDevices.getUserMedia({ audio: true });
           }
-
+          recordedChunks = [];
           const mimeType = recordingType === "video" ? getSupportedVideoMimeType() : getSupportedMimeType();
           try { mediaRecorder = mimeType ? new MediaRecorder(stream, { mimeType }) : new MediaRecorder(stream); }
           catch(e) { mediaRecorder = new MediaRecorder(stream); }
-
-          mediaRecorder.ondataavailable = e => {
-            if (e.data && e.data.size > 0) recordedChunks.push(e.data);
-          };
-
+          mediaRecorder.ondataavailable = e => { if (e.data && e.data.size > 0) recordedChunks.push(e.data); };
           mediaRecorder.onstop = () => {
-            // إيقاف ستريم الصوت (مش الكاميرا)
-            if (recordingType === "audio") {
-              stream.getTracks().forEach(t => { try { t.stop(); } catch(e) {} });
-            } else {
-              // إيقاف ستريم الصوت فقط من stream المدمج
-              stream.getAudioTracks().forEach(t => { try { t.stop(); } catch(e) {} });
-            }
-            isRecording = false;
+            if (recordingType === "audio") stream.getTracks().forEach(t => { try { t.stop(); } catch(e) {} });
             showPreview();
           };
-
-          mediaRecorder.start(200); // chunk كل 200ms للأمان
-          isRecording = true;
-
+          mediaRecorder.start(100);
           document.getElementById("recordBtn").classList.add("hidden");
           document.getElementById("stopBtn").classList.remove("hidden");
           document.getElementById("timer").classList.remove("hidden");
           if (recordingType === "video") document.getElementById("livePreview").classList.add("recording");
-
           recordingStartTime = Date.now();
           timerInterval = setInterval(() => {
             const elapsed = Math.floor((Date.now() - recordingStartTime) / 1000);
             const el = document.getElementById("timer");
             if (el) el.textContent = `${Math.floor(elapsed/60).toString().padStart(2,"0")}:${(elapsed%60).toString().padStart(2,"0")}`;
           }, 1000);
-
-        } catch(err) {
-          isRecording = false;
-          alert("خطأ في الوصول للمايكروفون/الكاميرا: " + err.message);
-        }
+        } catch(err) { alert("خطأ: " + err.message); }
       }
 
       function stopRecording() {
-        if (!isRecording) return;
         if (mediaRecorder && mediaRecorder.state !== "inactive") {
           try { mediaRecorder.stop(); } catch(e) {}
           clearInterval(timerInterval);
-          document.getElementById("stopBtn").classList.add("hidden");
-          document.getElementById("timer").classList.add("hidden");
         }
       }
 
       function cancelRecording() {
-        if (mediaRecorder && mediaRecorder.state !== "inactive") {
-          try { mediaRecorder.stop(); } catch(e) {}
-        }
+        if (mediaRecorder && mediaRecorder.state !== "inactive") { try { mediaRecorder.stop(); } catch(e) {} }
         document.getElementById("livePreview").classList.remove("recording");
         clearInterval(timerInterval);
         recordedChunks = [];
-        currentPreviewBlob = null;
-        currentPreviewMime = null;
-        isRecording = false;
-        isSaving = false;
         document.getElementById("recordBtn").classList.remove("hidden");
         document.getElementById("stopBtn").classList.add("hidden");
         document.getElementById("timer").classList.add("hidden");
         document.getElementById("timer").textContent = "00:00";
         document.getElementById("recordingPreview").classList.add("hidden");
-        document.getElementById("previewMedia").innerHTML = '';
       }
 
       function showPreview() {
-        if (recordedChunks.length === 0) {
-          alert("لم يتم تسجيل أي بيانات. حاول مرة أخرى.");
-          cancelRecording();
-          return;
-        }
-
-        const mimeType = (mediaRecorder && mediaRecorder.mimeType) ? mediaRecorder.mimeType
-          : (recordingType === "video" ? "video/webm" : "audio/webm");
-
-        // حفظ الـ blob حتى نستخدمه عند الحفظ - لا نعيد بناءه
-        currentPreviewBlob = new Blob(recordedChunks, { type: mimeType });
-        currentPreviewMime = mimeType;
-
-        const url = URL.createObjectURL(currentPreviewBlob);
+        if (recordedChunks.length === 0) { alert("لم يتم تسجيل أي بيانات."); cancelRecording(); return; }
+        const mimeType = mediaRecorder && mediaRecorder.mimeType ? mediaRecorder.mimeType : (recordingType === "video" ? "video/webm" : "audio/webm");
+        const blob = new Blob(recordedChunks, { type: mimeType });
+        const url = URL.createObjectURL(blob);
         const previewDiv = document.getElementById("previewMedia");
-
-        if (recordingType === "video") {
-          previewDiv.innerHTML = `<video controls src="${url}" style="width:100%;border-radius:8px;" preload="auto"></video>`;
-        } else {
-          previewDiv.innerHTML = `<audio controls src="${url}" style="width:100%;" preload="auto"></audio>`;
-        }
-
+        previewDiv.innerHTML = recordingType === "video"
+          ? `<video controls src="${url}" style="width:100%;border-radius:8px;"></video>`
+          : `<audio controls src="${url}" style="width:100%;"></audio>`;
         document.getElementById("recordingPreview").classList.remove("hidden");
         document.getElementById("livePreview").classList.remove("recording");
         document.getElementById("recordBtn").classList.remove("hidden");
         document.getElementById("stopBtn").classList.add("hidden");
         document.getElementById("timer").classList.add("hidden");
-        document.getElementById("timer").textContent = "00:00";
       }
 
       async function saveRecording() {
-        // منع الحفظ المتكرر
-        if (isSaving) return;
-        if (!currentPreviewBlob) { alert("لا توجد بيانات للحفظ. سجّل أولاً."); return; }
-
-        isSaving = true;
-        const saveBtn = document.querySelector('#recordingPreview .btn-primary');
-        if (saveBtn) { saveBtn.disabled = true; saveBtn.textContent = '⏳ جاري الحفظ...'; }
-
+        if (recordedChunks.length === 0) { alert("لا توجد بيانات للحفظ."); return; }
         showLoading();
         try {
-          const blob = currentPreviewBlob;
-
-          if (blob.size > 10 * 1024 * 1024) {
-            hideLoading();
-            isSaving = false;
-            if (saveBtn) { saveBtn.disabled = false; saveBtn.textContent = '💾 حفظ التسجيل'; }
-            alert("التسجيل كبير جداً (أكثر من 10MB). يرجى تقليل المدة.");
-            return;
-          }
-
+          const mimeType = mediaRecorder && mediaRecorder.mimeType ? mediaRecorder.mimeType : (recordingType === "video" ? "video/webm" : "audio/webm");
+          const blob = new Blob(recordedChunks, { type: mimeType });
+          if (blob.size > 8 * 1024 * 1024) { hideLoading(); alert("التسجيل كبير جداً (أكثر من 8MB). يرجى تقليل المدة."); return; }
           const base64Data = await blobToBase64(blob);
-
           const { data: saved, error } = await db.from('recordings').insert({
             participant_id: currentUser.id,
             type: recordingType,
             data: base64Data
           }).select().single();
-
           if (error) throw error;
-
-          // مسح البيانات بعد الحفظ الناجح
-          currentPreviewBlob = null;
-          currentPreviewMime = null;
-          recordedChunks = [];
-          isSaving = false;
-
           hideLoading();
           alert("تم الحفظ بنجاح! ✅");
-
-          // إخفاء المعاينة
+          recordedChunks = [];
           document.getElementById("recordingPreview").classList.add("hidden");
-          document.getElementById("previewMedia").innerHTML = '';
           document.getElementById("timer").textContent = "00:00";
-
-          // تحديث قائمة التسجيلات
-          await loadMyRecordings();
-
+          loadMyRecordings();
         } catch(err) {
           hideLoading();
-          isSaving = false;
-          if (saveBtn) { saveBtn.disabled = false; saveBtn.textContent = '💾 حفظ التسجيل'; }
           alert("خطأ في الحفظ: " + err.message);
         }
       }
 
       async function loadMyRecordings() {
-        const { data: recordings, error } = await db.from('recordings')
-          .select('id, participant_id, type, data, created_at')
-          .eq('participant_id', currentUser.id)
-          .order('created_at', { ascending: true });
-
+        const { data: recordings, error } = await db.from('recordings').select('*').eq('participant_id', currentUser.id).order('created_at', { ascending: true });
         const listDiv = document.getElementById("myRecordingsList");
         if (!recordings || recordings.length === 0) {
-          listDiv.innerHTML = '<div class="empty-state"><div class="icon">🎙️</div><p>لا توجد تسجيلات بعد</p></div>';
+          listDiv.innerHTML = '<div class="empty-state"><div class="icon">🎙️</div><p>لا توجد تسجيلات</p></div>';
           return;
         }
-
-        // إزالة التكرارات بناءً على id (ضمان العرض الصحيح)
-        const uniqueRecordings = [];
-        const seenIds = new Set();
-        for (const rec of recordings) {
-          if (!seenIds.has(rec.id)) {
-            seenIds.add(rec.id);
-            uniqueRecordings.push(rec);
-          }
-        }
-
-        listDiv.innerHTML = uniqueRecordings.map((rec, index) => `
-          <div class="recording-item" data-rec-id="${rec.id}">
+        listDiv.innerHTML = recordings.map((rec, index) => `
+          <div class="recording-item">
             <div class="three-dots" onclick="showRecordingMenu(event, ${rec.id})">⋮</div>
             <p style="color:var(--dark-green);font-weight:700;font-size:1rem;margin-bottom:4px;">
               التسجيل ${index+1} - ${rec.type === "video" ? "🎥 فيديو" : "🎤 صوت"}
             </p>
-            <p class="recording-date">${new Date(rec.created_at).toLocaleString("ar-SA")}</p>
+            <p class="recording-date">${new Date(rec.created_at).toLocaleDateString("ar-SA")}</p>
             ${createMediaElement(rec.data, rec.type)}
           </div>`).join("");
       }
 
       function showRecordingMenu(e, recordingId) {
         e.stopPropagation();
-        document.querySelectorAll(".menu-popup").forEach(m => m.remove());
+        const existingMenu = document.querySelector(".menu-popup");
+        if (existingMenu) existingMenu.remove();
         const menu = document.createElement("div");
         menu.className = "menu-popup";
         menu.innerHTML = `<div class="menu-item danger" onclick="confirmDeleteRecording(${recordingId})">🗑️ حذف التسجيل</div>`;
         e.target.parentElement.appendChild(menu);
         setTimeout(() => {
-          document.addEventListener("click", function closeMenu(ev) {
-            if (!menu.contains(ev.target)) { menu.remove(); document.removeEventListener("click", closeMenu); }
+          document.addEventListener("click", function closeMenu(e) {
+            if (!menu.contains(e.target)) { menu.remove(); document.removeEventListener("click", closeMenu); }
           });
         }, 10);
       }
@@ -1095,7 +1014,6 @@
       function confirmDeleteRecording(recordingId) {
         const dialog = document.createElement("div");
         dialog.className = "confirm-dialog";
-        dialog.id = "confirmDialog_" + recordingId;
         dialog.innerHTML = `
           <div class="confirm-content">
             <h3>⚠️ تأكيد الحذف</h3>
@@ -1119,46 +1037,37 @@
           await db.from('recordings').delete().eq('id', recordingId);
           hideLoading();
           closeConfirmDialog();
-          await loadMyRecordings();
-          await updateUnreadBadge();
+          loadMyRecordings();
+          updateUnreadBadge();
           alert("تم الحذف! ✅");
         } catch(e) { hideLoading(); alert("خطأ: " + e.message); }
       }
 
       // ====== الرسائل (للمشارك) ======
       async function updateUnreadBadge() {
-        try {
-          const { count } = await db.from('messages').select('id', { count: 'exact', head: true })
-            .eq('participant_id', currentUser.id).eq('read', false);
-          const badge = document.getElementById("unreadBadge");
-          if (badge) {
-            if (count > 0) { badge.textContent = count; badge.classList.remove("hidden"); }
-            else { badge.classList.add("hidden"); }
-          }
-        } catch(e) {}
+        const { count } = await db.from('messages').select('id', { count: 'exact', head: true })
+          .eq('participant_id', currentUser.id).eq('read', false);
+        const badge = document.getElementById("unreadBadge");
+        if (badge) {
+          if (count > 0) { badge.textContent = count; badge.classList.remove("hidden"); }
+          else { badge.classList.add("hidden"); }
+        }
       }
 
       async function markMessagesAsRead() {
-        try {
-          await db.from('messages').update({ read: true }).eq('participant_id', currentUser.id).eq('read', false);
-          updateUnreadBadge();
-        } catch(e) {}
+        await db.from('messages').update({ read: true }).eq('participant_id', currentUser.id).eq('read', false);
+        updateUnreadBadge();
       }
 
       async function loadMessages() {
         const listDiv = document.getElementById("messagesList");
-        listDiv.innerHTML = '<div class="empty-state"><div class="icon">⏳</div><p>جاري التحميل...</p></div>';
-
-        const { data: messages, error } = await db.from('messages').select('*')
-          .eq('participant_id', currentUser.id).order('created_at', { ascending: false });
-
+        const { data: messages, error } = await db.from('messages').select('*').eq('participant_id', currentUser.id).order('created_at', { ascending: false });
         if (error || !messages || messages.length === 0) {
           listDiv.innerHTML = '<div class="empty-state"><div class="icon">📭</div><p>لا توجد رسائل</p></div>';
           return;
         }
-
-        const { data: myRecordings } = await db.from('recordings').select('id, type, data')
-          .eq('participant_id', currentUser.id);
+        // جلب التسجيلات المرتبطة
+        const { data: myRecordings } = await db.from('recordings').select('*').eq('participant_id', currentUser.id);
 
         let html = '';
         for (const msg of messages) {
@@ -1211,8 +1120,8 @@
       // ====== إدارة المشاركين (للاستاذة) ======
       async function loadParticipants() {
         showLoading();
-        const { data: participants, error } = await db.from('participants').select('*').order('name');
-        const { data: allRecordings } = await db.from('recordings').select('id, participant_id');
+        const { data: participants, error } = await db.from('participants').select('*');
+        const { data: allRecordings } = await db.from('recordings').select('id, participant_id, created_at');
         hideLoading();
         const listDiv = document.getElementById("participantsList");
         if (error || !participants || participants.length === 0) {
@@ -1256,43 +1165,27 @@
 
       async function loadParticipantRecordings() {
         const listDiv = document.getElementById("adminRecordingsList");
-        listDiv.innerHTML = '<div class="empty-state"><div class="icon">⏳</div><p>جاري التحميل...</p></div>';
-
-        const { data: recordings, error } = await db.from('recordings')
-          .select('id, type, data, created_at')
-          .eq('participant_id', currentParticipant.id)
-          .order('created_at', { ascending: true });
-
+        const { data: recordings, error } = await db.from('recordings').select('*').eq('participant_id', currentParticipant.id).order('created_at', { ascending: true });
         if (!recordings || recordings.length === 0) {
           listDiv.innerHTML = '<div class="empty-state"><div class="icon">🎙️</div><p>لا توجد تسجيلات</p></div>';
           return;
         }
-
-        // إزالة التكرارات
-        const uniqueRecordings = [];
-        const seenIds = new Set();
-        for (const rec of recordings) {
-          if (!seenIds.has(rec.id)) {
-            seenIds.add(rec.id);
-            uniqueRecordings.push(rec);
-            markRecordingAsViewed(currentParticipant.id, rec.id);
-          }
-        }
-
-        listDiv.innerHTML = uniqueRecordings.map((rec, index) => `
-          <div class="recording-item" data-rec-id="${rec.id}">
+        recordings.forEach(rec => markRecordingAsViewed(currentParticipant.id, rec.id));
+        listDiv.innerHTML = recordings.map((rec, index) => `
+          <div class="recording-item">
             <div class="three-dots" onclick="showAdminRecordingMenu(event, ${rec.id})">⋮</div>
             <p style="color:var(--dark-green);font-weight:700;font-size:1rem;margin-bottom:4px;">
               التسجيل ${index+1} - ${rec.type === "video" ? "🎥 فيديو" : "🎤 صوت"}
             </p>
-            <p class="recording-date">${new Date(rec.created_at).toLocaleString("ar-SA")}</p>
+            <p class="recording-date">${new Date(rec.created_at).toLocaleDateString("ar-SA")}</p>
             ${createMediaElement(rec.data, rec.type)}
           </div>`).join("");
       }
 
       function showAdminRecordingMenu(e, recordingId) {
         e.stopPropagation();
-        document.querySelectorAll(".menu-popup").forEach(m => m.remove());
+        const existingMenu = document.querySelector(".menu-popup");
+        if (existingMenu) existingMenu.remove();
         const menu = document.createElement("div");
         menu.className = "menu-popup";
         menu.innerHTML = `
@@ -1302,18 +1195,15 @@
           <div class="menu-item danger" onclick="confirmDeleteRecordingAdmin(${recordingId})">🗑️ حذف التسجيل</div>`;
         e.target.parentElement.appendChild(menu);
         setTimeout(() => {
-          document.addEventListener("click", function closeMenu(ev) {
-            if (!menu.contains(ev.target)) { menu.remove(); document.removeEventListener("click", closeMenu); }
+          document.addEventListener("click", function closeMenu(e) {
+            if (!menu.contains(e.target)) { menu.remove(); document.removeEventListener("click", closeMenu); }
           });
         }, 10);
       }
 
       async function loadAdminSentMessages() {
         const div = document.getElementById("adminSentMessages");
-        div.innerHTML = '';
-        const { data: messages, error } = await db.from('messages').select('*')
-          .eq('participant_id', currentParticipant.id).order('created_at', { ascending: false });
-
+        const { data: messages, error } = await db.from('messages').select('*').eq('participant_id', currentParticipant.id).order('created_at', { ascending: false });
         if (!messages || messages.length === 0) { div.innerHTML = ''; return; }
         let html = `<h3 style="color:var(--dark-green);margin-bottom:10px;font-size:1rem;">📨 رسائلك المرسلة لهذا المشارك</h3>`;
         for (const msg of messages) {
@@ -1341,20 +1231,18 @@
       }
 
       async function calculateAndDisplayTotalRating() {
-        try {
-          const { data: ratings } = await db.from('messages').select('rating, recording_id')
-            .eq('participant_id', currentParticipant.id).eq('message_type', 'rating').not('rating', 'is', null);
-          let total = 0;
-          const ratedSet = new Set();
-          if (ratings) {
-            ratings.forEach(r => {
-              if (!ratedSet.has(r.recording_id)) { total += r.rating; ratedSet.add(r.recording_id); }
-            });
-          }
-          document.getElementById("totalRatingValue").textContent = total.toFixed(1);
-          document.getElementById("totalRatingMax").textContent = ratedSet.size * 5;
-          document.getElementById("totalRatingBadge").style.display = ratedSet.size === 0 ? 'none' : 'inline-flex';
-        } catch(e) {}
+        const { data: ratings } = await db.from('messages').select('rating, recording_id')
+          .eq('participant_id', currentParticipant.id).eq('message_type', 'rating').not('rating', 'is', null);
+        let total = 0;
+        const ratedSet = new Set();
+        if (ratings) {
+          ratings.forEach(r => {
+            if (!ratedSet.has(r.recording_id)) { total += r.rating; ratedSet.add(r.recording_id); }
+          });
+        }
+        document.getElementById("totalRatingValue").textContent = total.toFixed(1);
+        document.getElementById("totalRatingMax").textContent = ratedSet.size * 5;
+        document.getElementById("totalRatingBadge").style.display = ratedSet.size === 0 ? 'none' : 'inline-flex';
       }
 
       // ====== إرسال رسالة للمشارك ======
@@ -1368,9 +1256,9 @@
           <div class="message-modal-content">
             <h3>إرسال رسالة للمشارك</h3>
             <div class="message-type-btns">
-              <button class="message-type-btn ${type==='text'?'active':''}" onclick="switchMessageType('text', this)">✍️ نصية</button>
-              <button class="message-type-btn ${type==='voice'?'active':''}" onclick="switchMessageType('voice', this)">🎤 صوتية</button>
-              <button class="message-type-btn ${type==='rating'?'active':''}" onclick="switchMessageType('rating', this)">⭐ تقييم</button>
+              <button class="message-type-btn ${type==='text'?'active':''}" onclick="switchMessageType('text')">✍️ نصية</button>
+              <button class="message-type-btn ${type==='voice'?'active':''}" onclick="switchMessageType('voice')">🎤 صوتية</button>
+              <button class="message-type-btn ${type==='rating'?'active':''}" onclick="switchMessageType('rating')">⭐ تقييم</button>
             </div>
             <div id="textMessageDiv" class="${type!=='text'?'hidden':''}">
               <textarea id="messageText" placeholder="اكتب رسالتك هنا..."></textarea>
@@ -1392,16 +1280,16 @@
               </div>
             </div>
             <div class="modal-buttons">
-              <button class="btn btn-primary" id="sendMsgBtn" onclick="sendMessageToParticipant()">إرسال ✅</button>
+              <button class="btn btn-primary" onclick="sendMessageToParticipant()">إرسال</button>
               <button class="btn btn-secondary" onclick="closeMessageModal()">إلغاء</button>
             </div>
           </div>`;
         document.body.appendChild(modal);
       }
 
-      function switchMessageType(type, btn) {
-        document.querySelectorAll("#messageModal .message-type-btn").forEach(b => b.classList.remove("active"));
-        btn.classList.add("active");
+      function switchMessageType(type) {
+        document.querySelectorAll("#messageModal .message-type-btn").forEach(btn => btn.classList.remove("active"));
+        event.target.classList.add("active");
         ["textMessageDiv","voiceMessageDiv","ratingMessageDiv"].forEach(id => document.getElementById(id).classList.add("hidden"));
         if (type === 'text') document.getElementById("textMessageDiv").classList.remove("hidden");
         else if (type === 'voice') document.getElementById("voiceMessageDiv").classList.remove("hidden");
@@ -1438,7 +1326,7 @@
               if (div) div.classList.remove("hidden");
             }
           };
-          adminVoiceRecorder.start(200);
+          adminVoiceRecorder.start(100);
           document.getElementById("voiceRecordBtn").classList.add("hidden");
           document.getElementById("voiceStopBtn").classList.remove("hidden");
           document.getElementById("voiceTimer").classList.remove("hidden");
@@ -1467,17 +1355,10 @@
       async function sendMessageToParticipant() {
         const activeBtn = document.querySelector("#messageModal .message-type-btn.active");
         if (!activeBtn) return;
-
-        // منع الإرسال المتكرر
-        const sendBtn = document.getElementById("sendMsgBtn");
-        if (sendBtn && sendBtn.disabled) return;
-        if (sendBtn) { sendBtn.disabled = true; sendBtn.textContent = '⏳ جاري الإرسال...'; }
-
         let messageType = 'text';
         if (activeBtn.textContent.includes("نصية")) messageType = 'text';
         else if (activeBtn.textContent.includes("صوتية")) messageType = 'voice';
         else if (activeBtn.textContent.includes("تقييم")) messageType = 'rating';
-
         showLoading();
         try {
           let msgData = {
@@ -1488,36 +1369,27 @@
           };
           if (messageType === 'text') {
             const text = document.getElementById("messageText").value.trim();
-            if (!text) { hideLoading(); if (sendBtn) { sendBtn.disabled = false; sendBtn.textContent = 'إرسال ✅'; } alert("الرجاء كتابة رسالة!"); return; }
+            if (!text) { hideLoading(); alert("الرجاء كتابة رسالة!"); return; }
             msgData.message = text;
           } else if (messageType === 'voice') {
-            if (!adminVoiceBlob) { hideLoading(); if (sendBtn) { sendBtn.disabled = false; sendBtn.textContent = 'إرسال ✅'; } alert("الرجاء تسجيل رسالة صوتية أولاً!"); return; }
+            if (!adminVoiceBlob) { hideLoading(); alert("الرجاء تسجيل رسالة صوتية أولاً!"); return; }
             msgData.message = "رسالة صوتية من الاستاذة 🎤";
             msgData.voice_data = await blobToBase64(adminVoiceBlob);
           } else if (messageType === 'rating') {
-            if (selectedRating === 0) { hideLoading(); if (sendBtn) { sendBtn.disabled = false; sendBtn.textContent = 'إرسال ✅'; } alert("الرجاء اختيار تقييم!"); return; }
-            // حذف التقييم القديم لنفس التسجيل أولاً
-            await db.from('messages').delete()
-              .eq('participant_id', currentParticipant.id)
-              .eq('recording_id', currentRecordingForMessage)
-              .eq('message_type', 'rating');
+            if (selectedRating === 0) { hideLoading(); alert("الرجاء اختيار تقييم!"); return; }
+            // حذف التقييم القديم لنفس التسجيل
+            await db.from('messages').delete().eq('participant_id', currentParticipant.id).eq('recording_id', currentRecordingForMessage).eq('message_type', 'rating');
             msgData.message = `تقييمك: ${selectedRating} / 5 نجوم`;
             msgData.rating = selectedRating;
           }
-
           const { error } = await db.from('messages').insert(msgData);
           if (error) throw error;
-
           hideLoading();
           closeMessageModal();
           if (messageType === 'rating') await calculateAndDisplayTotalRating();
           await loadAdminSentMessages();
           alert("تم الإرسال! ✅");
-        } catch(err) {
-          hideLoading();
-          if (sendBtn) { sendBtn.disabled = false; sendBtn.textContent = 'إرسال ✅'; }
-          alert("خطأ: " + err.message);
-        }
+        } catch(err) { hideLoading(); alert("خطأ: " + err.message); }
       }
 
       function closeMessageModal() {
@@ -1530,7 +1402,6 @@
       }
 
       function confirmDeleteRecordingAdmin(recordingId) {
-        document.querySelectorAll(".confirm-dialog").forEach(d => d.remove());
         const dialog = document.createElement("div");
         dialog.className = "confirm-dialog";
         dialog.innerHTML = `
@@ -1560,9 +1431,9 @@
       }
 
       function confirmDeleteAccount() {
-        document.querySelectorAll(".confirm-dialog").forEach(d => d.remove());
         const dialog = document.createElement("div");
         dialog.className = "confirm-dialog";
+        dialog.id = "deleteAccountDialog";
         dialog.innerHTML = `
           <div class="confirm-content">
             <h3>⚠️ حذف الحساب نهائياً</h3>
@@ -1597,29 +1468,25 @@
         else { content.classList.add("hidden"); toggleText.textContent = "عرض"; }
       }
 
-      async function copyToClipboard(type, e) {
+      async function copyToClipboard(type) {
         const textToCopy = type === 'name' ? currentParticipant.name : currentParticipant.password;
-        const buttonElement = e ? e.target.closest('.copy-btn') : null;
+        const buttonElement = event.target.closest('.copy-btn');
         try {
           await navigator.clipboard.writeText(textToCopy);
-          if (buttonElement) {
-            const originalHTML = buttonElement.innerHTML;
-            buttonElement.innerHTML = '✅ تم النسخ';
-            buttonElement.classList.add('copied');
-            setTimeout(() => { buttonElement.innerHTML = originalHTML; buttonElement.classList.remove('copied'); }, 2000);
-          }
-        } catch(err) { alert('فشل النسخ: ' + err.message); }
+          const originalHTML = buttonElement.innerHTML;
+          buttonElement.innerHTML = '✅ تم النسخ';
+          buttonElement.classList.add('copied');
+          setTimeout(() => { buttonElement.innerHTML = originalHTML; buttonElement.classList.remove('copied'); }, 2000);
+        } catch(err) { alert('فشل النسخ'); }
       }
 
       // ====== لوحة الترتيب ======
       async function showLeaderboard() {
         showLoading();
-        const { data: participants } = await db.from('participants').select('id, name');
+        const { data: participants } = await db.from('participants').select('*');
         const { data: allRecordings } = await db.from('recordings').select('id, participant_id');
-        const { data: ratings } = await db.from('messages').select('participant_id, recording_id, rating')
-          .eq('message_type', 'rating').not('rating', 'is', null);
+        const { data: ratings } = await db.from('messages').select('participant_id, recording_id, rating').eq('message_type', 'rating').not('rating', 'is', null);
         hideLoading();
-
         const ratingMap = {};
         if (ratings) {
           ratings.forEach(r => {
@@ -1630,7 +1497,6 @@
             }
           });
         }
-
         const ranked = (participants || []).map(p => {
           const recCount = (allRecordings || []).filter(r => r.participant_id === p.id).length;
           const rm = ratingMap[p.id] || { total: 0, ratedSet: new Set() };
@@ -1643,10 +1509,8 @@
           if (!count) return '<span style="color:#bbb;font-size:0.8rem;">لا يوجد تقييم بعد</span>';
           return '⭐'.repeat(Math.floor(rating)) + '☆'.repeat(Math.max(0, 5 - Math.floor(rating)));
         };
-
-        let rowsHtml = ranked.length === 0
-          ? `<div style="text-align:center;padding:30px;color:#aaa;"><div style="font-size:3rem;">🏆</div><p>لا يوجد مشاركون بعد</p></div>`
-          : ranked.map((p, i) => `
+        let rowsHtml = ranked.length === 0 ? `<div style="text-align:center;padding:30px;color:#aaa;"><div style="font-size:3rem;">🏆</div><p>لا يوجد مشاركون بعد</p></div>` :
+          ranked.map((p, i) => `
             <div class="leaderboard-row ${rankClass(i)}" style="animation-delay:${i*0.06}s">
               <div class="rank-badge">${rankEmoji(i)}</div>
               <div class="rank-info">
@@ -1676,11 +1540,185 @@
         modal.addEventListener('click', e => { if (e.target === modal) modal.remove(); });
       }
 
+      // ====== نقل البيانات من Firebase إلى Supabase ======
+      async function checkFirebaseData() {
+        // البانر يظهر دائماً - المستخدم يختار متى يضغطه
+      }
+
+      function migrateLog(msg, color) {
+        const el = document.getElementById('migrateLog');
+        el.style.display = 'block';
+        const div = document.createElement('div');
+        div.style.color = color || '#00ff88';
+        div.textContent = msg;
+        el.appendChild(div);
+        el.scrollTop = el.scrollHeight;
+      }
+
+      async function runMigration() {
+        const btn = document.getElementById('migrateBtn');
+        btn.disabled = true;
+        btn.textContent = '⏳ جاري النقل...';
+        document.getElementById('migrateLog').innerHTML = '';
+
+        try {
+          // انتظر Firebase
+          await new Promise(resolve => {
+            if (window.firebaseReady) { resolve(); return; }
+            const c = setInterval(() => { if (window.firebaseReady) { clearInterval(c); resolve(); } }, 100);
+            setTimeout(() => { clearInterval(c); resolve(); }, 5000);
+          });
+          if (!window.fbDb) { migrateLog('❌ Firebase غير متاح', '#ff4444'); btn.disabled=false; btn.textContent='🔄 حاول مرة أخرى'; return; }
+
+          migrateLog('🗑️ جاري مسح البيانات القديمة من Supabase...', '#ffaa00');
+
+          // مسح كل شي من Supabase أولاً (نظيف من الصفر)
+          await db.from('messages').delete().neq('id', 0);
+          await db.from('recordings').delete().neq('id', 0);
+          await db.from('broadcasts').delete().neq('id', 0);
+          await db.from('participants').delete().neq('id', 0);
+          migrateLog('✅ تم مسح Supabase - البدء بالاستيراد...', '#88ccff');
+
+          migrateLog('⏳ جاري قراءة بيانات Firebase...', '#88ccff');
+          const [pSnap, mSnap, bSnap] = await Promise.all([
+            window.fbGet(window.fbRef(window.fbDb, 'participants')),
+            window.fbGet(window.fbRef(window.fbDb, 'messages')),
+            window.fbGet(window.fbRef(window.fbDb, 'broadcasts'))
+          ]);
+
+          const participants = [], allRecordings = [], messages = [], broadcasts = [];
+
+          if (pSnap.exists()) {
+            pSnap.forEach(child => {
+              const p = child.val();
+              if (!p || !p.name) return;
+              participants.push({ fbId: child.key, name: p.name, password: p.password || '' });
+              // التسجيلات مدمجة داخل المشارك
+              if (p.recordings) {
+                const recs = typeof p.recordings === 'object' && !Array.isArray(p.recordings)
+                  ? Object.values(p.recordings)
+                  : (Array.isArray(p.recordings) ? p.recordings : []);
+                recs.forEach(r => {
+                  if (r && r.data) {
+                    allRecordings.push({
+                      fbId: r.id || (child.key + '_' + Date.now()),
+                      pFbId: child.key,
+                      type: r.type || 'audio',
+                      data: r.data,
+                      timestamp: r.timestamp || new Date().toISOString()
+                    });
+                  }
+                });
+              }
+            });
+          }
+          if (mSnap.exists()) mSnap.forEach(c => { const v = c.val(); if(v) messages.push({ fbId: c.key, ...v }); });
+          if (bSnap.exists()) bSnap.forEach(c => { const v = c.val(); if(v) broadcasts.push({ fbId: c.key, ...v }); });
+
+          migrateLog(`📊 وجدت: ${participants.length} مشارك، ${allRecordings.length} تسجيل، ${messages.length} رسالة، ${broadcasts.length} إعلان`, '#88ccff');
+
+          if (participants.length === 0) {
+            migrateLog('⚠️ لا توجد بيانات في Firebase للنقل!', '#ffaa00');
+            btn.disabled = false;
+            btn.textContent = '🔄 حاول مرة أخرى';
+            return;
+          }
+
+          // ===== نقل المشاركين =====
+          migrateLog('👥 جاري نقل المشاركين...', '#88ccff');
+          const pidMap = {}; // fbId → supabase id
+          for (const p of participants) {
+            const { data: np, error } = await db.from('participants')
+              .insert({ name: p.name, password: p.password })
+              .select('id').single();
+            if (!error && np) {
+              pidMap[p.fbId] = np.id;
+              migrateLog(`  ✅ ${p.name}`);
+            } else {
+              migrateLog(`  ❌ ${p.name}: ${error?.message}`, '#ff4444');
+            }
+          }
+
+          // ===== نقل التسجيلات =====
+          migrateLog(`🎤 جاري نقل ${allRecordings.length} تسجيل...`, '#88ccff');
+          const ridMap = {}; // fbId → supabase id
+          let rCount = 0;
+          for (const r of allRecordings) {
+            const pid = pidMap[r.pFbId];
+            if (!pid) continue;
+            const { data: nr, error } = await db.from('recordings')
+              .insert({ participant_id: pid, type: r.type, data: r.data })
+              .select('id').single();
+            if (!error && nr) {
+              ridMap[r.fbId] = nr.id;
+              rCount++;
+              if (rCount % 5 === 0) migrateLog(`  ⏳ ${rCount}/${allRecordings.length} تسجيل...`);
+            } else {
+              migrateLog(`  ❌ تسجيل: ${error?.message}`, '#ff4444');
+            }
+          }
+          migrateLog(`  ✅ ${rCount} تسجيل تم نقله`);
+
+          // ===== نقل الرسائل =====
+          migrateLog(`📬 جاري نقل ${messages.length} رسالة...`, '#88ccff');
+          let mCount = 0;
+          for (const m of messages) {
+            const pid = pidMap[String(m.participantId)];
+            if (!pid) continue;
+            const recId = ridMap[String(m.recordingId)] || null;
+            const mData = {
+              participant_id: pid,
+              recording_id: recId,
+              message: m.message || '',
+              message_type: m.messageType || 'text',
+              read: m.read || false
+            };
+            if (m.voiceData) mData.voice_data = m.voiceData;
+            if (m.rating) mData.rating = parseFloat(m.rating);
+            const { error } = await db.from('messages').insert(mData);
+            if (!error) mCount++;
+          }
+          migrateLog(`  ✅ ${mCount} رسالة تم نقلها`);
+
+          // ===== نقل الإعلانات =====
+          migrateLog(`📢 جاري نقل ${broadcasts.length} إعلان...`, '#88ccff');
+          let bCount = 0;
+          for (const b of broadcasts) {
+            const bData = { message: b.message || '', type: b.type || 'text' };
+            if (b.voiceData) bData.voice_data = b.voiceData;
+            const { error } = await db.from('broadcasts').insert(bData);
+            if (!error) bCount++;
+          }
+          migrateLog(`  ✅ ${bCount} إعلان تم نقله`);
+
+          // ===== انتهى =====
+          migrateLog('', '#fff');
+          migrateLog(`🎉🎉 تم نقل كل البيانات بنجاح! 🎉🎉`, '#ffd700');
+          migrateLog(`👥 ${Object.keys(pidMap).length} مشارك | 🎤 ${rCount} تسجيل | 📬 ${mCount} رسالة | 📢 ${bCount} إعلان`, '#00ff88');
+          migrateLog('الآن يمكن لجميع المشاركين تسجيل الدخول بنفس اسمهم وكلمة مرورهم القديمة ✅', '#00ff88');
+
+          localStorage.setItem('migrationDone', 'true');
+          btn.textContent = '✅ تم النقل!';
+
+          setTimeout(() => {
+            document.getElementById('migrationBanner').classList.add('hidden');
+            loadGlobalBroadcasts();
+          }, 4000);
+
+        } catch(err) {
+          migrateLog('❌ خطأ: ' + err.message, '#ff4444');
+          console.error(err);
+          btn.disabled = false;
+          btn.textContent = '🔄 حاول مرة أخرى';
+        }
+      }
+
       // ====== تشغيل التطبيق ======
       window.onload = function() {
         loadViewedRecordings();
         loadCurrentSession();
         loadGlobalBroadcasts();
+        checkFirebaseData();
       };
     </script>
   </body>
