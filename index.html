@@ -53,6 +53,7 @@
       .btn-secondary:hover { background: var(--medium-green); transform: translateY(-2px); }
       .btn-danger { background: #dc2626; color: white; }
       .btn-danger:hover { background: #b91c1c; }
+      .btn:disabled { opacity: 0.6; cursor: not-allowed; transform: none !important; }
       .big-icon-btn { font-size: 1.3rem; padding: 15px; margin: 6px 0; }
       .stats-container { display: grid; grid-template-columns: repeat(auto-fit, minmax(100px, 1fr)); gap: 8px; margin-bottom: 12px; }
       .stat-card { background: linear-gradient(135deg, var(--primary-gold), var(--accent-gold)); padding: 10px; border-radius: 10px; text-align: center; box-shadow: 0 3px 12px rgba(212,175,55,0.3); }
@@ -98,11 +99,21 @@
       .empty-state { text-align: center; padding: 25px 15px; color: #999; }
       .empty-state .icon { font-size: 3rem; margin-bottom: 10px; opacity: 0.5; }
       .empty-state p { font-size: 0.95rem; }
-      .loading-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.7); display: flex; align-items: center; justify-content: center; z-index: 3000; }
+
+      /* ===== Loading مُحسَّن - بدون overlay يمنع الضغط ===== */
+      .loading-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); display: flex; align-items: center; justify-content: center; z-index: 3000; pointer-events: none; }
       .spinner { border: 3px solid rgba(255,255,255,0.3); border-top: 3px solid var(--primary-gold); border-radius: 50%; width: 40px; height: 40px; animation: spin 1s linear infinite; margin: 0 auto 10px; }
       @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
-      .loading-spinner { text-align: center; color: white; }
+      .loading-spinner { text-align: center; color: white; background: rgba(0,0,0,0.7); padding: 20px 30px; border-radius: 12px; pointer-events: none; }
       .loading-spinner p { font-size: 0.95rem; font-weight: 600; }
+
+      /* ===== مشغّل تلقائي خفيف ===== */
+      .auto-player-wrap { margin-top: 8px; background: #f8fafc; border-radius: 8px; padding: 6px; border: 1px solid #e2e8f0; }
+      .auto-player-wrap audio, .auto-player-wrap video { width: 100%; border-radius: 6px; display: block; }
+      .player-loading { display: flex; align-items: center; gap: 8px; padding: 10px; color: #888; font-size: 0.85rem; }
+      .mini-spinner { border: 2px solid rgba(0,0,0,0.1); border-top: 2px solid var(--primary-gold); border-radius: 50%; width: 18px; height: 18px; animation: spin 0.8s linear infinite; flex-shrink: 0; }
+      .player-error { color: #dc2626; font-size: 0.82rem; padding: 8px; text-align: center; }
+
       .message-modal { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.7); display: flex; align-items: center; justify-content: center; z-index: 2000; padding: 15px; }
       .message-modal-content { background: white; padding: 20px; border-radius: 12px; max-width: 450px; width: 100%; max-height: 80vh; overflow-y: auto; }
       .message-modal h3 { color: var(--dark-green); font-size: 1.2rem; margin-bottom: 12px; }
@@ -122,7 +133,6 @@
       .message-recording audio { width: 100%; margin-top: 6px; }
       .linked-recording { background: linear-gradient(135deg, #e8f5e9, #f0fff4); padding: 12px; border-radius: 8px; margin-top: 10px; border: 2px solid #4caf50; }
       .linked-recording p { color: var(--dark-green); font-weight: 700; margin-bottom: 8px; font-size: 0.9rem; }
-      .linked-recording audio, .linked-recording video { width: 100%; border-radius: 6px; }
       .rating-container { background: linear-gradient(to bottom, #fff9e6, white); padding: 15px; border-radius: 8px; border: 2px solid var(--primary-gold); text-align: center; }
       .stars-display { display: flex; justify-content: center; align-items: center; gap: 8px; margin: 15px 0; font-size: 2.5rem; }
       .star { cursor: pointer; transition: all 0.2s ease; color: #d1d5db; }
@@ -193,40 +203,6 @@
       .confirm-content p { font-size: 0.95rem; margin-bottom: 20px; line-height: 1.5; }
       .confirm-buttons { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
 
-      /* ===== مشغّل الصوت/الفيديو التلقائي ===== */
-      .auto-player-wrap {
-        margin-top: 8px;
-        background: #f8fafc;
-        border-radius: 8px;
-        padding: 6px;
-        border: 1px solid #e2e8f0;
-        position: relative;
-      }
-      .auto-player-wrap audio,
-      .auto-player-wrap video {
-        width: 100%;
-        border-radius: 6px;
-        display: block;
-      }
-      .player-loading {
-        display: flex;
-        align-items: center;
-        gap: 8px;
-        padding: 10px;
-        color: #888;
-        font-size: 0.85rem;
-      }
-      .mini-spinner {
-        border: 2px solid rgba(0,0,0,0.1);
-        border-top: 2px solid var(--primary-gold);
-        border-radius: 50%;
-        width: 18px;
-        height: 18px;
-        animation: spin 0.8s linear infinite;
-        flex-shrink: 0;
-      }
-      .player-error { color: #dc2626; font-size: 0.82rem; padding: 8px; text-align: center; }
-
       @media (max-width: 768px) {
         h1 { font-size: 1.3rem; }
         .card { padding: 12px 10px; }
@@ -252,9 +228,9 @@
 
       <!-- الصفحة الرئيسية -->
       <div id="homePage" class="card">
-        <button class="btn btn-primary big-icon-btn" onclick="showRegisterPage()">🆕 تسجيل جديد</button>
-        <button class="btn btn-secondary big-icon-btn" onclick="showLoginPage()">🔑 دخول</button>
-        <button class="btn btn-secondary" onclick="showAdminLogin()" style="margin-top: 20px;">👩‍🏫 دخول الاستاذة</button>
+        <button class="btn btn-primary big-icon-btn" id="btnRegister" onclick="showRegisterPage()">🆕 تسجيل جديد</button>
+        <button class="btn btn-secondary big-icon-btn" id="btnLogin" onclick="showLoginPage()">🔑 دخول</button>
+        <button class="btn btn-secondary" id="btnAdmin" onclick="showAdminLogin()" style="margin-top: 20px;">👩‍🏫 دخول الاستاذة</button>
       </div>
 
       <!-- صفحة التسجيل -->
@@ -263,16 +239,16 @@
         <form id="registerForm">
           <div class="form-group">
             <label>الاسم</label>
-            <input type="text" id="participantName" required placeholder="اكتب اسمك" />
+            <input type="text" id="participantName" required placeholder="اكتب اسمك" autocomplete="name" />
           </div>
           <div class="form-group">
             <label>كلمة المرور</label>
             <div class="password-input-wrapper">
-              <input type="password" id="password" required placeholder="اختر كلمة مرور" />
+              <input type="password" id="password" required placeholder="اختر كلمة مرور" autocomplete="new-password" />
               <span class="password-toggle" onclick="togglePassword('password')">👁️</span>
             </div>
           </div>
-          <button type="submit" class="btn btn-primary">تسجيل 🌟</button>
+          <button type="submit" class="btn btn-primary" id="registerSubmitBtn">تسجيل 🌟</button>
         </form>
         <button class="btn btn-secondary" onclick="showHomePage()">رجوع</button>
       </div>
@@ -284,16 +260,16 @@
         <form id="loginForm">
           <div class="form-group">
             <label>الاسم</label>
-            <input type="text" id="loginName" required placeholder="اسمك" />
+            <input type="text" id="loginName" required placeholder="اسمك" autocomplete="username" />
           </div>
           <div class="form-group">
             <label>كلمة المرور</label>
             <div class="password-input-wrapper">
-              <input type="password" id="loginPassword" required placeholder="كلمة المرور" />
+              <input type="password" id="loginPassword" required placeholder="كلمة المرور" autocomplete="current-password" />
               <span class="password-toggle" onclick="togglePassword('loginPassword')">👁️</span>
             </div>
           </div>
-          <button type="submit" class="btn btn-primary">دخول 🔓</button>
+          <button type="submit" class="btn btn-primary" id="loginSubmitBtn">دخول 🔓</button>
         </form>
         <button class="btn btn-secondary" onclick="showHomePage()">رجوع</button>
       </div>
@@ -306,7 +282,7 @@
           <div class="form-group">
             <label>كلمة المرور</label>
             <div class="password-input-wrapper">
-              <input type="password" id="adminPassword" required placeholder="كلمة المرور" />
+              <input type="password" id="adminPassword" required placeholder="كلمة المرور" autocomplete="current-password" />
               <span class="password-toggle" onclick="togglePassword('adminPassword')">👁️</span>
             </div>
           </div>
@@ -431,12 +407,30 @@
     <!-- Supabase SDK -->
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <script>
+      // =============================================
       // ====== إعداد Supabase ======
+      // =============================================
       const SUPABASE_URL = 'https://jimrkqewuafaoxmpmhbp.supabase.co';
       const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImppbXJrcWV3dWFmYW94bXBtaGJwIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzE2ODM1NzUsImV4cCI6MjA4NzI1OTU3NX0.Qihj4BnB0FErseE0j8Gq8ydbOf8Bu7lW2sRTfTudZ7Q';
-      const db = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+      const db = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY, {
+        // ⚡ تحسين: تقليل retry وزيادة سرعة الاستجابة
+        global: { fetch: (url, opts) => fetch(url, { ...opts, keepalive: true }) }
+      });
 
+      // =============================================
+      // ====== كاش مركزي لتسريع كل شيء ======
+      // =============================================
+      const _cache = {
+        participants: null,         // كاش المشاركين
+        recordings: {},             // كاش التسجيلات: { id: objectURL }
+        voiceMsgs: {},              // كاش الرسائل الصوتية: { id: objectURL }
+        broadcasts: null,           // كاش الإعلانات
+        objectUrls: new Map(),      // كاش ObjectURLs
+      };
+
+      // =============================================
       // ====== متغيرات عامة ======
+      // =============================================
       let currentUser = null;
       let isAdmin = false;
       let mediaRecorder = null;
@@ -457,14 +451,16 @@
       let broadcastVoiceChunks = [];
       let broadcastVoiceTimerInterval = null;
       let broadcastVoiceBlob = null;
+      // ⚡ قائمة pending loads - تمنع تحميل نفس التسجيل مرتين
+      const _pendingLoads = new Set();
 
-      // ====== كاش ObjectURLs لتجنب إعادة التحويل ======
-      const _objectUrlCache = new Map();
-
+      // =============================================
+      // ====== تحويل base64 → ObjectURL (مع كاش) ======
+      // =============================================
       function dataUriToObjectUrl(dataUri) {
         if (!dataUri) return '';
         if (!dataUri.startsWith('data:')) return dataUri;
-        if (_objectUrlCache.has(dataUri)) return _objectUrlCache.get(dataUri);
+        if (_cache.objectUrls.has(dataUri)) return _cache.objectUrls.get(dataUri);
         try {
           const commaIndex = dataUri.indexOf(',');
           if (commaIndex === -1) return dataUri;
@@ -477,127 +473,128 @@
           for (let i = 0; i < binary.length; i++) bytes[i] = binary.charCodeAt(i);
           const blob = new Blob([bytes], { type: mimeType });
           const url = URL.createObjectURL(blob);
-          _objectUrlCache.set(dataUri, url);
+          _cache.objectUrls.set(dataUri, url);
           return url;
-        } catch(e) {
-          console.error('خطأ في تحويل base64:', e);
-          return '';
-        }
+        } catch(e) { console.error('خطأ في تحويل base64:', e); return ''; }
       }
 
-      // ====== إصلاح مدة الصوت ======
       function fixDuration(el) {
         if (!el || isFinite(el.duration)) return;
         try {
           el.currentTime = 1e101;
-          el.addEventListener('timeupdate', function h() {
-            el.removeEventListener('timeupdate', h);
-            el.currentTime = 0;
-          }, { once: true });
+          el.addEventListener('timeupdate', function h() { el.removeEventListener('timeupdate', h); el.currentTime = 0; }, { once: true });
         } catch(e) {}
       }
 
-      // ====== إنشاء عنصر وسائط من data URI ======
-      function createMediaElement(data, type) {
-        if (!data) return '<p style="color:#999;font-size:0.85rem;text-align:center;padding:10px;">⚠️ لا توجد بيانات</p>';
-        const url = dataUriToObjectUrl(data);
-        if (!url) return '<p style="color:#999;font-size:0.85rem;text-align:center;padding:10px;">⚠️ تعذّر تحميل الملف</p>';
-        if (type === 'video') {
-          return `<video controls src="${url}" style="width:100%;border-radius:8px;background:#000;max-height:300px;"
-            onloadedmetadata="fixDuration(this)" preload="metadata"></video>`;
-        } else {
-          return `<audio controls src="${url}" style="width:100%;"
-            onloadedmetadata="fixDuration(this)" preload="metadata"></audio>`;
-        }
-      }
-
-      // ====== تحميل تسجيل تلقائي (يُعرض مباشرة بدون ضغط) ======
-      // يبني بطاقة مع مؤشر تحميل ثم يجلب البيانات فوراً بشكل غير متزامن
+      // =============================================
+      // ====== مشغّل تلقائي بدون ضغط ======
+      // =============================================
       function createAutoPlayer(recId, type) {
-        const wrapperId = 'aplayer_' + recId;
-        // نرجع HTML الهيكل وندفع الجلب بعدها
-        return `<div class="auto-player-wrap" id="${wrapperId}">
+        // إذا محمّل بالكاش، ارجع مباشرة
+        if (_cache.recordings[recId]) {
+          const url = _cache.recordings[recId];
+          if (type === 'video') {
+            return `<video controls src="${url}" style="width:100%;border-radius:6px;background:#000;max-height:280px;" onloadedmetadata="fixDuration(this)" preload="metadata"></video>`;
+          }
+          return `<audio controls src="${url}" style="width:100%;" onloadedmetadata="fixDuration(this)" preload="metadata"></audio>`;
+        }
+        return `<div class="auto-player-wrap" id="aplayer_${recId}">
           <div class="player-loading"><div class="mini-spinner"></div><span>جاري التحميل...</span></div>
         </div>`;
       }
 
-      // قائمة لتتبع الأحمال المعلّقة
-      const _pendingLoads = new Set();
-
-      // يُطلق بعد رسم الـ HTML مباشرة
       function scheduleAutoLoad(recId, type) {
-        if (_pendingLoads.has(recId)) return;
+        if (_pendingLoads.has(recId) || _cache.recordings[recId]) return;
         _pendingLoads.add(recId);
-        // تأخير بسيط جداً لضمان أن الـ DOM جاهز
-        setTimeout(() => autoLoadPlayer(recId, type), 30);
+        // ⚡ requestIdleCallback لعدم تعطيل الـ UI
+        const load = () => autoLoadPlayer(recId, type);
+        if (window.requestIdleCallback) requestIdleCallback(load, { timeout: 2000 });
+        else setTimeout(load, 50);
       }
 
       async function autoLoadPlayer(recId, type) {
         const container = document.getElementById('aplayer_' + recId);
-        if (!container) { _pendingLoads.delete(recId); return; }
-        try {
-          const { data: rec, error } = await db
-            .from('recordings')
-            .select('data, type')
-            .eq('id', recId)
-            .single();
-
+        // إذا موجود في الكاش، استخدمه مباشرة
+        if (_cache.recordings[recId]) {
           _pendingLoads.delete(recId);
-
+          if (container) renderPlayer(container, _cache.recordings[recId], type);
+          return;
+        }
+        try {
+          const { data: rec, error } = await db.from('recordings').select('data, type').eq('id', recId).single();
+          _pendingLoads.delete(recId);
           if (error || !rec || !rec.data) {
-            container.innerHTML = '<p class="player-error">⚠️ تعذّر تحميل التسجيل</p>';
+            if (container) container.innerHTML = '<p class="player-error">⚠️ تعذّر تحميل التسجيل</p>';
             return;
           }
           const url = dataUriToObjectUrl(rec.data);
-          if (!url) {
-            container.innerHTML = '<p class="player-error">⚠️ تعذّر تحميل التسجيل</p>';
-            return;
-          }
+          if (!url) { if (container) container.innerHTML = '<p class="player-error">⚠️ تعذّر تحميل التسجيل</p>'; return; }
+          // خزّن في الكاش
+          _cache.recordings[recId] = url;
           const actualType = rec.type || type;
-          if (actualType === 'video') {
-            container.innerHTML = `<video controls src="${url}"
-              style="width:100%;border-radius:6px;background:#000;max-height:280px;"
-              onloadedmetadata="fixDuration(this)" preload="metadata"></video>`;
-          } else {
-            container.innerHTML = `<audio controls src="${url}"
-              style="width:100%;" onloadedmetadata="fixDuration(this)" preload="metadata"></audio>`;
-          }
+          // ابحث عن كل containers بهذا الـ id (قد يكون مكرراً في الصفحة)
+          document.querySelectorAll('#aplayer_' + recId).forEach(c => renderPlayer(c, url, actualType));
         } catch(e) {
           _pendingLoads.delete(recId);
-          if (container) container.innerHTML = '<p class="player-error">⚠️ خطأ في التحميل</p>';
+          const c = document.getElementById('aplayer_' + recId);
+          if (c) c.innerHTML = '<p class="player-error">⚠️ خطأ في التحميل</p>';
         }
       }
 
-      // ====== تحميل رسالة صوتية تلقائي ======
+      function renderPlayer(container, url, type) {
+        if (type === 'video') {
+          container.innerHTML = `<video controls src="${url}" style="width:100%;border-radius:6px;background:#000;max-height:280px;" onloadedmetadata="fixDuration(this)" preload="metadata"></video>`;
+        } else {
+          container.innerHTML = `<audio controls src="${url}" style="width:100%;" onloadedmetadata="fixDuration(this)" preload="metadata"></audio>`;
+        }
+        // أزل الـ class و style الزائدة
+        container.style.background = 'none';
+        container.style.border = 'none';
+        container.style.padding = '0';
+      }
+
+      // ====== مشغّل رسائل صوتية ======
       function createVoiceMsgPlayer(msgId, prefix) {
         const wrapperId = prefix + '_' + msgId;
+        if (_cache.voiceMsgs[msgId]) {
+          return `<audio controls src="${_cache.voiceMsgs[msgId]}" style="width:100%;" onloadedmetadata="fixDuration(this)" preload="metadata"></audio>`;
+        }
         return `<div class="auto-player-wrap" id="${wrapperId}">
           <div class="player-loading"><div class="mini-spinner"></div><span>جاري التحميل...</span></div>
         </div>`;
       }
 
       function scheduleVoiceMsgLoad(msgId, prefix) {
-        setTimeout(() => autoLoadVoiceMsg(msgId, prefix), 30);
+        if (_cache.voiceMsgs[msgId]) return;
+        setTimeout(() => autoLoadVoiceMsg(msgId, prefix), 50);
       }
 
       async function autoLoadVoiceMsg(msgId, prefix) {
         const wrapperId = prefix + '_' + msgId;
-        const container = document.getElementById(wrapperId);
-        if (!container) return;
+        if (_cache.voiceMsgs[msgId]) {
+          const c = document.getElementById(wrapperId);
+          if (c) c.outerHTML = `<audio controls src="${_cache.voiceMsgs[msgId]}" style="width:100%;" onloadedmetadata="fixDuration(this)" preload="metadata"></audio>`;
+          return;
+        }
         try {
           const { data: msg } = await db.from('messages').select('voice_data').eq('id', msgId).single();
-          if (!msg || !msg.voice_data) {
-            container.innerHTML = '<p class="player-error">⚠️ لا توجد بيانات</p>';
-            return;
-          }
+          if (!msg || !msg.voice_data) { const c = document.getElementById(wrapperId); if (c) c.innerHTML = '<p class="player-error">⚠️ لا توجد بيانات</p>'; return; }
           const url = dataUriToObjectUrl(msg.voice_data);
-          container.innerHTML = `<audio controls src="${url}" style="width:100%;" onloadedmetadata="fixDuration(this)" preload="metadata"></audio>`;
+          _cache.voiceMsgs[msgId] = url;
+          // ابحث بكل prefixes المحتملة
+          ['vmsgp', 'vmsg'].forEach(pfx => {
+            const c = document.getElementById(pfx + '_' + msgId);
+            if (c) c.outerHTML = `<audio controls src="${url}" style="width:100%;" onloadedmetadata="fixDuration(this)" preload="metadata"></audio>`;
+          });
         } catch(e) {
-          if (container) container.innerHTML = '<p class="player-error">⚠️ خطأ في التحميل</p>';
+          const c = document.getElementById(wrapperId);
+          if (c) c.innerHTML = '<p class="player-error">⚠️ خطأ في التحميل</p>';
         }
       }
 
+      // =============================================
       // ====== مساعدات ======
+      // =============================================
       function blobToBase64(blob) {
         return new Promise((resolve, reject) => {
           const reader = new FileReader();
@@ -619,67 +616,95 @@
         return '';
       }
 
-      // ====== الجلسة ======
-      function saveSession() {
-        const session = isAdmin ? { isAdmin: true } : { isAdmin: false, userId: currentUser.id };
-        localStorage.setItem("currentSession", JSON.stringify(session));
+      function escapeHtml(text) {
+        if (!text) return '';
+        return String(text).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;').replace(/'/g,'&#039;');
       }
 
+      // =============================================
+      // ====== Loading - خفيف لا يمنع التفاعل ======
+      // =============================================
+      let _loadingEl = null;
+      function showLoading() {
+        if (_loadingEl) return;
+        _loadingEl = document.createElement('div');
+        _loadingEl.className = 'loading-overlay';
+        _loadingEl.id = 'loadingOverlay';
+        _loadingEl.innerHTML = `<div class="loading-spinner"><div class="spinner"></div><p>جاري...</p></div>`;
+        document.body.appendChild(_loadingEl);
+      }
+      function hideLoading() {
+        if (_loadingEl) { _loadingEl.remove(); _loadingEl = null; }
+        const o = document.getElementById('loadingOverlay');
+        if (o) o.remove();
+      }
+
+      // =============================================
+      // ====== الجلسة - مُحسَّنة بدون DB query عند الضغط ======
+      // =============================================
+      function saveSession(userData) {
+        try {
+          const session = isAdmin ? { isAdmin: true } : { isAdmin: false, user: userData || currentUser };
+          localStorage.setItem("currentSession", JSON.stringify(session));
+        } catch(e) {}
+      }
+
+      // ⚡ FIX الرئيسي: نخزّن بيانات المشارك كاملة في localStorage
+      // بدل ما نعمل DB query عند كل تحميل
       async function loadCurrentSession() {
         try {
-          const session = localStorage.getItem("currentSession");
-          if (!session) { showHomePage(); return; }
-          const data = JSON.parse(session);
-          if (data.isAdmin) {
+          const sessionStr = localStorage.getItem("currentSession");
+          if (!sessionStr) { showHomePage(); return; }
+          const session = JSON.parse(sessionStr);
+          if (session.isAdmin) {
             isAdmin = true;
             showAdminParticipantsPage();
-          } else {
+          } else if (session.user) {
+            // ⚡ استخدم البيانات المخزنة مباشرة - بدون DB query!
+            currentUser = session.user;
+            showParticipantPage();
+            // في الخلفية: حدّث البيانات من DB (بدون إيقاف الـ UI)
+            refreshUserInBackground(session.user.id);
+          } else if (session.userId) {
+            // للجلسات القديمة
             showLoading();
-            const { data: user, error } = await db.from('participants').select('*').eq('id', data.userId).single();
+            const { data: user, error } = await db.from('participants').select('id, name, password').eq('id', session.userId).single();
             hideLoading();
             if (error || !user) { localStorage.removeItem("currentSession"); showHomePage(); return; }
             currentUser = user;
+            saveSession(user);
             showParticipantPage();
+          } else {
+            localStorage.removeItem("currentSession");
+            showHomePage();
           }
         } catch(e) { localStorage.removeItem("currentSession"); showHomePage(); }
       }
 
-      function loadViewedRecordings() {
+      // ⚡ تحديث بيانات المستخدم في الخلفية (لا يوقف UI)
+      async function refreshUserInBackground(userId) {
         try {
-          const stored = localStorage.getItem('viewedRecordings');
-          if (stored) viewedRecordings = new Set(JSON.parse(stored));
-        } catch(e) { viewedRecordings = new Set(); }
+          const { data: user, error } = await db.from('participants').select('id, name, password').eq('id', userId).single();
+          if (!error && user) { currentUser = user; saveSession(user); }
+        } catch(e) {}
       }
 
-      function saveViewedRecordings() {
-        try { localStorage.setItem('viewedRecordings', JSON.stringify([...viewedRecordings])); } catch(e) {}
+      function loadViewedRecordings() {
+        try { const s = localStorage.getItem('viewedRecordings'); if (s) viewedRecordings = new Set(JSON.parse(s)); }
+        catch(e) { viewedRecordings = new Set(); }
       }
+      function saveViewedRecordings() { try { localStorage.setItem('viewedRecordings', JSON.stringify([...viewedRecordings])); } catch(e) {} }
+      function markRecordingAsViewed(pId, rId) { viewedRecordings.add(`${pId}_${rId}`); saveViewedRecordings(); }
+      function isRecordingViewed(pId, rId) { return viewedRecordings.has(`${pId}_${rId}`); }
 
-      function markRecordingAsViewed(participantId, recordingId) {
-        viewedRecordings.add(`${participantId}_${recordingId}`);
-        saveViewedRecordings();
-      }
-
-      function isRecordingViewed(participantId, recordingId) {
-        return viewedRecordings.has(`${participantId}_${recordingId}`);
-      }
-
-      // ====== Loading ======
-      function showLoading() {
-        if (document.getElementById('loadingOverlay')) return;
-        const overlay = document.createElement('div');
-        overlay.className = 'loading-overlay';
-        overlay.id = 'loadingOverlay';
-        overlay.innerHTML = `<div class="loading-spinner"><div class="spinner"></div><p>جاري التحميل...</p></div>`;
-        document.body.appendChild(overlay);
-      }
-      function hideLoading() { const o = document.getElementById('loadingOverlay'); if (o) o.remove(); }
-
-      // ====== عرض الصفحات ======
+      // =============================================
+      // ====== عرض الصفحات - فوري ======
+      // =============================================
       function hideAllPages() {
         ["homePage","registerPage","loginPage","adminLoginPage","participantPage","adminParticipantsPage","adminRecordingsPage"]
           .forEach(id => { const el = document.getElementById(id); if (el) el.classList.add("hidden"); });
       }
+      // ⚡ FIX: الانتقال فوري - لا DB query عند الضغط على الأزرار
       function showHomePage() { hideAllPages(); document.getElementById("homePage").classList.remove("hidden"); }
       function showRegisterPage() { hideAllPages(); document.getElementById("registerPage").classList.remove("hidden"); }
       function showLoginPage() { hideAllPages(); document.getElementById("loginPage").classList.remove("hidden"); }
@@ -697,6 +722,7 @@
       async function showAdminParticipantsPage() {
         hideAllPages();
         document.getElementById("adminParticipantsPage").classList.remove("hidden");
+        // ⚡ تحميل متوازي
         await Promise.all([loadParticipants(), loadAdminBroadcasts()]);
       }
 
@@ -714,24 +740,26 @@
         }
         const badge = document.getElementById("totalRatingBadge");
         if (badge) badge.style.display = 'none';
+        // ⚡ تحميل متوازي
         await Promise.all([loadParticipantRecordingsAndRating(), loadAdminSentMessages()]);
       }
 
+      // =============================================
       // ====== تحميل تسجيلات المشارك (للاستاذة) ======
+      // =============================================
       async function loadParticipantRecordingsAndRating() {
         const listDiv = document.getElementById("adminRecordingsList");
         if (!listDiv || !currentParticipant) return;
         listDiv.innerHTML = '<div class="empty-state"><div class="icon">⏳</div><p>جاري التحميل...</p></div>';
         try {
+          // ⚡ جلب بدون data (الـ data تُجلب لاحقاً عند الحاجة)
           const [recResult, ratingResult] = await Promise.all([
             db.from('recordings').select('id, type, created_at').eq('participant_id', currentParticipant.id).order('created_at', { ascending: true }),
             db.from('messages').select('rating, recording_id').eq('participant_id', currentParticipant.id).eq('message_type', 'rating').not('rating', 'is', null)
           ]);
 
-          // تقييمات
           const ratings = ratingResult.data || [];
-          let total = 0;
-          const ratedSet = new Set();
+          let total = 0; const ratedSet = new Set();
           ratings.forEach(r => { if (!ratedSet.has(r.recording_id)) { total += r.rating; ratedSet.add(r.recording_id); } });
           const badge = document.getElementById("totalRatingBadge");
           document.getElementById("totalRatingValue").textContent = total.toFixed(1);
@@ -748,7 +776,6 @@
           const seenIds = new Set();
           const unique = recordings.filter(r => { if (seenIds.has(r.id)) return false; seenIds.add(r.id); markRecordingAsViewed(currentParticipant.id, r.id); return true; });
 
-          // رسم الهيكل مع مشغّلات التحميل التلقائي
           listDiv.innerHTML = unique.map((rec, i) => `
             <div class="recording-item" data-rec-id="${rec.id}">
               <div class="three-dots" onclick="showAdminRecordingMenu(event, ${rec.id})">⋮</div>
@@ -759,8 +786,8 @@
               ${createAutoPlayer(rec.id, rec.type)}
             </div>`).join('');
 
-          // بدء التحميل التلقائي لكل تسجيل
-          unique.forEach(rec => scheduleAutoLoad(rec.id, rec.type));
+          // ⚡ تحميل تسلسلي (واحد واحد) لتجنب إغراق الـ network
+          loadPlayersSequentially(unique.map(r => ({ id: r.id, type: r.type })));
 
         } catch(err) {
           console.error('خطأ:', err);
@@ -768,9 +795,16 @@
         }
       }
 
-      async function loadParticipantRecordings() {
-        await loadParticipantRecordingsAndRating();
+      // ⚡ تحميل تسلسلي - يمنع إغراق الشبكة
+      async function loadPlayersSequentially(items) {
+        for (const item of items) {
+          if (!_cache.recordings[item.id] && document.getElementById('aplayer_' + item.id)) {
+            await autoLoadPlayer(item.id, item.type);
+          }
+        }
       }
+
+      async function loadParticipantRecordings() { await loadParticipantRecordingsAndRating(); }
 
       function backToParticipants() { currentParticipant = null; showAdminParticipantsPage(); }
 
@@ -804,30 +838,43 @@
         else { input.type = "password"; icon.textContent = "👁️"; }
       }
 
+      // =============================================
       // ====== الإعلانات العامة ======
+      // =============================================
       async function loadGlobalBroadcasts() {
         const bar = document.getElementById("globalBroadcastsBar");
         if (!bar) return;
+        // ⚡ استخدم الكاش
+        if (_cache.broadcasts) { renderGlobalBroadcasts(_cache.broadcasts); return; }
         try {
-          const { data, error } = await db.from('broadcasts').select('*').order('created_at', { ascending: false });
-          if (error || !data || data.length === 0) { bar.innerHTML = ''; return; }
-          bar.innerHTML = data.map(b => `
-            <div class="broadcast-banner" style="margin-bottom:8px;">
-              <div style="display:flex;align-items:center;gap:8px;margin-bottom:6px;">
-                <span style="font-size:1.3rem;">📢</span>
-                <span style="color:var(--dark-green);font-weight:700;font-size:0.95rem;">إعلان من الاستاذة</span>
-                <span style="color:#888;font-size:0.75rem;margin-right:auto;">${new Date(b.created_at).toLocaleDateString("ar-SA")}</span>
-              </div>
-              <div style="color:var(--text-dark);font-size:0.95rem;line-height:1.7;">${escapeHtml(b.message || '')}</div>
-              ${b.type === 'voice' && b.voice_data ? createMediaElement(b.voice_data, 'audio') : ''}
-            </div>`).join("");
-        } catch(e) { console.error('خطأ في الإعلانات:', e); }
+          const { data, error } = await db.from('broadcasts').select('id, message, type, voice_data, created_at').order('created_at', { ascending: false });
+          if (error) return;
+          _cache.broadcasts = data || [];
+          renderGlobalBroadcasts(_cache.broadcasts);
+        } catch(e) {}
+      }
+
+      function renderGlobalBroadcasts(data) {
+        const bar = document.getElementById("globalBroadcastsBar");
+        if (!bar || !data || data.length === 0) { if(bar) bar.innerHTML = ''; return; }
+        bar.innerHTML = data.map(b => `
+          <div class="broadcast-banner" style="margin-bottom:8px;">
+            <div style="display:flex;align-items:center;gap:8px;margin-bottom:6px;">
+              <span style="font-size:1.3rem;">📢</span>
+              <span style="color:var(--dark-green);font-weight:700;font-size:0.95rem;">إعلان من الاستاذة</span>
+              <span style="color:#888;font-size:0.75rem;margin-right:auto;">${new Date(b.created_at).toLocaleDateString("ar-SA")}</span>
+            </div>
+            <div style="color:var(--text-dark);font-size:0.95rem;line-height:1.7;">${escapeHtml(b.message || '')}</div>
+            ${b.type === 'voice' && b.voice_data ? `<audio controls src="${dataUriToObjectUrl(b.voice_data)}" style="width:100%;margin-top:8px;" preload="metadata"></audio>` : ''}
+          </div>`).join("");
       }
 
       async function loadAdminBroadcasts() {
         const div = document.getElementById("adminBroadcastsList");
+        if (!div) return;
         try {
-          const { data, error } = await db.from('broadcasts').select('*').order('created_at', { ascending: false });
+          const { data, error } = await db.from('broadcasts').select('id, message, type, voice_data, created_at').order('created_at', { ascending: false });
+          _cache.broadcasts = data || [];
           if (error || !data || data.length === 0) { div.innerHTML = ''; return; }
           let html = `<h3 style="color:var(--dark-green);margin-bottom:8px;font-size:1rem;">📢 الإعلانات العامة الحالية</h3>`;
           for (const b of data) {
@@ -836,12 +883,12 @@
               <div class="broadcast-icon">📢</div>
               <div class="broadcast-title">إعلان عام</div>
               <div class="broadcast-text">${escapeHtml(b.message || '')}</div>
-              ${b.type === 'voice' && b.voice_data ? createMediaElement(b.voice_data, 'audio') : ''}
+              ${b.type === 'voice' && b.voice_data ? `<audio controls src="${dataUriToObjectUrl(b.voice_data)}" style="width:100%;margin-top:8px;" preload="metadata"></audio>` : ''}
               <div style="color:#888;font-size:0.78rem;margin-top:6px;">${new Date(b.created_at).toLocaleString("ar-SA")}</div>
             </div>`;
           }
           div.innerHTML = html;
-        } catch(e) { console.error('خطأ في الإعلانات:', e); }
+        } catch(e) {}
       }
 
       async function deleteBroadcast(id) {
@@ -849,6 +896,7 @@
         showLoading();
         try {
           await db.from('broadcasts').delete().eq('id', id);
+          _cache.broadcasts = null; // أعد تعيين الكاش
           hideLoading();
           await Promise.all([loadAdminBroadcasts(), loadGlobalBroadcasts()]);
         } catch(e) { hideLoading(); alert("خطأ: " + e.message); }
@@ -897,10 +945,8 @@
             if (broadcastVoiceChunks.length > 0) {
               broadcastVoiceBlob = new Blob(broadcastVoiceChunks, { type: broadcastVoiceRecorder.mimeType || 'audio/webm' });
               const url = URL.createObjectURL(broadcastVoiceBlob);
-              const preview = document.getElementById("bVoicePreview");
-              if (preview) preview.src = url;
-              const div = document.getElementById("bVoicePreviewDiv");
-              if (div) div.classList.remove("hidden");
+              const preview = document.getElementById("bVoicePreview"); if (preview) preview.src = url;
+              const div = document.getElementById("bVoicePreviewDiv"); if (div) div.classList.remove("hidden");
             }
           };
           broadcastVoiceRecorder.start(100);
@@ -918,8 +964,7 @@
 
       function stopBroadcastVoice() {
         if (broadcastVoiceRecorder && broadcastVoiceRecorder.state !== "inactive") {
-          broadcastVoiceRecorder.stop();
-          clearInterval(broadcastVoiceTimerInterval);
+          broadcastVoiceRecorder.stop(); clearInterval(broadcastVoiceTimerInterval);
           document.getElementById("bVoiceRecordBtn").classList.remove("hidden");
           document.getElementById("bVoiceStopBtn").classList.add("hidden");
           document.getElementById("bVoiceTimer").classList.add("hidden");
@@ -943,110 +988,103 @@
           }
           const { error } = await db.from('broadcasts').insert(broadcastData);
           if (error) throw error;
-          hideLoading();
-          closeBroadcastModal();
+          _cache.broadcasts = null;
+          hideLoading(); closeBroadcastModal();
           await Promise.all([loadAdminBroadcasts(), loadGlobalBroadcasts()]);
           alert("تم إرسال الإعلان ✅");
         } catch(e) { hideLoading(); alert("خطأ: " + e.message); }
       }
 
       function closeBroadcastModal() {
-        const modal = document.getElementById("broadcastModal");
-        if (modal) modal.remove();
+        const modal = document.getElementById("broadcastModal"); if (modal) modal.remove();
         broadcastVoiceChunks = []; broadcastVoiceBlob = null;
         if (broadcastVoiceRecorder && broadcastVoiceRecorder.state !== "inactive") { try { broadcastVoiceRecorder.stop(); } catch(e) {} }
         clearInterval(broadcastVoiceTimerInterval);
       }
 
-      // ====== FIX: تسجيل مشارك - مقارنة صحيحة للأسماء ======
+      // =============================================
+      // ====== تسجيل مشارك ======
+      // =============================================
       document.getElementById("registerForm").onsubmit = async function(e) {
         e.preventDefault();
-        // trim لإزالة المسافات الزائدة
         const name = document.getElementById("participantName").value.trim();
         const password = document.getElementById("password").value.trim();
         if (!name || !password) { alert("الرجاء ملء جميع الحقول!"); return; }
+        const btn = document.getElementById("registerSubmitBtn");
+        btn.disabled = true; btn.textContent = "جاري التسجيل...";
         showLoading();
         try {
-          // FIX: مقارنة بدون حساسية للحالة ومع trim
           const { data: existing } = await db.from('participants').select('id').ilike('name', name);
-          if (existing && existing.length > 0) {
-            hideLoading();
-            alert("هذا الاسم مسجل مسبقاً! يرجى اختيار اسم آخر.");
-            return;
-          }
+          if (existing && existing.length > 0) { hideLoading(); btn.disabled=false; btn.textContent="تسجيل 🌟"; alert("هذا الاسم مسجل مسبقاً!"); return; }
           const { data: newUser, error } = await db.from('participants').insert({ name, password }).select().single();
           if (error) throw error;
           currentUser = newUser;
-          saveSession();
-          hideLoading();
+          saveSession(newUser);
+          hideLoading(); btn.disabled=false; btn.textContent="تسجيل 🌟";
           showParticipantPage();
-        } catch(err) { hideLoading(); alert("حدث خطأ: " + err.message); }
+        } catch(err) { hideLoading(); btn.disabled=false; btn.textContent="تسجيل 🌟"; alert("حدث خطأ: " + err.message); }
       };
 
-      // ====== تسجيل دخول - يجيب كل المشاركين ويقارن يدوياً ======
+      // =============================================
+      // ====== تسجيل دخول - مُحسَّن ======
+      // =============================================
       document.getElementById("loginForm").onsubmit = async function(e) {
         e.preventDefault();
         const nameRaw = document.getElementById("loginName").value.trim();
         const passwordRaw = document.getElementById("loginPassword").value;
         if (!nameRaw || !passwordRaw) { alert("الرجاء ملء جميع الحقول!"); return; }
+        const btn = document.getElementById("loginSubmitBtn");
+        btn.disabled = true; btn.textContent = "جاري الدخول...";
         showLoading();
         try {
-          // نجيب كل المشاركين ونقارن يدوياً - يحل مشكلة الحسابات القديمة
-          const { data: allUsers, error } = await db.from('participants').select('*');
-          hideLoading();
-          if (error || !allUsers) { showLoginError("خطأ في الاتصال. حاول مرة أخرى."); return; }
+          // ⚡ استخدم ilike للبحث المباشر في DB
+          const { data: allUsers, error } = await db.from('participants').select('id, name, password');
+          hideLoading(); btn.disabled = false; btn.textContent = "دخول 🔓";
+          if (error || !allUsers) { showLoginError("خطأ في الاتصال."); return; }
 
-          // normalize للمقارنة المرنة (همزات، ة/ه، مسافات زائدة)
           const normalize = str => (str || '').trim()
             .replace(/[\u0622\u0623\u0625]/g, '\u0627')
             .replace(/\u0629/g, '\u0647')
-            .replace(/\s+/g, ' ')
-            .toLowerCase();
+            .replace(/\s+/g, ' ').toLowerCase();
 
           const nameNorm = normalize(nameRaw);
-
-          const user = allUsers.find(u => {
-            const nameMatch = normalize(u.name) === nameNorm;
-            const passMatch = (u.password === passwordRaw) ||
-                              ((u.password || '').trim() === passwordRaw.trim());
-            return nameMatch && passMatch;
-          });
+          const user = allUsers.find(u =>
+            normalize(u.name) === nameNorm &&
+            ((u.password === passwordRaw) || ((u.password || '').trim() === passwordRaw.trim()))
+          );
 
           if (!user) { showLoginError("الاسم أو كلمة المرور خاطئة!"); return; }
-
           currentUser = user;
-          saveSession();
+          saveSession(user);
           showParticipantPage();
         } catch(err) {
-          hideLoading();
+          hideLoading(); btn.disabled = false; btn.textContent = "دخول 🔓";
           showLoginError("حدث خطأ. حاول مرة أخرى.");
         }
       };
 
       function showLoginError(msg) {
         const err = document.getElementById("loginError");
-        err.textContent = msg;
-        err.classList.remove("hidden");
+        err.textContent = msg; err.classList.remove("hidden");
         setTimeout(() => err.classList.add("hidden"), 4000);
       }
 
-      // ====== دخول الاستاذة ======
       document.getElementById("adminLoginForm").onsubmit = function(e) {
         e.preventDefault();
         const password = document.getElementById("adminPassword").value;
         if (password === "Qur@n2025#Admin$Ramadan") {
-          isAdmin = true;
-          saveSession();
+          isAdmin = true; saveSession();
           showAdminParticipantsPage();
         } else {
           const err = document.getElementById("adminError");
-          err.textContent = "كلمة المرور خاطئة!";
-          err.classList.remove("hidden");
+          err.textContent = "كلمة المرور خاطئة!"; err.classList.remove("hidden");
           setTimeout(() => err.classList.add("hidden"), 3000);
         }
       };
 
+      // =============================================
       // ====== التسجيل الصوتي/المرئي ======
+      // =============================================
       function selectType(type, cardElement) {
         recordingType = type;
         document.querySelectorAll(".type-card").forEach(el => el.classList.remove("selected"));
@@ -1070,10 +1108,8 @@
         if (previewStream) {
           previewStream.getTracks().forEach(t => { try { t.stop(); } catch(e) {} });
           previewStream = null;
-          const liveVideo = document.getElementById("liveVideo");
-          if (liveVideo) liveVideo.srcObject = null;
-          const livePreview = document.getElementById("livePreview");
-          if (livePreview) livePreview.classList.add("hidden");
+          const lv = document.getElementById("liveVideo"); if (lv) lv.srcObject = null;
+          const lp = document.getElementById("livePreview"); if (lp) lp.classList.add("hidden");
         }
       }
 
@@ -1116,9 +1152,8 @@
 
       function cancelRecording() {
         if (mediaRecorder && mediaRecorder.state !== "inactive") { try { mediaRecorder.stop(); } catch(e) {} }
-        document.getElementById("livePreview").classList.remove("recording");
-        clearInterval(timerInterval);
-        recordedChunks = [];
+        const lp = document.getElementById("livePreview"); if(lp) lp.classList.remove("recording");
+        clearInterval(timerInterval); recordedChunks = [];
         document.getElementById("recordBtn").classList.remove("hidden");
         document.getElementById("stopBtn").classList.add("hidden");
         document.getElementById("timer").classList.add("hidden");
@@ -1128,7 +1163,7 @@
       }
 
       function showPreview() {
-        if (recordedChunks.length === 0) { alert("لم يتم تسجيل أي بيانات. حاول مرة أخرى."); cancelRecording(); return; }
+        if (recordedChunks.length === 0) { alert("لم يتم تسجيل أي بيانات."); cancelRecording(); return; }
         const mimeType = (mediaRecorder && mediaRecorder.mimeType) ? mediaRecorder.mimeType : (recordingType === "video" ? "video/webm" : "audio/webm");
         const blob = new Blob(recordedChunks, { type: mimeType });
         const url = URL.createObjectURL(blob);
@@ -1137,7 +1172,7 @@
           ? `<video controls src="${url}" style="width:100%;border-radius:8px;"></video>`
           : `<audio controls src="${url}" style="width:100%;"></audio>`;
         document.getElementById("recordingPreview").classList.remove("hidden");
-        document.getElementById("livePreview").classList.remove("recording");
+        const lp = document.getElementById("livePreview"); if(lp) lp.classList.remove("recording");
         document.getElementById("recordBtn").classList.remove("hidden");
         document.getElementById("stopBtn").classList.add("hidden");
         document.getElementById("timer").classList.add("hidden");
@@ -1145,15 +1180,14 @@
       }
 
       async function saveRecording() {
-        if (!recordedChunks || recordedChunks.length === 0) { alert("لا توجد بيانات للحفظ. يرجى التسجيل أولاً."); return; }
+        if (!recordedChunks || recordedChunks.length === 0) { alert("لا توجد بيانات للحفظ."); return; }
         showLoading();
         try {
           const mimeType = (mediaRecorder && mediaRecorder.mimeType) ? mediaRecorder.mimeType : (recordingType === "video" ? "video/webm" : "audio/webm");
-          const chunksCopy = [...recordedChunks];
-          const blob = new Blob(chunksCopy, { type: mimeType });
+          const blob = new Blob([...recordedChunks], { type: mimeType });
           if (blob.size > 8 * 1024 * 1024) { hideLoading(); alert("التسجيل كبير جداً (أكثر من 8MB). يرجى تقليل مدة التسجيل."); return; }
           const base64Data = await blobToBase64(blob);
-          const { data: saved, error } = await db.from('recordings').insert({ participant_id: currentUser.id, type: recordingType, data: base64Data }).select().single();
+          const { data: saved, error } = await db.from('recordings').insert({ participant_id: currentUser.id, type: recordingType, data: base64Data }).select('id, type, created_at').single();
           if (error) throw error;
           hideLoading();
           alert("تم الحفظ بنجاح! ✅");
@@ -1161,31 +1195,30 @@
           document.getElementById("recordingPreview").classList.add("hidden");
           document.getElementById("previewMedia").innerHTML = "";
           document.getElementById("timer").textContent = "00:00";
+          // ⚡ أضف التسجيل للكاش مباشرة
+          _cache.recordings[saved.id] = dataUriToObjectUrl(base64Data);
           await loadMyRecordings();
         } catch(err) { hideLoading(); alert("خطأ في الحفظ: " + err.message); }
       }
 
-      // ====== تحميل تسجيلات المشارك - تلقائي بدون ضغط ======
+      // =============================================
+      // ====== تسجيلات المشارك - تلقائي ======
+      // =============================================
       async function loadMyRecordings() {
         const listDiv = document.getElementById("myRecordingsList");
         if (!listDiv) return;
         listDiv.innerHTML = '<div class="empty-state"><div class="icon">⏳</div><p>جاري التحميل...</p></div>';
         try {
           const { data: recordings, error } = await db
-            .from('recordings')
-            .select('id, type, created_at')
-            .eq('participant_id', currentUser.id)
-            .order('created_at', { ascending: true });
-
+            .from('recordings').select('id, type, created_at')
+            .eq('participant_id', currentUser.id).order('created_at', { ascending: true });
           if (error) throw error;
           if (!recordings || recordings.length === 0) {
             listDiv.innerHTML = '<div class="empty-state"><div class="icon">🎙️</div><p>لا توجد تسجيلات بعد</p></div>';
             return;
           }
-
           const seenIds = new Set();
           const unique = recordings.filter(r => { if (seenIds.has(r.id)) return false; seenIds.add(r.id); return true; });
-
           listDiv.innerHTML = unique.map((rec, i) => `
             <div class="recording-item" data-rec-id="${rec.id}">
               <div class="three-dots" onclick="showRecordingMenu(event, ${rec.id})">⋮</div>
@@ -1196,11 +1229,9 @@
               ${createAutoPlayer(rec.id, rec.type)}
             </div>`).join('');
 
-          // تحميل تلقائي لكل تسجيل بعد رسم الـ HTML
-          unique.forEach(rec => scheduleAutoLoad(rec.id, rec.type));
-
+          // ⚡ تحميل تسلسلي
+          loadPlayersSequentially(unique.map(r => ({ id: r.id, type: r.type })));
         } catch(err) {
-          console.error('خطأ:', err);
           listDiv.innerHTML = '<div class="empty-state"><div class="icon">⚠️</div><p>خطأ في التحميل. حاول مرة أخرى.</p></div>';
         }
       }
@@ -1241,14 +1272,16 @@
         try {
           await db.from('messages').delete().eq('recording_id', recordingId);
           await db.from('recordings').delete().eq('id', recordingId);
+          delete _cache.recordings[recordingId];
           hideLoading(); closeConfirmDialog();
-          await loadMyRecordings();
-          await updateUnreadBadge();
+          await loadMyRecordings(); await updateUnreadBadge();
           alert("تم الحذف بنجاح! ✅");
         } catch(e) { hideLoading(); alert("خطأ في الحذف: " + e.message); }
       }
 
+      // =============================================
       // ====== الرسائل (للمشارك) ======
+      // =============================================
       async function updateUnreadBadge() {
         if (!currentUser) return;
         try {
@@ -1256,7 +1289,7 @@
           const badge = document.getElementById("unreadBadge");
           if (badge) {
             if (count && count > 0) { badge.textContent = count; badge.classList.remove("hidden"); }
-            else { badge.classList.add("hidden"); }
+            else badge.classList.add("hidden");
           }
         } catch(e) {}
       }
@@ -1275,20 +1308,14 @@
         listDiv.innerHTML = '<div class="empty-state"><div class="icon">⏳</div><p>جاري التحميل...</p></div>';
         try {
           const { data: messages, error } = await db
-            .from('messages')
-            .select('id, message, message_type, rating, read, created_at, recording_id')
-            .eq('participant_id', currentUser.id)
-            .order('created_at', { ascending: false });
-
+            .from('messages').select('id, message, message_type, rating, read, created_at, recording_id')
+            .eq('participant_id', currentUser.id).order('created_at', { ascending: false });
           if (error) throw error;
           if (!messages || messages.length === 0) {
             listDiv.innerHTML = '<div class="empty-state"><div class="icon">📭</div><p>لا توجد رسائل</p></div>';
             return;
           }
-
-          const voiceMsgIds = [];
-          const linkedRecIds = [];
-
+          const voiceMsgIds = [], linkedRecIds = [];
           let html = '';
           for (const msg of messages) {
             let typeIcon = msg.message_type === 'voice' ? '🎤' : msg.message_type === 'rating' ? '⭐' : '✉️';
@@ -1298,15 +1325,10 @@
                 <span style="color:#666;font-size:0.75rem;">${new Date(msg.created_at).toLocaleDateString('ar-SA')}</span>
               </div>
               <div class="message-content">${escapeHtml(msg.message || '')}</div>`;
-
             if (msg.message_type === 'voice') {
-              html += `<div class="message-recording">
-                <p style="color:var(--dark-green);font-weight:600;margin-bottom:6px;font-size:0.9rem;">🎤 رسالة صوتية</p>
-                ${createVoiceMsgPlayer(msg.id, 'vmsgp')}
-              </div>`;
+              html += `<div class="message-recording"><p style="color:var(--dark-green);font-weight:600;margin-bottom:6px;font-size:0.9rem;">🎤 رسالة صوتية</p>${createVoiceMsgPlayer(msg.id, 'vmsgp')}</div>`;
               voiceMsgIds.push(msg.id);
             }
-
             if (msg.message_type === 'rating' && msg.rating) {
               html += `<div class="message-rating">
                 <p style="color:var(--dark-green);font-weight:700;margin-bottom:6px;font-size:1rem;">تقييمك</p>
@@ -1314,23 +1336,15 @@
                 <p style="color:var(--dark-green);font-weight:700;font-size:1.3rem;margin-top:6px;">${msg.rating} / 5</p>
               </div>`;
             }
-
             if (msg.recording_id) {
-              html += `<div class="linked-recording">
-                <p>🔗 التسجيل الذي علّقت عليه الاستاذة:</p>
-                ${createAutoPlayer(msg.recording_id, 'audio')}
-              </div>`;
+              html += `<div class="linked-recording"><p>🔗 التسجيل الذي علّقت عليه الاستاذة:</p>${createAutoPlayer(msg.recording_id, 'audio')}</div>`;
               linkedRecIds.push({ id: msg.recording_id, type: 'audio' });
             }
-
             html += '</div>';
           }
           listDiv.innerHTML = html;
-
-          // تحميل تلقائي لكل الرسائل الصوتية والتسجيلات المرتبطة
           voiceMsgIds.forEach(id => scheduleVoiceMsgLoad(id, 'vmsgp'));
-          linkedRecIds.forEach(r => scheduleAutoLoad(r.id, r.type));
-
+          loadPlayersSequentially(linkedRecIds);
         } catch(err) {
           listDiv.innerHTML = '<div class="empty-state"><div class="icon">⚠️</div><p>خطأ في التحميل</p></div>';
         }
@@ -1338,42 +1352,37 @@
 
       function generateStarsDisplay(rating) {
         let html = '';
-        for (let i = 1; i <= 5; i++) {
-          html += rating >= i ? '<span class="star filled">⭐</span>' : '<span class="star" style="opacity:0.3;">⭐</span>';
-        }
+        for (let i = 1; i <= 5; i++) html += rating >= i ? '<span class="star filled">⭐</span>' : '<span class="star" style="opacity:0.3;">⭐</span>';
         return html;
       }
 
+      // =============================================
       // ====== إدارة المشاركين ======
+      // =============================================
       async function loadParticipants() {
         showLoading();
         try {
+          // ⚡ جلب بدون data للتسجيلات (أسرع بكثير)
           const [pResult, rResult] = await Promise.all([
-            db.from('participants').select('*').order('name', { ascending: true }),
+            db.from('participants').select('id, name, password').order('name', { ascending: true }),
             db.from('recordings').select('id, participant_id, created_at')
           ]);
           hideLoading();
-          const participants = pResult.data || [];
-          const allRecordings = rResult.data || [];
+          const participants = pResult.data || [], allRecordings = rResult.data || [];
           const listDiv = document.getElementById("participantsList");
-
           if (pResult.error || participants.length === 0) {
             listDiv.innerHTML = '<div class="empty-state"><div class="icon">👥</div><p>لا يوجد مشاركون بعد</p></div>';
             updateAdminStats(0, 0, 0); return;
           }
-
           let totalRec = 0, newRec = 0;
           window._participantsCache = {};
-
           participants.forEach(p => {
             p.recordings = allRecordings.filter(r => r.participant_id === p.id);
             totalRec += p.recordings.length;
             p.recordings.forEach(rec => { if (!isRecordingViewed(p.id, rec.id)) newRec++; });
             window._participantsCache[p.id] = p;
           });
-
           updateAdminStats(participants.length, totalRec, newRec);
-
           listDiv.innerHTML = participants.map(p => {
             const newCount = p.recordings.filter(rec => !isRecordingViewed(p.id, rec.id)).length;
             return `<div class="participant-card" data-pid="${p.id}">
@@ -1383,7 +1392,6 @@
               <p class="count">${p.recordings.length} تسجيل</p>
             </div>`;
           }).join("");
-
           listDiv.querySelectorAll('.participant-card').forEach(card => {
             card.addEventListener('click', function() {
               const pid = parseInt(this.getAttribute('data-pid'));
@@ -1423,13 +1431,9 @@
         if (!div || !currentParticipant) return;
         try {
           const { data: messages } = await db
-            .from('messages')
-            .select('id, message, message_type, rating, created_at, recording_id')
-            .eq('participant_id', currentParticipant.id)
-            .order('created_at', { ascending: false });
-
+            .from('messages').select('id, message, message_type, rating, created_at, recording_id')
+            .eq('participant_id', currentParticipant.id).order('created_at', { ascending: false });
           if (!messages || messages.length === 0) { div.innerHTML = ''; return; }
-
           const voiceMsgIds = [];
           let html = `<h3 style="color:var(--dark-green);margin-bottom:10px;font-size:1rem;">📨 رسائلك المرسلة لهذا المشارك</h3>`;
           for (const msg of messages) {
@@ -1444,9 +1448,8 @@
             if (msg.message_type === 'voice') voiceMsgIds.push(msg.id);
           }
           div.innerHTML = html;
-          // تحميل تلقائي للرسائل الصوتية
           voiceMsgIds.forEach(id => scheduleVoiceMsgLoad(id, 'vmsg'));
-        } catch(err) { console.error('خطأ:', err); }
+        } catch(err) {}
       }
 
       async function deleteMessage(msgId) {
@@ -1466,9 +1469,8 @@
         try {
           const { data: ratings } = await db.from('messages').select('rating, recording_id')
             .eq('participant_id', currentParticipant.id).eq('message_type', 'rating').not('rating', 'is', null);
-          let total = 0;
-          const ratedSet = new Set();
-          if (ratings) { ratings.forEach(r => { if (!ratedSet.has(r.recording_id)) { total += r.rating; ratedSet.add(r.recording_id); } }); }
+          let total = 0; const ratedSet = new Set();
+          if (ratings) ratings.forEach(r => { if (!ratedSet.has(r.recording_id)) { total += r.rating; ratedSet.add(r.recording_id); } });
           const badge = document.getElementById("totalRatingBadge");
           document.getElementById("totalRatingValue").textContent = total.toFixed(1);
           document.getElementById("totalRatingMax").textContent = ratedSet.size * 5;
@@ -1476,7 +1478,9 @@
         } catch(e) {}
       }
 
+      // =============================================
       // ====== إرسال رسالة للمشارك ======
+      // =============================================
       function openMessageModal(recordingId, type) {
         currentRecordingForMessage = recordingId;
         selectedRating = 0; adminVoiceChunks = []; adminVoiceBlob = null;
@@ -1527,10 +1531,9 @@
 
       function setRating(value) {
         selectedRating = value;
-        const valEl = document.getElementById("ratingValue");
-        if (valEl) valEl.textContent = `${value} / 5`;
-        document.querySelectorAll("#starsDisplay .star").forEach((star, index) => { star.classList.toggle("filled", value >= index + 1); });
-        document.querySelectorAll(".rating-btn").forEach(btn => { btn.classList.toggle("active", parseFloat(btn.textContent) === value); });
+        const valEl = document.getElementById("ratingValue"); if (valEl) valEl.textContent = `${value} / 5`;
+        document.querySelectorAll("#starsDisplay .star").forEach((star, index) => star.classList.toggle("filled", value >= index + 1));
+        document.querySelectorAll(".rating-btn").forEach(btn => btn.classList.toggle("active", parseFloat(btn.textContent) === value));
       }
 
       async function startAdminVoice() {
@@ -1546,10 +1549,8 @@
             if (adminVoiceChunks.length > 0) {
               adminVoiceBlob = new Blob(adminVoiceChunks, { type: adminVoiceRecorder.mimeType || 'audio/webm' });
               const url = URL.createObjectURL(adminVoiceBlob);
-              const preview = document.getElementById("voicePreview");
-              if (preview) preview.src = url;
-              const div = document.getElementById("voicePreviewDiv");
-              if (div) div.classList.remove("hidden");
+              const preview = document.getElementById("voicePreview"); if (preview) preview.src = url;
+              const div = document.getElementById("voicePreviewDiv"); if (div) div.classList.remove("hidden");
             }
           };
           adminVoiceRecorder.start(100);
@@ -1569,22 +1570,16 @@
         if (adminVoiceRecorder && adminVoiceRecorder.state !== "inactive") {
           try { adminVoiceRecorder.stop(); } catch(e) {}
           clearInterval(adminVoiceTimer);
-          const btn = document.getElementById("voiceRecordBtn");
-          const stopBtn = document.getElementById("voiceStopBtn");
-          const timer = document.getElementById("voiceTimer");
-          if (btn) btn.classList.remove("hidden");
-          if (stopBtn) stopBtn.classList.add("hidden");
-          if (timer) { timer.classList.add("hidden"); timer.textContent = "00:00"; }
+          const btn = document.getElementById("voiceRecordBtn"); if (btn) btn.classList.remove("hidden");
+          const stopBtn = document.getElementById("voiceStopBtn"); if (stopBtn) stopBtn.classList.add("hidden");
+          const timer = document.getElementById("voiceTimer"); if (timer) { timer.classList.add("hidden"); timer.textContent = "00:00"; }
         }
       }
 
       async function sendMessageToParticipant() {
         const activeBtn = document.querySelector("#messageModal .message-type-btn.active");
         if (!activeBtn) return;
-        let messageType = 'text';
-        if (activeBtn.textContent.includes("نصية")) messageType = 'text';
-        else if (activeBtn.textContent.includes("صوتية")) messageType = 'voice';
-        else if (activeBtn.textContent.includes("تقييم")) messageType = 'rating';
+        let messageType = activeBtn.textContent.includes("نصية") ? 'text' : activeBtn.textContent.includes("صوتية") ? 'voice' : 'rating';
         showLoading();
         try {
           let msgData = { participant_id: currentParticipant.id, recording_id: currentRecordingForMessage, message_type: messageType, read: false };
@@ -1612,8 +1607,7 @@
       }
 
       function closeMessageModal() {
-        const modal = document.getElementById("messageModal");
-        if (modal) modal.remove();
+        const modal = document.getElementById("messageModal"); if (modal) modal.remove();
         adminVoiceChunks = []; adminVoiceBlob = null;
         if (adminVoiceRecorder && adminVoiceRecorder.state !== "inactive") { try { adminVoiceRecorder.stop(); } catch(e) {} }
         clearInterval(adminVoiceTimer); selectedRating = 0;
@@ -1639,6 +1633,7 @@
         try {
           await db.from('messages').delete().eq('recording_id', recordingId);
           await db.from('recordings').delete().eq('id', recordingId);
+          delete _cache.recordings[recordingId];
           hideLoading(); closeConfirmDialog();
           await calculateAndDisplayTotalRating();
           await loadAdminSentMessages();
@@ -1653,8 +1648,7 @@
         dialog.className = "confirm-dialog";
         dialog.innerHTML = `<div class="confirm-content">
           <h3>⚠️ حذف الحساب نهائياً</h3>
-          <p>هل أنت متأكد من حذف حساب <strong>${escapeHtml(currentParticipant.name)}</strong>؟<br>
-          سيتم حذف جميع تسجيلاته ورسائله نهائياً ولا يمكن التراجع.</p>
+          <p>هل أنت متأكد من حذف حساب <strong>${escapeHtml(currentParticipant.name)}</strong>؟<br>سيتم حذف جميع تسجيلاته ورسائله نهائياً.</p>
           <div class="confirm-buttons">
             <button class="btn btn-danger" onclick="deleteParticipantAccount()">حذف نهائي</button>
             <button class="btn btn-secondary" onclick="closeConfirmDialog()">إلغاء</button>
@@ -1687,35 +1681,32 @@
       async function copyToClipboard(type, buttonElement) {
         if (!currentParticipant) return;
         const textToCopy = type === 'name' ? currentParticipant.name : currentParticipant.password;
-        try {
-          await navigator.clipboard.writeText(textToCopy);
-        } catch {
+        try { await navigator.clipboard.writeText(textToCopy); }
+        catch {
           try {
             const ta = document.createElement('textarea');
             ta.value = textToCopy; ta.style.position = 'fixed'; ta.style.opacity = '0';
             document.body.appendChild(ta); ta.select(); document.execCommand('copy'); document.body.removeChild(ta);
-          } catch(e2) { alert('فشل النسخ - يرجى النسخ يدوياً'); return; }
+          } catch(e2) { alert('فشل النسخ'); return; }
         }
         const originalHTML = buttonElement.innerHTML;
-        buttonElement.innerHTML = '✅ تم النسخ';
-        buttonElement.classList.add('copied');
+        buttonElement.innerHTML = '✅ تم النسخ'; buttonElement.classList.add('copied');
         setTimeout(() => { buttonElement.innerHTML = originalHTML; buttonElement.classList.remove('copied'); }, 2000);
       }
 
+      // =============================================
       // ====== لوحة الترتيب ======
+      // =============================================
       async function showLeaderboard() {
         showLoading();
         try {
           const [pResult, rResult, ratResult] = await Promise.all([
-            db.from('participants').select('*'),
+            db.from('participants').select('id, name'),
             db.from('recordings').select('id, participant_id'),
             db.from('messages').select('participant_id, recording_id, rating').eq('message_type', 'rating').not('rating', 'is', null)
           ]);
           hideLoading();
-          const participants = pResult.data || [];
-          const allRecordings = rResult.data || [];
-          const ratings = ratResult.data || [];
-
+          const participants = pResult.data || [], allRecordings = rResult.data || [], ratings = ratResult.data || [];
           const ratingMap = {};
           ratings.forEach(r => {
             if (!ratingMap[r.participant_id]) ratingMap[r.participant_id] = { total: 0, ratedSet: new Set() };
@@ -1724,7 +1715,6 @@
               ratingMap[r.participant_id].ratedSet.add(r.recording_id);
             }
           });
-
           const ranked = participants.map(p => {
             const recCount = allRecordings.filter(r => r.participant_id === p.id).length;
             const rm = ratingMap[p.id] || { total: 0, ratedSet: new Set() };
@@ -1733,25 +1723,22 @@
 
           const rankClass = i => i === 0 ? 'rank-1' : i === 1 ? 'rank-2' : i === 2 ? 'rank-3' : 'rank-other';
           const rankEmoji = i => i === 0 ? '🥇' : i === 1 ? '🥈' : i === 2 ? '🥉' : (i + 1);
-          const starsHtml = (rating, count) => {
-            if (!count) return '<span style="color:#bbb;font-size:0.8rem;">لا يوجد تقييم بعد</span>';
-            return '⭐'.repeat(Math.floor(rating)) + '☆'.repeat(Math.max(0, 5 - Math.floor(rating)));
-          };
+          const starsHtml = (rating, count) => !count ? '<span style="color:#bbb;font-size:0.8rem;">لا يوجد تقييم بعد</span>' : '⭐'.repeat(Math.floor(rating)) + '☆'.repeat(Math.max(0, 5 - Math.floor(rating)));
 
           const rowsHtml = ranked.length === 0
             ? `<div style="text-align:center;padding:30px;color:#aaa;"><div style="font-size:3rem;">🏆</div><p>لا يوجد مشاركون بعد</p></div>`
             : ranked.map((p, i) => `<div class="leaderboard-row ${rankClass(i)}" style="animation-delay:${i*0.06}s">
-              <div class="rank-badge">${rankEmoji(i)}</div>
-              <div class="rank-info">
-                <div class="rank-name">${escapeHtml(p.name)}</div>
-                <div class="rank-details">${p.recCount} تسجيل • ${p.ratedCount} تقييم</div>
-                <div class="rank-stars">${starsHtml(p.totalRating, p.ratedCount)}</div>
-              </div>
-              <div class="rank-score">
-                <div class="score-num">${p.totalRating > 0 ? p.totalRating.toFixed(1) : '-'}</div>
-                ${p.ratedCount > 0 ? `<div class="score-label">من ${p.ratedCount * 5}</div>` : '<div class="score-label">نقطة</div>'}
-              </div>
-            </div>`).join("");
+                <div class="rank-badge">${rankEmoji(i)}</div>
+                <div class="rank-info">
+                  <div class="rank-name">${escapeHtml(p.name)}</div>
+                  <div class="rank-details">${p.recCount} تسجيل • ${p.ratedCount} تقييم</div>
+                  <div class="rank-stars">${starsHtml(p.totalRating, p.ratedCount)}</div>
+                </div>
+                <div class="rank-score">
+                  <div class="score-num">${p.totalRating > 0 ? p.totalRating.toFixed(1) : '-'}</div>
+                  ${p.ratedCount > 0 ? `<div class="score-label">من ${p.ratedCount * 5}</div>` : '<div class="score-label">نقطة</div>'}
+                </div>
+              </div>`).join("");
 
           const modal = document.createElement('div');
           modal.className = 'leaderboard-modal'; modal.id = 'leaderboardModal';
@@ -1768,17 +1755,15 @@
         } catch(e) { hideLoading(); alert("خطأ: " + e.message); }
       }
 
-      // ====== أداة مساعدة ======
-      function escapeHtml(text) {
-        if (!text) return '';
-        return String(text).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;').replace(/'/g,'&#039;');
-      }
-
+      // =============================================
       // ====== تشغيل التطبيق ======
+      // =============================================
       window.onload = function() {
         loadViewedRecordings();
-        loadCurrentSession();
-        loadGlobalBroadcasts();
+        // ⚡ FIX الأساسي: الأزرار تعمل فوراً لأن showRegisterPage/showLoginPage/showAdminLogin
+        // لا تعمل أي DB query - مجرد إظهار/إخفاء HTML
+        loadCurrentSession();      // تحميل الجلسة (من localStorage أولاً)
+        loadGlobalBroadcasts();    // تحميل الإعلانات في الخلفية
       };
     </script>
   </body>
