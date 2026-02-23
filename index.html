@@ -99,21 +99,16 @@
       .empty-state { text-align: center; padding: 25px 15px; color: #999; }
       .empty-state .icon { font-size: 3rem; margin-bottom: 10px; opacity: 0.5; }
       .empty-state p { font-size: 0.95rem; }
-
-      /* ===== Loading مُحسَّن - بدون overlay يمنع الضغط ===== */
       .loading-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); display: flex; align-items: center; justify-content: center; z-index: 3000; pointer-events: none; }
       .spinner { border: 3px solid rgba(255,255,255,0.3); border-top: 3px solid var(--primary-gold); border-radius: 50%; width: 40px; height: 40px; animation: spin 1s linear infinite; margin: 0 auto 10px; }
       @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
       .loading-spinner { text-align: center; color: white; background: rgba(0,0,0,0.7); padding: 20px 30px; border-radius: 12px; pointer-events: none; }
       .loading-spinner p { font-size: 0.95rem; font-weight: 600; }
-
-      /* ===== مشغّل تلقائي خفيف ===== */
       .auto-player-wrap { margin-top: 8px; background: #f8fafc; border-radius: 8px; padding: 6px; border: 1px solid #e2e8f0; }
       .auto-player-wrap audio, .auto-player-wrap video { width: 100%; border-radius: 6px; display: block; }
       .player-loading { display: flex; align-items: center; gap: 8px; padding: 10px; color: #888; font-size: 0.85rem; }
       .mini-spinner { border: 2px solid rgba(0,0,0,0.1); border-top: 2px solid var(--primary-gold); border-radius: 50%; width: 18px; height: 18px; animation: spin 0.8s linear infinite; flex-shrink: 0; }
       .player-error { color: #dc2626; font-size: 0.82rem; padding: 8px; text-align: center; }
-
       .message-modal { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.7); display: flex; align-items: center; justify-content: center; z-index: 2000; padding: 15px; }
       .message-modal-content { background: white; padding: 20px; border-radius: 12px; max-width: 450px; width: 100%; max-height: 80vh; overflow-y: auto; }
       .message-modal h3 { color: var(--dark-green); font-size: 1.2rem; margin-bottom: 12px; }
@@ -202,7 +197,8 @@
       .confirm-content h3 { color: var(--dark-green); font-size: 1.2rem; margin-bottom: 12px; }
       .confirm-content p { font-size: 0.95rem; margin-bottom: 20px; line-height: 1.5; }
       .confirm-buttons { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
-
+      /* ✅ FIX: نبار خطأ التسجيل */
+      .save-error-banner { background: #fee2e2; border: 2px solid #dc2626; color: #991b1b; padding: 12px; border-radius: 10px; margin: 8px 0; font-size: 0.9rem; font-weight: 600; text-align: center; }
       @media (max-width: 768px) {
         h1 { font-size: 1.3rem; }
         .card { padding: 12px 10px; }
@@ -226,14 +222,12 @@
 
       <div id="globalBroadcastsBar"></div>
 
-      <!-- الصفحة الرئيسية -->
       <div id="homePage" class="card">
         <button class="btn btn-primary big-icon-btn" id="btnRegister" onclick="showRegisterPage()">🆕 تسجيل جديد</button>
         <button class="btn btn-secondary big-icon-btn" id="btnLogin" onclick="showLoginPage()">🔑 دخول</button>
         <button class="btn btn-secondary" id="btnAdmin" onclick="showAdminLogin()" style="margin-top: 20px;">👩‍🏫 دخول الاستاذة</button>
       </div>
 
-      <!-- صفحة التسجيل -->
       <div id="registerPage" class="card hidden">
         <h2 style="color:var(--dark-green);margin-bottom:15px;text-align:center;font-size:1.3rem;">تسجيل جديد</h2>
         <form id="registerForm">
@@ -253,7 +247,6 @@
         <button class="btn btn-secondary" onclick="showHomePage()">رجوع</button>
       </div>
 
-      <!-- صفحة تسجيل الدخول -->
       <div id="loginPage" class="card hidden">
         <h2 style="color:var(--dark-green);margin-bottom:15px;text-align:center;font-size:1.3rem;">تسجيل دخول</h2>
         <div id="loginError" class="error-message hidden"></div>
@@ -274,7 +267,6 @@
         <button class="btn btn-secondary" onclick="showHomePage()">رجوع</button>
       </div>
 
-      <!-- صفحة دخول الاستاذة -->
       <div id="adminLoginPage" class="card hidden">
         <h2 style="color:var(--dark-green);margin-bottom:15px;text-align:center;font-size:1.3rem;">دخول الاستاذة</h2>
         <div id="adminError" class="error-message hidden"></div>
@@ -291,7 +283,6 @@
         <button class="btn btn-secondary" onclick="showHomePage()">رجوع</button>
       </div>
 
-      <!-- صفحة المشارك -->
       <div id="participantPage" class="card hidden">
         <button class="logout-btn" onclick="logout()">خروج</button>
         <h2 style="color:var(--dark-green);margin-bottom:8px;text-align:center;font-size:1.3rem;">
@@ -339,7 +330,6 @@
         </div>
       </div>
 
-      <!-- صفحة المشاركين للاستاذة -->
       <div id="adminParticipantsPage" class="card hidden">
         <button class="logout-btn" onclick="logout()">خروج</button>
         <h2 style="color:var(--dark-green);margin-bottom:12px;text-align:center;font-size:1.3rem;">إدارة المشاركين</h2>
@@ -366,7 +356,6 @@
         <div id="participantsList" class="participants-grid"></div>
       </div>
 
-      <!-- صفحة تسجيلات مشارك للاستاذة -->
       <div id="adminRecordingsPage" class="card hidden">
         <button class="logout-btn" onclick="logout()">خروج</button>
         <button class="back-btn" onclick="backToParticipants()">← رجوع</button>
@@ -404,33 +393,22 @@
       </div>
     </div>
 
-    <!-- Supabase SDK -->
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <script>
-      // =============================================
-      // ====== إعداد Supabase ======
-      // =============================================
       const SUPABASE_URL = 'https://jimrkqewuafaoxmpmhbp.supabase.co';
       const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImppbXJrcWV3dWFmYW94bXBtaGJwIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzE2ODM1NzUsImV4cCI6MjA4NzI1OTU3NX0.Qihj4BnB0FErseE0j8Gq8ydbOf8Bu7lW2sRTfTudZ7Q';
       const db = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY, {
-        // ⚡ تحسين: تقليل retry وزيادة سرعة الاستجابة
         global: { fetch: (url, opts) => fetch(url, { ...opts, keepalive: true }) }
       });
 
-      // =============================================
-      // ====== كاش مركزي لتسريع كل شيء ======
-      // =============================================
       const _cache = {
-        participants: null,         // كاش المشاركين
-        recordings: {},             // كاش التسجيلات: { id: objectURL }
-        voiceMsgs: {},              // كاش الرسائل الصوتية: { id: objectURL }
-        broadcasts: null,           // كاش الإعلانات
-        objectUrls: new Map(),      // كاش ObjectURLs
+        participants: null,
+        recordings: {},
+        voiceMsgs: {},
+        broadcasts: null,
+        objectUrls: new Map(),
       };
 
-      // =============================================
-      // ====== متغيرات عامة ======
-      // =============================================
       let currentUser = null;
       let isAdmin = false;
       let mediaRecorder = null;
@@ -451,12 +429,8 @@
       let broadcastVoiceChunks = [];
       let broadcastVoiceTimerInterval = null;
       let broadcastVoiceBlob = null;
-      // ⚡ قائمة pending loads - تمنع تحميل نفس التسجيل مرتين
       const _pendingLoads = new Set();
 
-      // =============================================
-      // ====== تحويل base64 → ObjectURL (مع كاش) ======
-      // =============================================
       function dataUriToObjectUrl(dataUri) {
         if (!dataUri) return '';
         if (!dataUri.startsWith('data:')) return dataUri;
@@ -486,11 +460,7 @@
         } catch(e) {}
       }
 
-      // =============================================
-      // ====== مشغّل تلقائي بدون ضغط ======
-      // =============================================
       function createAutoPlayer(recId, type) {
-        // إذا محمّل بالكاش، ارجع مباشرة
         if (_cache.recordings[recId]) {
           const url = _cache.recordings[recId];
           if (type === 'video') {
@@ -506,7 +476,6 @@
       function scheduleAutoLoad(recId, type) {
         if (_pendingLoads.has(recId) || _cache.recordings[recId]) return;
         _pendingLoads.add(recId);
-        // ⚡ requestIdleCallback لعدم تعطيل الـ UI
         const load = () => autoLoadPlayer(recId, type);
         if (window.requestIdleCallback) requestIdleCallback(load, { timeout: 2000 });
         else setTimeout(load, 50);
@@ -514,7 +483,6 @@
 
       async function autoLoadPlayer(recId, type) {
         const container = document.getElementById('aplayer_' + recId);
-        // إذا موجود في الكاش، استخدمه مباشرة
         if (_cache.recordings[recId]) {
           _pendingLoads.delete(recId);
           if (container) renderPlayer(container, _cache.recordings[recId], type);
@@ -529,10 +497,8 @@
           }
           const url = dataUriToObjectUrl(rec.data);
           if (!url) { if (container) container.innerHTML = '<p class="player-error">⚠️ تعذّر تحميل التسجيل</p>'; return; }
-          // خزّن في الكاش
           _cache.recordings[recId] = url;
           const actualType = rec.type || type;
-          // ابحث عن كل containers بهذا الـ id (قد يكون مكرراً في الصفحة)
           document.querySelectorAll('#aplayer_' + recId).forEach(c => renderPlayer(c, url, actualType));
         } catch(e) {
           _pendingLoads.delete(recId);
@@ -547,13 +513,11 @@
         } else {
           container.innerHTML = `<audio controls src="${url}" style="width:100%;" onloadedmetadata="fixDuration(this)" preload="metadata"></audio>`;
         }
-        // أزل الـ class و style الزائدة
         container.style.background = 'none';
         container.style.border = 'none';
         container.style.padding = '0';
       }
 
-      // ====== مشغّل رسائل صوتية ======
       function createVoiceMsgPlayer(msgId, prefix) {
         const wrapperId = prefix + '_' + msgId;
         if (_cache.voiceMsgs[msgId]) {
@@ -581,7 +545,6 @@
           if (!msg || !msg.voice_data) { const c = document.getElementById(wrapperId); if (c) c.innerHTML = '<p class="player-error">⚠️ لا توجد بيانات</p>'; return; }
           const url = dataUriToObjectUrl(msg.voice_data);
           _cache.voiceMsgs[msgId] = url;
-          // ابحث بكل prefixes المحتملة
           ['vmsgp', 'vmsg'].forEach(pfx => {
             const c = document.getElementById(pfx + '_' + msgId);
             if (c) c.outerHTML = `<audio controls src="${url}" style="width:100%;" onloadedmetadata="fixDuration(this)" preload="metadata"></audio>`;
@@ -592,27 +555,68 @@
         }
       }
 
-      // =============================================
-      // ====== مساعدات ======
-      // =============================================
+      // ✅ FIX 1: blobToBase64 محسّن - يدعم iOS/Safari وملفات كبيرة
       function blobToBase64(blob) {
         return new Promise((resolve, reject) => {
+          // التحقق من صحة الـ blob
+          if (!blob || blob.size === 0) {
+            reject(new Error('التسجيل فارغ - حاول مرة أخرى'));
+            return;
+          }
+          // iOS Fix: استخدم arrayBuffer للملفات الأكبر من 3MB (أكثر استقراراً)
+          if (blob.size > 3 * 1024 * 1024) {
+            blob.arrayBuffer().then(buffer => {
+              try {
+                const bytes = new Uint8Array(buffer);
+                let binary = '';
+                const chunkSize = 8192;
+                for (let i = 0; i < bytes.length; i += chunkSize) {
+                  binary += String.fromCharCode(...bytes.subarray(i, Math.min(i + chunkSize, bytes.length)));
+                }
+                const base64 = btoa(binary);
+                resolve(`data:${blob.type || 'audio/webm'};base64,${base64}`);
+              } catch(e) {
+                reject(new Error('فشل معالجة التسجيل: ' + e.message));
+              }
+            }).catch(e => reject(new Error('فشل تحميل التسجيل: ' + e.message)));
+            return;
+          }
+          // الطريقة العادية للملفات الصغيرة مع timeout
           const reader = new FileReader();
-          reader.onloadend = () => { if (reader.result) resolve(reader.result); else reject(new Error('فشل')); };
-          reader.onerror = () => reject(new Error('خطأ'));
+          const timeout = setTimeout(() => {
+            try { reader.abort(); } catch(e) {}
+            reject(new Error('انتهت مهلة التحميل - حاول مرة أخرى'));
+          }, 25000);
+          reader.onloadend = () => {
+            clearTimeout(timeout);
+            if (reader.result) resolve(reader.result);
+            else reject(new Error('فشل قراءة التسجيل'));
+          };
+          reader.onerror = () => { clearTimeout(timeout); reject(new Error('خطأ في قراءة التسجيل')); };
+          reader.onabort = () => { clearTimeout(timeout); reject(new Error('تم إلغاء التحميل')); };
           reader.readAsDataURL(blob);
         });
       }
 
+      // ✅ FIX 2: getSupportedMimeType - يضع mp4 أولاً لـ iOS
       function getSupportedMimeType() {
-        const types = ['audio/webm;codecs=opus','audio/webm','audio/ogg;codecs=opus','audio/ogg','audio/mp4',''];
-        for (const t of types) { if (!t || MediaRecorder.isTypeSupported(t)) return t; }
+        const types = [
+          'audio/mp4',              // iOS Safari يدعم هذا أفضل
+          'audio/webm;codecs=opus',
+          'audio/webm',
+          'audio/ogg;codecs=opus',
+          'audio/ogg',
+          ''
+        ];
+        for (const t of types) {
+          try { if (!t || MediaRecorder.isTypeSupported(t)) return t; } catch(e) {}
+        }
         return '';
       }
 
       function getSupportedVideoMimeType() {
         const types = ['video/webm;codecs=vp9,opus','video/webm;codecs=vp8,opus','video/webm','video/mp4',''];
-        for (const t of types) { if (!t || MediaRecorder.isTypeSupported(t)) return t; }
+        for (const t of types) { try { if (!t || MediaRecorder.isTypeSupported(t)) return t; } catch(e) {} }
         return '';
       }
 
@@ -621,9 +625,6 @@
         return String(text).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;').replace(/'/g,'&#039;');
       }
 
-      // =============================================
-      // ====== Loading - خفيف لا يمنع التفاعل ======
-      // =============================================
       let _loadingEl = null;
       function showLoading() {
         if (_loadingEl) return;
@@ -639,9 +640,6 @@
         if (o) o.remove();
       }
 
-      // =============================================
-      // ====== الجلسة - مُحسَّنة بدون DB query عند الضغط ======
-      // =============================================
       function saveSession(userData) {
         try {
           const session = isAdmin ? { isAdmin: true } : { isAdmin: false, user: userData || currentUser };
@@ -649,8 +647,6 @@
         } catch(e) {}
       }
 
-      // ⚡ FIX الرئيسي: نخزّن بيانات المشارك كاملة في localStorage
-      // بدل ما نعمل DB query عند كل تحميل
       async function loadCurrentSession() {
         try {
           const sessionStr = localStorage.getItem("currentSession");
@@ -660,13 +656,10 @@
             isAdmin = true;
             showAdminParticipantsPage();
           } else if (session.user) {
-            // ⚡ استخدم البيانات المخزنة مباشرة - بدون DB query!
             currentUser = session.user;
             showParticipantPage();
-            // في الخلفية: حدّث البيانات من DB (بدون إيقاف الـ UI)
             refreshUserInBackground(session.user.id);
           } else if (session.userId) {
-            // للجلسات القديمة
             showLoading();
             const { data: user, error } = await db.from('participants').select('id, name, password').eq('id', session.userId).single();
             hideLoading();
@@ -681,7 +674,6 @@
         } catch(e) { localStorage.removeItem("currentSession"); showHomePage(); }
       }
 
-      // ⚡ تحديث بيانات المستخدم في الخلفية (لا يوقف UI)
       async function refreshUserInBackground(userId) {
         try {
           const { data: user, error } = await db.from('participants').select('id, name, password').eq('id', userId).single();
@@ -697,14 +689,10 @@
       function markRecordingAsViewed(pId, rId) { viewedRecordings.add(`${pId}_${rId}`); saveViewedRecordings(); }
       function isRecordingViewed(pId, rId) { return viewedRecordings.has(`${pId}_${rId}`); }
 
-      // =============================================
-      // ====== عرض الصفحات - فوري ======
-      // =============================================
       function hideAllPages() {
         ["homePage","registerPage","loginPage","adminLoginPage","participantPage","adminParticipantsPage","adminRecordingsPage"]
           .forEach(id => { const el = document.getElementById(id); if (el) el.classList.add("hidden"); });
       }
-      // ⚡ FIX: الانتقال فوري - لا DB query عند الضغط على الأزرار
       function showHomePage() { hideAllPages(); document.getElementById("homePage").classList.remove("hidden"); }
       function showRegisterPage() { hideAllPages(); document.getElementById("registerPage").classList.remove("hidden"); }
       function showLoginPage() { hideAllPages(); document.getElementById("loginPage").classList.remove("hidden"); }
@@ -722,7 +710,6 @@
       async function showAdminParticipantsPage() {
         hideAllPages();
         document.getElementById("adminParticipantsPage").classList.remove("hidden");
-        // ⚡ تحميل متوازي
         await Promise.all([loadParticipants(), loadAdminBroadcasts()]);
       }
 
@@ -740,19 +727,14 @@
         }
         const badge = document.getElementById("totalRatingBadge");
         if (badge) badge.style.display = 'none';
-        // ⚡ تحميل متوازي
         await Promise.all([loadParticipantRecordingsAndRating(), loadAdminSentMessages()]);
       }
 
-      // =============================================
-      // ====== تحميل تسجيلات المشارك (للاستاذة) ======
-      // =============================================
       async function loadParticipantRecordingsAndRating() {
         const listDiv = document.getElementById("adminRecordingsList");
         if (!listDiv || !currentParticipant) return;
         listDiv.innerHTML = '<div class="empty-state"><div class="icon">⏳</div><p>جاري التحميل...</p></div>';
         try {
-          // ⚡ جلب بدون data (الـ data تُجلب لاحقاً عند الحاجة)
           const [recResult, ratingResult] = await Promise.all([
             db.from('recordings').select('id, type, created_at').eq('participant_id', currentParticipant.id).order('created_at', { ascending: true }),
             db.from('messages').select('rating, recording_id').eq('participant_id', currentParticipant.id).eq('message_type', 'rating').not('rating', 'is', null)
@@ -786,16 +768,13 @@
               ${createAutoPlayer(rec.id, rec.type)}
             </div>`).join('');
 
-          // ⚡ تحميل تسلسلي (واحد واحد) لتجنب إغراق الـ network
           loadPlayersSequentially(unique.map(r => ({ id: r.id, type: r.type })));
-
         } catch(err) {
           console.error('خطأ:', err);
           listDiv.innerHTML = '<div class="empty-state"><div class="icon">⚠️</div><p>خطأ في التحميل</p></div>';
         }
       }
 
-      // ⚡ تحميل تسلسلي - يمنع إغراق الشبكة
       async function loadPlayersSequentially(items) {
         for (const item of items) {
           if (!_cache.recordings[item.id] && document.getElementById('aplayer_' + item.id)) {
@@ -838,13 +817,9 @@
         else { input.type = "password"; icon.textContent = "👁️"; }
       }
 
-      // =============================================
-      // ====== الإعلانات العامة ======
-      // =============================================
       async function loadGlobalBroadcasts() {
         const bar = document.getElementById("globalBroadcastsBar");
         if (!bar) return;
-        // ⚡ استخدم الكاش
         if (_cache.broadcasts) { renderGlobalBroadcasts(_cache.broadcasts); return; }
         try {
           const { data, error } = await db.from('broadcasts').select('id, message, type, voice_data, created_at').order('created_at', { ascending: false });
@@ -896,7 +871,7 @@
         showLoading();
         try {
           await db.from('broadcasts').delete().eq('id', id);
-          _cache.broadcasts = null; // أعد تعيين الكاش
+          _cache.broadcasts = null;
           hideLoading();
           await Promise.all([loadAdminBroadcasts(), loadGlobalBroadcasts()]);
         } catch(e) { hideLoading(); alert("خطأ: " + e.message); }
@@ -1002,9 +977,6 @@
         clearInterval(broadcastVoiceTimerInterval);
       }
 
-      // =============================================
-      // ====== تسجيل مشارك ======
-      // =============================================
       document.getElementById("registerForm").onsubmit = async function(e) {
         e.preventDefault();
         const name = document.getElementById("participantName").value.trim();
@@ -1025,9 +997,6 @@
         } catch(err) { hideLoading(); btn.disabled=false; btn.textContent="تسجيل 🌟"; alert("حدث خطأ: " + err.message); }
       };
 
-      // =============================================
-      // ====== تسجيل دخول - مُحسَّن ======
-      // =============================================
       document.getElementById("loginForm").onsubmit = async function(e) {
         e.preventDefault();
         const nameRaw = document.getElementById("loginName").value.trim();
@@ -1037,22 +1006,18 @@
         btn.disabled = true; btn.textContent = "جاري الدخول...";
         showLoading();
         try {
-          // ⚡ استخدم ilike للبحث المباشر في DB
           const { data: allUsers, error } = await db.from('participants').select('id, name, password');
           hideLoading(); btn.disabled = false; btn.textContent = "دخول 🔓";
           if (error || !allUsers) { showLoginError("خطأ في الاتصال."); return; }
-
           const normalize = str => (str || '').trim()
             .replace(/[\u0622\u0623\u0625]/g, '\u0627')
             .replace(/\u0629/g, '\u0647')
             .replace(/\s+/g, ' ').toLowerCase();
-
           const nameNorm = normalize(nameRaw);
           const user = allUsers.find(u =>
             normalize(u.name) === nameNorm &&
             ((u.password === passwordRaw) || ((u.password || '').trim() === passwordRaw.trim()))
           );
-
           if (!user) { showLoginError("الاسم أو كلمة المرور خاطئة!"); return; }
           currentUser = user;
           saveSession(user);
@@ -1082,9 +1047,6 @@
         }
       };
 
-      // =============================================
-      // ====== التسجيل الصوتي/المرئي ======
-      // =============================================
       function selectType(type, cardElement) {
         recordingType = type;
         document.querySelectorAll(".type-card").forEach(el => el.classList.remove("selected"));
@@ -1179,31 +1141,82 @@
         document.getElementById("timer").textContent = "00:00";
       }
 
+      // ✅ FIX 3 & 4: saveRecording - معالجة شاملة للأخطاء
       async function saveRecording() {
-        if (!recordedChunks || recordedChunks.length === 0) { alert("لا توجد بيانات للحفظ."); return; }
+        if (!recordedChunks || recordedChunks.length === 0) {
+          alert("لا توجد بيانات للحفظ. يرجى التسجيل أولاً.");
+          return;
+        }
         showLoading();
         try {
-          const mimeType = (mediaRecorder && mediaRecorder.mimeType) ? mediaRecorder.mimeType : (recordingType === "video" ? "video/webm" : "audio/webm");
+          const mimeType = (mediaRecorder && mediaRecorder.mimeType && mediaRecorder.mimeType !== '')
+            ? mediaRecorder.mimeType
+            : (recordingType === "video" ? "video/webm" : "audio/webm");
+
           const blob = new Blob([...recordedChunks], { type: mimeType });
-          if (blob.size > 8 * 1024 * 1024) { hideLoading(); alert("التسجيل كبير جداً (أكثر من 8MB). يرجى تقليل مدة التسجيل."); return; }
-          const base64Data = await blobToBase64(blob);
-          const { data: saved, error } = await db.from('recordings').insert({ participant_id: currentUser.id, type: recordingType, data: base64Data }).select('id, type, created_at').single();
-          if (error) throw error;
+
+          // التحقق من أن التسجيل ليس فارغاً
+          if (blob.size === 0) {
+            hideLoading();
+            alert("التسجيل فارغ! يرجى المحاولة مرة أخرى.");
+            return;
+          }
+
+          // حد 5MB (أكثر أماناً مع Supabase)
+          const MAX_SIZE = 5 * 1024 * 1024;
+          if (blob.size > MAX_SIZE) {
+            hideLoading();
+            const sizeMB = (blob.size / 1024 / 1024).toFixed(1);
+            alert(`التسجيل كبير جداً (${sizeMB}MB).\nالحد الأقصى المسموح: 5MB\nيرجى تقليل مدة التسجيل.`);
+            return;
+          }
+
+          // تحويل لـ base64 مع معالجة منفصلة للخطأ
+          let base64Data;
+          try {
+            base64Data = await blobToBase64(blob);
+          } catch(convErr) {
+            hideLoading();
+            alert("خطأ في معالجة التسجيل:\n" + convErr.message + "\n\nيرجى المحاولة مرة أخرى.");
+            return;
+          }
+
+          // رفع لـ Supabase
+          const { data: saved, error } = await db.from('recordings')
+            .insert({ participant_id: currentUser.id, type: recordingType, data: base64Data })
+            .select('id, type, created_at')
+            .single();
+
+          if (error) {
+            if (error.message && (error.message.includes('size') || error.message.includes('payload'))) {
+              throw new Error('حجم التسجيل كبير جداً على قاعدة البيانات. يرجى تقليل المدة.');
+            }
+            throw error;
+          }
+
           hideLoading();
           alert("تم الحفظ بنجاح! ✅");
           recordedChunks = [];
           document.getElementById("recordingPreview").classList.add("hidden");
           document.getElementById("previewMedia").innerHTML = "";
           document.getElementById("timer").textContent = "00:00";
-          // ⚡ أضف التسجيل للكاش مباشرة
           _cache.recordings[saved.id] = dataUriToObjectUrl(base64Data);
           await loadMyRecordings();
-        } catch(err) { hideLoading(); alert("خطأ في الحفظ: " + err.message); }
+
+        } catch(err) {
+          hideLoading();
+          const m = err.message || '';
+          // رسالة خطأ واضحة ومفيدة
+          if (m.includes('Load failed') || m.includes('load failed') || m.includes('Failed to load')) {
+            alert('❌ فشل الحفظ\n\nتأكد من:\n• حجم التسجيل أقل من 5MB\n• الاتصال بالإنترنت\n• إذن المايكروفون\n\nحاول مجدداً بعد تقليل مدة التسجيل.');
+          } else if (m.includes('payload') || m.includes('413')) {
+            alert('❌ التسجيل كبير جداً\nيرجى تقليل مدة التسجيل.');
+          } else {
+            alert('❌ خطأ في الحفظ:\n' + m);
+          }
+        }
       }
 
-      // =============================================
-      // ====== تسجيلات المشارك - تلقائي ======
-      // =============================================
       async function loadMyRecordings() {
         const listDiv = document.getElementById("myRecordingsList");
         if (!listDiv) return;
@@ -1228,8 +1241,6 @@
               <p class="recording-date">${new Date(rec.created_at).toLocaleDateString('ar-SA')}</p>
               ${createAutoPlayer(rec.id, rec.type)}
             </div>`).join('');
-
-          // ⚡ تحميل تسلسلي
           loadPlayersSequentially(unique.map(r => ({ id: r.id, type: r.type })));
         } catch(err) {
           listDiv.innerHTML = '<div class="empty-state"><div class="icon">⚠️</div><p>خطأ في التحميل. حاول مرة أخرى.</p></div>';
@@ -1279,9 +1290,6 @@
         } catch(e) { hideLoading(); alert("خطأ في الحذف: " + e.message); }
       }
 
-      // =============================================
-      // ====== الرسائل (للمشارك) ======
-      // =============================================
       async function updateUnreadBadge() {
         if (!currentUser) return;
         try {
@@ -1356,13 +1364,9 @@
         return html;
       }
 
-      // =============================================
-      // ====== إدارة المشاركين ======
-      // =============================================
       async function loadParticipants() {
         showLoading();
         try {
-          // ⚡ جلب بدون data للتسجيلات (أسرع بكثير)
           const [pResult, rResult] = await Promise.all([
             db.from('participants').select('id, name, password').order('name', { ascending: true }),
             db.from('recordings').select('id, participant_id, created_at')
@@ -1478,9 +1482,6 @@
         } catch(e) {}
       }
 
-      // =============================================
-      // ====== إرسال رسالة للمشارك ======
-      // =============================================
       function openMessageModal(recordingId, type) {
         currentRecordingForMessage = recordingId;
         selectedRating = 0; adminVoiceChunks = []; adminVoiceBlob = null;
@@ -1694,9 +1695,6 @@
         setTimeout(() => { buttonElement.innerHTML = originalHTML; buttonElement.classList.remove('copied'); }, 2000);
       }
 
-      // =============================================
-      // ====== لوحة الترتيب ======
-      // =============================================
       async function showLeaderboard() {
         showLoading();
         try {
@@ -1755,15 +1753,10 @@
         } catch(e) { hideLoading(); alert("خطأ: " + e.message); }
       }
 
-      // =============================================
-      // ====== تشغيل التطبيق ======
-      // =============================================
       window.onload = function() {
         loadViewedRecordings();
-        // ⚡ FIX الأساسي: الأزرار تعمل فوراً لأن showRegisterPage/showLoginPage/showAdminLogin
-        // لا تعمل أي DB query - مجرد إظهار/إخفاء HTML
-        loadCurrentSession();      // تحميل الجلسة (من localStorage أولاً)
-        loadGlobalBroadcasts();    // تحميل الإعلانات في الخلفية
+        loadCurrentSession();
+        loadGlobalBroadcasts();
       };
     </script>
   </body>
