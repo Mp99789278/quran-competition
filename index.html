@@ -204,7 +204,7 @@
           <div class="form-group"><label>كلمة المرور</label>
             <div class="password-input-wrapper">
               <input type="password" id="password" required placeholder="اختر كلمة مرور" />
-              <span class="password-toggle" onclick="togglePassword('password')">👁️</span>
+              <span class="password-toggle" onclick="togglePassword('password', event)">👁️</span>
             </div>
           </div>
           <button type="submit" class="btn btn-primary" id="registerSubmitBtn">تسجيل 🌟</button>
@@ -220,7 +220,7 @@
           <div class="form-group"><label>كلمة المرور</label>
             <div class="password-input-wrapper">
               <input type="password" id="loginPassword" required placeholder="كلمة المرور" />
-              <span class="password-toggle" onclick="togglePassword('loginPassword')">👁️</span>
+              <span class="password-toggle" onclick="togglePassword('loginPassword', event)">👁️</span>
             </div>
           </div>
           <button type="submit" class="btn btn-primary" id="loginSubmitBtn">دخول 🔓</button>
@@ -235,7 +235,7 @@
           <div class="form-group"><label>كلمة المرور</label>
             <div class="password-input-wrapper">
               <input type="password" id="adminPassword" required placeholder="كلمة المرور" />
-              <span class="password-toggle" onclick="togglePassword('adminPassword')">👁️</span>
+              <span class="password-toggle" onclick="togglePassword('adminPassword', event)">👁️</span>
             </div>
           </div>
           <button type="submit" class="btn btn-primary">دخول</button>
@@ -323,22 +323,43 @@
       </div>
     </div>
 
-    <!-- ✅ تحميل Supabase -->
-    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <!-- ✅ [إصلاح 0] تحميل Supabase مع fallback CDN ثاني -->
+    <script>
+      (function(){
+        function load(url){
+          return new Promise((res, rej)=>{
+            const s=document.createElement('script');
+            s.src=url;
+            s.onload=()=>res();
+            s.onerror=()=>rej();
+            document.head.appendChild(s);
+          });
+        }
+        window.__loadSupabase = async function(){
+          if(window.supabase) return true;
+          try { await load('https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2'); }
+          catch(e1){
+            try { await load('https://unpkg.com/@supabase/supabase-js@2'); }
+            catch(e2){ return false; }
+          }
+          return !!window.supabase;
+        };
+      })();
+    </script>
     <script>
       // =============================================
-      // ✅ [إصلاح 1] تحقق من تحميل Supabase قبل أي شيء
+      // ✅ [إصلاح 0] تأكد Supabase جاهزة (مع fallback)
       // =============================================
-      (function checkSupabaseLoaded() {
-        if (!window.supabase) {
+      (async ()=>{
+        const ok = await window.__loadSupabase?.();
+        if(!ok){
           document.body.innerHTML = `
-            <div style="font-family:Cairo,sans-serif;direction:rtl;padding:18px;background:#fff;border-radius:12px;max-width:700px;margin:20px auto;">
-              <h2 style="color:#b91c1c;margin-bottom:8px;">⚠️ مشكلة تشغيل</h2>
-              <p style="line-height:1.9;color:#111">مكتبة Supabase لم تُحمّل. ممكن سببها حظر CDN أو ضعف الاتصال.</p>
-              <p style="margin-top:10px;color:#555;font-size:14px">جرّب تحديث الصفحة أو تغيير الشبكة.</p>
+            <div style="direction:rtl;font-family:Cairo,sans-serif;max-width:720px;margin:20px auto;background:#fff;padding:16px;border-radius:12px">
+              <h2 style="color:#b91c1c;margin-bottom:8px">⚠️ تعذّر تحميل Supabase</h2>
+              <p style="line-height:1.9">عند بعض الشبكات ينحجب CDN. جرّب شبكة ثانية أو افتح من متصفح Chrome مباشر.</p>
               <button onclick="location.reload()" style="margin-top:14px;padding:10px 20px;background:#d4af37;border:none;border-radius:8px;font-family:Cairo,sans-serif;font-weight:700;cursor:pointer;font-size:1rem;">🔄 تحديث الصفحة</button>
             </div>`;
-          throw new Error('Supabase library not loaded');
+          return;
         }
       })();
 
@@ -376,6 +397,11 @@
       let currentRecordingForMessage = null, viewedRecordings = new Set(), selectedRating = 0;
       let broadcastVoiceRecorder = null, broadcastVoiceChunks = [], broadcastVoiceTimerInterval = null, broadcastVoiceBlob = null;
       let _loadingEl = null;
+      // ✅ [إصلاح 2] متغيرات إدارة الستريم وحماية الضغطات المتعددة
+      let recordStream = null;
+      let extraAudioStream = null;
+      let isSaving = false;
+      let isStarting = false;
 
       // =============================================
       // ✅ [إصلاح 3] رفع الملف — مع تشخيص واضح
@@ -539,10 +565,13 @@
         currentUser=null; isAdmin=false; currentParticipant=null; recordedChunks=[];
         showHomePage();
       }
-      function togglePassword(id) {
-        const el=document.getElementById(id), icon=event.target;
-        if(el.type==='password'){el.type='text';icon.textContent='🙈';}
-        else{el.type='password';icon.textContent='👁️';}
+      // ✅ [إصلاح 1] togglePassword تستقبل event بشكل صريح
+      function togglePassword(id, ev) {
+        const el = document.getElementById(id);
+        const icon = ev?.target;
+        if(!el || !icon) return;
+        if (el.type === 'password') { el.type = 'text'; icon.textContent = '🙈'; }
+        else { el.type = 'password'; icon.textContent = '👁️'; }
       }
 
       // =============================================
@@ -561,7 +590,8 @@
         const bar = document.getElementById('globalBroadcastsBar');
         if (!bar) return;
         try {
-          const {data} = await db.from('broadcasts').select('id,message,type,voice_url,voice_data,created_at').order('created_at',{ascending:false});
+          // ✅ [إصلاح 5] limit(3) لتقليل ضغط الشبكة
+          const {data} = await db.from('broadcasts').select('id,message,type,voice_url,voice_data,created_at').order('created_at',{ascending:false}).limit(3);
           if (!data || data.length===0) { bar.innerHTML=''; return; }
           bar.innerHTML = data.map(b=>`
             <div class="broadcast-banner" style="margin-bottom:8px;">
@@ -580,8 +610,8 @@
         const div = document.getElementById('adminBroadcastsList');
         if (!div) return;
         try {
-          const {data} = await db.from('broadcasts').select('id,message,type,voice_url,voice_data,created_at').order('created_at',{ascending:false});
-          if (!data || data.length===0){ div.innerHTML=''; return; }
+          // ✅ [إصلاح 5] limit(10) للأدمن
+          const {data} = await db.from('broadcasts').select('id,message,type,voice_url,voice_data,created_at').order('created_at',{ascending:false}).limit(10);
           let html=`<h3 style="color:var(--dark-green);margin-bottom:8px;">📢 الإعلانات الحالية</h3>`;
           data.forEach(b=>{
             html+=`<div class="broadcast-banner" style="position:relative;">
@@ -698,90 +728,9 @@
       }
 
       // =============================================
-      // تسجيل مشارك جديد
+      // تسجيل مشارك جديد + تسجيل دخول (مربوطة في window.onload أدناه)
       // =============================================
-      document.getElementById('registerForm').onsubmit=async function(e){
-        e.preventDefault();
-        const name=document.getElementById('participantName').value.trim();
-        const pass=document.getElementById('password').value.trim();
-        if(!name||!pass){alert('الرجاء ملء جميع الحقول!');return;}
-        const btn=document.getElementById('registerSubmitBtn');
-        btn.disabled=true; btn.textContent='جاري التسجيل...';
-        showLoading();
-        try {
-          const {data:existing}=await db.from('participants').select('id').ilike('name',name);
-          if(existing&&existing.length>0){hideLoading();btn.disabled=false;btn.textContent='تسجيل 🌟';alert('هذا الاسم مسجل مسبقاً!');return;}
-          const {data:newUser,error}=await db.from('participants').insert({name,password:pass}).select().single();
-          if(error) throw error;
-          currentUser=newUser; saveSession(newUser);
-          hideLoading(); btn.disabled=false; btn.textContent='تسجيل 🌟';
-          showParticipantPage();
-        } catch(err){hideLoading();btn.disabled=false;btn.textContent='تسجيل 🌟';alert('حدث خطأ: '+err.message);}
-      };
-
-      // =============================================
-      // ✅ [إصلاح 2] تسجيل دخول ذكي — يجيب فقط 25 نتيجة بدل كل المشاركين
-      // =============================================
-      document.getElementById('loginForm').onsubmit = async function(e) {
-        e.preventDefault();
-
-        const nameRaw = document.getElementById('loginName').value.trim();
-        const passRaw = document.getElementById('loginPassword').value;
-
-        if (!nameRaw || !passRaw) { alert('الرجاء ملء جميع الحقول!'); return; }
-
-        const btn = document.getElementById('loginSubmitBtn');
-        btn.disabled = true; btn.textContent = 'جاري الدخول...';
-        showLoading('جاري الدخول...');
-
-        const norm = s => (s || '')
-          .trim()
-          .replace(/[\u0622\u0623\u0625]/g, '\u0627')
-          .replace(/\u0629/g, '\u0647')
-          .replace(/\s+/g, ' ')
-          .toLowerCase();
-
-        try {
-          // ✅ نجيب فقط النتائج القريبة من الاسم (بدل كل المشاركين)
-          const { data: candidates, error } = await db
-            .from('participants')
-            .select('id,name,password')
-            .ilike('name', `%${nameRaw}%`)
-            .limit(25);
-
-          hideLoading();
-          btn.disabled = false; btn.textContent = 'دخول 🔓';
-
-          if (error) { showLoginError('خطأ في الاتصال.'); return; }
-          if (!candidates || candidates.length === 0) { showLoginError('الاسم أو كلمة المرور خاطئة!'); return; }
-
-          const user = candidates.find(u =>
-            norm(u.name) === norm(nameRaw) &&
-            ((u.password === passRaw) || ((u.password || '').trim() === passRaw.trim()))
-          );
-
-          if (!user) { showLoginError('الاسم أو كلمة المرور خاطئة!'); return; }
-
-          currentUser = user;
-          saveSession(user);
-          showParticipantPage();
-
-        } catch (err) {
-          hideLoading();
-          btn.disabled = false; btn.textContent = 'دخول 🔓';
-          showLoginError('حدث خطأ. حاول مرة أخرى.');
-          console.error(err);
-        }
-      };
-
       function showLoginError(msg){const el=document.getElementById('loginError');el.textContent=msg;el.classList.remove('hidden');setTimeout(()=>el.classList.add('hidden'),4000);}
-
-      document.getElementById('adminLoginForm').onsubmit=function(e){
-        e.preventDefault();
-        const pass=document.getElementById('adminPassword').value;
-        if(pass==='Qur@n2025#Admin$Ramadan'){isAdmin=true;saveSession();showAdminParticipantsPage();}
-        else{const el=document.getElementById('adminError');el.textContent='كلمة المرور خاطئة!';el.classList.remove('hidden');setTimeout(()=>el.classList.add('hidden'),3000);}
-      };
 
       // =============================================
       // التسجيل الصوتي/المرئي
@@ -809,43 +758,103 @@
           document.getElementById('livePreview').classList.add('hidden');
         }
       }
+      // ✅ [إصلاح 2] resetRecordingUI — دالة مشتركة لإعادة الواجهة
+      function resetRecordingUI(){
+        clearInterval(timerInterval);
+        const lp = document.getElementById('livePreview'); if(lp) lp.classList.remove('recording');
+        document.getElementById('recordBtn').classList.remove('hidden');
+        document.getElementById('stopBtn').classList.add('hidden');
+        const t = document.getElementById('timer');
+        if(t){ t.classList.add('hidden'); t.textContent='00:00'; }
+      }
+
+      // ✅ [إصلاح 2+7] startRecording — مع إدارة كاملة للستريم وحماية ضغطات مزدوجة
       async function startRecording(){
+        if(isStarting) return;
+        isStarting = true;
+
         try {
           let stream;
-          if(recordingType==='video'){
-            if(previewStream){const as=await navigator.mediaDevices.getUserMedia({audio:true});stream=new MediaStream([...previewStream.getVideoTracks(),...as.getAudioTracks()]);}
-            else{stream=await navigator.mediaDevices.getUserMedia({video:true,audio:true});}
-          } else {stream=await navigator.mediaDevices.getUserMedia({audio:true});}
-          recordedChunks=[];
-          const mt=recordingType==='video'?getSupportedVideoMimeType():getSupportedMimeType();
-          try{mediaRecorder=mt?new MediaRecorder(stream,{mimeType:mt}):new MediaRecorder(stream);}
-          catch(e){mediaRecorder=new MediaRecorder(stream);}
-          mediaRecorder.ondataavailable=e=>{if(e.data&&e.data.size>0)recordedChunks.push(e.data);};
-          mediaRecorder.onstop=()=>{if(recordingType==='audio')stream.getTracks().forEach(t=>{try{t.stop();}catch(e){}});showPreview();};
-          mediaRecorder.start(100);
+
+          if(recordingType === 'video'){
+            if(previewStream){
+              extraAudioStream = await navigator.mediaDevices.getUserMedia({ audio:true });
+              stream = new MediaStream([
+                ...previewStream.getVideoTracks(),
+                ...extraAudioStream.getAudioTracks()
+              ]);
+            } else {
+              stream = await navigator.mediaDevices.getUserMedia({ video:true, audio:true });
+            }
+          } else {
+            stream = await navigator.mediaDevices.getUserMedia({ audio:true });
+          }
+
+          recordStream = stream;
+          recordedChunks = [];
+
+          const mt = recordingType==='video' ? getSupportedVideoMimeType() : getSupportedMimeType();
+          try { mediaRecorder = mt ? new MediaRecorder(stream, { mimeType: mt }) : new MediaRecorder(stream); }
+          catch(e) { mediaRecorder = new MediaRecorder(stream); }
+
+          mediaRecorder.ondataavailable = (e)=>{ if(e.data && e.data.size>0) recordedChunks.push(e.data); };
+
+          mediaRecorder.onstop = ()=>{
+            // ✅ قفل ستريم التسجيل دائمًا
+            try { recordStream?.getTracks().forEach(t=>t.stop()); } catch(e){}
+            recordStream = null;
+            // ✅ قفل ستريم الصوت الإضافي
+            try { extraAudioStream?.getTracks().forEach(t=>t.stop()); } catch(e){}
+            extraAudioStream = null;
+            showPreview();
+          };
+
+          // ✅ [إصلاح 7] timeslice 200ms بدل 100ms لتقليل الضغط على الأجهزة الضعيفة
+          mediaRecorder.start(200);
+
           document.getElementById('recordBtn').classList.add('hidden');
           document.getElementById('stopBtn').classList.remove('hidden');
           document.getElementById('timer').classList.remove('hidden');
           if(recordingType==='video') document.getElementById('livePreview').classList.add('recording');
-          recordingStartTime=Date.now();
-          timerInterval=setInterval(()=>{
-            const el=Math.floor((Date.now()-recordingStartTime)/1000);
-            const t=document.getElementById('timer');
-            if(t) t.textContent=`${Math.floor(el/60).toString().padStart(2,'0')}:${(el%60).toString().padStart(2,'0')}`;
-          },1000);
-        } catch(err){alert('خطأ: '+err.message);}
+
+          recordingStartTime = Date.now();
+          clearInterval(timerInterval);
+          timerInterval = setInterval(()=>{
+            const sec = Math.floor((Date.now()-recordingStartTime)/1000);
+            const t = document.getElementById('timer');
+            if(t) t.textContent = `${String(Math.floor(sec/60)).padStart(2,'0')}:${String(sec%60).padStart(2,'0')}`;
+          }, 1000);
+
+        } catch(err){
+          alert('خطأ: ' + (err?.message || err));
+          resetRecordingUI();
+          try { recordStream?.getTracks().forEach(t=>t.stop()); } catch(e){}
+          recordStream = null;
+          try { extraAudioStream?.getTracks().forEach(t=>t.stop()); } catch(e){}
+          extraAudioStream = null;
+        } finally {
+          isStarting = false;
+        }
       }
+
+      // ✅ [إصلاح 2] stopRecording المحسّن
       function stopRecording(){
-        if(mediaRecorder&&mediaRecorder.state!=='inactive'){try{mediaRecorder.stop();}catch(e){}clearInterval(timerInterval);}
+        if(mediaRecorder && mediaRecorder.state!=='inactive'){
+          try { mediaRecorder.stop(); } catch(e){}
+        }
+        resetRecordingUI();
       }
+
+      // ✅ [إصلاح 2] cancelRecording مع تنظيف كامل للستريم
       function cancelRecording(){
-        if(mediaRecorder&&mediaRecorder.state!=='inactive'){try{mediaRecorder.stop();}catch(e){}}
-        const lp=document.getElementById('livePreview'); if(lp)lp.classList.remove('recording');
-        clearInterval(timerInterval); recordedChunks=[];
-        document.getElementById('recordBtn').classList.remove('hidden');
-        document.getElementById('stopBtn').classList.add('hidden');
-        document.getElementById('timer').classList.add('hidden');
-        document.getElementById('timer').textContent='00:00';
+        try { if(mediaRecorder && mediaRecorder.state!=='inactive') mediaRecorder.stop(); } catch(e){}
+        try { recordStream?.getTracks().forEach(t=>t.stop()); } catch(e){}
+        recordStream = null;
+        try { extraAudioStream?.getTracks().forEach(t=>t.stop()); } catch(e){}
+        extraAudioStream = null;
+
+        recordedChunks = [];
+        resetRecordingUI();
         document.getElementById('recordingPreview').classList.add('hidden');
         document.getElementById('previewMedia').innerHTML='';
       }
@@ -867,52 +876,62 @@
       }
 
       // =============================================
-      // ✅ [إصلاح 3] حفظ التسجيل — مع قفل الزر أثناء الرفع
+      // ✅ [إصلاح 3] حفظ التسجيل — حماية من الضغطات المزدوجة + finally
       // =============================================
       async function saveRecording(){
-        if(!recordedChunks||recordedChunks.length===0){alert('لا توجد بيانات. يرجى التسجيل أولاً.');return;}
-        const mt=(mediaRecorder&&mediaRecorder.mimeType&&mediaRecorder.mimeType!=='')?mediaRecorder.mimeType:(recordingType==='video'?'video/webm':'audio/webm');
-        const blob=new Blob([...recordedChunks],{type:mt});
-        if(blob.size===0){alert('التسجيل فارغ! حاول مرة أخرى.');return;}
+        if(isSaving) return;
 
-        // ✅ قفل الزر لمنع الضغط المتعدد
+        if(!recordedChunks || recordedChunks.length===0){
+          alert('لا توجد بيانات. يرجى التسجيل أولاً.');
+          return;
+        }
+
+        const mt = (mediaRecorder && mediaRecorder.mimeType) ? mediaRecorder.mimeType : (recordingType==='video'?'video/webm':'audio/webm');
+        const blob = new Blob([...recordedChunks], { type: mt || 'audio/webm' });
+        if(blob.size===0){ alert('التسجيل فارغ! حاول مرة أخرى.'); return; }
+
+        isSaving = true;
+
         const saveBtn = document.getElementById('saveRecordingBtn');
-        if (saveBtn) { saveBtn.disabled = true; saveBtn.textContent = '⬆️ جاري الرفع...'; }
+        if(saveBtn){ saveBtn.disabled = true; saveBtn.textContent = '⬆️ جاري الرفع...'; }
 
         showLoading('⬆️ جاري الرفع...');
+
         try {
+          if(blob.size > 30 * 1024 * 1024){
+            console.warn('Large blob:', blob.size);
+          }
+
           const fileUrl = await uploadToStorage(blob, `participant_${currentUser.id}`);
 
-          const {data:saved,error}=await db.from('recordings').insert({
+          const { error } = await db.from('recordings').insert({
             participant_id: currentUser.id,
             type: recordingType,
             file_url: fileUrl,
             data: null
-          }).select('id,type,created_at,file_url').single();
+          });
 
           if(error) throw error;
 
-          hideLoading();
-          // ✅ إعادة تفعيل الزر
-          if (saveBtn) { saveBtn.disabled = false; saveBtn.textContent = '💾 حفظ ورفع'; }
-
-          alert('تم الحفظ بنجاح! ✅');
-          recordedChunks=[];
+          recordedChunks = [];
           document.getElementById('recordingPreview').classList.add('hidden');
           document.getElementById('previewMedia').innerHTML='';
-          document.getElementById('timer').textContent='00:00';
+          hideLoading();
+          alert('تم الحفظ بنجاح! ✅');
           await loadMyRecordings();
 
         } catch(err){
           hideLoading();
-          // ✅ إعادة تفعيل الزر عند الخطأ
-          if (saveBtn) { saveBtn.disabled = false; saveBtn.textContent = '💾 حفظ ورفع'; }
-          let msg=err.message||'';
+          let msg = err?.message || String(err);
           if(msg.includes('not found')||msg.includes('bucket')){
             alert('❌ خطأ في الرفع:\nيجب إنشاء bucket باسم "recordings" في Supabase Storage أولاً!');
           } else {
-            alert('❌ خطأ في الحفظ:\n'+msg);
+            alert('❌ فشل الحفظ/الرفع:\n' + msg);
           }
+          console.error(err);
+        } finally {
+          isSaving = false;
+          if(saveBtn){ saveBtn.disabled = false; saveBtn.textContent = '💾 حفظ ورفع'; }
         }
       }
 
@@ -1383,10 +1402,78 @@
       // =============================================
       // تشغيل التطبيق
       // =============================================
-      window.onload=function(){
+      window.onload = function(){
         loadViewedRecordings();
         loadCurrentSession();
-        loadGlobalBroadcasts();
+        // ✅ [إصلاح 5] تأخير بسيط لتفتح الصفحة فوراً
+        setTimeout(loadGlobalBroadcasts, 400);
+
+        // =============================================
+        // ✅ [إصلاح 6] ربط الفورمات هنا لضمان وجود العناصر في DOM
+        // =============================================
+
+        // تسجيل مشارك جديد
+        document.getElementById('registerForm').onsubmit = async function(e){
+          e.preventDefault();
+          const name=document.getElementById('participantName').value.trim();
+          const pass=document.getElementById('password').value.trim();
+          if(!name||!pass){alert('الرجاء ملء جميع الحقول!');return;}
+          const btn=document.getElementById('registerSubmitBtn');
+          btn.disabled=true; btn.textContent='جاري التسجيل...';
+          showLoading();
+          try {
+            const {data:existing}=await db.from('participants').select('id').ilike('name',name);
+            if(existing&&existing.length>0){hideLoading();btn.disabled=false;btn.textContent='تسجيل 🌟';alert('هذا الاسم مسجل مسبقاً!');return;}
+            const {data:newUser,error}=await db.from('participants').insert({name,password:pass}).select().single();
+            if(error) throw error;
+            currentUser=newUser; saveSession(newUser);
+            hideLoading(); btn.disabled=false; btn.textContent='تسجيل 🌟';
+            showParticipantPage();
+          } catch(err){hideLoading();btn.disabled=false;btn.textContent='تسجيل 🌟';alert('حدث خطأ: '+err.message);}
+        };
+
+        // ✅ [إصلاح 4] تسجيل دخول ذكي — يجيب فقط 25 نتيجة بدل كل المشاركين
+        document.getElementById('loginForm').onsubmit = async function(e) {
+          e.preventDefault();
+          const nameRaw = document.getElementById('loginName').value.trim();
+          const passRaw = document.getElementById('loginPassword').value;
+          if (!nameRaw || !passRaw) { alert('الرجاء ملء جميع الحقول!'); return; }
+          const btn = document.getElementById('loginSubmitBtn');
+          btn.disabled = true; btn.textContent = 'جاري الدخول...';
+          showLoading('جاري الدخول...');
+          const norm = s => (s||'').trim()
+            .replace(/[\u0622\u0623\u0625]/g,'\u0627')
+            .replace(/\u0629/g,'\u0647')
+            .replace(/\s+/g,' ').toLowerCase();
+          try {
+            const { data: candidates, error } = await db
+              .from('participants').select('id,name,password')
+              .ilike('name', `%${nameRaw}%`).limit(25);
+            hideLoading();
+            btn.disabled = false; btn.textContent = 'دخول 🔓';
+            if (error) { showLoginError('خطأ في الاتصال.'); return; }
+            if (!candidates || candidates.length === 0) { showLoginError('الاسم أو كلمة المرور خاطئة!'); return; }
+            const user = candidates.find(u =>
+              norm(u.name) === norm(nameRaw) &&
+              ((u.password === passRaw) || ((u.password||'').trim() === passRaw.trim()))
+            );
+            if (!user) { showLoginError('الاسم أو كلمة المرور خاطئة!'); return; }
+            currentUser = user; saveSession(user); showParticipantPage();
+          } catch (err) {
+            hideLoading();
+            btn.disabled = false; btn.textContent = 'دخول 🔓';
+            showLoginError('حدث خطأ. حاول مرة أخرى.');
+            console.error(err);
+          }
+        };
+
+        // دخول الاستاذة
+        document.getElementById('adminLoginForm').onsubmit = function(e){
+          e.preventDefault();
+          const pass=document.getElementById('adminPassword').value;
+          if(pass==='Qur@n2025#Admin$Ramadan'){isAdmin=true;saveSession();showAdminParticipantsPage();}
+          else{const el=document.getElementById('adminError');el.textContent='كلمة المرور خاطئة!';el.classList.remove('hidden');setTimeout(()=>el.classList.add('hidden'),3000);}
+        };
       };
     </script>
   </body>
