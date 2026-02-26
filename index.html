@@ -168,7 +168,6 @@
       .confirm-content h3 { color: var(--dark-green); font-size: 1.2rem; margin-bottom: 12px; }
       .confirm-content p { font-size: 0.95rem; margin-bottom: 20px; line-height: 1.5; }
       .confirm-buttons { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
-      /* ✅ شريط تشخيص الاتصال */
       #debugBar { position: fixed; bottom: 10px; right: 10px; background: #fff; padding: 8px 10px; border-radius: 10px; border: 2px solid #d4af37; font-family: Cairo, sans-serif; z-index: 9999; font-size: 12px; color: #0d4d3f; box-shadow: 0 4px 15px rgba(0,0,0,0.15); }
       @media (max-width: 768px) {
         h1 { font-size: 1.3rem; } .card { padding: 12px 10px; } .btn { font-size: 0.95rem; padding: 10px; }
@@ -177,7 +176,6 @@
     </style>
   </head>
   <body>
-    <!-- ✅ شريط تشخيص الاتصال -->
     <div id="debugBar">🟡 جاري التحقق...</div>
 
     <div class="container">
@@ -204,7 +202,8 @@
           <div class="form-group"><label>كلمة المرور</label>
             <div class="password-input-wrapper">
               <input type="password" id="password" required placeholder="اختر كلمة مرور" />
-              <span class="password-toggle" onclick="togglePassword('password')">👁️</span>
+              <!-- ✅ Fix 1: pass this instead of using global event -->
+              <span class="password-toggle" onclick="togglePassword('password', this)">👁️</span>
             </div>
           </div>
           <button type="submit" class="btn btn-primary" id="registerSubmitBtn">تسجيل 🌟</button>
@@ -220,7 +219,8 @@
           <div class="form-group"><label>كلمة المرور</label>
             <div class="password-input-wrapper">
               <input type="password" id="loginPassword" required placeholder="كلمة المرور" />
-              <span class="password-toggle" onclick="togglePassword('loginPassword')">👁️</span>
+              <!-- ✅ Fix 1: pass this instead of using global event -->
+              <span class="password-toggle" onclick="togglePassword('loginPassword', this)">👁️</span>
             </div>
           </div>
           <button type="submit" class="btn btn-primary" id="loginSubmitBtn">دخول 🔓</button>
@@ -235,7 +235,8 @@
           <div class="form-group"><label>كلمة المرور</label>
             <div class="password-input-wrapper">
               <input type="password" id="adminPassword" required placeholder="كلمة المرور" />
-              <span class="password-toggle" onclick="togglePassword('adminPassword')">👁️</span>
+              <!-- ✅ Fix 1: pass this instead of using global event -->
+              <span class="password-toggle" onclick="togglePassword('adminPassword', this)">👁️</span>
             </div>
           </div>
           <button type="submit" class="btn btn-primary">دخول</button>
@@ -323,13 +324,17 @@
       </div>
     </div>
 
-    <!-- ✅ تحميل Supabase -->
+    <!-- تحميل Supabase -->
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <script>
       // =============================================
-      // ✅ [إصلاح 1] تحقق من تحميل Supabase قبل أي شيء
+      // ✅ Fix 4: انتظار تحميل Supabase حتى 4 ثواني
       // =============================================
-      (function checkSupabaseLoaded() {
+      (async function waitSupabase() {
+        const start = Date.now();
+        while (!window.supabase && Date.now() - start < 4000) {
+          await new Promise(r => setTimeout(r, 100));
+        }
         if (!window.supabase) {
           document.body.innerHTML = `
             <div style="font-family:Cairo,sans-serif;direction:rtl;padding:18px;background:#fff;border-radius:12px;max-width:700px;margin:20px auto;">
@@ -351,11 +356,14 @@
 
       const db = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
 
-      // ✅ [إصلاح 1] فحص الاتصال بعد إنشاء db مباشرة
+      // ✅ Fix 2: فحص الاتصال بدون count: 'exact' (أسرع)
       (async () => {
         const bar = document.getElementById('debugBar');
         try {
-          const { error } = await db.from('participants').select('id', { head: true, count: 'exact' }).limit(1);
+          const { error } = await db
+            .from('participants')
+            .select('id', { head: true })
+            .limit(1);
           if (error) throw error;
           if (bar) bar.textContent = '🟢 الاتصال شغال';
           setTimeout(() => { if (bar) bar.style.display = 'none'; }, 4000);
@@ -378,30 +386,27 @@
       let _loadingEl = null;
 
       // =============================================
-      // ✅ [إصلاح 3] رفع الملف — مع تشخيص واضح
+      // ✅ Fix 3: رفع الملف — يرجّع { publicUrl, path }
       // =============================================
       async function uploadToStorage(blob, folder) {
         const ext  = getExtension(blob.type);
-        const name = `${folder}/${Date.now()}_${Math.random().toString(36).slice(2)}.${ext}`;
+        const path = `${folder}/${Date.now()}_${Math.random().toString(36).slice(2)}.${ext}`;
 
         const t0 = Date.now();
-        const { error } = await db.storage.from(BUCKET).upload(name, blob, {
+        const { error } = await db.storage.from(BUCKET).upload(path, blob, {
           cacheControl: '3600',
           upsert: false,
           contentType: blob.type || 'audio/webm',
         });
+        if (error) throw new Error('فشل الرفع: ' + (error.message || JSON.stringify(error)));
 
-        if (error) {
-          throw new Error('فشل الرفع: ' + (error.message || JSON.stringify(error)));
-        }
+        console.log('Upload ms:', Date.now() - t0, 'size:', blob.size);
 
-        const ms = Date.now() - t0;
-        console.log('Upload ms:', ms, 'size:', blob.size);
+        const { data: urlData } = db.storage.from(BUCKET).getPublicUrl(path);
+        const publicUrl = urlData?.publicUrl;
+        if (!publicUrl) throw new Error('تم الرفع لكن فشل استخراج الرابط العام');
 
-        const { data: urlData } = db.storage.from(BUCKET).getPublicUrl(name);
-        if (!urlData?.publicUrl) throw new Error('تم الرفع لكن فشل استخراج الرابط العام');
-
-        return urlData.publicUrl;
+        return { publicUrl, path };
       }
 
       function getExtension(mimeType) {
@@ -539,10 +544,13 @@
         currentUser=null; isAdmin=false; currentParticipant=null; recordedChunks=[];
         showHomePage();
       }
-      function togglePassword(id) {
-        const el=document.getElementById(id), icon=event.target;
-        if(el.type==='password'){el.type='text';icon.textContent='🙈';}
-        else{el.type='password';icon.textContent='👁️';}
+
+      // ✅ Fix 1: دالة togglePassword تستقبل iconEl بدل event العالمي
+      function togglePassword(id, iconEl) {
+        const el = document.getElementById(id);
+        if (!el) return;
+        if (el.type === 'password') { el.type = 'text'; if (iconEl) iconEl.textContent = '🙈'; }
+        else { el.type = 'password'; if (iconEl) iconEl.textContent = '👁️'; }
       }
 
       // =============================================
@@ -677,7 +685,10 @@
           if(isVoice){
             if(!broadcastVoiceBlob){hideLoading();alert('الرجاء تسجيل رسالة صوتية!');return;}
             bd.message='رسالة صوتية من الاستاذة 📢';
-            bd.voice_url=await uploadToStorage(broadcastVoiceBlob,'broadcasts');
+            // ✅ Fix 3: استخدام الكائن الجديد لـ uploadToStorage
+            const up = await uploadToStorage(broadcastVoiceBlob,'broadcasts');
+            bd.voice_url = up.publicUrl;
+            bd.voice_path = up.path;
           } else {
             const text=document.getElementById('broadcastText').value.trim();
             if(!text){hideLoading();alert('الرجاء كتابة الإعلان!');return;}
@@ -720,7 +731,7 @@
       };
 
       // =============================================
-      // ✅ [إصلاح 2] تسجيل دخول ذكي — يجيب فقط 25 نتيجة بدل كل المشاركين
+      // تسجيل دخول
       // =============================================
       document.getElementById('loginForm').onsubmit = async function(e) {
         e.preventDefault();
@@ -742,7 +753,6 @@
           .toLowerCase();
 
         try {
-          // ✅ نجيب فقط النتائج القريبة من الاسم (بدل كل المشاركين)
           const { data: candidates, error } = await db
             .from('participants')
             .select('id,name,password')
@@ -867,7 +877,7 @@
       }
 
       // =============================================
-      // ✅ [إصلاح 3] حفظ التسجيل — مع قفل الزر أثناء الرفع
+      // ✅ Fix 3: حفظ التسجيل — مع storage_path
       // =============================================
       async function saveRecording(){
         if(!recordedChunks||recordedChunks.length===0){alert('لا توجد بيانات. يرجى التسجيل أولاً.');return;}
@@ -875,25 +885,25 @@
         const blob=new Blob([...recordedChunks],{type:mt});
         if(blob.size===0){alert('التسجيل فارغ! حاول مرة أخرى.');return;}
 
-        // ✅ قفل الزر لمنع الضغط المتعدد
         const saveBtn = document.getElementById('saveRecordingBtn');
         if (saveBtn) { saveBtn.disabled = true; saveBtn.textContent = '⬆️ جاري الرفع...'; }
 
         showLoading('⬆️ جاري الرفع...');
         try {
-          const fileUrl = await uploadToStorage(blob, `participant_${currentUser.id}`);
+          // ✅ Fix 3: استخدام الكائن الجديد { publicUrl, path }
+          const up = await uploadToStorage(blob, `participant_${currentUser.id}`);
 
           const {data:saved,error}=await db.from('recordings').insert({
             participant_id: currentUser.id,
             type: recordingType,
-            file_url: fileUrl,
+            file_url: up.publicUrl,
+            storage_path: up.path,
             data: null
           }).select('id,type,created_at,file_url').single();
 
           if(error) throw error;
 
           hideLoading();
-          // ✅ إعادة تفعيل الزر
           if (saveBtn) { saveBtn.disabled = false; saveBtn.textContent = '💾 حفظ ورفع'; }
 
           alert('تم الحفظ بنجاح! ✅');
@@ -905,7 +915,6 @@
 
         } catch(err){
           hideLoading();
-          // ✅ إعادة تفعيل الزر عند الخطأ
           if (saveBtn) { saveBtn.disabled = false; saveBtn.textContent = '💾 حفظ ورفع'; }
           let msg=err.message||'';
           if(msg.includes('not found')||msg.includes('bucket')){
@@ -1261,7 +1270,10 @@
           } else if(messageType==='voice'){
             if(!adminVoiceBlob){hideLoading();alert('الرجاء تسجيل رسالة صوتية أولاً!');return;}
             msgData.message='رسالة صوتية من الاستاذة 🎤';
-            msgData.voice_url=await uploadToStorage(adminVoiceBlob,'messages');
+            // ✅ Fix 3: استخدام الكائن الجديد { publicUrl, path }
+            const up = await uploadToStorage(adminVoiceBlob,'messages');
+            msgData.voice_url = up.publicUrl;
+            msgData.voice_path = up.path;
           } else {
             if(selectedRating===0){hideLoading();alert('الرجاء اختيار تقييم!');return;}
             await db.from('messages').delete().eq('participant_id',currentParticipant.id).eq('recording_id',currentRecordingForMessage).eq('message_type','rating');
