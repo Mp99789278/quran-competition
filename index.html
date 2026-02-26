@@ -83,13 +83,13 @@
       .new-recordings-badge { position: absolute; top: -6px; right: -6px; background: #dc2626; color: white; border-radius: 50%; width: 24px; height: 24px; display: flex; align-items: center; justify-content: center; font-size: 0.8rem; font-weight: 700; border: 2px solid white; }
       .empty-state { text-align: center; padding: 25px 15px; color: #999; }
       .empty-state .icon { font-size: 3rem; margin-bottom: 10px; opacity: 0.5; }
-      .loading-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); display: flex; align-items: center; justify-content: center; z-index: 3000; pointer-events: none; }
+      .loading-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); display: flex; align-items: center; justify-content: center; z-index: 3000; }
       .spinner { border: 3px solid rgba(255,255,255,0.3); border-top: 3px solid var(--primary-gold); border-radius: 50%; width: 40px; height: 40px; animation: spin 1s linear infinite; margin: 0 auto 10px; }
       @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
       .loading-spinner { text-align: center; color: white; background: rgba(0,0,0,0.7); padding: 20px 30px; border-radius: 12px; }
       .loading-spinner p { font-size: 0.95rem; font-weight: 600; }
-      .player-loading { display: flex; align-items: center; gap: 8px; padding: 10px; color: #888; font-size: 0.85rem; background: #f8fafc; border-radius: 8px; border: 1px solid #e2e8f0; }
       .mini-spinner { border: 2px solid rgba(0,0,0,0.1); border-top: 2px solid var(--primary-gold); border-radius: 50%; width: 18px; height: 18px; animation: spin 0.8s linear infinite; flex-shrink: 0; }
+      .player-loading { display: flex; align-items: center; gap: 8px; padding: 10px; color: #888; font-size: 0.85rem; background: #f8fafc; border-radius: 8px; border: 1px solid #e2e8f0; }
       .player-error { color: #dc2626; font-size: 0.82rem; padding: 8px; text-align: center; background: #fee2e2; border-radius: 8px; }
       .message-modal { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.7); display: flex; align-items: center; justify-content: center; z-index: 2000; padding: 15px; }
       .message-modal-content { background: white; padding: 20px; border-radius: 12px; max-width: 450px; width: 100%; max-height: 80vh; overflow-y: auto; }
@@ -163,7 +163,34 @@
       .confirm-content h3 { color: var(--dark-green); font-size: 1.2rem; margin-bottom: 12px; }
       .confirm-content p { font-size: 0.95rem; margin-bottom: 20px; line-height: 1.5; }
       .confirm-buttons { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
-      #debugBar { position: fixed; bottom: 10px; right: 10px; background: #fff; padding: 8px 10px; border-radius: 10px; border: 2px solid #d4af37; font-family: Cairo, sans-serif; z-index: 9999; font-size: 12px; color: #0d4d3f; box-shadow: 0 4px 15px rgba(0,0,0,0.15); }
+
+      /* ======= CONNECTION ERROR OVERLAY ======= */
+      #connectionErrorOverlay {
+        position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+        background: rgba(0,0,0,0.85); display: flex; align-items: center; justify-content: center;
+        z-index: 9999; padding: 20px;
+      }
+      #connectionErrorOverlay .err-box {
+        background: white; border-radius: 16px; padding: 25px 20px; max-width: 420px; width: 100%; text-align: center;
+      }
+      #connectionErrorOverlay h2 { color: #dc2626; font-size: 1.3rem; margin-bottom: 10px; }
+      #connectionErrorOverlay p { color: #444; font-size: 0.9rem; line-height: 1.7; margin-bottom: 14px; }
+      #connectionErrorOverlay .steps { text-align: right; background: #fef9e7; border-radius: 10px; padding: 12px 16px; margin-bottom: 16px; border: 2px solid #f0c850; }
+      #connectionErrorOverlay .steps p { color: #444; font-size: 0.88rem; margin-bottom: 6px; }
+      #connectionErrorOverlay .steps strong { color: var(--dark-green); }
+
+      /* ======= CONNECTING OVERLAY ======= */
+      #connectingOverlay {
+        position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+        background: linear-gradient(135deg, #0d4d3f 0%, #1a6b54 100%);
+        display: flex; align-items: center; justify-content: center;
+        z-index: 9998; flex-direction: column; gap: 16px;
+      }
+      #connectingOverlay .conn-box { text-align: center; color: white; }
+      #connectingOverlay .conn-spinner { border: 4px solid rgba(255,255,255,0.3); border-top: 4px solid var(--primary-gold); border-radius: 50%; width: 55px; height: 55px; animation: spin 1s linear infinite; margin: 0 auto 16px; }
+      #connectingOverlay h2 { font-family: "Amiri", serif; font-size: 1.6rem; margin-bottom: 8px; }
+      #connectingOverlay p { color: var(--primary-gold); font-size: 0.95rem; }
+
       @media (max-width: 768px) {
         h1 { font-size: 1.3rem; } .card { padding: 12px 10px; } .btn { font-size: 0.95rem; padding: 10px; }
         .record-type-grid { grid-template-columns: 1fr; } .message-type-btns { grid-template-columns: 1fr; }
@@ -171,7 +198,32 @@
     </style>
   </head>
   <body>
-    <div id="debugBar">🟡 جاري التحقق...</div>
+
+    <!-- شاشة الاتصال -->
+    <div id="connectingOverlay">
+      <div class="conn-box">
+        <div class="conn-spinner"></div>
+        <h2>🌙 مسابقة جزء عم</h2>
+        <p id="connectingMsg">جاري الاتصال بالخادم...</p>
+      </div>
+    </div>
+
+    <!-- شاشة خطأ الاتصال -->
+    <div id="connectionErrorOverlay" style="display:none;">
+      <div class="err-box">
+        <div style="font-size:3rem;margin-bottom:10px;">⚠️</div>
+        <h2>تعذّر الاتصال بالخادم</h2>
+        <p>قد يكون الخادم في وضع السكون بسبب عدم النشاط. جرّب الخطوات التالية:</p>
+        <div class="steps">
+          <p><strong>1.</strong> اضغط "إعادة المحاولة" أدناه</p>
+          <p><strong>2.</strong> إذا لم ينجح، تحقق من اتصالك بالإنترنت</p>
+          <p><strong>3.</strong> إذا استمرت المشكلة، افتح <strong>supabase.com</strong> وأعِد تفعيل المشروع</p>
+        </div>
+        <button onclick="retryConnection()" style="width:100%;padding:14px;background:linear-gradient(135deg,#d4af37,#f0c850);border:none;border-radius:10px;font-family:Cairo,sans-serif;font-weight:700;font-size:1.05rem;cursor:pointer;color:#0d4d3f;margin-bottom:8px;">🔄 إعادة المحاولة</button>
+        <p style="font-size:0.8rem;color:#888;margin:0;">إذا ظهر هذا الخطأ دائماً، تواصل مع مشرف الموقع</p>
+      </div>
+    </div>
+
     <div class="container">
       <div class="header">
         <div class="logo">
@@ -182,7 +234,7 @@
       </div>
       <div id="globalBroadcastsBar"></div>
 
-      <div id="homePage" class="card">
+      <div id="homePage" class="card hidden">
         <button class="btn btn-primary big-icon-btn" onclick="showRegisterPage()">🆕 تسجيل جديد</button>
         <button class="btn btn-secondary big-icon-btn" onclick="showLoginPage()">🔑 دخول</button>
         <button class="btn btn-secondary" onclick="showAdminLogin()" style="margin-top:20px;">👩‍🏫 دخول الاستاذة</button>
@@ -190,6 +242,7 @@
 
       <div id="registerPage" class="card hidden">
         <h2 style="color:var(--dark-green);margin-bottom:15px;text-align:center;">تسجيل جديد</h2>
+        <div id="registerError" class="error-message hidden"></div>
         <form id="registerForm">
           <div class="form-group"><label>الاسم</label><input type="text" id="participantName" required placeholder="اكتب اسمك" /></div>
           <div class="form-group"><label>كلمة المرور</label>
@@ -314,92 +367,50 @@
       </div>
     </div>
 
-    <!-- ✅ إصلاح لودر Supabase: async/await صحيح + لا double increment -->
+    <!-- ===== تحميل Supabase ===== -->
     <script>
-      (function () {
+      var _sbLoaded = false;
+
+      function _loadScript(src) {
+        return new Promise(function(resolve, reject) {
+          var s = document.createElement('script');
+          s.src = src; s.async = true;
+          s.onload = resolve; s.onerror = reject;
+          document.head.appendChild(s);
+        });
+      }
+
+      async function _bootSupabase() {
         var cdns = [
           "https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.js",
           "https://unpkg.com/@supabase/supabase-js@2/dist/umd/supabase.js",
           "https://cdnjs.cloudflare.com/ajax/libs/supabase-js/2.39.3/umd/supabase.min.js"
         ];
-
-        function loadScript(src) {
-          return new Promise(function (resolve, reject) {
-            var s = document.createElement("script");
-            s.src = src;
-            s.async = true;
-            s.onload = resolve;
-            s.onerror = reject;
-            document.head.appendChild(s);
-          });
+        for (var i = 0; i < cdns.length; i++) {
+          try {
+            document.getElementById('connectingMsg').textContent = 'جاري تحميل المكتبة... (' + (i+1) + '/' + cdns.length + ')';
+            await _loadScript(cdns[i]);
+            if (window.supabase) { _sbLoaded = true; break; }
+          } catch(e) {}
         }
-
-        async function boot() {
-          for (var i = 0; i < cdns.length; i++) {
-            try {
-              await loadScript(cdns[i]);
-              if (window.supabase) break;
-            } catch (e) {
-              // جرّب التالي
-            }
-          }
-
-          if (!window.supabase) {
-            document.body.innerHTML =
-              '<div style="font-family:Cairo,sans-serif;direction:rtl;padding:18px;background:#fff;border-radius:12px;max-width:700px;margin:20px auto;">' +
-              '<h2 style="color:#b91c1c;margin-bottom:8px;">⚠️ مشكلة تشغيل</h2>' +
-              '<p style="line-height:1.9;color:#111">مكتبة Supabase لم تُحمّل. جرّب:</p>' +
-              '<ol style="line-height:1.9;color:#111;margin:10px 18px;">' +
-              '<li>إغلاق مانع الإعلانات/الخصوصية مؤقتًا</li>' +
-              '<li>فتح الصفحة عبر شبكة مختلفة (بيانات/واي فاي)</li>' +
-              '<li>تحديث الصفحة</li>' +
-              '</ol>' +
-              '<button onclick="location.reload()" style="margin-top:14px;padding:10px 20px;background:#d4af37;border:none;border-radius:8px;font-family:Cairo,sans-serif;font-weight:700;cursor:pointer;font-size:1rem;">🔄 تحديث الصفحة</button>' +
-              "</div>";
-            return;
-          }
-
-          // ✅ أطلق الحدث بعد تحميل المكتبة بنجاح
-          window.dispatchEvent(new Event("supabase:ready"));
+        if (_sbLoaded) {
+          document.getElementById('connectingMsg').textContent = 'جاري الاتصال بالخادم...';
+          window.dispatchEvent(new Event('supabase:ready'));
+        } else {
+          document.getElementById('connectingOverlay').style.display = 'none';
+          document.getElementById('connectionErrorOverlay').style.display = 'flex';
         }
+      }
 
-        boot();
-      })();
+      _bootSupabase();
     </script>
 
+    <!-- ===== الكود الرئيسي ===== -->
     <script>
       const SUPABASE_URL = 'https://jimrkqewuafaoxmpmhbp.supabase.co';
       const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImppbXJrcWV3dWFmYW94bXBtaGJwIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzE2ODM1NzUsImV4cCI6MjA4NzI1OTU3NX0.Qihj4BnB0FErseE0j8Gq8ydbOf8Bu7lW2sRTfTudZ7Q';
       const BUCKET = 'recordings';
       let db = null;
-
-      function initApp() {
-        if (db) return;
-        if (!window.supabase) return; // حماية إضافية
-        db = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
-        (async () => {
-          const bar = document.getElementById('debugBar');
-          try {
-            const { error } = await db.from('participants').select('id', { head: true }).limit(1);
-            if (error) throw error;
-            if (bar) bar.textContent = '🟢 الاتصال شغال';
-            setTimeout(() => { if (bar) bar.style.display = 'none'; }, 4000);
-          } catch (e) {
-            if (bar) bar.textContent = '🔴 مشكلة اتصال — جرب تحديث الصفحة';
-          }
-        })();
-        loadViewedRecordings();
-        loadCurrentSession();
-        loadGlobalBroadcasts();
-      }
-
-      // ✅ الإصلاح الجوهري: ننتظر حدث supabase:ready أو نشغّل مباشرة لو المكتبة موجودة
-      window.addEventListener("supabase:ready", function () {
-        if (typeof initApp === "function") initApp();
-      }, { once: true });
-
-      // لو المكتبة اتحمّلت قبل تعريف هذا الكود (نادر لكن ممكن)
-      if (window.supabase && typeof initApp === "function") initApp();
 
       let currentUser = null, isAdmin = false;
       let mediaRecorder = null, recordedChunks = [], recordingType = 'audio';
@@ -409,7 +420,86 @@
       let currentRecordingForMessage = null, viewedRecordings = new Set(), selectedRating = 0;
       let broadcastVoiceRecorder = null, broadcastVoiceChunks = [], broadcastVoiceTimerInterval = null, broadcastVoiceBlob = null;
       let _loadingEl = null;
+      let _appInited = false;
 
+      // ===== الإصلاح الرئيسي: انتظار supabase مع timeout =====
+      async function initApp() {
+        if (_appInited) return;
+        _appInited = true;
+
+        if (!window.supabase) {
+          showConnectionError();
+          return;
+        }
+
+        db = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+
+        // اختبار الاتصال مع timeout 10 ثوان
+        try {
+          document.getElementById('connectingMsg').textContent = 'جاري التحقق من الاتصال...';
+          const testPromise = db.from('participants').select('id', { head: true }).limit(1);
+          const timeoutPromise = new Promise((_, rej) => setTimeout(() => rej(new Error('timeout')), 10000));
+          const { error } = await Promise.race([testPromise, timeoutPromise]);
+
+          if (error && error.code !== 'PGRST116') {
+            // PGRST116 = no rows, which is fine
+            throw error;
+          }
+
+          // ✅ الاتصال نجح
+          document.getElementById('connectingOverlay').style.display = 'none';
+          loadViewedRecordings();
+          loadCurrentSession();
+          loadGlobalBroadcasts();
+
+        } catch(e) {
+          // فشل الاتصال - إذا كان timeout أو خطأ شبكة
+          if (e.message === 'timeout' || e.message?.includes('Failed to fetch') || e.message?.includes('NetworkError')) {
+            showConnectionError();
+          } else {
+            // خطأ في DB لكن الاتصال يعمل (مثلاً RLS)
+            document.getElementById('connectingOverlay').style.display = 'none';
+            loadViewedRecordings();
+            loadCurrentSession();
+            loadGlobalBroadcasts();
+          }
+        }
+      }
+
+      function showConnectionError() {
+        document.getElementById('connectingOverlay').style.display = 'none';
+        document.getElementById('connectionErrorOverlay').style.display = 'flex';
+      }
+
+      async function retryConnection() {
+        _appInited = false;
+        document.getElementById('connectionErrorOverlay').style.display = 'none';
+        document.getElementById('connectingOverlay').style.display = 'flex';
+        document.getElementById('connectingMsg').textContent = 'جاري إعادة الاتصال...';
+
+        // انتظر قليلاً ثم أعد المحاولة
+        await new Promise(r => setTimeout(r, 1000));
+
+        if (db) {
+          // db موجود، جرب الاتصال مباشرة
+          _appInited = false;
+          await initApp();
+        } else if (window.supabase) {
+          await initApp();
+        } else {
+          // أعد تحميل الصفحة كاملاً
+          location.reload();
+        }
+      }
+
+      window.addEventListener('supabase:ready', function() {
+        initApp();
+      }, { once: true });
+
+      // إذا supabase موجود مسبقاً
+      if (window.supabase && !_appInited) initApp();
+
+      // ===== دوال مساعدة =====
       async function uploadToStorage(blob, folder) {
         const ext = getExtension(blob.type);
         const path = `${folder}/${Date.now()}_${Math.random().toString(36).slice(2)}.${ext}`;
@@ -419,7 +509,7 @@
         if (error) throw new Error('فشل الرفع: ' + (error.message || JSON.stringify(error)));
         const { data: urlData } = db.storage.from(BUCKET).getPublicUrl(path);
         const publicUrl = urlData?.publicUrl;
-        if (!publicUrl) throw new Error('تم الرفع لكن فشل استخراج الرابط العام');
+        if (!publicUrl) throw new Error('تم الرفع لكن فشل استخراج الرابط');
         return { publicUrl, path };
       }
 
@@ -554,13 +644,13 @@
 
       function playerHtml(url, type) {
         if (!url) return '<div class="player-error">⚠️ لا يوجد تسجيل</div>';
-        if (type==='video') return `<video controls src="${url}" style="width:100%;border-radius:6px;background:#000;max-height:280px;" onloadedmetadata="fixDuration(this)" preload="metadata"></video>`;
-        return `<audio controls src="${url}" style="width:100%;" onloadedmetadata="fixDuration(this)" preload="metadata"></audio>`;
+        if (type==='video') return `<video controls src="${escapeHtml(url)}" style="width:100%;border-radius:6px;background:#000;max-height:280px;" onloadedmetadata="fixDuration(this)" preload="metadata"></video>`;
+        return `<audio controls src="${escapeHtml(url)}" style="width:100%;" onloadedmetadata="fixDuration(this)" preload="metadata"></audio>`;
       }
 
       async function loadGlobalBroadcasts() {
         const bar = document.getElementById('globalBroadcastsBar');
-        if (!bar) return;
+        if (!bar || !db) return;
         try {
           const {data} = await db.from('broadcasts').select('id,message,type,voice_url,voice_data,created_at').order('created_at',{ascending:false});
           if (!data || data.length===0) { bar.innerHTML=''; return; }
@@ -579,7 +669,7 @@
 
       async function loadAdminBroadcasts() {
         const div = document.getElementById('adminBroadcastsList');
-        if (!div) return;
+        if (!div || !db) return;
         try {
           const {data} = await db.from('broadcasts').select('id,message,type,voice_url,voice_data,created_at').order('created_at',{ascending:false});
           if (!data || data.length===0){ div.innerHTML=''; return; }
@@ -703,57 +793,107 @@
         clearInterval(broadcastVoiceTimerInterval);
       }
 
+      // ===== تسجيل مشارك جديد =====
       document.getElementById('registerForm').onsubmit=async function(e){
         e.preventDefault();
         const name=document.getElementById('participantName').value.trim();
         const pass=document.getElementById('password').value.trim();
-        if(!name||!pass){alert('الرجاء ملء جميع الحقول!');return;}
+        if(!name||!pass){showRegisterError('الرجاء ملء جميع الحقول!');return;}
         const btn=document.getElementById('registerSubmitBtn');
         btn.disabled=true; btn.textContent='جاري التسجيل...';
-        showLoading();
+        showLoading('جاري التسجيل...');
         try {
           const {data:existing}=await db.from('participants').select('id').ilike('name',name);
-          if(existing&&existing.length>0){hideLoading();btn.disabled=false;btn.textContent='تسجيل 🌟';alert('هذا الاسم مسجل مسبقاً!');return;}
+          if(existing&&existing.length>0){hideLoading();btn.disabled=false;btn.textContent='تسجيل 🌟';showRegisterError('هذا الاسم مسجل مسبقاً! جرب اسماً آخر.');return;}
           const {data:newUser,error}=await db.from('participants').insert({name,password:pass}).select().single();
           if(error) throw error;
           currentUser=newUser; saveSession(newUser);
           hideLoading(); btn.disabled=false; btn.textContent='تسجيل 🌟';
           showParticipantPage();
-        } catch(err){hideLoading();btn.disabled=false;btn.textContent='تسجيل 🌟';alert('حدث خطأ: '+err.message);}
+        } catch(err){
+          hideLoading(); btn.disabled=false; btn.textContent='تسجيل 🌟';
+          showRegisterError('حدث خطأ: '+err.message);
+        }
       };
 
+      function showRegisterError(msg){
+        const el=document.getElementById('registerError');
+        if(!el)return;
+        el.textContent=msg; el.classList.remove('hidden');
+        setTimeout(()=>el.classList.add('hidden'),5000);
+      }
+
+      // ===== تسجيل دخول =====
       document.getElementById('loginForm').onsubmit = async function(e) {
         e.preventDefault();
         const nameRaw = document.getElementById('loginName').value.trim();
         const passRaw = document.getElementById('loginPassword').value;
-        if (!nameRaw || !passRaw) { alert('الرجاء ملء جميع الحقول!'); return; }
+        if (!nameRaw || !passRaw) { showLoginError('الرجاء ملء جميع الحقول!'); return; }
         const btn = document.getElementById('loginSubmitBtn');
         btn.disabled = true; btn.textContent = 'جاري الدخول...';
         showLoading('جاري الدخول...');
-        const norm = s => (s||'').trim().replace(/[\u0622\u0623\u0625]/g,'\u0627').replace(/\u0629/g,'\u0647').replace(/\s+/g,' ').toLowerCase();
+
+        // دالة تطبيع النص للمقارنة (تتجاهل فروق الألف والتاء)
+        const norm = s => (s||'').trim()
+          .replace(/[\u0622\u0623\u0625\u0627]/g,'\u0627')
+          .replace(/[\u0629\u0647]/g,'\u0647')
+          .replace(/\s+/g,' ')
+          .toLowerCase();
+
         try {
-          const { data: candidates, error } = await db.from('participants').select('id,name,password').ilike('name',`%${nameRaw}%`).limit(25);
+          // جلب المشاركين المحتملين
+          const { data: candidates, error } = await db
+            .from('participants')
+            .select('id,name,password')
+            .limit(200); // جلب الكل للمقارنة المحلية
+
           hideLoading(); btn.disabled = false; btn.textContent = 'دخول 🔓';
-          if (error) { showLoginError('خطأ في الاتصال.'); return; }
+
+          if (error) { showLoginError('خطأ في الاتصال. حاول مرة أخرى.'); return; }
           if (!candidates || candidates.length === 0) { showLoginError('الاسم أو كلمة المرور خاطئة!'); return; }
-          const user = candidates.find(u => norm(u.name)===norm(nameRaw) && ((u.password===passRaw)||((u.password||'').trim()===passRaw.trim())));
-          if (!user) { showLoginError('الاسم أو كلمة المرور خاطئة!'); return; }
+
+          // مقارنة الاسم وكلمة المرور
+          const user = candidates.find(u => {
+            const nameMatch = norm(u.name) === norm(nameRaw);
+            const passMatch = (u.password === passRaw) || ((u.password||'').trim() === passRaw.trim());
+            return nameMatch && passMatch;
+          });
+
+          if (!user) {
+            showLoginError('الاسم أو كلمة المرور خاطئة! تأكد من الكتابة الصحيحة.');
+            return;
+          }
+
           currentUser = user; saveSession(user); showParticipantPage();
+
         } catch (err) {
           hideLoading(); btn.disabled = false; btn.textContent = 'دخول 🔓';
-          showLoginError('حدث خطأ. حاول مرة أخرى.');
+          showLoginError('حدث خطأ في الاتصال. حاول مرة أخرى.');
         }
       };
 
-      function showLoginError(msg){const el=document.getElementById('loginError');el.textContent=msg;el.classList.remove('hidden');setTimeout(()=>el.classList.add('hidden'),4000);}
+      function showLoginError(msg){
+        const el=document.getElementById('loginError');
+        if(!el)return;
+        el.textContent=msg; el.classList.remove('hidden');
+        setTimeout(()=>el.classList.add('hidden'),5000);
+      }
 
+      // ===== دخول الاستاذة =====
       document.getElementById('adminLoginForm').onsubmit=function(e){
         e.preventDefault();
         const pass=document.getElementById('adminPassword').value;
-        if(pass==='Qur@n2025#Admin$Ramadan'){isAdmin=true;saveSession();showAdminParticipantsPage();}
-        else{const el=document.getElementById('adminError');el.textContent='كلمة المرور خاطئة!';el.classList.remove('hidden');setTimeout(()=>el.classList.add('hidden'),3000);}
+        if(pass==='Qur@n2025#Admin$Ramadan'){
+          isAdmin=true; saveSession(); showAdminParticipantsPage();
+        } else {
+          const el=document.getElementById('adminError');
+          el.textContent='كلمة المرور خاطئة!';
+          el.classList.remove('hidden');
+          setTimeout(()=>el.classList.add('hidden'),3000);
+        }
       };
 
+      // ===== تسجيل الصوت والفيديو =====
       function selectType(type,card){
         recordingType=type;
         document.querySelectorAll('.type-card').forEach(el=>el.classList.remove('selected'));
@@ -801,7 +941,7 @@
             const t=document.getElementById('timer');
             if(t) t.textContent=`${Math.floor(el/60).toString().padStart(2,'0')}:${(el%60).toString().padStart(2,'0')}`;
           },1000);
-        } catch(err){alert('خطأ: '+err.message);}
+        } catch(err){alert('خطأ في التسجيل: '+err.message);}
       }
       function stopRecording(){
         if(mediaRecorder&&mediaRecorder.state!=='inactive'){try{mediaRecorder.stop();}catch(e){}clearInterval(timerInterval);}
@@ -841,7 +981,7 @@
         if(blob.size===0){alert('التسجيل فارغ! حاول مرة أخرى.');return;}
         const saveBtn = document.getElementById('saveRecordingBtn');
         if (saveBtn) { saveBtn.disabled = true; saveBtn.textContent = '⬆️ جاري الرفع...'; }
-        showLoading('⬆️ جاري الرفع...');
+        showLoading('⬆️ جاري الرفع... قد يستغرق بعض الوقت');
         try {
           const up = await uploadToStorage(blob, `participant_${currentUser.id}`);
           const {data:saved,error}=await db.from('recordings').insert({
@@ -862,14 +1002,14 @@
           if (saveBtn) { saveBtn.disabled = false; saveBtn.textContent = '💾 حفظ ورفع'; }
           let msg=err.message||'';
           if(msg.includes('not found')||msg.includes('bucket')){
-            alert('❌ خطأ في الرفع:\nيجب إنشاء bucket باسم "recordings" في Supabase Storage أولاً!');
+            alert('❌ تأكد من إنشاء bucket باسم "recordings" في Supabase Storage!');
           } else { alert('❌ خطأ في الحفظ:\n'+msg); }
         }
       }
 
       async function loadMyRecordings(){
         const listDiv=document.getElementById('myRecordingsList');
-        if(!listDiv)return;
+        if(!listDiv||!db)return;
         listDiv.innerHTML='<div class="empty-state"><div class="icon">⏳</div><p>جاري التحميل...</p></div>';
         try {
           const {data,error}=await db.from('recordings').select('id,type,created_at,file_url,data').eq('participant_id',currentUser.id).order('created_at',{ascending:true});
@@ -909,14 +1049,10 @@
         try {
           const { data: rec, error: e0 } = await db.from('recordings').select('storage_path').eq('id', id).single();
           if (e0) throw e0;
-          const { error: e1 } = await db.from('messages').delete().eq('recording_id', id);
-          if (e1) throw e1;
+          await db.from('messages').delete().eq('recording_id', id);
           const { error: e2 } = await db.from('recordings').delete().eq('id', id);
           if (e2) throw e2;
-          if (rec?.storage_path) {
-            const { error: e3 } = await db.storage.from(BUCKET).remove([rec.storage_path]);
-            if (e3) console.warn('Storage remove failed:', e3);
-          }
+          if (rec?.storage_path) { await db.storage.from(BUCKET).remove([rec.storage_path]); }
           hideLoading(); closeConfirmDialog();
           await loadMyRecordings();
           await updateUnreadBadge();
@@ -925,7 +1061,7 @@
       }
 
       async function updateUnreadBadge(){
-        if(!currentUser)return;
+        if(!currentUser||!db)return;
         try {
           const {count}=await db.from('messages').select('id',{count:'exact',head:true}).eq('participant_id',currentUser.id).eq('read',false);
           const badge=document.getElementById('unreadBadge');
@@ -933,12 +1069,12 @@
         }catch(e){}
       }
       async function markMessagesAsRead(){
-        if(!currentUser)return;
+        if(!currentUser||!db)return;
         try{await db.from('messages').update({read:true}).eq('participant_id',currentUser.id).eq('read',false);await updateUnreadBadge();}catch(e){}
       }
       async function loadMessages(){
         const listDiv=document.getElementById('messagesList');
-        if(!listDiv)return;
+        if(!listDiv||!db)return;
         listDiv.innerHTML='<div class="empty-state"><div class="icon">⏳</div><p>جاري التحميل...</p></div>';
         try {
           const {data,error}=await db.from('messages').select('id,message,message_type,rating,read,created_at,recording_id,voice_url,voice_data').eq('participant_id',currentUser.id).order('created_at',{ascending:false});
@@ -987,7 +1123,7 @@
       }
 
       async function loadParticipants(){
-        showLoading();
+        showLoading('جاري تحميل المشاركين...');
         try {
           const [pRes,rRes]=await Promise.all([
             db.from('participants').select('id,name,password').order('name',{ascending:true}),
@@ -1018,7 +1154,7 @@
               if(p) showAdminRecordingsPage(p);
             });
           });
-        }catch(e){hideLoading();alert('خطأ: '+e.message);}
+        }catch(e){hideLoading();alert('خطأ في تحميل المشاركين: '+e.message);}
       }
       function updateAdminStats(p,r,n){
         document.getElementById('totalParticipants').textContent=p;
@@ -1028,7 +1164,7 @@
 
       async function loadParticipantRecordingsAndRating(){
         const listDiv=document.getElementById('adminRecordingsList');
-        if(!listDiv||!currentParticipant)return;
+        if(!listDiv||!currentParticipant||!db)return;
         listDiv.innerHTML='<div class="empty-state"><div class="icon">⏳</div><p>جاري التحميل...</p></div>';
         try {
           const [recRes,ratRes]=await Promise.all([
@@ -1072,7 +1208,7 @@
 
       async function loadAdminSentMessages(){
         const div=document.getElementById('adminSentMessages');
-        if(!div||!currentParticipant)return;
+        if(!div||!currentParticipant||!db)return;
         try {
           const {data}=await db.from('messages').select('id,message,message_type,rating,created_at,voice_url,voice_data').eq('participant_id',currentParticipant.id).order('created_at',{ascending:false});
           if(!data||data.length===0){div.innerHTML='';return;}
@@ -1105,7 +1241,7 @@
       }
 
       async function calculateAndDisplayTotalRating(){
-        if(!currentParticipant)return;
+        if(!currentParticipant||!db)return;
         try {
           const {data}=await db.from('messages').select('rating,recording_id').eq('participant_id',currentParticipant.id).eq('message_type','rating').not('rating','is',null);
           let total=0; const rs=new Set();
@@ -1246,14 +1382,10 @@
         try{
           const { data: rec, error: e0 } = await db.from('recordings').select('storage_path').eq('id', id).single();
           if (e0) throw e0;
-          const { error: e1 } = await db.from('messages').delete().eq('recording_id', id);
-          if (e1) throw e1;
+          await db.from('messages').delete().eq('recording_id', id);
           const { error: e2 } = await db.from('recordings').delete().eq('id', id);
           if (e2) throw e2;
-          if (rec?.storage_path) {
-            const { error: e3 } = await db.storage.from(BUCKET).remove([rec.storage_path]);
-            if (e3) console.warn('Storage remove failed:', e3);
-          }
+          if (rec?.storage_path) { await db.storage.from(BUCKET).remove([rec.storage_path]); }
           hideLoading(); closeConfirmDialog();
           await calculateAndDisplayTotalRating();
           await loadAdminSentMessages();
@@ -1271,12 +1403,10 @@
       }
 
       async function deleteParticipantAccount(){
-        showLoading('جاري الحذف...');
+        showLoading('جاري حذف الحساب...');
         try{
-          const { error: e1 } = await db.from('messages').delete().eq('participant_id', currentParticipant.id);
-          if (e1) throw e1;
-          const { error: e2 } = await db.from('recordings').delete().eq('participant_id', currentParticipant.id);
-          if (e2) throw e2;
+          await db.from('messages').delete().eq('participant_id', currentParticipant.id);
+          await db.from('recordings').delete().eq('participant_id', currentParticipant.id);
           const { error: e3 } = await db.from('participants').delete().eq('id', currentParticipant.id);
           if (e3) throw e3;
           hideLoading(); closeConfirmDialog();
@@ -1301,7 +1431,7 @@
       }
 
       async function showLeaderboard(){
-        showLoading();
+        showLoading('جاري تحميل الترتيب...');
         try {
           const [pRes,rRes,ratRes]=await Promise.all([
             db.from('participants').select('id,name'),
@@ -1323,7 +1453,8 @@
           const rankClass=i=>i===0?'rank-1':i===1?'rank-2':i===2?'rank-3':'rank-other';
           const rankEmoji=i=>i===0?'🥇':i===1?'🥈':i===2?'🥉':(i+1);
           const starsHtml=(r,c)=>!c?'<span style="color:#bbb;font-size:0.8rem;">لا يوجد تقييم</span>':'⭐'.repeat(Math.floor(r))+'☆'.repeat(Math.max(0,5-Math.floor(r)));
-          const rowsHtml=ranked.length===0?'<div style="text-align:center;padding:30px;color:#aaa;"><div style="font-size:3rem;">🏆</div><p>لا يوجد مشاركون</p></div>'
+          const rowsHtml=ranked.length===0
+            ?'<div style="text-align:center;padding:30px;color:#aaa;"><div style="font-size:3rem;">🏆</div><p>لا يوجد مشاركون</p></div>'
             :ranked.map((p,i)=>`<div class="leaderboard-row ${rankClass(i)}">
               <div class="rank-badge">${rankEmoji(i)}</div>
               <div class="rank-info"><div class="rank-name">${escapeHtml(p.name)}</div>
