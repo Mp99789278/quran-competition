@@ -188,7 +188,6 @@
       </div>
       <div id="globalBroadcastsBar"></div>
 
-      <!-- الصفحة الرئيسية -->
       <div id="homePage" class="card">
         <button class="btn btn-primary big-icon-btn" onclick="showRegisterPage()">🆕 تسجيل جديد</button>
         <button class="btn btn-secondary big-icon-btn" onclick="showLoginPage()">🔑 دخول</button>
@@ -202,7 +201,6 @@
           <div class="form-group"><label>كلمة المرور</label>
             <div class="password-input-wrapper">
               <input type="password" id="password" required placeholder="اختر كلمة مرور" />
-              <!-- ✅ Fix 1: pass this instead of using global event -->
               <span class="password-toggle" onclick="togglePassword('password', this)">👁️</span>
             </div>
           </div>
@@ -219,7 +217,6 @@
           <div class="form-group"><label>كلمة المرور</label>
             <div class="password-input-wrapper">
               <input type="password" id="loginPassword" required placeholder="كلمة المرور" />
-              <!-- ✅ Fix 1: pass this instead of using global event -->
               <span class="password-toggle" onclick="togglePassword('loginPassword', this)">👁️</span>
             </div>
           </div>
@@ -235,7 +232,6 @@
           <div class="form-group"><label>كلمة المرور</label>
             <div class="password-input-wrapper">
               <input type="password" id="adminPassword" required placeholder="كلمة المرور" />
-              <!-- ✅ Fix 1: pass this instead of using global event -->
               <span class="password-toggle" onclick="togglePassword('adminPassword', this)">👁️</span>
             </div>
           </div>
@@ -324,29 +320,41 @@
       </div>
     </div>
 
-    <!-- تحميل Supabase -->
-    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <!-- ✅ تحميل Supabase من عدة مصادر لتفادي الحجب -->
     <script>
-      // =============================================
-      // ✅ Fix 4: انتظار تحميل Supabase حتى 4 ثواني
-      // =============================================
-      (async function waitSupabase() {
-        const start = Date.now();
-        while (!window.supabase && Date.now() - start < 4000) {
-          await new Promise(r => setTimeout(r, 100));
+      (function() {
+        var cdns = [
+          'https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.js',
+          'https://unpkg.com/@supabase/supabase-js@2/dist/umd/supabase.js',
+          'https://cdnjs.cloudflare.com/ajax/libs/supabase-js/2.39.3/umd/supabase.min.js'
+        ];
+        var idx = 0;
+        function tryLoad() {
+          if (idx >= cdns.length) {
+            // كل المصادر فشلت
+            document.body.innerHTML = '<div style="font-family:Cairo,sans-serif;direction:rtl;padding:18px;background:#fff;border-radius:12px;max-width:700px;margin:20px auto;"><h2 style="color:#b91c1c;margin-bottom:8px;">⚠️ مشكلة تشغيل</h2><p style="line-height:1.9;color:#111">مكتبة Supabase لم تُحمّل. ممكن سببها حظر CDN أو ضعف الاتصال.</p><p style="margin-top:10px;color:#555;font-size:14px">جرّب تحديث الصفحة أو تغيير الشبكة.</p><button onclick="location.reload()" style="margin-top:14px;padding:10px 20px;background:#d4af37;border:none;border-radius:8px;font-family:Cairo,sans-serif;font-weight:700;cursor:pointer;font-size:1rem;">🔄 تحديث الصفحة</button></div>';
+            return;
+          }
+          var s = document.createElement('script');
+          s.src = cdns[idx];
+          s.onload = function() {
+            console.log('✅ Supabase loaded from: ' + cdns[idx]);
+            // تشغيل التطبيق بعد تحميل Supabase
+            if (typeof initApp === 'function') initApp();
+          };
+          s.onerror = function() {
+            console.warn('❌ CDN failed: ' + cdns[idx] + ', trying next...');
+            idx++;
+            tryLoad();
+          };
+          document.head.appendChild(s);
+          idx++;
         }
-        if (!window.supabase) {
-          document.body.innerHTML = `
-            <div style="font-family:Cairo,sans-serif;direction:rtl;padding:18px;background:#fff;border-radius:12px;max-width:700px;margin:20px auto;">
-              <h2 style="color:#b91c1c;margin-bottom:8px;">⚠️ مشكلة تشغيل</h2>
-              <p style="line-height:1.9;color:#111">مكتبة Supabase لم تُحمّل. ممكن سببها حظر CDN أو ضعف الاتصال.</p>
-              <p style="margin-top:10px;color:#555;font-size:14px">جرّب تحديث الصفحة أو تغيير الشبكة.</p>
-              <button onclick="location.reload()" style="margin-top:14px;padding:10px 20px;background:#d4af37;border:none;border-radius:8px;font-family:Cairo,sans-serif;font-weight:700;cursor:pointer;font-size:1rem;">🔄 تحديث الصفحة</button>
-            </div>`;
-          throw new Error('Supabase library not loaded');
-        }
+        tryLoad();
       })();
+    </script>
 
+    <script>
       // =============================================
       // ⚙️ الإعدادات
       // =============================================
@@ -354,24 +362,31 @@
       const SUPABASE_KEY  = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImppbXJrcWV3dWFmYW94bXBtaGJwIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzE2ODM1NzUsImV4cCI6MjA4NzI1OTU3NX0.Qihj4BnB0FErseE0j8Gq8ydbOf8Bu7lW2sRTfTudZ7Q';
       const BUCKET = 'recordings';
 
-      const db = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+      let db = null;
 
-      // ✅ Fix 2: فحص الاتصال بدون count: 'exact' (أسرع)
-      (async () => {
-        const bar = document.getElementById('debugBar');
-        try {
-          const { error } = await db
-            .from('participants')
-            .select('id', { head: true })
-            .limit(1);
-          if (error) throw error;
-          if (bar) bar.textContent = '🟢 الاتصال شغال';
-          setTimeout(() => { if (bar) bar.style.display = 'none'; }, 4000);
-        } catch (e) {
-          console.error('Supabase connection error:', e);
-          if (bar) bar.textContent = '🔴 مشكلة اتصال — جرب تحديث الصفحة';
-        }
-      })();
+      // ✅ دالة initApp تُستدعى بعد تحميل Supabase
+      function initApp() {
+        if (db) return; // تم التهيئة مسبقاً
+        db = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+
+        // فحص الاتصال
+        (async () => {
+          const bar = document.getElementById('debugBar');
+          try {
+            const { error } = await db.from('participants').select('id', { head: true }).limit(1);
+            if (error) throw error;
+            if (bar) bar.textContent = '🟢 الاتصال شغال';
+            setTimeout(() => { if (bar) bar.style.display = 'none'; }, 4000);
+          } catch (e) {
+            console.error('Supabase connection error:', e);
+            if (bar) bar.textContent = '🔴 مشكلة اتصال — جرب تحديث الصفحة';
+          }
+        })();
+
+        loadViewedRecordings();
+        loadCurrentSession();
+        loadGlobalBroadcasts();
+      }
 
       // =============================================
       // متغيرات عامة
@@ -385,27 +400,18 @@
       let broadcastVoiceRecorder = null, broadcastVoiceChunks = [], broadcastVoiceTimerInterval = null, broadcastVoiceBlob = null;
       let _loadingEl = null;
 
-      // =============================================
-      // ✅ Fix 3: رفع الملف — يرجّع { publicUrl, path }
-      // =============================================
       async function uploadToStorage(blob, folder) {
         const ext  = getExtension(blob.type);
         const path = `${folder}/${Date.now()}_${Math.random().toString(36).slice(2)}.${ext}`;
-
         const t0 = Date.now();
         const { error } = await db.storage.from(BUCKET).upload(path, blob, {
-          cacheControl: '3600',
-          upsert: false,
-          contentType: blob.type || 'audio/webm',
+          cacheControl: '3600', upsert: false, contentType: blob.type || 'audio/webm',
         });
         if (error) throw new Error('فشل الرفع: ' + (error.message || JSON.stringify(error)));
-
         console.log('Upload ms:', Date.now() - t0, 'size:', blob.size);
-
         const { data: urlData } = db.storage.from(BUCKET).getPublicUrl(path);
         const publicUrl = urlData?.publicUrl;
         if (!publicUrl) throw new Error('تم الرفع لكن فشل استخراج الرابط العام');
-
         return { publicUrl, path };
       }
 
@@ -418,9 +424,6 @@
         return 'webm';
       }
 
-      // =============================================
-      // مساعدات
-      // =============================================
       function getSupportedMimeType() {
         const types = ['audio/mp4','audio/webm;codecs=opus','audio/webm','audio/ogg;codecs=opus','audio/ogg',''];
         for (const t of types) { try { if (!t || MediaRecorder.isTypeSupported(t)) return t; } catch(e) {} }
@@ -440,9 +443,6 @@
         try { el.currentTime = 1e101; el.addEventListener('timeupdate', function h(){ el.removeEventListener('timeupdate',h); el.currentTime=0; },{once:true}); } catch(e){}
       }
 
-      // =============================================
-      // Loading
-      // =============================================
       function showLoading(msg) {
         if (_loadingEl) return;
         _loadingEl = document.createElement('div');
@@ -452,9 +452,6 @@
       }
       function hideLoading() { if (_loadingEl){ _loadingEl.remove(); _loadingEl=null; } }
 
-      // =============================================
-      // جلسة المستخدم
-      // =============================================
       function saveSession(userData) {
         try {
           localStorage.setItem('currentSession', JSON.stringify(
@@ -485,9 +482,6 @@
       function markRecordingAsViewed(pId,rId){ viewedRecordings.add(`${pId}_${rId}`); saveViewedRecordings(); }
       function isRecordingViewed(pId,rId){ return viewedRecordings.has(`${pId}_${rId}`); }
 
-      // =============================================
-      // التنقل بين الصفحات
-      // =============================================
       function hideAllPages() {
         ['homePage','registerPage','loginPage','adminLoginPage','participantPage','adminParticipantsPage','adminRecordingsPage']
           .forEach(id=>{ const el=document.getElementById(id); if(el) el.classList.add('hidden'); });
@@ -545,7 +539,6 @@
         showHomePage();
       }
 
-      // ✅ Fix 1: دالة togglePassword تستقبل iconEl بدل event العالمي
       function togglePassword(id, iconEl) {
         const el = document.getElementById(id);
         if (!el) return;
@@ -553,18 +546,12 @@
         else { el.type = 'password'; if (iconEl) iconEl.textContent = '👁️'; }
       }
 
-      // =============================================
-      // عرض مشغّل
-      // =============================================
       function playerHtml(url, type) {
         if (!url) return '<div class="player-error">⚠️ لا يوجد تسجيل</div>';
         if (type==='video') return `<video controls src="${url}" style="width:100%;border-radius:6px;background:#000;max-height:280px;" onloadedmetadata="fixDuration(this)" preload="metadata"></video>`;
         return `<audio controls src="${url}" style="width:100%;" onloadedmetadata="fixDuration(this)" preload="metadata"></audio>`;
       }
 
-      // =============================================
-      // الإعلانات العامة
-      // =============================================
       async function loadGlobalBroadcasts() {
         const bar = document.getElementById('globalBroadcastsBar');
         if (!bar) return;
@@ -685,10 +672,8 @@
           if(isVoice){
             if(!broadcastVoiceBlob){hideLoading();alert('الرجاء تسجيل رسالة صوتية!');return;}
             bd.message='رسالة صوتية من الاستاذة 📢';
-            // ✅ Fix 3: استخدام الكائن الجديد لـ uploadToStorage
             const up = await uploadToStorage(broadcastVoiceBlob,'broadcasts');
-            bd.voice_url = up.publicUrl;
-            bd.voice_path = up.path;
+            bd.voice_url = up.publicUrl; bd.voice_path = up.path;
           } else {
             const text=document.getElementById('broadcastText').value.trim();
             if(!text){hideLoading();alert('الرجاء كتابة الإعلان!');return;}
@@ -708,9 +693,6 @@
         clearInterval(broadcastVoiceTimerInterval);
       }
 
-      // =============================================
-      // تسجيل مشارك جديد
-      // =============================================
       document.getElementById('registerForm').onsubmit=async function(e){
         e.preventDefault();
         const name=document.getElementById('participantName').value.trim();
@@ -730,57 +712,26 @@
         } catch(err){hideLoading();btn.disabled=false;btn.textContent='تسجيل 🌟';alert('حدث خطأ: '+err.message);}
       };
 
-      // =============================================
-      // تسجيل دخول
-      // =============================================
       document.getElementById('loginForm').onsubmit = async function(e) {
         e.preventDefault();
-
         const nameRaw = document.getElementById('loginName').value.trim();
         const passRaw = document.getElementById('loginPassword').value;
-
         if (!nameRaw || !passRaw) { alert('الرجاء ملء جميع الحقول!'); return; }
-
         const btn = document.getElementById('loginSubmitBtn');
         btn.disabled = true; btn.textContent = 'جاري الدخول...';
         showLoading('جاري الدخول...');
-
-        const norm = s => (s || '')
-          .trim()
-          .replace(/[\u0622\u0623\u0625]/g, '\u0627')
-          .replace(/\u0629/g, '\u0647')
-          .replace(/\s+/g, ' ')
-          .toLowerCase();
-
+        const norm = s => (s || '').trim().replace(/[\u0622\u0623\u0625]/g,'\u0627').replace(/\u0629/g,'\u0647').replace(/\s+/g,' ').toLowerCase();
         try {
-          const { data: candidates, error } = await db
-            .from('participants')
-            .select('id,name,password')
-            .ilike('name', `%${nameRaw}%`)
-            .limit(25);
-
-          hideLoading();
-          btn.disabled = false; btn.textContent = 'دخول 🔓';
-
+          const { data: candidates, error } = await db.from('participants').select('id,name,password').ilike('name',`%${nameRaw}%`).limit(25);
+          hideLoading(); btn.disabled = false; btn.textContent = 'دخول 🔓';
           if (error) { showLoginError('خطأ في الاتصال.'); return; }
           if (!candidates || candidates.length === 0) { showLoginError('الاسم أو كلمة المرور خاطئة!'); return; }
-
-          const user = candidates.find(u =>
-            norm(u.name) === norm(nameRaw) &&
-            ((u.password === passRaw) || ((u.password || '').trim() === passRaw.trim()))
-          );
-
+          const user = candidates.find(u => norm(u.name)===norm(nameRaw) && ((u.password===passRaw)||((u.password||'').trim()===passRaw.trim())));
           if (!user) { showLoginError('الاسم أو كلمة المرور خاطئة!'); return; }
-
-          currentUser = user;
-          saveSession(user);
-          showParticipantPage();
-
+          currentUser = user; saveSession(user); showParticipantPage();
         } catch (err) {
-          hideLoading();
-          btn.disabled = false; btn.textContent = 'دخول 🔓';
-          showLoginError('حدث خطأ. حاول مرة أخرى.');
-          console.error(err);
+          hideLoading(); btn.disabled = false; btn.textContent = 'دخول 🔓';
+          showLoginError('حدث خطأ. حاول مرة أخرى.'); console.error(err);
         }
       };
 
@@ -793,9 +744,6 @@
         else{const el=document.getElementById('adminError');el.textContent='كلمة المرور خاطئة!';el.classList.remove('hidden');setTimeout(()=>el.classList.add('hidden'),3000);}
       };
 
-      // =============================================
-      // التسجيل الصوتي/المرئي
-      // =============================================
       function selectType(type,card){
         recordingType=type;
         document.querySelectorAll('.type-card').forEach(el=>el.classList.remove('selected'));
@@ -876,65 +824,45 @@
         document.getElementById('timer').textContent='00:00';
       }
 
-      // =============================================
-      // ✅ Fix 3: حفظ التسجيل — مع storage_path
-      // =============================================
       async function saveRecording(){
         if(!recordedChunks||recordedChunks.length===0){alert('لا توجد بيانات. يرجى التسجيل أولاً.');return;}
         const mt=(mediaRecorder&&mediaRecorder.mimeType&&mediaRecorder.mimeType!=='')?mediaRecorder.mimeType:(recordingType==='video'?'video/webm':'audio/webm');
         const blob=new Blob([...recordedChunks],{type:mt});
         if(blob.size===0){alert('التسجيل فارغ! حاول مرة أخرى.');return;}
-
         const saveBtn = document.getElementById('saveRecordingBtn');
         if (saveBtn) { saveBtn.disabled = true; saveBtn.textContent = '⬆️ جاري الرفع...'; }
-
         showLoading('⬆️ جاري الرفع...');
         try {
-          // ✅ Fix 3: استخدام الكائن الجديد { publicUrl, path }
           const up = await uploadToStorage(blob, `participant_${currentUser.id}`);
-
           const {data:saved,error}=await db.from('recordings').insert({
-            participant_id: currentUser.id,
-            type: recordingType,
-            file_url: up.publicUrl,
-            storage_path: up.path,
-            data: null
+            participant_id: currentUser.id, type: recordingType,
+            file_url: up.publicUrl, storage_path: up.path, data: null
           }).select('id,type,created_at,file_url').single();
-
           if(error) throw error;
-
           hideLoading();
           if (saveBtn) { saveBtn.disabled = false; saveBtn.textContent = '💾 حفظ ورفع'; }
-
           alert('تم الحفظ بنجاح! ✅');
           recordedChunks=[];
           document.getElementById('recordingPreview').classList.add('hidden');
           document.getElementById('previewMedia').innerHTML='';
           document.getElementById('timer').textContent='00:00';
           await loadMyRecordings();
-
         } catch(err){
           hideLoading();
           if (saveBtn) { saveBtn.disabled = false; saveBtn.textContent = '💾 حفظ ورفع'; }
           let msg=err.message||'';
           if(msg.includes('not found')||msg.includes('bucket')){
             alert('❌ خطأ في الرفع:\nيجب إنشاء bucket باسم "recordings" في Supabase Storage أولاً!');
-          } else {
-            alert('❌ خطأ في الحفظ:\n'+msg);
-          }
+          } else { alert('❌ خطأ في الحفظ:\n'+msg); }
         }
       }
 
-      // =============================================
-      // تسجيلاتي
-      // =============================================
       async function loadMyRecordings(){
         const listDiv=document.getElementById('myRecordingsList');
         if(!listDiv)return;
         listDiv.innerHTML='<div class="empty-state"><div class="icon">⏳</div><p>جاري التحميل...</p></div>';
         try {
-          const {data,error}=await db.from('recordings').select('id,type,created_at,file_url,data')
-            .eq('participant_id',currentUser.id).order('created_at',{ascending:true});
+          const {data,error}=await db.from('recordings').select('id,type,created_at,file_url,data').eq('participant_id',currentUser.id).order('created_at',{ascending:true});
           if(error) throw error;
           if(!data||data.length===0){listDiv.innerHTML='<div class="empty-state"><div class="icon">🎙️</div><p>لا توجد تسجيلات بعد</p></div>';return;}
           const seen=new Set();
@@ -952,8 +880,7 @@
       function showRecordingMenu(e,id){
         e.stopPropagation();
         document.querySelectorAll('.menu-popup').forEach(m=>m.remove());
-        const menu=document.createElement('div');
-        menu.className='menu-popup';
+        const menu=document.createElement('div'); menu.className='menu-popup';
         menu.innerHTML=`<div class="menu-item danger" onclick="confirmDeleteRecording(${id})">🗑️ حذف التسجيل</div>`;
         e.target.closest('.recording-item').appendChild(menu);
         setTimeout(()=>{document.addEventListener('click',function h(ev){if(!menu.contains(ev.target)){menu.remove();document.removeEventListener('click',h);}});},10);
@@ -977,9 +904,6 @@
         } catch(e){hideLoading();alert('خطأ: '+e.message);}
       }
 
-      // =============================================
-      // الرسائل (للمشارك)
-      // =============================================
       async function updateUnreadBadge(){
         if(!currentUser)return;
         try {
@@ -997,8 +921,7 @@
         if(!listDiv)return;
         listDiv.innerHTML='<div class="empty-state"><div class="icon">⏳</div><p>جاري التحميل...</p></div>';
         try {
-          const {data,error}=await db.from('messages').select('id,message,message_type,rating,read,created_at,recording_id,voice_url,voice_data')
-            .eq('participant_id',currentUser.id).order('created_at',{ascending:false});
+          const {data,error}=await db.from('messages').select('id,message,message_type,rating,read,created_at,recording_id,voice_url,voice_data').eq('participant_id',currentUser.id).order('created_at',{ascending:false});
           if(error) throw error;
           if(!data||data.length===0){listDiv.innerHTML='<div class="empty-state"><div class="icon">📭</div><p>لا توجد رسائل</p></div>';return;}
           let html='';
@@ -1043,9 +966,6 @@
         return h;
       }
 
-      // =============================================
-      // إدارة المشاركين
-      // =============================================
       async function loadParticipants(){
         showLoading();
         try {
@@ -1086,9 +1006,6 @@
         document.getElementById('newRecordings').textContent=n;
       }
 
-      // =============================================
-      // تسجيلات المشارك (للأستاذة)
-      // =============================================
       async function loadParticipantRecordingsAndRating(){
         const listDiv=document.getElementById('adminRecordingsList');
         if(!listDiv||!currentParticipant)return;
@@ -1105,7 +1022,6 @@
           document.getElementById('totalRatingValue').textContent=total.toFixed(1);
           document.getElementById('totalRatingMax').textContent=ratedSet.size*5;
           if(badge) badge.style.display=ratedSet.size===0?'none':'inline-flex';
-
           const recs=recRes.data||[];
           if(recRes.error) throw recRes.error;
           if(recs.length===0){listDiv.innerHTML='<div class="empty-state"><div class="icon">🎙️</div><p>لا توجد تسجيلات</p></div>';return;}
@@ -1138,8 +1054,7 @@
         const div=document.getElementById('adminSentMessages');
         if(!div||!currentParticipant)return;
         try {
-          const {data}=await db.from('messages').select('id,message,message_type,rating,created_at,voice_url,voice_data')
-            .eq('participant_id',currentParticipant.id).order('created_at',{ascending:false});
+          const {data}=await db.from('messages').select('id,message,message_type,rating,created_at,voice_url,voice_data').eq('participant_id',currentParticipant.id).order('created_at',{ascending:false});
           if(!data||data.length===0){div.innerHTML='';return;}
           let html=`<h3 style="color:var(--dark-green);margin-bottom:10px;">📨 رسائلك المرسلة</h3>`;
           data.forEach(msg=>{
@@ -1174,9 +1089,6 @@
         }catch(e){}
       }
 
-      // =============================================
-      // إرسال رسالة للمشارك
-      // =============================================
       function openMessageModal(recordingId,type){
         currentRecordingForMessage=recordingId; selectedRating=0; adminVoiceChunks=[]; adminVoiceBlob=null;
         const modal=document.createElement('div'); modal.className='message-modal'; modal.id='messageModal';
@@ -1270,10 +1182,8 @@
           } else if(messageType==='voice'){
             if(!adminVoiceBlob){hideLoading();alert('الرجاء تسجيل رسالة صوتية أولاً!');return;}
             msgData.message='رسالة صوتية من الاستاذة 🎤';
-            // ✅ Fix 3: استخدام الكائن الجديد { publicUrl, path }
             const up = await uploadToStorage(adminVoiceBlob,'messages');
-            msgData.voice_url = up.publicUrl;
-            msgData.voice_path = up.path;
+            msgData.voice_url = up.publicUrl; msgData.voice_path = up.path;
           } else {
             if(selectedRating===0){hideLoading();alert('الرجاء اختيار تقييم!');return;}
             await db.from('messages').delete().eq('participant_id',currentParticipant.id).eq('recording_id',currentRecordingForMessage).eq('message_type','rating');
@@ -1346,9 +1256,6 @@
         setTimeout(()=>{btn.innerHTML=orig;btn.classList.remove('copied');},2000);
       }
 
-      // =============================================
-      // لوحة الترتيب
-      // =============================================
       async function showLeaderboard(){
         showLoading();
         try {
@@ -1392,14 +1299,8 @@
         }catch(e){hideLoading();alert('خطأ: '+e.message);}
       }
 
-      // =============================================
-      // تشغيل التطبيق
-      // =============================================
-      window.onload=function(){
-        loadViewedRecordings();
-        loadCurrentSession();
-        loadGlobalBroadcasts();
-      };
+      // ✅ التطبيق يبدأ من initApp() بعد تحميل Supabase
+      // window.onload لا يُستخدم هنا — initApp تُستدعى من script تحميل CDN
     </script>
   </body>
 </html>
