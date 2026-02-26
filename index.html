@@ -314,28 +314,56 @@
       </div>
     </div>
 
-    <!-- تحميل Supabase من عدة مصادر -->
+    <!-- ✅ إصلاح لودر Supabase: async/await صحيح + لا double increment -->
     <script>
-      (function() {
+      (function () {
         var cdns = [
-          'https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.js',
-          'https://unpkg.com/@supabase/supabase-js@2/dist/umd/supabase.js',
-          'https://cdnjs.cloudflare.com/ajax/libs/supabase-js/2.39.3/umd/supabase.min.js'
+          "https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.js",
+          "https://unpkg.com/@supabase/supabase-js@2/dist/umd/supabase.js",
+          "https://cdnjs.cloudflare.com/ajax/libs/supabase-js/2.39.3/umd/supabase.min.js"
         ];
-        var idx = 0;
-        function tryLoad() {
-          if (idx >= cdns.length) {
-            document.body.innerHTML = '<div style="font-family:Cairo,sans-serif;direction:rtl;padding:18px;background:#fff;border-radius:12px;max-width:700px;margin:20px auto;"><h2 style="color:#b91c1c;margin-bottom:8px;">⚠️ مشكلة تشغيل</h2><p style="line-height:1.9;color:#111">مكتبة Supabase لم تُحمّل.</p><button onclick="location.reload()" style="margin-top:14px;padding:10px 20px;background:#d4af37;border:none;border-radius:8px;font-family:Cairo,sans-serif;font-weight:700;cursor:pointer;font-size:1rem;">🔄 تحديث الصفحة</button></div>';
+
+        function loadScript(src) {
+          return new Promise(function (resolve, reject) {
+            var s = document.createElement("script");
+            s.src = src;
+            s.async = true;
+            s.onload = resolve;
+            s.onerror = reject;
+            document.head.appendChild(s);
+          });
+        }
+
+        async function boot() {
+          for (var i = 0; i < cdns.length; i++) {
+            try {
+              await loadScript(cdns[i]);
+              if (window.supabase) break;
+            } catch (e) {
+              // جرّب التالي
+            }
+          }
+
+          if (!window.supabase) {
+            document.body.innerHTML =
+              '<div style="font-family:Cairo,sans-serif;direction:rtl;padding:18px;background:#fff;border-radius:12px;max-width:700px;margin:20px auto;">' +
+              '<h2 style="color:#b91c1c;margin-bottom:8px;">⚠️ مشكلة تشغيل</h2>' +
+              '<p style="line-height:1.9;color:#111">مكتبة Supabase لم تُحمّل. جرّب:</p>' +
+              '<ol style="line-height:1.9;color:#111;margin:10px 18px;">' +
+              '<li>إغلاق مانع الإعلانات/الخصوصية مؤقتًا</li>' +
+              '<li>فتح الصفحة عبر شبكة مختلفة (بيانات/واي فاي)</li>' +
+              '<li>تحديث الصفحة</li>' +
+              '</ol>' +
+              '<button onclick="location.reload()" style="margin-top:14px;padding:10px 20px;background:#d4af37;border:none;border-radius:8px;font-family:Cairo,sans-serif;font-weight:700;cursor:pointer;font-size:1rem;">🔄 تحديث الصفحة</button>' +
+              "</div>";
             return;
           }
-          var s = document.createElement('script');
-          s.src = cdns[idx];
-          s.onload = function() { if (typeof initApp === 'function') initApp(); };
-          s.onerror = function() { idx++; tryLoad(); };
-          document.head.appendChild(s);
-          idx++;
+
+          // ✅ أطلق الحدث بعد تحميل المكتبة بنجاح
+          window.dispatchEvent(new Event("supabase:ready"));
         }
-        tryLoad();
+
+        boot();
       })();
     </script>
 
@@ -347,6 +375,7 @@
 
       function initApp() {
         if (db) return;
+        if (!window.supabase) return; // حماية إضافية
         db = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
         (async () => {
           const bar = document.getElementById('debugBar');
@@ -363,6 +392,14 @@
         loadCurrentSession();
         loadGlobalBroadcasts();
       }
+
+      // ✅ الإصلاح الجوهري: ننتظر حدث supabase:ready أو نشغّل مباشرة لو المكتبة موجودة
+      window.addEventListener("supabase:ready", function () {
+        if (typeof initApp === "function") initApp();
+      }, { once: true });
+
+      // لو المكتبة اتحمّلت قبل تعريف هذا الكود (نادر لكن ممكن)
+      if (window.supabase && typeof initApp === "function") initApp();
 
       let currentUser = null, isAdmin = false;
       let mediaRecorder = null, recordedChunks = [], recordingType = 'audio';
@@ -561,7 +598,6 @@
         } catch(e){}
       }
 
-      // ✅ إصلاح: deleteBroadcast — فحص error
       async function deleteBroadcast(id) {
         if (!confirm('هل تريد حذف هذا الإعلان؟')) return;
         showLoading('جاري الحذف...');
@@ -868,20 +904,15 @@
       }
       function closeConfirmDialog(){document.querySelectorAll('.confirm-dialog').forEach(d=>d.remove());}
 
-      // ✅ إصلاح: حذف تسجيل المشارك — فحص كل error + حذف الملف من Storage
       async function deleteRecording(id){
         showLoading('جاري الحذف...');
         try {
-          // 1) نجيب storage_path قبل الحذف
           const { data: rec, error: e0 } = await db.from('recordings').select('storage_path').eq('id', id).single();
           if (e0) throw e0;
-          // 2) نحذف الرسائل المرتبطة أولاً
           const { error: e1 } = await db.from('messages').delete().eq('recording_id', id);
           if (e1) throw e1;
-          // 3) نحذف التسجيل من الجدول
           const { error: e2 } = await db.from('recordings').delete().eq('id', id);
           if (e2) throw e2;
-          // 4) نحذف الملف من Storage (لو موجود)
           if (rec?.storage_path) {
             const { error: e3 } = await db.storage.from(BUCKET).remove([rec.storage_path]);
             if (e3) console.warn('Storage remove failed:', e3);
@@ -1060,7 +1091,6 @@
         }catch(e){}
       }
 
-      // ✅ إصلاح: deleteMessage — فحص error
       async function deleteMessage(id){
         if(!confirm('هل تريد حذف هذه الرسالة؟'))return;
         showLoading('جاري الحذف...');
@@ -1211,20 +1241,15 @@
         document.body.appendChild(d);
       }
 
-      // ✅ إصلاح: حذف تسجيل من صفحة الأستاذة — فحص كل error + حذف الملف من Storage
       async function deleteRecordingAdmin(id){
         showLoading('جاري الحذف...');
         try{
-          // 1) نجيب storage_path قبل الحذف
           const { data: rec, error: e0 } = await db.from('recordings').select('storage_path').eq('id', id).single();
           if (e0) throw e0;
-          // 2) نحذف الرسائل المرتبطة أولاً
           const { error: e1 } = await db.from('messages').delete().eq('recording_id', id);
           if (e1) throw e1;
-          // 3) نحذف التسجيل من الجدول
           const { error: e2 } = await db.from('recordings').delete().eq('id', id);
           if (e2) throw e2;
-          // 4) نحذف الملف من Storage (لو موجود)
           if (rec?.storage_path) {
             const { error: e3 } = await db.storage.from(BUCKET).remove([rec.storage_path]);
             if (e3) console.warn('Storage remove failed:', e3);
@@ -1245,7 +1270,6 @@
         document.body.appendChild(d);
       }
 
-      // ✅ إصلاح: deleteParticipantAccount — فحص كل error بالترتيب
       async function deleteParticipantAccount(){
         showLoading('جاري الحذف...');
         try{
