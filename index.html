@@ -88,11 +88,6 @@
       @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
       .loading-spinner { text-align: center; color: white; background: rgba(0,0,0,0.7); padding: 20px 30px; border-radius: 12px; }
       .loading-spinner p { font-size: 0.95rem; font-weight: 600; }
-      .upload-progress { background: #e5e7eb; border-radius: 8px; height: 8px; margin: 10px 0; overflow: hidden; }
-      .upload-progress-bar { background: linear-gradient(90deg, var(--primary-gold), var(--accent-gold)); height: 100%; border-radius: 8px; transition: width 0.3s ease; }
-      .upload-status { text-align: center; color: var(--dark-green); font-size: 0.9rem; font-weight: 600; margin: 6px 0; }
-      .player-wrap { margin-top: 8px; }
-      .player-wrap audio, .player-wrap video { width: 100%; border-radius: 6px; }
       .player-loading { display: flex; align-items: center; gap: 8px; padding: 10px; color: #888; font-size: 0.85rem; background: #f8fafc; border-radius: 8px; border: 1px solid #e2e8f0; }
       .mini-spinner { border: 2px solid rgba(0,0,0,0.1); border-top: 2px solid var(--primary-gold); border-radius: 50%; width: 18px; height: 18px; animation: spin 0.8s linear infinite; flex-shrink: 0; }
       .player-error { color: #dc2626; font-size: 0.82rem; padding: 8px; text-align: center; background: #fee2e2; border-radius: 8px; }
@@ -177,7 +172,6 @@
   </head>
   <body>
     <div id="debugBar">🟡 جاري التحقق...</div>
-
     <div class="container">
       <div class="header">
         <div class="logo">
@@ -320,7 +314,7 @@
       </div>
     </div>
 
-    <!-- ✅ تحميل Supabase من عدة مصادر لتفادي الحجب -->
+    <!-- تحميل Supabase من عدة مصادر -->
     <script>
       (function() {
         var cdns = [
@@ -331,22 +325,13 @@
         var idx = 0;
         function tryLoad() {
           if (idx >= cdns.length) {
-            // كل المصادر فشلت
-            document.body.innerHTML = '<div style="font-family:Cairo,sans-serif;direction:rtl;padding:18px;background:#fff;border-radius:12px;max-width:700px;margin:20px auto;"><h2 style="color:#b91c1c;margin-bottom:8px;">⚠️ مشكلة تشغيل</h2><p style="line-height:1.9;color:#111">مكتبة Supabase لم تُحمّل. ممكن سببها حظر CDN أو ضعف الاتصال.</p><p style="margin-top:10px;color:#555;font-size:14px">جرّب تحديث الصفحة أو تغيير الشبكة.</p><button onclick="location.reload()" style="margin-top:14px;padding:10px 20px;background:#d4af37;border:none;border-radius:8px;font-family:Cairo,sans-serif;font-weight:700;cursor:pointer;font-size:1rem;">🔄 تحديث الصفحة</button></div>';
+            document.body.innerHTML = '<div style="font-family:Cairo,sans-serif;direction:rtl;padding:18px;background:#fff;border-radius:12px;max-width:700px;margin:20px auto;"><h2 style="color:#b91c1c;margin-bottom:8px;">⚠️ مشكلة تشغيل</h2><p style="line-height:1.9;color:#111">مكتبة Supabase لم تُحمّل.</p><button onclick="location.reload()" style="margin-top:14px;padding:10px 20px;background:#d4af37;border:none;border-radius:8px;font-family:Cairo,sans-serif;font-weight:700;cursor:pointer;font-size:1rem;">🔄 تحديث الصفحة</button></div>';
             return;
           }
           var s = document.createElement('script');
           s.src = cdns[idx];
-          s.onload = function() {
-            console.log('✅ Supabase loaded from: ' + cdns[idx]);
-            // تشغيل التطبيق بعد تحميل Supabase
-            if (typeof initApp === 'function') initApp();
-          };
-          s.onerror = function() {
-            console.warn('❌ CDN failed: ' + cdns[idx] + ', trying next...');
-            idx++;
-            tryLoad();
-          };
+          s.onload = function() { if (typeof initApp === 'function') initApp(); };
+          s.onerror = function() { idx++; tryLoad(); };
           document.head.appendChild(s);
           idx++;
         }
@@ -355,21 +340,14 @@
     </script>
 
     <script>
-      // =============================================
-      // ⚙️ الإعدادات
-      // =============================================
-      const SUPABASE_URL  = 'https://jimrkqewuafaoxmpmhbp.supabase.co';
-      const SUPABASE_KEY  = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImppbXJrcWV3dWFmYW94bXBtaGJwIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzE2ODM1NzUsImV4cCI6MjA4NzI1OTU3NX0.Qihj4BnB0FErseE0j8Gq8ydbOf8Bu7lW2sRTfTudZ7Q';
+      const SUPABASE_URL = 'https://jimrkqewuafaoxmpmhbp.supabase.co';
+      const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImppbXJrcWV3dWFmYW94bXBtaGJwIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzE2ODM1NzUsImV4cCI6MjA4NzI1OTU3NX0.Qihj4BnB0FErseE0j8Gq8ydbOf8Bu7lW2sRTfTudZ7Q';
       const BUCKET = 'recordings';
-
       let db = null;
 
-      // ✅ دالة initApp تُستدعى بعد تحميل Supabase
       function initApp() {
-        if (db) return; // تم التهيئة مسبقاً
+        if (db) return;
         db = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
-
-        // فحص الاتصال
         (async () => {
           const bar = document.getElementById('debugBar');
           try {
@@ -378,19 +356,14 @@
             if (bar) bar.textContent = '🟢 الاتصال شغال';
             setTimeout(() => { if (bar) bar.style.display = 'none'; }, 4000);
           } catch (e) {
-            console.error('Supabase connection error:', e);
             if (bar) bar.textContent = '🔴 مشكلة اتصال — جرب تحديث الصفحة';
           }
         })();
-
         loadViewedRecordings();
         loadCurrentSession();
         loadGlobalBroadcasts();
       }
 
-      // =============================================
-      // متغيرات عامة
-      // =============================================
       let currentUser = null, isAdmin = false;
       let mediaRecorder = null, recordedChunks = [], recordingType = 'audio';
       let timerInterval = null, recordingStartTime = null, previewStream = null;
@@ -401,14 +374,12 @@
       let _loadingEl = null;
 
       async function uploadToStorage(blob, folder) {
-        const ext  = getExtension(blob.type);
+        const ext = getExtension(blob.type);
         const path = `${folder}/${Date.now()}_${Math.random().toString(36).slice(2)}.${ext}`;
-        const t0 = Date.now();
         const { error } = await db.storage.from(BUCKET).upload(path, blob, {
           cacheControl: '3600', upsert: false, contentType: blob.type || 'audio/webm',
         });
         if (error) throw new Error('فشل الرفع: ' + (error.message || JSON.stringify(error)));
-        console.log('Upload ms:', Date.now() - t0, 'size:', blob.size);
         const { data: urlData } = db.storage.from(BUCKET).getPublicUrl(path);
         const publicUrl = urlData?.publicUrl;
         if (!publicUrl) throw new Error('تم الرفع لكن فشل استخراج الرابط العام');
@@ -417,13 +388,12 @@
 
       function getExtension(mimeType) {
         if (!mimeType) return 'webm';
-        if (mimeType.includes('mp4'))  return 'mp4';
-        if (mimeType.includes('ogg'))  return 'ogg';
+        if (mimeType.includes('mp4')) return 'mp4';
+        if (mimeType.includes('ogg')) return 'ogg';
         if (mimeType.includes('webm')) return 'webm';
-        if (mimeType.includes('wav'))  return 'wav';
+        if (mimeType.includes('wav')) return 'wav';
         return 'webm';
       }
-
       function getSupportedMimeType() {
         const types = ['audio/mp4','audio/webm;codecs=opus','audio/webm','audio/ogg;codecs=opus','audio/ogg',''];
         for (const t of types) { try { if (!t || MediaRecorder.isTypeSupported(t)) return t; } catch(e) {} }
@@ -442,7 +412,6 @@
         if (!el || isFinite(el.duration)) return;
         try { el.currentTime = 1e101; el.addEventListener('timeupdate', function h(){ el.removeEventListener('timeupdate',h); el.currentTime=0; },{once:true}); } catch(e){}
       }
-
       function showLoading(msg) {
         if (_loadingEl) return;
         _loadingEl = document.createElement('div');
@@ -486,10 +455,10 @@
         ['homePage','registerPage','loginPage','adminLoginPage','participantPage','adminParticipantsPage','adminRecordingsPage']
           .forEach(id=>{ const el=document.getElementById(id); if(el) el.classList.add('hidden'); });
       }
-      function showHomePage()       { hideAllPages(); document.getElementById('homePage').classList.remove('hidden'); }
-      function showRegisterPage()   { hideAllPages(); document.getElementById('registerPage').classList.remove('hidden'); }
-      function showLoginPage()      { hideAllPages(); document.getElementById('loginPage').classList.remove('hidden'); }
-      function showAdminLogin()     { hideAllPages(); document.getElementById('adminLoginPage').classList.remove('hidden'); }
+      function showHomePage()     { hideAllPages(); document.getElementById('homePage').classList.remove('hidden'); }
+      function showRegisterPage() { hideAllPages(); document.getElementById('registerPage').classList.remove('hidden'); }
+      function showLoginPage()    { hideAllPages(); document.getElementById('loginPage').classList.remove('hidden'); }
+      function showAdminLogin()   { hideAllPages(); document.getElementById('adminLoginPage').classList.remove('hidden'); }
 
       function showParticipantPage() {
         hideAllPages();
@@ -509,7 +478,7 @@
         currentParticipant = participant;
         document.getElementById('adminRecordingsPage').classList.remove('hidden');
         document.getElementById('participantTitle').textContent = 'تسجيلات: '+participant.name;
-        document.getElementById('contactName').textContent     = participant.name;
+        document.getElementById('contactName').textContent = participant.name;
         document.getElementById('contactPassword').textContent = participant.password;
         const cc = document.getElementById('contactInfoContent');
         if (cc && !cc.classList.contains('hidden')) { cc.classList.add('hidden'); document.getElementById('contactToggleText').textContent='عرض'; }
@@ -592,11 +561,16 @@
         } catch(e){}
       }
 
+      // ✅ إصلاح: deleteBroadcast — فحص error
       async function deleteBroadcast(id) {
         if (!confirm('هل تريد حذف هذا الإعلان؟')) return;
         showLoading('جاري الحذف...');
-        try { await db.from('broadcasts').delete().eq('id',id); hideLoading(); await Promise.all([loadAdminBroadcasts(),loadGlobalBroadcasts()]); }
-        catch(e){ hideLoading(); alert('خطأ: '+e.message); }
+        try {
+          const { error } = await db.from('broadcasts').delete().eq('id', id);
+          if (error) throw error;
+          hideLoading();
+          await Promise.all([loadAdminBroadcasts(), loadGlobalBroadcasts()]);
+        } catch(e) { hideLoading(); alert('خطأ في الحذف:\n' + (e?.message || JSON.stringify(e))); }
       }
 
       function showBroadcastModal() {
@@ -720,7 +694,7 @@
         const btn = document.getElementById('loginSubmitBtn');
         btn.disabled = true; btn.textContent = 'جاري الدخول...';
         showLoading('جاري الدخول...');
-        const norm = s => (s || '').trim().replace(/[\u0622\u0623\u0625]/g,'\u0627').replace(/\u0629/g,'\u0647').replace(/\s+/g,' ').toLowerCase();
+        const norm = s => (s||'').trim().replace(/[\u0622\u0623\u0625]/g,'\u0627').replace(/\u0629/g,'\u0647').replace(/\s+/g,' ').toLowerCase();
         try {
           const { data: candidates, error } = await db.from('participants').select('id,name,password').ilike('name',`%${nameRaw}%`).limit(25);
           hideLoading(); btn.disabled = false; btn.textContent = 'دخول 🔓';
@@ -731,7 +705,7 @@
           currentUser = user; saveSession(user); showParticipantPage();
         } catch (err) {
           hideLoading(); btn.disabled = false; btn.textContent = 'دخول 🔓';
-          showLoginError('حدث خطأ. حاول مرة أخرى.'); console.error(err);
+          showLoginError('حدث خطأ. حاول مرة أخرى.');
         }
       };
 
@@ -893,15 +867,30 @@
         document.body.appendChild(d);
       }
       function closeConfirmDialog(){document.querySelectorAll('.confirm-dialog').forEach(d=>d.remove());}
+
+      // ✅ إصلاح: حذف تسجيل المشارك — فحص كل error + حذف الملف من Storage
       async function deleteRecording(id){
         showLoading('جاري الحذف...');
         try {
-          await db.from('messages').delete().eq('recording_id',id);
-          await db.from('recordings').delete().eq('id',id);
+          // 1) نجيب storage_path قبل الحذف
+          const { data: rec, error: e0 } = await db.from('recordings').select('storage_path').eq('id', id).single();
+          if (e0) throw e0;
+          // 2) نحذف الرسائل المرتبطة أولاً
+          const { error: e1 } = await db.from('messages').delete().eq('recording_id', id);
+          if (e1) throw e1;
+          // 3) نحذف التسجيل من الجدول
+          const { error: e2 } = await db.from('recordings').delete().eq('id', id);
+          if (e2) throw e2;
+          // 4) نحذف الملف من Storage (لو موجود)
+          if (rec?.storage_path) {
+            const { error: e3 } = await db.storage.from(BUCKET).remove([rec.storage_path]);
+            if (e3) console.warn('Storage remove failed:', e3);
+          }
           hideLoading(); closeConfirmDialog();
-          await loadMyRecordings(); await updateUnreadBadge();
+          await loadMyRecordings();
+          await updateUnreadBadge();
           alert('تم الحذف ✅');
-        } catch(e){hideLoading();alert('خطأ: '+e.message);}
+        } catch(e){ hideLoading(); alert('فشل الحذف:\n' + (e?.message || JSON.stringify(e))); }
       }
 
       async function updateUnreadBadge(){
@@ -1070,12 +1059,21 @@
           div.innerHTML=html;
         }catch(e){}
       }
+
+      // ✅ إصلاح: deleteMessage — فحص error
       async function deleteMessage(id){
         if(!confirm('هل تريد حذف هذه الرسالة؟'))return;
-        showLoading();
-        try{await db.from('messages').delete().eq('id',id);hideLoading();await loadAdminSentMessages();await calculateAndDisplayTotalRating();alert('تم الحذف ✅');}
-        catch(e){hideLoading();alert('خطأ: '+e.message);}
+        showLoading('جاري الحذف...');
+        try{
+          const { error } = await db.from('messages').delete().eq('id', id);
+          if (error) throw error;
+          hideLoading();
+          await loadAdminSentMessages();
+          await calculateAndDisplayTotalRating();
+          alert('تم الحذف ✅');
+        } catch(e){ hideLoading(); alert('خطأ في الحذف:\n' + (e?.message || JSON.stringify(e))); }
       }
+
       async function calculateAndDisplayTotalRating(){
         if(!currentParticipant)return;
         try {
@@ -1212,15 +1210,31 @@
           <div class="confirm-buttons"><button class="btn btn-danger" onclick="deleteRecordingAdmin(${id})">حذف</button><button class="btn btn-secondary" onclick="closeConfirmDialog()">إلغاء</button></div></div>`;
         document.body.appendChild(d);
       }
+
+      // ✅ إصلاح: حذف تسجيل من صفحة الأستاذة — فحص كل error + حذف الملف من Storage
       async function deleteRecordingAdmin(id){
-        showLoading();
+        showLoading('جاري الحذف...');
         try{
-          await db.from('messages').delete().eq('recording_id',id);
-          await db.from('recordings').delete().eq('id',id);
+          // 1) نجيب storage_path قبل الحذف
+          const { data: rec, error: e0 } = await db.from('recordings').select('storage_path').eq('id', id).single();
+          if (e0) throw e0;
+          // 2) نحذف الرسائل المرتبطة أولاً
+          const { error: e1 } = await db.from('messages').delete().eq('recording_id', id);
+          if (e1) throw e1;
+          // 3) نحذف التسجيل من الجدول
+          const { error: e2 } = await db.from('recordings').delete().eq('id', id);
+          if (e2) throw e2;
+          // 4) نحذف الملف من Storage (لو موجود)
+          if (rec?.storage_path) {
+            const { error: e3 } = await db.storage.from(BUCKET).remove([rec.storage_path]);
+            if (e3) console.warn('Storage remove failed:', e3);
+          }
           hideLoading(); closeConfirmDialog();
-          await calculateAndDisplayTotalRating(); await loadAdminSentMessages(); await loadParticipantRecordings();
+          await calculateAndDisplayTotalRating();
+          await loadAdminSentMessages();
+          await loadParticipantRecordings();
           alert('تم الحذف ✅');
-        }catch(e){hideLoading();alert('خطأ: '+e.message);}
+        } catch(e){ hideLoading(); alert('فشل الحذف:\n' + (e?.message || JSON.stringify(e))); }
       }
 
       function confirmDeleteAccount(){
@@ -1230,17 +1244,23 @@
           <div class="confirm-buttons"><button class="btn btn-danger" onclick="deleteParticipantAccount()">حذف نهائي</button><button class="btn btn-secondary" onclick="closeConfirmDialog()">إلغاء</button></div></div>`;
         document.body.appendChild(d);
       }
+
+      // ✅ إصلاح: deleteParticipantAccount — فحص كل error بالترتيب
       async function deleteParticipantAccount(){
-        showLoading();
+        showLoading('جاري الحذف...');
         try{
-          await db.from('messages').delete().eq('participant_id',currentParticipant.id);
-          await db.from('recordings').delete().eq('participant_id',currentParticipant.id);
-          await db.from('participants').delete().eq('id',currentParticipant.id);
+          const { error: e1 } = await db.from('messages').delete().eq('participant_id', currentParticipant.id);
+          if (e1) throw e1;
+          const { error: e2 } = await db.from('recordings').delete().eq('participant_id', currentParticipant.id);
+          if (e2) throw e2;
+          const { error: e3 } = await db.from('participants').delete().eq('id', currentParticipant.id);
+          if (e3) throw e3;
           hideLoading(); closeConfirmDialog();
           alert(`تم حذف حساب ${currentParticipant.name} ✅`);
           currentParticipant=null; showAdminParticipantsPage();
-        }catch(e){hideLoading();alert('خطأ: '+e.message);}
+        } catch(e){ hideLoading(); alert('فشل الحذف:\n' + (e?.message || JSON.stringify(e))); }
       }
+
       function toggleContactInfo(){
         const c=document.getElementById('contactInfoContent'),t=document.getElementById('contactToggleText');
         if(!c)return;
@@ -1298,9 +1318,6 @@
           modal.addEventListener('click',e=>{if(e.target===modal)modal.remove();});
         }catch(e){hideLoading();alert('خطأ: '+e.message);}
       }
-
-      // ✅ التطبيق يبدأ من initApp() بعد تحميل Supabase
-      // window.onload لا يُستخدم هنا — initApp تُستدعى من script تحميل CDN
     </script>
   </body>
 </html>
