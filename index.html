@@ -351,6 +351,18 @@
         margin: 8px 0 4px;
         letter-spacing: 2px;
       }
+      .cert-rank-badge {
+        font-family: "Amiri", serif;
+        font-size: 1.5rem;
+        font-weight: 900;
+        color: var(--dark-green);
+        background: linear-gradient(135deg, #fef3c7, #fde68a);
+        border: 2px solid #f59e0b;
+        border-radius: 30px;
+        padding: 6px 22px;
+        margin: 8px auto;
+        display: inline-block;
+      }
       .cert-score-display {
         font-size: 1.4rem;
         font-weight: 900;
@@ -481,8 +493,10 @@
                 <div class="cert-presented-label">تُقدَّم هذه الشهادة إلى</div>
                 <div class="cert-name-display" id="certNameEl">—</div>
                 <div class="cert-divider"></div>
+                <!-- المركز - يظهر كبادج بارز -->
+                <div id="certRankEl" style="display:none;font-family:'Amiri',serif;font-size:1.6rem;font-weight:900;color:var(--dark-green);background:linear-gradient(135deg,#fef3c7,#fde68a);border:2px solid #f59e0b;border-radius:30px;padding:6px 20px;margin:8px auto;display:inline-block;letter-spacing:1px;"></div>
                 <div class="cert-text-display" id="certTextEl"></div>
-                <div class="cert-stars-row" id="certStarsEl"></div>
+                <div class="cert-stars-row" id="certStarsEl" style="font-size:1.8rem;margin:10px 0 4px;letter-spacing:4px;"></div>
                 <div class="cert-score-display" id="certScoreEl"></div>
                 <div class="cert-footer-row">
                   <div class="cert-sig">الأستاذة المشرفة<br><span style="font-size:0.75rem;color:#aaa;">التوقيع</span></div>
@@ -886,12 +900,16 @@
         return null;
       }
 
-      function buildStarsHtml(stars, outOf) {
-        // stars 0-100, show proportional filled stars out of 5
-        const ratio = Math.min(stars, outOf) / outOf;
-        const filled = Math.round(ratio * 5);
+      function buildStarsHtml(stars) {
+        // stars من 5
+        const filled = Math.floor(stars);
+        const half = (stars - filled) >= 0.5;
         let h = '';
-        for (let i=1; i<=5; i++) h += (i<=filled) ? '⭐' : '☆';
+        for (let i = 1; i <= 5; i++) {
+          if (i <= filled) h += '⭐';
+          else if (i === filled + 1 && half) h += '🌟';
+          else h += '<span style="opacity:0.22;">⭐</span>';
+        }
         return h;
       }
 
@@ -975,8 +993,20 @@
       function renderCertificate(certData) {
         document.getElementById('certNameEl').textContent = certData.name || '—';
         document.getElementById('certTextEl').textContent = certData.text || '';
-        document.getElementById('certStarsEl').innerHTML = buildStarsHtml(certData.stars || 0, certData.outOf || 100);
-        document.getElementById('certScoreEl').textContent = (certData.stars || 0) + ' / ' + (certData.outOf || 100);
+        // النجوم من 5 تلقائياً
+        document.getElementById('certStarsEl').innerHTML = buildStarsHtml(certData.stars || 0);
+        // الدرجة
+        if (certData.outOf > 0) {
+          document.getElementById('certScoreEl').textContent = certData.score + ' / ' + certData.outOf + ' نقطة';
+        } else {
+          document.getElementById('certScoreEl').textContent = '';
+        }
+        // المركز
+        const rankEl = document.getElementById('certRankEl');
+        if (rankEl) {
+          rankEl.textContent = certData.rankLabel || '';
+          rankEl.style.display = certData.rankLabel ? 'block' : 'none';
+        }
         document.getElementById('certDateEl').textContent = new Date().toLocaleDateString('ar-SA', {year:'numeric',month:'long',day:'numeric'});
       }
 
@@ -1036,54 +1066,116 @@
       }
 
       // ========= Admin: Certificate modal =========
-      function showCertificateModal() {
+      async function showCertificateModal() {
         if (!currentParticipant) return;
-        const defaultText = `تُمنح هذه الشهادة تقديراً لجهودكِ المتميزة في مسابقة حفظ جزء عم خلال شهر رمضان المبارك 1446 هـ، شاكرين لكِ إخلاصكِ وتفانيكِ، سائلين المولى أن يبارك في علمكِ وعملكِ.`;
+        showLoading('جاري حساب الترتيب...');
 
-        const modal = document.createElement('div');
-        modal.className = 'message-modal';
-        modal.id = 'certModal';
-        modal.innerHTML = `
-          <div class="message-modal-content">
-            <h3>🎓 إرسال شهادة شكر وتقدير</h3>
-            <div class="form-group">
-              <label>اسم المشارك في الشهادة</label>
-              <input type="text" id="certNameInput" value="${escapeHtml(currentParticipant.name)}" placeholder="اسم المشارك" />
-            </div>
-            <div class="form-group">
-              <label>نص الشهادة</label>
-              <textarea id="certTextInput" style="width:100%;padding:10px;border:2px solid var(--border-light);border-radius:8px;font-family:Cairo,sans-serif;font-size:0.9rem;min-height:100px;resize:vertical;">${defaultText}</textarea>
-            </div>
-            <div class="form-group">
-              <label>النجوم / الدرجة (من 100)</label>
-              <input type="number" id="certStarsInput" value="70" min="0" max="100" style="text-align:center;font-size:1.3rem;font-weight:700;" />
-              <p style="color:#888;font-size:0.8rem;margin-top:4px;">مثال: 70 يعني 70/100 ويُعرض كنجوم</p>
-            </div>
-            <div style="background:linear-gradient(135deg,#f0f9ff,#e0f2fe);padding:10px;border-radius:8px;border:2px solid var(--primary-gold);margin-bottom:10px;">
-              <p style="color:var(--dark-green);font-size:0.85rem;font-weight:600;">📌 ملاحظة: ستظهر الشهادة للمشارك تلقائياً بأنيميشن ظرف عند دخوله التالي</p>
-            </div>
-            <div class="modal-buttons">
-              <button class="btn btn-primary" onclick="sendCertificate()">🎓 إرسال الشهادة</button>
-              <button class="btn btn-secondary" onclick="document.getElementById('certModal').remove()">إلغاء</button>
-            </div>
-          </div>`;
-        document.body.appendChild(modal);
+        try {
+          // جلب ترتيب وتقييم المشارك تلقائياً
+          const [allParticipants, allRatings] = await Promise.all([
+            db.from('participants').select('id'),
+            db.from('messages').select('participant_id,recording_id,rating')
+              .eq('message_type','rating').not('rating','is',null)
+          ]);
+          hideLoading();
+
+          // حساب مجموع نقاط كل مشارك
+          const scoreMap = {};
+          (allRatings.data || []).forEach(r => {
+            if (!scoreMap[r.participant_id]) scoreMap[r.participant_id] = { total: 0, seen: new Set() };
+            if (!scoreMap[r.participant_id].seen.has(r.recording_id)) {
+              scoreMap[r.participant_id].total += r.rating;
+              scoreMap[r.participant_id].seen.add(r.recording_id);
+            }
+          });
+
+          // ترتيب المشاركين تنازلياً
+          const sorted = (allParticipants.data || [])
+            .map(p => ({ id: p.id, total: scoreMap[p.id]?.total || 0 }))
+            .sort((a, b) => b.total - a.total);
+
+          const myRank = sorted.findIndex(p => p.id === currentParticipant.id) + 1;
+          const myScore = scoreMap[currentParticipant.id]?.total || 0;
+          const mySeenCount = scoreMap[currentParticipant.id]?.seen?.size || 0;
+          const myOutOf = mySeenCount * 5;
+
+          // حساب النجوم (1-5) بناءً على النسبة
+          const starsOutOf5 = myOutOf > 0 ? Math.round((myScore / myOutOf) * 5 * 10) / 10 : 0;
+
+          const rankLabel = myRank === 1 ? '🥇 المركز الأول' : myRank === 2 ? '🥈 المركز الثاني' : myRank === 3 ? '🥉 المركز الثالث' : `المركز ${myRank}`;
+          const defaultText = `تُمنح هذه الشهادة تقديراً لجهودكِ المتميزة في مسابقة حفظ جزء عم خلال شهر رمضان المبارك 1446 هـ، شاكرين لكِ إخلاصكِ وتفانيكِ، سائلين المولى أن يبارك في علمكِ وعملكِ.`;
+
+          const modal = document.createElement('div');
+          modal.className = 'message-modal';
+          modal.id = 'certModal';
+          modal.innerHTML = `
+            <div class="message-modal-content">
+              <h3>🎓 إرسال شهادة شكر وتقدير</h3>
+
+              <!-- معلومات تلقائية (للعرض فقط) -->
+              <div style="background:linear-gradient(135deg,#fffce8,#fff3cc);padding:12px;border-radius:10px;border:2px solid var(--primary-gold);margin-bottom:14px;text-align:center;">
+                <p style="color:#888;font-size:0.78rem;margin-bottom:6px;">المعلومات التالية تُحسب تلقائياً من النظام</p>
+                <div style="font-size:1.5rem;font-weight:900;color:var(--dark-green);">${rankLabel}</div>
+                <div style="font-size:1rem;color:#555;margin-top:4px;">
+                  النجوم: ${'⭐'.repeat(Math.floor(starsOutOf5))}${'☆'.repeat(Math.max(0, 5-Math.floor(starsOutOf5)))}
+                  <strong style="color:var(--dark-green);margin-right:6px;">${starsOutOf5} / 5</strong>
+                </div>
+                <div style="font-size:0.8rem;color:#888;margin-top:2px;">المجموع: ${myScore} من ${myOutOf} نقطة</div>
+              </div>
+
+              <div class="form-group">
+                <label>اسم المشارك في الشهادة</label>
+                <input type="text" id="certNameInput" value="${escapeHtml(currentParticipant.name)}" placeholder="اسم المشارك" />
+              </div>
+              <div class="form-group">
+                <label>نص الشهادة</label>
+                <textarea id="certTextInput" style="width:100%;padding:10px;border:2px solid var(--border-light);border-radius:8px;font-family:Cairo,sans-serif;font-size:0.9rem;min-height:100px;resize:vertical;">${defaultText}</textarea>
+              </div>
+
+              <!-- حقول مخفية تحمل القيم التلقائية -->
+              <input type="hidden" id="certRankInput" value="${myRank}" />
+              <input type="hidden" id="certRankLabelInput" value="${rankLabel}" />
+              <input type="hidden" id="certStarsInput" value="${starsOutOf5}" />
+              <input type="hidden" id="certScoreInput" value="${myScore}" />
+              <input type="hidden" id="certOutOfInput" value="${myOutOf}" />
+
+              <div style="background:linear-gradient(135deg,#f0f9ff,#e0f2fe);padding:10px;border-radius:8px;border:2px solid var(--primary-gold);margin-bottom:10px;">
+                <p style="color:var(--dark-green);font-size:0.85rem;font-weight:600;">📌 ستظهر الشهادة للمشارك تلقائياً بأنيميشن ظرف عند دخوله التالي</p>
+              </div>
+              <div class="modal-buttons">
+                <button class="btn btn-primary" onclick="sendCertificate()">🎓 إرسال الشهادة</button>
+                <button class="btn btn-secondary" onclick="document.getElementById('certModal').remove()">إلغاء</button>
+              </div>
+            </div>`;
+          document.body.appendChild(modal);
+
+        } catch(e) {
+          hideLoading();
+          alert('خطأ في حساب الترتيب:\n' + (e?.message || ''));
+        }
       }
 
       async function sendCertificate() {
-        const name = document.getElementById('certNameInput').value.trim();
-        const text = document.getElementById('certTextInput').value.trim();
-        const stars = parseFloat(document.getElementById('certStarsInput').value) || 70;
+        const name  = document.getElementById('certNameInput').value.trim();
+        const text  = document.getElementById('certTextInput').value.trim();
+        const rank  = parseInt(document.getElementById('certRankInput').value) || 1;
+        const rankLabel = document.getElementById('certRankLabelInput').value;
+        const stars = parseFloat(document.getElementById('certStarsInput').value) || 0;
+        const score = parseFloat(document.getElementById('certScoreInput').value) || 0;
+        const outOf = parseFloat(document.getElementById('certOutOfInput').value) || 0;
 
         if (!name) { alert('الرجاء إدخال اسم المشارك!'); return; }
         if (!text) { alert('الرجاء كتابة نص الشهادة!'); return; }
 
         const certData = {
           _type: 'certificate',
-          name: name,
-          text: text,
-          stars: Math.min(Math.max(stars, 0), 100),
-          outOf: 100
+          name,
+          text,
+          rank,
+          rankLabel,
+          stars,       // من 5
+          score,       // المجموع الكلي
+          outOf        // أقصى نقطة
         };
 
         showLoading('جاري إرسال الشهادة...');
@@ -1093,7 +1185,7 @@
             recording_id: null,
             message_type: 'certificate',
             message: JSON.stringify(certData),
-            rating: certData.stars,
+            rating: stars,
             read: false
           });
           if (error) throw error;
@@ -1793,7 +1885,7 @@
                 <div class="cert-thumb">🎓</div>
                 <div class="cert-msg-info">
                   <div class="cert-msg-title">شهادة شكر وتقدير</div>
-                  <div class="cert-msg-sub">باسم: ${escapeHtml(certData.name||'')} • ${certData.stars||0}/100 ⭐</div>
+                  <div class="cert-msg-sub">${certData.rankLabel ? certData.rankLabel + ' • ' : ''}${certData.stars||0}/5 نجوم</div>
                   <div class="cert-msg-sub">${new Date(msg.created_at).toLocaleDateString('ar-SA')} — اضغط للعرض</div>
                 </div>
                 <span style="color:var(--primary-gold);font-size:1.4rem;">←</span>
