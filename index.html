@@ -424,6 +424,13 @@
       .btn-cert { background: linear-gradient(135deg, #7c3aed, #6d28d9); color: white; }
       .btn-cert:hover { background: linear-gradient(135deg, #6d28d9, #5b21b6); transform: translateY(-2px); }
 
+
+      /* ===== VIRTUAL PARTICIPANT ===== */
+      .virtual-badge { background: linear-gradient(135deg,#7c3aed,#6d28d9); color:white; font-size:0.7rem; padding:2px 7px; border-radius:10px; font-weight:700; }
+      .transfer-modal-content { background:white; padding:20px; border-radius:12px; max-width:480px; width:100%; max-height:88vh; overflow-y:auto; }
+      .participant-select { width:100%; padding:10px; border:2px solid var(--border-light); border-radius:8px; font-family:"Cairo",sans-serif; font-size:0.95rem; background:var(--cream); }
+      .cert-save-admin-btn { background:linear-gradient(135deg,#10b981,#059669); color:white; border:none; padding:10px 16px; border-radius:8px; font-family:"Cairo",sans-serif; font-weight:700; font-size:0.9rem; cursor:pointer; display:flex; align-items:center; gap:6px; }
+      .cert-save-admin-btn:hover { opacity:0.88; }
       @media print {
         body * { visibility: hidden; }
         #printCertArea, #printCertArea * { visibility: visible; }
@@ -510,6 +517,12 @@
           <button class="cert-btn cert-btn-save" onclick="downloadCertAsImage()">📸 حفظ صورة</button>
           <button class="cert-btn cert-btn-pdf"  onclick="downloadCertAsPDF()">📄 PDF</button>
           <button class="cert-btn cert-btn-close" onclick="closeCertOverlay()">✕ إغلاق</button>
+        </div>
+        <!-- زر حفظ إضافي للاستاذة عند المعاينة -->
+        <div id="adminCertSaveArea" style="margin-top:10px;text-align:center;display:none;">
+          <button onclick="downloadCertAsImage()" style="background:linear-gradient(135deg,#10b981,#059669);color:white;border:none;padding:12px 30px;border-radius:10px;font-family:Cairo,sans-serif;font-weight:700;font-size:1rem;cursor:pointer;width:100%;">
+            📸 حفظ الشهادة كصورة (للاستاذة)
+          </button>
         </div>
       </div>
     </div>
@@ -634,8 +647,12 @@
           <div class="stat-card"><div class="icon">🎙️</div><div class="number" id="totalRecordings">0</div><div class="label">تسجيل كلي</div></div>
           <div class="stat-card"><div class="icon">🆕</div><div class="number" id="newRecordings">0</div><div class="label">جديد</div></div>
         </div>
-        <button class="btn btn-primary" onclick="showBroadcastModal()" style="margin-bottom:8px;">📢 إرسال إعلان عام</button>
-        <button class="btn btn-secondary" onclick="showLeaderboard()" style="margin-bottom:10px;">🏆 عرض لوحة الترتيب</button>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:8px;">
+          <button class="btn btn-primary" onclick="showBroadcastModal()">📢 إعلان عام</button>
+          <button class="btn btn-secondary" onclick="showLeaderboard()">🏆 الترتيب</button>
+          <button class="btn btn-cert" onclick="showTransferModal()">🔄 نقل بيانات</button>
+          <button class="btn" style="background:linear-gradient(135deg,#7c3aed,#6d28d9);color:white;" onclick="showAddVirtualModal()">➕ مشارك وهمي</button>
+        </div>
         <div id="adminBroadcastsList" style="margin-bottom:12px;"></div>
         <div id="participantsList" class="participants-grid"></div>
       </div>
@@ -654,7 +671,8 @@
 
         <div style="display:flex;gap:8px;margin-bottom:12px;flex-wrap:wrap;">
           <button class="btn btn-cert" onclick="showCertificateModal()" style="flex:1;min-width:140px;">🎓 إرسال شهادة</button>
-          <button class="btn btn-danger" onclick="confirmDeleteAccount()" style="flex:1;min-width:140px;">🗑️ حذف الحساب</button>
+          <button class="btn" style="background:linear-gradient(135deg,#f59e0b,#d97706);color:white;flex:1;min-width:140px;" onclick="showAdminCertPreview()">📸 معاينة وحفظ شهادة</button>
+          <button class="btn btn-danger" onclick="confirmDeleteAccount()" style="flex:1;min-width:100%;">🗑️ حذف الحساب</button>
         </div>
 
         <div class="contact-info-section">
@@ -1012,6 +1030,10 @@
 
       async function closeCertOverlay() {
         document.getElementById('certOverlay').classList.add('hidden');
+        // إخفاء زر الاستاذة
+        const adminSaveArea = document.getElementById('adminCertSaveArea');
+        if (adminSaveArea) adminSaveArea.style.display = 'none';
+        _adminCertPreviewMode = false;
         // Reset animation state
         document.getElementById('envFlapTri').classList.remove('open');
         document.getElementById('certSlideOut').classList.remove('slide-up');
@@ -1194,7 +1216,27 @@
           const modal = document.getElementById('certModal');
           if (modal) modal.remove();
           await loadAdminSentMessages();
-          alert('✅ تم إرسال الشهادة بنجاح! ستظهر للمشارك عند دخوله التالي.');
+
+          // عرض الشهادة للاستاذة لحفظها مباشرةً
+          const showNow = confirm('✅ تم إرسال الشهادة بنجاح!\n\nهل تريدين معاينة الشهادة وحفظها الآن؟');
+          if (showNow) {
+            _adminCertPreviewMode = true;
+            const ovr = document.getElementById('certOverlay');
+            document.getElementById('certEnvelopePhase').classList.add('hidden');
+            renderCertificate(certData);
+            document.getElementById('certDisplayPhase').classList.remove('hidden');
+            ovr.classList.remove('hidden');
+            const adminSaveArea = document.getElementById('adminCertSaveArea');
+            if (adminSaveArea) adminSaveArea.style.display = 'block';
+            const closeBtn = document.querySelector('#certDisplayPhase .cert-btn-close');
+            if (closeBtn) {
+              closeBtn.onclick = () => {
+                ovr.classList.add('hidden');
+                if (adminSaveArea) adminSaveArea.style.display = 'none';
+                _adminCertPreviewMode = false;
+              };
+            }
+          }
         } catch(e) {
           hideLoading();
           alert('خطأ في الإرسال:\n' + (e?.message || ''));
@@ -1232,7 +1274,7 @@
         hideAllPages();
         currentParticipant = participant;
         document.getElementById('adminRecordingsPage').classList.remove('hidden');
-        document.getElementById('participantTitle').textContent = 'تسجيلات: '+participant.name;
+        document.getElementById('participantTitle').textContent = (participant.is_virtual ? '🤖 وهمي: ' : 'تسجيلات: ') + participant.name;
         document.getElementById('contactName').textContent = participant.name;
         document.getElementById('contactPassword').textContent = participant.password;
         const cc = document.getElementById('contactInfoContent');
@@ -1945,7 +1987,7 @@
         showLoading('جاري تحميل المشاركين...');
         try {
           const [pRes,rRes] = await Promise.all([
-            db.from('participants').select('id,name,password').order('name',{ascending:true}),
+            db.from('participants').select('id,name,password,is_virtual').order('name',{ascending:true}),
             db.from('recordings').select('id,participant_id,created_at')
           ]);
           hideLoading();
@@ -1974,7 +2016,8 @@
             const nc=p.recordings.filter(r=>!isRecordingViewed(p.id,r.id)).length;
             return `<div class="participant-card" data-pid="${p.id}">
               ${nc>0?`<div class="new-recordings-badge">${nc}</div>`:''}
-              <div class="icon">👤</div><h3>${escapeHtml(p.name)}</h3>
+              <div class="icon">${p.is_virtual?'🤖':'👤'}</div>
+              <h3>${escapeHtml(p.name)}${p.is_virtual?'<br><span class="virtual-badge">وهمي</span>':''}</h3>
               <p class="count">${p.recordings.length} تسجيل</p></div>`;
           }).join('');
 
@@ -2077,7 +2120,7 @@
               const cd = parseCertData(msg.message);
               html += `<div class="admin-msg-item">
                 <button class="msg-delete-btn" onclick="deleteMessage(${msg.id})">🗑️ حذف</button>
-                <p style="color:var(--dark-green);font-weight:700;margin-bottom:4px;margin-left:55px;">🎓 شهادة شكر وتقدير — ${escapeHtml(cd?.name||'')} (${cd?.stars||0}/100)</p>
+                <p style="color:var(--dark-green);font-weight:700;margin-bottom:4px;margin-left:55px;">🎓 شهادة شكر وتقدير — ${escapeHtml(cd?.name||'')} (${cd?.rankLabel||''} • ${cd?.stars||0}/5 ⭐)</p>
                 <p style="color:#888;font-size:0.78rem;">${new Date(msg.created_at).toLocaleString('ar-SA')}</p>
               </div>`;
               return;
@@ -2337,7 +2380,7 @@
         showLoading('جاري تحميل الترتيب...');
         try {
           const [pRes,rRes,ratRes]=await Promise.all([
-            db.from('participants').select('id,name'),
+            db.from('participants').select('id,name,is_virtual'),
             db.from('recordings').select('id,participant_id'),
             db.from('messages').select('participant_id,recording_id,rating').eq('message_type','rating').not('rating','is',null)
           ]);
@@ -2365,7 +2408,7 @@
             ?'<div style="text-align:center;padding:30px;color:#aaa;"><div style="font-size:3rem;">🏆</div><p>لا يوجد مشاركون</p></div>'
             :ranked.map((p,i)=>`<div class="leaderboard-row ${rankClass(i)}">
               <div class="rank-badge">${rankEmoji(i)}</div>
-              <div class="rank-info"><div class="rank-name">${escapeHtml(p.name)}</div>
+              <div class="rank-info"><div class="rank-name">${escapeHtml(p.name)}${p.is_virtual?'&nbsp;<span class="virtual-badge">وهمي</span>':''}</div>
               <div class="rank-details">${p.recCount} تسجيل • ${p.ratedCount} تقييم</div>
               <div class="rank-stars">${starsHtml(p.totalRating,p.ratedCount)}</div></div>
               <div class="rank-score"><div class="score-num">${p.totalRating>0?p.totalRating.toFixed(1):'-'}</div>
@@ -2385,6 +2428,243 @@
           alert('خطأ: '+(e?.message||''));
         }
       }
+
+
+      // =========================================================
+      // ========= نقل البيانات بين حسابين =========
+      // =========================================================
+      async function showTransferModal() {
+        showLoading('جاري تحميل المشاركين...');
+        const { data: participants } = await db.from('participants').select('id,name,is_virtual').order('name',{ascending:true});
+        hideLoading();
+        if (!participants || participants.length < 2) { alert('يجب وجود حسابين على الأقل لنقل البيانات.'); return; }
+
+        const opts = participants.map(p => `<option value="${p.id}">${p.is_virtual ? '(وهمي) ' : ''}${p.name}</option>`).join('');
+
+        const modal = document.createElement('div');
+        modal.className = 'message-modal'; modal.id = 'transferModal';
+        modal.innerHTML = `<div class="transfer-modal-content">
+          <h3 style="color:var(--dark-green);margin-bottom:14px;">🔄 نقل بيانات بين حسابين</h3>
+          <div style="background:#fef9e7;padding:12px;border-radius:8px;border:2px solid #f0c850;margin-bottom:14px;font-size:0.85rem;color:#555;line-height:1.7;">
+            ⚠️ سيتم نقل <strong>جميع التسجيلات والرسائل</strong> من الحساب المصدر إلى الحساب الهدف. الحساب المصدر يبقى فارغاً (لا يُحذف).
+          </div>
+          <div class="form-group">
+            <label>📤 الحساب المصدر (نقل منه)</label>
+            <select class="participant-select" id="transferFrom">${opts}</select>
+          </div>
+          <div class="form-group">
+            <label>📥 الحساب الهدف (نقل إليه)</label>
+            <select class="participant-select" id="transferTo">${opts}</select>
+          </div>
+          <div style="background:#fee2e2;padding:10px;border-radius:8px;border:2px solid #dc2626;margin-bottom:12px;font-size:0.85rem;color:#991b1b;font-weight:600;">
+            ⚠️ لا يمكن التراجع عن النقل! تأكد من اختيارك.
+          </div>
+          <div class="modal-buttons">
+            <button class="btn btn-primary" onclick="executeTransfer()">🔄 تنفيذ النقل</button>
+            <button class="btn btn-secondary" onclick="document.getElementById('transferModal').remove()">إلغاء</button>
+          </div>
+        </div>`;
+        document.body.appendChild(modal);
+      }
+
+      async function executeTransfer() {
+        const fromId = parseInt(document.getElementById('transferFrom').value);
+        const toId   = parseInt(document.getElementById('transferTo').value);
+
+        if (fromId === toId) { alert('الحساب المصدر والهدف متطابقان!'); return; }
+
+        const fromName = document.querySelector('#transferFrom option:checked').text.replace('(وهمي) ','');
+        const toName   = document.querySelector('#transferTo option:checked').text.replace('(وهمي) ','');
+
+        if (!confirm(`هل تريد نقل جميع بيانات "${fromName}" إلى "${toName}"؟
+هذا الإجراء لا يمكن التراجع عنه.`)) return;
+
+        showLoading('جاري نقل البيانات...');
+        try {
+          // نقل التسجيلات
+          const { error: e1 } = await db.from('recordings')
+            .update({ participant_id: toId })
+            .eq('participant_id', fromId);
+          if (e1) throw e1;
+
+          // نقل الرسائل
+          const { error: e2 } = await db.from('messages')
+            .update({ participant_id: toId })
+            .eq('participant_id', fromId);
+          if (e2) throw e2;
+
+          hideLoading();
+          document.getElementById('transferModal').remove();
+          alert(`✅ تم نقل جميع بيانات "${fromName}" إلى "${toName}" بنجاح!`);
+          showAdminParticipantsPage();
+        } catch(e) {
+          hideLoading();
+          alert('فشل النقل:
+' + (e?.message || JSON.stringify(e)));
+        }
+      }
+
+      // =========================================================
+      // ========= إضافة مشارك وهمي =========
+      // =========================================================
+      function showAddVirtualModal() {
+        const modal = document.createElement('div');
+        modal.className = 'message-modal'; modal.id = 'virtualModal';
+        modal.innerHTML = `<div class="transfer-modal-content">
+          <h3 style="color:var(--dark-green);margin-bottom:14px;">➕ إضافة مشارك وهمي</h3>
+          <div style="background:#f3e8ff;padding:12px;border-radius:8px;border:2px solid #7c3aed;margin-bottom:14px;font-size:0.85rem;color:#4c1d95;line-height:1.7;">
+            المشارك الوهمي يظهر في لوحة الترتيب ويمكن إصدار شهادة له، لكنه لا يملك حساب دخول حقيقي.
+          </div>
+          <div class="form-group">
+            <label>اسم المشارك الوهمي</label>
+            <input type="text" id="virtualName" placeholder="اكتب الاسم..." />
+          </div>
+          <div class="form-group">
+            <label>عدد النجوم (من 5)</label>
+            <div style="display:flex;gap:8px;align-items:center;">
+              <input type="number" id="virtualStars" value="4" min="0" max="5" step="0.5" style="width:100px;text-align:center;font-size:1.3rem;font-weight:700;" />
+              <span style="font-size:0.85rem;color:#666;">مثال: 4.5 = 4.5/5 نجوم في الليدر بورد</span>
+            </div>
+          </div>
+          <div class="form-group">
+            <label>عدد التسجيلات الافتراضية (لحساب المجموع)</label>
+            <input type="number" id="virtualRecCount" value="3" min="1" max="20" style="width:100px;text-align:center;font-size:1.1rem;" />
+            <p style="color:#888;font-size:0.78rem;margin-top:4px;">المجموع = النجوم × عدد التسجيلات (مثال: 4.5 × 3 = 13.5 من 15)</p>
+          </div>
+          <div class="modal-buttons">
+            <button class="btn btn-primary" onclick="addVirtualParticipant()">➕ إضافة</button>
+            <button class="btn btn-secondary" onclick="document.getElementById('virtualModal').remove()">إلغاء</button>
+          </div>
+        </div>`;
+        document.body.appendChild(modal);
+      }
+
+      async function addVirtualParticipant() {
+        const name      = document.getElementById('virtualName').value.trim();
+        const stars     = parseFloat(document.getElementById('virtualStars').value) || 4;
+        const recCount  = parseInt(document.getElementById('virtualRecCount').value) || 3;
+
+        if (!name) { alert('الرجاء إدخال الاسم!'); return; }
+        if (stars < 0 || stars > 5) { alert('النجوم يجب أن تكون بين 0 و 5!'); return; }
+
+        showLoading('جاري الإضافة...');
+        try {
+          // إنشاء الحساب الوهمي
+          const { data: newP, error: e1 } = await db.from('participants')
+            .insert({ name, password: '__virtual__', is_virtual: true })
+            .select('id,name').single();
+          if (e1) throw e1;
+
+          // إنشاء تسجيلات وهمية وتقييمات لكل واحدة
+          for (let i = 0; i < recCount; i++) {
+            const { data: rec, error: e2 } = await db.from('recordings').insert({
+              participant_id: newP.id,
+              type: 'audio',
+              file_url: null,
+              data: null,
+              is_virtual: true
+            }).select('id').single();
+            if (e2) throw e2;
+
+            // تقييم لكل تسجيل
+            const { error: e3 } = await db.from('messages').insert({
+              participant_id: newP.id,
+              recording_id: rec.id,
+              message_type: 'rating',
+              rating: Math.min(stars, 5),
+              message: `تقييم وهمي: ${stars}/5`,
+              read: true
+            });
+            if (e3) throw e3;
+          }
+
+          hideLoading();
+          document.getElementById('virtualModal').remove();
+          alert(`✅ تم إضافة المشارك الوهمي "${name}" بنجاح!
+النجوم: ${stars}/5 × ${recCount} تسجيل = ${(stars*recCount).toFixed(1)} نقطة`);
+          showAdminParticipantsPage();
+        } catch(e) {
+          hideLoading();
+          alert('فشل الإضافة:
+' + (e?.message || JSON.stringify(e)));
+        }
+      }
+
+      // =========================================================
+      // ========= معاينة وحفظ شهادة (للاستاذة فقط) =========
+      // =========================================================
+      async function showAdminCertPreview() {
+        if (!currentParticipant) return;
+        showLoading('جاري حساب الترتيب...');
+        try {
+          const [allParticipants, allRatings] = await Promise.all([
+            db.from('participants').select('id'),
+            db.from('messages').select('participant_id,recording_id,rating')
+              .eq('message_type','rating').not('rating','is',null)
+          ]);
+          hideLoading();
+
+          const scoreMap = {};
+          (allRatings.data || []).forEach(r => {
+            if (!scoreMap[r.participant_id]) scoreMap[r.participant_id] = { total: 0, seen: new Set() };
+            if (!scoreMap[r.participant_id].seen.has(r.recording_id)) {
+              scoreMap[r.participant_id].total += r.rating;
+              scoreMap[r.participant_id].seen.add(r.recording_id);
+            }
+          });
+
+          const sorted = (allParticipants.data || [])
+            .map(p => ({ id: p.id, total: scoreMap[p.id]?.total || 0 }))
+            .sort((a, b) => b.total - a.total);
+
+          const myRank = sorted.findIndex(p => p.id === currentParticipant.id) + 1;
+          const myScore = scoreMap[currentParticipant.id]?.total || 0;
+          const mySeenCount = scoreMap[currentParticipant.id]?.seen?.size || 0;
+          const myOutOf = mySeenCount * 5;
+          const starsOutOf5 = myOutOf > 0 ? Math.round((myScore / myOutOf) * 5 * 10) / 10 : 0;
+          const rankLabel = myRank === 1 ? '🥇 المركز الأول' : myRank === 2 ? '🥈 المركز الثاني' : myRank === 3 ? '🥉 المركز الثالث' : `المركز ${myRank}`;
+
+          const defaultText = `تُمنح هذه الشهادة تقديراً لجهودكِ المتميزة في مسابقة حفظ جزء عم خلال شهر رمضان المبارك 1446 هـ.`;
+
+          const certData = {
+            _type: 'certificate',
+            name: currentParticipant.name,
+            text: defaultText,
+            rank: myRank,
+            rankLabel,
+            stars: starsOutOf5,
+            score: myScore,
+            outOf: myOutOf
+          };
+
+          // فتح شاشة الشهادة للاستاذة (بدون إرسال)
+          _adminCertPreviewMode = true;
+          const overlay = document.getElementById('certOverlay');
+          const envPhase = document.getElementById('certEnvelopePhase');
+          const dispPhase = document.getElementById('certDisplayPhase');
+          overlay.classList.remove('hidden');
+          envPhase.classList.add('hidden');
+          renderCertificate(certData);
+          dispPhase.classList.remove('hidden');
+          // إظهار زر حفظ إضافي للاستاذة
+          const adminSaveArea = document.getElementById('adminCertSaveArea');
+          if (adminSaveArea) adminSaveArea.style.display = 'block';
+          // تغيير زر الإغلاق ليكون مناسباً للاستاذة
+          const closeBtn = dispPhase.querySelector('.cert-btn-close');
+          if (closeBtn) {
+            closeBtn.onclick = () => {
+              overlay.classList.add('hidden');
+              if (adminSaveArea) adminSaveArea.style.display = 'none';
+              _adminCertPreviewMode = false;
+            };
+          }
+        } catch(e) {
+          hideLoading();
+          alert('خطأ: ' + (e?.message || ''));
+        }
+      }
+
+      let _adminCertPreviewMode = false;
 
       // ========= تشغيل أولي =========
       if (window.supabase && !_appInited) initApp();
