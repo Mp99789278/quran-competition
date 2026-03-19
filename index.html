@@ -1787,7 +1787,7 @@
       async function loadParticipants(){
         showLoading('جاري تحميل المشاركين...');
         try {
-          // ① جلب المشاركين فقط (بدون تسجيلات)
+          // جلب المشاركين فقط — بدون أي استعلام على التسجيلات لتجنب الـ timeout
           const { data: participants, error: pErr } = await db
             .from('participants')
             .select('id,name,password')
@@ -1795,45 +1795,27 @@
             .limit(300);
 
           if(pErr) throw pErr;
-
-          // ② جلب عدد التسجيلات لكل مشارك عبر استعلامات منفصلة بشكل دُفعي صغير
-          //    نستخدم select count مع group-by عبر الطريقة المتاحة في Supabase JS v2
-          // نجلب فقط participant_id بدون بيانات ثقيلة + LIMIT كبير
-          const { data: recData, error: rErr } = await db
-            .from('recordings')
-            .select('id,participant_id,created_at')
-            .limit(2000)   // ← الحد الأقصى المعقول
-            .order('created_at', {ascending:false});
-
           hideLoading();
 
           const listDiv = document.getElementById('participantsList');
           if(!participants || participants.length===0){
             listDiv.innerHTML='<div class="empty-state"><div class="icon">👥</div><p>لا يوجد مشاركون</p></div>';
-            updateAdminStats(0,0,0); return;
+            updateAdminStats(0,'—','—'); return;
           }
 
-          const allRecs = recData || [];
-          let totalRec = 0, newRec = 0;
           window._participantsCache = {};
-
           participants.forEach(p => {
             p.is_virtual = (p.password === '__virtual__');
-            p.recordings = allRecs.filter(r => r.participant_id === p.id);
-            totalRec += p.recordings.length;
-            p.recordings.forEach(r => { if(!isRecordingViewed(p.id, r.id)) newRec++; });
             window._participantsCache[p.id] = p;
           });
 
-          updateAdminStats(participants.length, totalRec, newRec);
+          updateAdminStats(participants.length,'—','—');
 
           listDiv.innerHTML = participants.map(p => {
-            const nc = p.recordings.filter(r => !isRecordingViewed(p.id, r.id)).length;
             return `<div class="participant-card" data-pid="${p.id}">
-              ${nc>0?`<div class="new-recordings-badge">${nc}</div>`:''}
               <div class="icon">${p.is_virtual?'🤖':'👤'}</div>
               <h3>${escapeHtml(p.name)}${p.is_virtual?'<br><span class="virtual-badge">وهمي</span>':''}</h3>
-              <p class="count">${p.recordings.length} تسجيل</p></div>`;
+              <p class="count">اضغط للعرض</p></div>`;
           }).join('');
 
           listDiv.querySelectorAll('.participant-card').forEach(card => {
@@ -1844,12 +1826,7 @@
           });
         } catch(e){
           hideLoading();
-          const isTimeout = (e?.message||'').includes('timeout') || (e?.message||'').includes('statement');
-          if(isTimeout){
-            alert('⚠️ انتهت مهلة التحميل!\nجرب إعادة المحاولة أو قلل عدد التسجيلات.');
-          } else {
-            alert('خطأ في تحميل المشاركين: '+(e?.message||''));
-          }
+          alert('خطأ في تحميل المشاركين: '+(e?.message||''));
         }
       }
 
@@ -2251,13 +2228,12 @@
       async function showLeaderboard(){
         showLoading('جاري تحميل الترتيب...');
         try {
-          const [pRes,rRes,ratRes]=await Promise.all([
+          const [pRes,ratRes]=await Promise.all([
             db.from('participants').select('id,name,password').limit(300),
-            db.from('recordings').select('id,participant_id').limit(2000),
-            db.from('messages').select('participant_id,recording_id,rating').eq('message_type','rating').not('rating','is',null).limit(2000)
+            db.from('messages').select('participant_id,recording_id,rating').eq('message_type','rating').not('rating','is',null).limit(3000)
           ]);
           hideLoading();
-          const participants=pRes.data||[],allRecs=rRes.data||[],ratings=ratRes.data||[];
+          const participants=pRes.data||[],ratings=ratRes.data||[];
           const rMap={};
           ratings.forEach(r=>{
             if(!rMap[r.participant_id]) rMap[r.participant_id]={total:0,ratedSet:new Set()};
@@ -2268,9 +2244,8 @@
           });
           const ranked=participants.map(p=>{
             p.is_virtual = (p.password==='__virtual__');
-            const rc=allRecs.filter(r=>r.participant_id===p.id).length;
             const rm=rMap[p.id]||{total:0,ratedSet:new Set()};
-            return{...p,totalRating:rm.total,ratedCount:rm.ratedSet.size,recCount:rc};
+            return{...p,totalRating:rm.total,ratedCount:rm.ratedSet.size,recCount:rm.ratedSet.size};
           }).sort((a,b)=>b.totalRating-a.totalRating||b.ratedCount-a.ratedCount);
 
           const rankClass=i=>i===0?'rank-1':i===1?'rank-2':i===2?'rank-3':'rank-other';
