@@ -166,7 +166,6 @@
       .confirm-content p { font-size: 0.95rem; margin-bottom: 20px; line-height: 1.5; }
       .confirm-buttons { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
 
-      /* ======= CONNECTION ERROR OVERLAY ======= */
       #connectionErrorOverlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.85); display: flex; align-items: center; justify-content: center; z-index: 9999; padding: 20px; }
       #connectionErrorOverlay .err-box { background: white; border-radius: 16px; padding: 25px 20px; max-width: 420px; width: 100%; text-align: center; }
       #connectionErrorOverlay h2 { color: #dc2626; font-size: 1.3rem; margin-bottom: 10px; }
@@ -175,14 +174,12 @@
       #connectionErrorOverlay .steps p { color: #444; font-size: 0.88rem; margin-bottom: 6px; }
       #connectionErrorOverlay .steps strong { color: var(--dark-green); }
 
-      /* ======= CONNECTING OVERLAY ======= */
       #connectingOverlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: linear-gradient(135deg, #0d4d3f 0%, #1a6b54 100%); display: flex; align-items: center; justify-content: center; z-index: 9998; flex-direction: column; gap: 16px; }
       #connectingOverlay .conn-box { text-align: center; color: white; }
       #connectingOverlay .conn-spinner { border: 4px solid rgba(255,255,255,0.3); border-top: 4px solid var(--primary-gold); border-radius: 50%; width: 55px; height: 55px; animation: spin 1s linear infinite; margin: 0 auto 16px; }
       #connectingOverlay h2 { font-family: "Amiri", serif; font-size: 1.6rem; margin-bottom: 8px; }
       #connectingOverlay p { color: var(--primary-gold); font-size: 0.95rem; }
 
-      /* ============ CERTIFICATE OVERLAY ============ */
       #certOverlay {
         position: fixed; inset: 0;
         background: rgba(0,0,0,0.92);
@@ -191,241 +188,52 @@
         flex-direction: column; padding: 16px;
         overflow-y: auto;
       }
-      /* Envelope animation phase */
-      #certEnvelopePhase {
-        display: flex; align-items: center; justify-content: center;
-        flex-direction: column;
-      }
-      .env-wrap {
-        position: relative;
-        width: 220px; height: 160px;
-        animation: envBounceIn 0.6s cubic-bezier(0.34,1.56,0.64,1) forwards;
-      }
-      @keyframes envBounceIn {
-        0% { transform: translateY(80px) scale(0.5); opacity: 0; }
-        100% { transform: translateY(0) scale(1); opacity: 1; }
-      }
-      .env-body {
-        position: absolute; bottom: 0; left: 0; right: 0;
-        height: 130px;
-        background: linear-gradient(160deg, #e8c84a 0%, #d4a017 60%, #b8860b 100%);
-        border-radius: 4px 4px 10px 10px;
-        border: 3px solid #a07000;
-        box-shadow: 0 8px 30px rgba(0,0,0,0.4);
-      }
-      .env-bottom-tri {
-        position: absolute; bottom: 0; left: 0; right: 0; z-index: 2;
-        width: 0; height: 0;
-        border-left: 110px solid transparent;
-        border-right: 110px solid transparent;
-        border-bottom: 65px solid #c9971e;
-      }
-      .env-flap-tri {
-        position: absolute; top: 0; left: 0; right: 0; z-index: 4;
-        width: 0; height: 0;
-        border-left: 110px solid transparent;
-        border-right: 110px solid transparent;
-        border-top: 75px solid #b8860b;
-        transform-origin: top center;
-        transform-style: preserve-3d;
-        transition: transform 0.7s ease-in-out;
-        filter: drop-shadow(0 4px 6px rgba(0,0,0,0.3));
-      }
-      .env-flap-tri.open {
-        transform: rotateX(170deg);
-      }
-      .env-left-tri {
-        position: absolute; bottom: 0; left: 0; width: 0; height: 0;
-        border-bottom: 65px solid #c9971e; border-right: 110px solid transparent;
-      }
-      .env-right-tri {
-        position: absolute; bottom: 0; right: 0; width: 0; height: 0;
-        border-bottom: 65px solid #c9971e; border-left: 110px solid transparent;
-      }
-      /* certificate paper slides out */
-      #certSlideOut {
-        position: absolute;
-        bottom: 15px; left: 50%; transform: translateX(-50%) translateY(0);
-        width: 170px; height: 100px;
-        background: white;
-        border-radius: 4px;
-        z-index: 3;
-        box-shadow: 0 2px 10px rgba(0,0,0,0.3);
-        transition: transform 0.7s ease;
-        overflow: hidden;
-      }
-      #certSlideOut.slide-up {
-        transform: translateX(-50%) translateY(-90px);
-      }
-      #certSlideOut .cert-mini-icon {
-        text-align: center; padding-top: 20px; font-size: 2.5rem;
-      }
-      /* Full certificate display */
-      #certDisplayPhase {
-        width: 100%; max-width: 520px; margin: 0 auto;
-      }
-      /* The actual certificate card */
-      .certificate-card {
-        background: white;
-        border-radius: 12px;
-        padding: 6px;
-        box-shadow: 0 15px 50px rgba(0,0,0,0.5);
-        position: relative;
-        overflow: hidden;
-      }
-      .cert-outer-border {
-        border: 4px double var(--primary-gold);
-        border-radius: 8px;
-        padding: 5px;
-      }
-      .cert-inner-border {
-        border: 2px solid var(--primary-gold);
-        border-radius: 6px;
-        padding: 20px 18px;
-        background: linear-gradient(160deg, #fffef5 0%, #fffce8 50%, #fff9d0 100%);
-        position: relative;
-        text-align: center;
-      }
-      /* corner ornaments */
-      .cert-inner-border::before,
-      .cert-inner-border::after {
-        content: '✦';
-        position: absolute;
-        color: var(--primary-gold);
-        font-size: 1.4rem;
-        top: 8px;
-      }
+      #certEnvelopePhase { display: flex; align-items: center; justify-content: center; flex-direction: column; }
+      .env-wrap { position: relative; width: 220px; height: 160px; animation: envBounceIn 0.6s cubic-bezier(0.34,1.56,0.64,1) forwards; }
+      @keyframes envBounceIn { 0% { transform: translateY(80px) scale(0.5); opacity: 0; } 100% { transform: translateY(0) scale(1); opacity: 1; } }
+      .env-body { position: absolute; bottom: 0; left: 0; right: 0; height: 130px; background: linear-gradient(160deg, #e8c84a 0%, #d4a017 60%, #b8860b 100%); border-radius: 4px 4px 10px 10px; border: 3px solid #a07000; box-shadow: 0 8px 30px rgba(0,0,0,0.4); }
+      .env-bottom-tri { position: absolute; bottom: 0; left: 0; right: 0; z-index: 2; width: 0; height: 0; border-left: 110px solid transparent; border-right: 110px solid transparent; border-bottom: 65px solid #c9971e; }
+      .env-flap-tri { position: absolute; top: 0; left: 0; right: 0; z-index: 4; width: 0; height: 0; border-left: 110px solid transparent; border-right: 110px solid transparent; border-top: 75px solid #b8860b; transform-origin: top center; transform-style: preserve-3d; transition: transform 0.7s ease-in-out; filter: drop-shadow(0 4px 6px rgba(0,0,0,0.3)); }
+      .env-flap-tri.open { transform: rotateX(170deg); }
+      .env-left-tri { position: absolute; bottom: 0; left: 0; width: 0; height: 0; border-bottom: 65px solid #c9971e; border-right: 110px solid transparent; }
+      .env-right-tri { position: absolute; bottom: 0; right: 0; width: 0; height: 0; border-bottom: 65px solid #c9971e; border-left: 110px solid transparent; }
+      #certSlideOut { position: absolute; bottom: 15px; left: 50%; transform: translateX(-50%) translateY(0); width: 170px; height: 100px; background: white; border-radius: 4px; z-index: 3; box-shadow: 0 2px 10px rgba(0,0,0,0.3); transition: transform 0.7s ease; overflow: hidden; }
+      #certSlideOut.slide-up { transform: translateX(-50%) translateY(-90px); }
+      #certSlideOut .cert-mini-icon { text-align: center; padding-top: 20px; font-size: 2.5rem; }
+      #certDisplayPhase { width: 100%; max-width: 520px; margin: 0 auto; }
+      .certificate-card { background: white; border-radius: 12px; padding: 6px; box-shadow: 0 15px 50px rgba(0,0,0,0.5); position: relative; overflow: hidden; }
+      .cert-outer-border { border: 4px double var(--primary-gold); border-radius: 8px; padding: 5px; }
+      .cert-inner-border { border: 2px solid var(--primary-gold); border-radius: 6px; padding: 20px 18px; background: linear-gradient(160deg, #fffef5 0%, #fffce8 50%, #fff9d0 100%); position: relative; text-align: center; }
+      .cert-inner-border::before, .cert-inner-border::after { content: '✦'; position: absolute; color: var(--primary-gold); font-size: 1.4rem; top: 8px; }
       .cert-inner-border::before { right: 10px; }
       .cert-inner-border::after { left: 10px; }
-      .cert-basmala {
-        font-family: "Amiri", serif;
-        font-size: 1.2rem;
-        color: var(--dark-green);
-        margin-bottom: 8px;
-        letter-spacing: 1px;
-      }
-      .cert-title-ar {
-        font-family: "Amiri", serif;
-        font-size: 2rem;
-        font-weight: 700;
-        color: var(--dark-green);
-        margin-bottom: 4px;
-        text-shadow: 0 1px 3px rgba(0,0,0,0.1);
-      }
-      .cert-subtitle-comp {
-        font-size: 0.85rem;
-        color: #777;
-        margin-bottom: 14px;
-        font-weight: 600;
-      }
-      .cert-divider {
-        height: 2px;
-        background: linear-gradient(to right, transparent, var(--primary-gold), transparent);
-        margin: 10px 0;
-      }
-      .cert-presented-label {
-        font-size: 0.9rem;
-        color: #666;
-        margin-bottom: 6px;
-      }
-      .cert-name-display {
-        font-family: "Amiri", serif;
-        font-size: 1.8rem;
-        font-weight: 700;
-        color: var(--dark-green);
-        margin: 8px 0;
-        padding: 6px 14px;
-        border-bottom: 2px solid var(--primary-gold);
-        display: inline-block;
-        min-width: 60%;
-      }
-      .cert-text-display {
-        font-size: 0.92rem;
-        color: #444;
-        line-height: 1.8;
-        margin: 10px 0;
-        padding: 0 10px;
-      }
-      .cert-stars-row {
-        font-size: 1.5rem;
-        margin: 8px 0 4px;
-        letter-spacing: 2px;
-      }
-      .cert-rank-badge {
-        font-family: "Amiri", serif;
-        font-size: 1.5rem;
-        font-weight: 900;
-        color: var(--dark-green);
-        background: linear-gradient(135deg, #fef3c7, #fde68a);
-        border: 2px solid #f59e0b;
-        border-radius: 30px;
-        padding: 6px 22px;
-        margin: 8px auto;
-        display: inline-block;
-      }
-      .cert-score-display {
-        font-size: 1.4rem;
-        font-weight: 900;
-        color: var(--dark-green);
-        margin-bottom: 10px;
-      }
-      .cert-footer-row {
-        display: flex;
-        justify-content: space-between;
-        align-items: flex-end;
-        margin-top: 14px;
-        padding-top: 10px;
-        border-top: 1px solid #e0d5a0;
-        font-size: 0.8rem;
-        color: #777;
-      }
+      .cert-basmala { font-family: "Amiri", serif; font-size: 1.2rem; color: var(--dark-green); margin-bottom: 8px; letter-spacing: 1px; }
+      .cert-title-ar { font-family: "Amiri", serif; font-size: 2rem; font-weight: 700; color: var(--dark-green); margin-bottom: 4px; text-shadow: 0 1px 3px rgba(0,0,0,0.1); }
+      .cert-subtitle-comp { font-size: 0.85rem; color: #777; margin-bottom: 14px; font-weight: 600; }
+      .cert-divider { height: 2px; background: linear-gradient(to right, transparent, var(--primary-gold), transparent); margin: 10px 0; }
+      .cert-presented-label { font-size: 0.9rem; color: #666; margin-bottom: 6px; }
+      .cert-name-display { font-family: "Amiri", serif; font-size: 1.8rem; font-weight: 700; color: var(--dark-green); margin: 8px 0; padding: 6px 14px; border-bottom: 2px solid var(--primary-gold); display: inline-block; min-width: 60%; }
+      .cert-text-display { font-size: 0.92rem; color: #444; line-height: 1.8; margin: 10px 0; padding: 0 10px; }
+      .cert-stars-row { font-size: 1.5rem; margin: 8px 0 4px; letter-spacing: 2px; }
+      .cert-rank-badge { font-family: "Amiri", serif; font-size: 1.5rem; font-weight: 900; color: var(--dark-green); background: linear-gradient(135deg, #fef3c7, #fde68a); border: 2px solid #f59e0b; border-radius: 30px; padding: 6px 22px; margin: 8px auto; display: inline-block; }
+      .cert-score-display { font-size: 1.4rem; font-weight: 900; color: var(--dark-green); margin-bottom: 10px; }
+      .cert-footer-row { display: flex; justify-content: space-between; align-items: flex-end; margin-top: 14px; padding-top: 10px; border-top: 1px solid #e0d5a0; font-size: 0.8rem; color: #777; }
       .cert-sig { font-family: "Amiri", serif; font-size: 1rem; color: var(--dark-green); }
-      /* cert action buttons */
-      .cert-action-btns {
-        display: grid;
-        grid-template-columns: 1fr 1fr 1fr;
-        gap: 8px;
-        margin-top: 14px;
-      }
-      .cert-btn {
-        padding: 11px 8px;
-        border: none;
-        border-radius: 10px;
-        font-family: "Cairo", sans-serif;
-        font-weight: 700;
-        font-size: 0.85rem;
-        cursor: pointer;
-        transition: all 0.2s;
-      }
+      .cert-action-btns { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 8px; margin-top: 14px; }
+      .cert-btn { padding: 11px 8px; border: none; border-radius: 10px; font-family: "Cairo", sans-serif; font-weight: 700; font-size: 0.85rem; cursor: pointer; transition: all 0.2s; }
       .cert-btn:active { transform: scale(0.96); }
       .cert-btn-save { background: linear-gradient(135deg, #10b981, #059669); color: white; }
       .cert-btn-pdf  { background: linear-gradient(135deg, #3b82f6, #1d4ed8); color: white; }
       .cert-btn-close{ background: linear-gradient(135deg, #6b7280, #4b5563); color: white; }
-
-      /* certificate in messages list */
-      .cert-msg-card {
-        background: linear-gradient(135deg, #fffce8, #fff3cc);
-        border: 2px solid var(--primary-gold);
-        border-radius: 12px;
-        padding: 14px 12px;
-        cursor: pointer;
-        transition: all 0.3s;
-        display: flex; align-items: center; gap: 12px;
-        margin-bottom: 10px;
-      }
+      .cert-msg-card { background: linear-gradient(135deg, #fffce8, #fff3cc); border: 2px solid var(--primary-gold); border-radius: 12px; padding: 14px 12px; cursor: pointer; transition: all 0.3s; display: flex; align-items: center; gap: 12px; margin-bottom: 10px; }
       .cert-msg-card:hover { transform: translateY(-2px); box-shadow: 0 6px 20px rgba(212,175,55,0.3); }
       .cert-msg-card .cert-thumb { font-size: 2.5rem; }
       .cert-msg-card .cert-msg-info { flex: 1; }
       .cert-msg-card .cert-msg-title { color: var(--dark-green); font-weight: 700; font-size: 1rem; }
       .cert-msg-card .cert-msg-sub { color: #888; font-size: 0.8rem; margin-top: 3px; }
       .cert-msg-card.unread { box-shadow: 0 4px 20px rgba(212,175,55,0.4); }
-
-      /* admin cert button */
       .btn-cert { background: linear-gradient(135deg, #7c3aed, #6d28d9); color: white; }
       .btn-cert:hover { background: linear-gradient(135deg, #6d28d9, #5b21b6); transform: translateY(-2px); }
-
-
-      /* ===== VIRTUAL PARTICIPANT ===== */
       .virtual-badge { background: linear-gradient(135deg,#7c3aed,#6d28d9); color:white; font-size:0.7rem; padding:2px 7px; border-radius:10px; font-weight:700; }
       .transfer-modal-content { background:white; padding:20px; border-radius:12px; max-width:480px; width:100%; max-height:88vh; overflow-y:auto; }
       .participant-select { width:100%; padding:10px; border:2px solid var(--border-light); border-radius:8px; font-family:"Cairo",sans-serif; font-size:0.95rem; background:var(--cream); }
@@ -436,7 +244,6 @@
         #printCertArea, #printCertArea * { visibility: visible; }
         #printCertArea { position: fixed; inset: 0; display: flex; align-items: center; justify-content: center; background: white; }
       }
-
       @media (max-width: 768px) {
         h1 { font-size: 1.3rem; } .card { padding: 12px 10px; } .btn { font-size: 0.95rem; padding: 10px; }
         .record-type-grid { grid-template-columns: 1fr; } .message-type-btns { grid-template-columns: 1fr; }
@@ -447,7 +254,6 @@
   </head>
 
   <body>
-    <!-- شاشة الاتصال -->
     <div id="connectingOverlay">
       <div class="conn-box">
         <div class="conn-spinner"></div>
@@ -456,7 +262,6 @@
       </div>
     </div>
 
-    <!-- شاشة خطأ الاتصال -->
     <div id="connectionErrorOverlay" style="display:none;">
       <div class="err-box">
         <div style="font-size:3rem;margin-bottom:10px;">⚠️</div>
@@ -472,9 +277,7 @@
       </div>
     </div>
 
-    <!-- ====== شهادة الأنيميشن ====== -->
     <div id="certOverlay" class="hidden">
-      <!-- مرحلة 1: الظرف -->
       <div id="certEnvelopePhase">
         <p style="color:var(--primary-gold);font-family:'Amiri',serif;font-size:1.3rem;margin-bottom:20px;text-align:center;">🎉 لديكِ شهادة جديدة!</p>
         <div class="env-wrap" id="envWrap">
@@ -487,7 +290,6 @@
         </div>
         <p style="color:#ccc;font-size:0.85rem;margin-top:16px;text-align:center;">جاري فتح الشهادة...</p>
       </div>
-      <!-- مرحلة 2: الشهادة الكاملة -->
       <div id="certDisplayPhase" class="hidden">
         <div id="printCertArea">
           <div class="certificate-card" id="certCardEl">
@@ -500,7 +302,6 @@
                 <div class="cert-presented-label">تُقدَّم هذه الشهادة إلى</div>
                 <div class="cert-name-display" id="certNameEl">—</div>
                 <div class="cert-divider"></div>
-                <!-- المركز - يظهر كبادج بارز -->
                 <div id="certRankEl" style="display:none;font-family:'Amiri',serif;font-size:1.6rem;font-weight:900;color:var(--dark-green);background:linear-gradient(135deg,#fef3c7,#fde68a);border:2px solid #f59e0b;border-radius:30px;padding:6px 20px;margin:8px auto;display:inline-block;letter-spacing:1px;"></div>
                 <div class="cert-text-display" id="certTextEl"></div>
                 <div class="cert-stars-row" id="certStarsEl" style="font-size:1.8rem;margin:10px 0 4px;letter-spacing:4px;"></div>
@@ -518,7 +319,6 @@
           <button class="cert-btn cert-btn-pdf"  onclick="downloadCertAsPDF()">📄 PDF</button>
           <button class="cert-btn cert-btn-close" onclick="closeCertOverlay()">✕ إغلاق</button>
         </div>
-        <!-- زر حفظ إضافي للاستاذة عند المعاينة -->
         <div id="adminCertSaveArea" style="margin-top:10px;text-align:center;display:none;">
           <button onclick="downloadCertAsImage()" style="background:linear-gradient(135deg,#10b981,#059669);color:white;border:none;padding:12px 30px;border-radius:10px;font-family:Cairo,sans-serif;font-weight:700;font-size:1rem;cursor:pointer;width:100%;">
             📸 حفظ الشهادة كصورة (للاستاذة)
@@ -597,42 +397,35 @@
       <div id="participantPage" class="card hidden">
         <button class="logout-btn" onclick="logout()">خروج</button>
         <h2 style="color:var(--dark-green);margin-bottom:8px;text-align:center;">أهلاً <span id="participantDisplayName"></span> 🌙</h2>
-
         <div style="display:flex;gap:8px;margin:12px 0;">
           <button class="btn btn-secondary" onclick="showRecordingSection()" style="flex:1;">🎤 تسجيل</button>
           <button class="btn btn-secondary" onclick="showMessagesSection()" style="flex:1;position:relative;">
             📬 رسائل<span id="unreadBadge" class="unread-badge hidden"></span>
           </button>
         </div>
-
         <div id="recordingSection">
           <h3 style="color:var(--dark-green);margin-bottom:10px;text-align:center;">اختر نوع التسجيل</h3>
           <div class="record-type-grid">
             <div class="type-card selected" onclick="selectType('audio', this)"><div class="icon">🎤</div><h3>صوت</h3></div>
             <div class="type-card" onclick="selectType('video', this)"><div class="icon">🎥</div><h3>فيديو</h3></div>
           </div>
-
           <div id="livePreview" class="live-preview hidden"><video id="liveVideo" autoplay muted playsinline></video></div>
-
           <div class="recording-controls">
             <button class="btn btn-primary big-icon-btn" id="recordBtn" onclick="startRecording()">🔴 ابدأ التسجيل</button>
             <div class="timer hidden" id="timer">00:00</div>
             <button class="btn btn-danger big-icon-btn hidden" id="stopBtn" onclick="stopRecording()">⏹ إيقاف</button>
           </div>
-
           <div id="recordingPreview" class="recording-preview hidden">
             <h3 style="color:var(--dark-green);margin-bottom:10px;">المعاينة</h3>
             <div id="previewMedia"></div>
             <button class="btn btn-primary" id="saveRecordingBtn" onclick="saveRecording()" style="margin-top:12px;">💾 حفظ ورفع</button>
             <button class="btn btn-secondary" onclick="cancelRecording()">🔄 إلغاء وتسجيل جديد</button>
           </div>
-
           <div style="margin-top:20px;">
             <h3 style="color:var(--dark-green);margin-bottom:10px;">تسجيلاتي</h3>
             <div id="myRecordingsList"></div>
           </div>
         </div>
-
         <div id="messagesSection" class="hidden">
           <h3 style="color:var(--dark-green);margin-bottom:12px;">📬 رسائل الاستاذة</h3>
           <div id="messagesList"></div>
@@ -661,20 +454,17 @@
         <button class="logout-btn" onclick="logout()">خروج</button>
         <button class="back-btn" onclick="backToParticipants()">← رجوع</button>
         <h2 id="participantTitle" style="color:var(--dark-green);margin-bottom:12px;text-align:center;"></h2>
-
         <div style="text-align:center;margin-bottom:12px;">
           <div class="total-rating-badge" id="totalRatingBadge" style="display:none;">
             <span>⭐</span><span class="text">المجموع الكلي:</span>
             <span class="value" id="totalRatingValue">0</span><span class="text">/</span><span class="value" id="totalRatingMax">0</span>
           </div>
         </div>
-
         <div style="display:flex;gap:8px;margin-bottom:12px;flex-wrap:wrap;">
           <button class="btn btn-cert" onclick="showCertificateModal()" style="flex:1;min-width:140px;">🎓 إرسال شهادة</button>
           <button class="btn" style="background:linear-gradient(135deg,#f59e0b,#d97706);color:white;flex:1;min-width:140px;" onclick="showAdminCertPreview()">📸 معاينة وحفظ شهادة</button>
           <button class="btn btn-danger" onclick="confirmDeleteAccount()" style="flex:1;min-width:100%;">🗑️ حذف الحساب</button>
         </div>
-
         <div class="contact-info-section">
           <div class="contact-info-header">
             <span class="contact-info-title">📞 معلومات التواصل</span>
@@ -685,13 +475,11 @@
             <div class="info-row"><div><div class="info-label">كلمة المرور</div><div class="info-value" id="contactPassword">-</div></div><button class="copy-btn" onclick="copyToClipboard('password',this)">📋 نسخ</button></div>
           </div>
         </div>
-
         <div id="adminSentMessages" style="margin-bottom:12px;"></div>
         <div id="adminRecordingsList"></div>
       </div>
     </div>
 
-    <!-- ===== تحميل Supabase ===== -->
     <script>
       (function(){
         var loaded = false;
@@ -728,14 +516,11 @@
       })();
     </script>
 
-    <!-- ===== الكود الرئيسي ===== -->
     <script>
-      // ========= الإعدادات =========
       const SUPABASE_URL = 'https://jimrkqewuafaoxmpmhbp.supabase.co';
       const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImppbXJrcWV3dWFmYW94bXBtaGJwIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzE2ODM1NzUsImV4cCI6MjA4NzI1OTU3NX0.Qihj4BnB0FErseE0j8Gq8ydbOf8Bu7lW2sRTfTudZ7Q';
       const BUCKET = 'recordings';
 
-      // ========= حالة التطبيق =========
       let db = null;
       let currentUser = null, isAdmin = false;
       let recordingType = 'audio';
@@ -752,9 +537,8 @@
       let broadcastVoiceRecorder = null, broadcastVoiceChunks = [], broadcastVoiceTimerInterval = null, broadcastVoiceBlob = null;
       let _loadingEl = null;
       let _appInited = false;
-      let _currentCertMsgId = null; // ID of cert being shown
+      let _currentCertMsgId = null;
 
-      // ========= أدوات مساعدة =========
       const sleep = (ms) => new Promise(r => setTimeout(r, ms));
 
       function escapeHtml(t) {
@@ -793,7 +577,6 @@
         await initApp(true);
       }
 
-      // ========= MIME Types (محسّن) =========
       function getSupportedMimeType() {
         const types = ['audio/webm;codecs=opus','audio/webm','audio/ogg;codecs=opus','audio/ogg',''];
         for (const t of types) { try { if (!t || MediaRecorder.isTypeSupported(t)) return t; } catch(e) {} }
@@ -824,7 +607,6 @@
         } catch(e){}
       }
 
-      // ========= Player HTML (مُحسَّن مع معالجة أخطاء) =========
       function playerHtml(url, type) {
         if (!url || url === 'null' || url === 'undefined' || url === '') {
           return '<div class="player-error">⚠️ الملف غير متاح حالياً</div>';
@@ -842,23 +624,17 @@
         </audio>`;
       }
 
-      // ========= رفع مع retry (محسّن) =========
       async function uploadToStorageWithRetry(blob, folder, maxRetries=4) {
         if (!blob || blob.size < 100) throw new Error('الملف فارغ أو صغير جداً');
-
         const ext = getExtension(blob.type);
         const path = `${folder}/${Date.now()}_${Math.random().toString(36).slice(2)}.${ext}`;
         let lastErr = null;
-
         for (let attempt = 1; attempt <= maxRetries; attempt++) {
           try {
             const { error } = await db.storage.from(BUCKET).upload(path, blob, {
-              cacheControl: '3600',
-              upsert: false,
-              contentType: blob.type || 'application/octet-stream'
+              cacheControl: '3600', upsert: false, contentType: blob.type || 'application/octet-stream'
             });
             if (error) throw error;
-
             const { data: urlData } = db.storage.from(BUCKET).getPublicUrl(path);
             const publicUrl = urlData?.publicUrl;
             if (!publicUrl) throw new Error('تم الرفع لكن فشل استخراج الرابط');
@@ -871,7 +647,6 @@
         throw new Error('فشل الرفع بعد ' + maxRetries + ' محاولات: ' + (lastErr?.message || 'unknown'));
       }
 
-      // ========= Session =========
       function saveSession(userData) {
         try {
           localStorage.setItem('currentSession', JSON.stringify(
@@ -901,7 +676,6 @@
         } catch(e){}
       }
 
-      // ========= Viewed recordings =========
       function loadViewedRecordings() {
         try { const s=localStorage.getItem('viewedRecordings'); if(s) viewedRecordings=new Set(JSON.parse(s)); } catch(e){}
       }
@@ -909,17 +683,12 @@
       function markRecordingAsViewed(pId,rId){ viewedRecordings.add(`${pId}_${rId}`); saveViewedRecordings(); }
       function isRecordingViewed(pId,rId){ return viewedRecordings.has(`${pId}_${rId}`); }
 
-      // ========= Certificate helper =========
       function parseCertData(message) {
-        try {
-          const d = JSON.parse(message);
-          if (d && d._type === 'certificate') return d;
-        } catch(e){}
+        try { const d = JSON.parse(message); if (d && d._type === 'certificate') return d; } catch(e){}
         return null;
       }
 
       function buildStarsHtml(stars) {
-        // stars من 5
         const filled = Math.floor(stars);
         const half = (stars - filled) >= 0.5;
         let h = '';
@@ -931,9 +700,7 @@
         return h;
       }
 
-      // Get key for localStorage for shown certs per user
       function certShownKey(userId) { return `cert_shown_${userId}`; }
-
       function markCertShown(userId, msgId) {
         try {
           const key = certShownKey(userId);
@@ -949,7 +716,6 @@
         } catch(e){ return false; }
       }
 
-      // ========= Certificate: check on login =========
       async function checkForNewCertificates() {
         if (!currentUser || !db) return;
         try {
@@ -958,50 +724,29 @@
             .eq('participant_id', currentUser.id)
             .eq('message_type', 'certificate')
             .order('created_at', {ascending: false});
-
           if (!data || data.length === 0) return;
-
-          // Find first certificate not yet shown with animation
           const unseen = data.find(m => !isCertShown(currentUser.id, m.id));
           if (!unseen) return;
-
           const certData = parseCertData(unseen.message);
           if (!certData) return;
-
           _currentCertMsgId = unseen.id;
-
-          // Show with animation after short delay
           await sleep(600);
           playCertEnvelopeAnimation(certData, unseen.id);
-
         } catch(e) { console.warn('cert check error:', e); }
       }
 
-      // ========= Certificate: envelope animation =========
       function playCertEnvelopeAnimation(certData, msgId) {
         const overlay = document.getElementById('certOverlay');
         const envPhase = document.getElementById('certEnvelopePhase');
         const dispPhase = document.getElementById('certDisplayPhase');
         const flap = document.getElementById('envFlapTri');
         const slide = document.getElementById('certSlideOut');
-
         overlay.classList.remove('hidden');
         envPhase.classList.remove('hidden');
         dispPhase.classList.add('hidden');
-
-        // Step 1: envelope in (animation already via CSS)
+        setTimeout(() => { flap.classList.add('open'); }, 900);
+        setTimeout(() => { slide.classList.add('slide-up'); }, 1800);
         setTimeout(() => {
-          // Step 2: open flap
-          flap.classList.add('open');
-        }, 900);
-
-        setTimeout(() => {
-          // Step 3: certificate slides up
-          slide.classList.add('slide-up');
-        }, 1800);
-
-        setTimeout(() => {
-          // Step 4: show full certificate
           envPhase.classList.add('hidden');
           renderCertificate(certData);
           dispPhase.classList.remove('hidden');
@@ -1011,15 +756,12 @@
       function renderCertificate(certData) {
         document.getElementById('certNameEl').textContent = certData.name || '—';
         document.getElementById('certTextEl').textContent = certData.text || '';
-        // النجوم من 5 تلقائياً
         document.getElementById('certStarsEl').innerHTML = buildStarsHtml(certData.stars || 0);
-        // الدرجة
         if (certData.outOf > 0) {
           document.getElementById('certScoreEl').textContent = certData.score + ' / ' + certData.outOf + ' نقطة';
         } else {
           document.getElementById('certScoreEl').textContent = '';
         }
-        // المركز
         const rankEl = document.getElementById('certRankEl');
         if (rankEl) {
           rankEl.textContent = certData.rankLabel || '';
@@ -1030,18 +772,13 @@
 
       async function closeCertOverlay() {
         document.getElementById('certOverlay').classList.add('hidden');
-        // إخفاء زر الاستاذة
         const adminSaveArea = document.getElementById('adminCertSaveArea');
         if (adminSaveArea) adminSaveArea.style.display = 'none';
         _adminCertPreviewMode = false;
-        // Reset animation state
         document.getElementById('envFlapTri').classList.remove('open');
         document.getElementById('certSlideOut').classList.remove('slide-up');
-
-        // Mark as shown so it won't auto-show again
         if (_currentCertMsgId && currentUser) {
           markCertShown(currentUser.id, _currentCertMsgId);
-          // Mark as read in DB
           try {
             await db.from('messages').update({read:true}).eq('id', _currentCertMsgId);
             await updateUnreadBadge();
@@ -1050,12 +787,10 @@
         _currentCertMsgId = null;
       }
 
-      // Show cert from messages list (no animation)
       function showCertFromMessage(msgId, certData) {
         const overlay = document.getElementById('certOverlay');
         const envPhase = document.getElementById('certEnvelopePhase');
         const dispPhase = document.getElementById('certDisplayPhase');
-
         _currentCertMsgId = msgId;
         overlay.classList.remove('hidden');
         envPhase.classList.add('hidden');
@@ -1066,10 +801,7 @@
       async function downloadCertAsImage() {
         const card = document.getElementById('certCardEl');
         if (!card) return;
-        if (typeof html2canvas === 'undefined') {
-          alert('مكتبة الصور لم تُحمَّل بعد. حاول مجدداً بعد ثوانٍ.');
-          return;
-        }
+        if (typeof html2canvas === 'undefined') { alert('مكتبة الصور لم تُحمَّل بعد. حاول مجدداً بعد ثوانٍ.'); return; }
         showLoading('جاري حفظ الصورة...');
         try {
           const canvas = await html2canvas(card, { scale: 2, useCORS: true, backgroundColor: '#fff' });
@@ -1077,31 +809,21 @@
           link.download = 'شهادة-شكر-وتقدير.png';
           link.href = canvas.toDataURL('image/png');
           link.click();
-        } catch(e) {
-          alert('حدث خطأ أثناء الحفظ: ' + e.message);
-        }
+        } catch(e) { alert('حدث خطأ أثناء الحفظ: ' + e.message); }
         hideLoading();
       }
 
-      function downloadCertAsPDF() {
-        window.print();
-      }
+      function downloadCertAsPDF() { window.print(); }
 
-      // ========= Admin: Certificate modal =========
       async function showCertificateModal() {
         if (!currentParticipant) return;
         showLoading('جاري حساب الترتيب...');
-
         try {
-          // جلب ترتيب وتقييم المشارك تلقائياً
           const [allParticipants, allRatings] = await Promise.all([
             db.from('participants').select('id'),
-            db.from('messages').select('participant_id,recording_id,rating')
-              .eq('message_type','rating').not('rating','is',null)
+            db.from('messages').select('participant_id,recording_id,rating').eq('message_type','rating').not('rating','is',null)
           ]);
           hideLoading();
-
-          // حساب مجموع نقاط كل مشارك
           const scoreMap = {};
           (allRatings.data || []).forEach(r => {
             if (!scoreMap[r.participant_id]) scoreMap[r.participant_id] = { total: 0, seen: new Set() };
@@ -1110,31 +832,22 @@
               scoreMap[r.participant_id].seen.add(r.recording_id);
             }
           });
-
-          // ترتيب المشاركين تنازلياً
           const sorted = (allParticipants.data || [])
             .map(p => ({ id: p.id, total: scoreMap[p.id]?.total || 0 }))
             .sort((a, b) => b.total - a.total);
-
           const myRank = sorted.findIndex(p => p.id === currentParticipant.id) + 1;
           const myScore = scoreMap[currentParticipant.id]?.total || 0;
           const mySeenCount = scoreMap[currentParticipant.id]?.seen?.size || 0;
           const myOutOf = mySeenCount * 5;
-
-          // حساب النجوم (1-5) بناءً على النسبة
           const starsOutOf5 = myOutOf > 0 ? Math.round((myScore / myOutOf) * 5 * 10) / 10 : 0;
-
           const rankLabel = myRank === 1 ? '🥇 المركز الأول' : myRank === 2 ? '🥈 المركز الثاني' : myRank === 3 ? '🥉 المركز الثالث' : `المركز ${myRank}`;
           const defaultText = `تُمنح هذه الشهادة تقديراً لجهودكِ المتميزة في مسابقة حفظ جزء عم خلال شهر رمضان المبارك 1446 هـ، شاكرين لكِ إخلاصكِ وتفانيكِ، سائلين المولى أن يبارك في علمكِ وعملكِ.`;
 
           const modal = document.createElement('div');
-          modal.className = 'message-modal';
-          modal.id = 'certModal';
+          modal.className = 'message-modal'; modal.id = 'certModal';
           modal.innerHTML = `
             <div class="message-modal-content">
               <h3>🎓 إرسال شهادة شكر وتقدير</h3>
-
-              <!-- معلومات تلقائية (للعرض فقط) -->
               <div style="background:linear-gradient(135deg,#fffce8,#fff3cc);padding:12px;border-radius:10px;border:2px solid var(--primary-gold);margin-bottom:14px;text-align:center;">
                 <p style="color:#888;font-size:0.78rem;margin-bottom:6px;">المعلومات التالية تُحسب تلقائياً من النظام</p>
                 <div style="font-size:1.5rem;font-weight:900;color:var(--dark-green);">${rankLabel}</div>
@@ -1144,7 +857,6 @@
                 </div>
                 <div style="font-size:0.8rem;color:#888;margin-top:2px;">المجموع: ${myScore} من ${myOutOf} نقطة</div>
               </div>
-
               <div class="form-group">
                 <label>اسم المشارك في الشهادة</label>
                 <input type="text" id="certNameInput" value="${escapeHtml(currentParticipant.name)}" placeholder="اسم المشارك" />
@@ -1153,14 +865,11 @@
                 <label>نص الشهادة</label>
                 <textarea id="certTextInput" style="width:100%;padding:10px;border:2px solid var(--border-light);border-radius:8px;font-family:Cairo,sans-serif;font-size:0.9rem;min-height:100px;resize:vertical;">${defaultText}</textarea>
               </div>
-
-              <!-- حقول مخفية تحمل القيم التلقائية -->
               <input type="hidden" id="certRankInput" value="${myRank}" />
               <input type="hidden" id="certRankLabelInput" value="${rankLabel}" />
               <input type="hidden" id="certStarsInput" value="${starsOutOf5}" />
               <input type="hidden" id="certScoreInput" value="${myScore}" />
               <input type="hidden" id="certOutOfInput" value="${myOutOf}" />
-
               <div style="background:linear-gradient(135deg,#f0f9ff,#e0f2fe);padding:10px;border-radius:8px;border:2px solid var(--primary-gold);margin-bottom:10px;">
                 <p style="color:var(--dark-green);font-size:0.85rem;font-weight:600;">📌 ستظهر الشهادة للمشارك تلقائياً بأنيميشن ظرف عند دخوله التالي</p>
               </div>
@@ -1170,11 +879,7 @@
               </div>
             </div>`;
           document.body.appendChild(modal);
-
-        } catch(e) {
-          hideLoading();
-          alert('خطأ في حساب الترتيب:\n' + (e?.message || ''));
-        }
+        } catch(e) { hideLoading(); alert('خطأ في حساب الترتيب:\n' + (e?.message || '')); }
       }
 
       async function sendCertificate() {
@@ -1185,39 +890,19 @@
         const stars = parseFloat(document.getElementById('certStarsInput').value) || 0;
         const score = parseFloat(document.getElementById('certScoreInput').value) || 0;
         const outOf = parseFloat(document.getElementById('certOutOfInput').value) || 0;
-
         if (!name) { alert('الرجاء إدخال اسم المشارك!'); return; }
         if (!text) { alert('الرجاء كتابة نص الشهادة!'); return; }
-
-        const certData = {
-          _type: 'certificate',
-          name,
-          text,
-          rank,
-          rankLabel,
-          stars,       // من 5
-          score,       // المجموع الكلي
-          outOf        // أقصى نقطة
-        };
-
+        const certData = { _type: 'certificate', name, text, rank, rankLabel, stars, score, outOf };
         showLoading('جاري إرسال الشهادة...');
         try {
           const { error } = await db.from('messages').insert({
-            participant_id: currentParticipant.id,
-            recording_id: null,
-            message_type: 'certificate',
-            message: JSON.stringify(certData),
-            rating: stars,
-            read: false
+            participant_id: currentParticipant.id, recording_id: null, message_type: 'certificate',
+            message: JSON.stringify(certData), rating: stars, read: false
           });
           if (error) throw error;
-
           hideLoading();
-          const modal = document.getElementById('certModal');
-          if (modal) modal.remove();
+          const modal = document.getElementById('certModal'); if (modal) modal.remove();
           await loadAdminSentMessages();
-
-          // عرض الشهادة للاستاذة لحفظها مباشرةً
           const showNow = confirm('✅ تم إرسال الشهادة بنجاح!\n\nهل تريدين معاينة الشهادة وحفظها الآن؟');
           if (showNow) {
             _adminCertPreviewMode = true;
@@ -1228,22 +913,10 @@
             ovr.classList.remove('hidden');
             const adminSaveArea = document.getElementById('adminCertSaveArea');
             if (adminSaveArea) adminSaveArea.style.display = 'block';
-            const closeBtn = document.querySelector('#certDisplayPhase .cert-btn-close');
-            if (closeBtn) {
-              closeBtn.onclick = () => {
-                ovr.classList.add('hidden');
-                if (adminSaveArea) adminSaveArea.style.display = 'none';
-                _adminCertPreviewMode = false;
-              };
-            }
           }
-        } catch(e) {
-          hideLoading();
-          alert('خطأ في الإرسال:\n' + (e?.message || ''));
-        }
+        } catch(e) { hideLoading(); alert('خطأ في الإرسال:\n' + (e?.message || '')); }
       }
 
-      // ========= Pages =========
       function hideAllPages() {
         ['homePage','registerPage','loginPage','adminLoginPage','participantPage','adminParticipantsPage','adminRecordingsPage']
           .forEach(id=>{ const el=document.getElementById(id); if(el) el.classList.add('hidden'); });
@@ -1260,7 +933,6 @@
         showRecordingSection();
         loadMyRecordings();
         await updateUnreadBadge();
-        // Check for new certificates (slight delay so page renders first)
         setTimeout(() => checkForNewCertificates(), 800);
       }
 
@@ -1299,45 +971,35 @@
       }
 
       function logout() {
-        stopVideoPreview();
-        cleanupRecordingStream();
-        cancelRecording(true);
+        stopVideoPreview(); cleanupRecordingStream(); cancelRecording(true);
         localStorage.removeItem('currentSession');
         currentUser=null; isAdmin=false; currentParticipant=null; recordedChunks=[];
         showHomePage();
       }
 
       function togglePassword(id, iconEl) {
-        const el = document.getElementById(id);
-        if (!el) return;
+        const el = document.getElementById(id); if (!el) return;
         if (el.type === 'password') { el.type = 'text'; if (iconEl) iconEl.textContent = '🙈'; }
         else { el.type = 'password'; if (iconEl) iconEl.textContent = '👁️'; }
       }
 
-      // ========= initApp =========
       async function initApp(force=false) {
         if (_appInited && !force) return;
         _appInited = true;
-
         if (!window.supabase) { showConnectionError(); return; }
-
         db = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY, {
           realtime: { params: { eventsPerSecond: 10 } }
         });
-
         try {
           document.getElementById('connectingMsg').textContent = 'جاري التحقق من الاتصال...';
           const testPromise = db.from('participants').select('id', { head: true }).limit(1);
           const timeoutPromise = new Promise((_, rej) => setTimeout(() => rej(new Error('timeout')), 12000));
           const { error } = await Promise.race([testPromise, timeoutPromise]);
-
           if (error && error.code !== 'PGRST116') throw error;
-
           document.getElementById('connectingOverlay').style.display = 'none';
           loadViewedRecordings();
           await loadCurrentSession();
           loadGlobalBroadcasts();
-
         } catch (e) {
           if (e.message === 'timeout' || (e.message||'').includes('Failed to fetch') || (e.message||'').includes('NetworkError')) {
             showConnectionError();
@@ -1352,14 +1014,11 @@
 
       window.addEventListener('supabase:ready', function() { initApp(); }, { once:true });
 
-      // ========= Broadcasts =========
       async function loadGlobalBroadcasts() {
         const bar = document.getElementById('globalBroadcastsBar');
         if (!bar || !db) return;
         try {
-          const {data} = await db.from('broadcasts')
-            .select('id,message,type,voice_url,voice_data,created_at')
-            .order('created_at',{ascending:false});
+          const {data} = await db.from('broadcasts').select('id,message,type,voice_url,voice_data,created_at').order('created_at',{ascending:false});
           if (!data || data.length===0) { bar.innerHTML=''; return; }
           bar.innerHTML = data.map(b=>`
             <div class="broadcast-banner" style="margin-bottom:8px;">
@@ -1378,9 +1037,7 @@
         const div = document.getElementById('adminBroadcastsList');
         if (!div || !db) return;
         try {
-          const {data} = await db.from('broadcasts')
-            .select('id,message,type,voice_url,voice_data,created_at')
-            .order('created_at',{ascending:false});
+          const {data} = await db.from('broadcasts').select('id,message,type,voice_url,voice_data,created_at').order('created_at',{ascending:false});
           if (!data || data.length===0){ div.innerHTML=''; return; }
           let html=`<h3 style="color:var(--dark-green);margin-bottom:8px;">📢 الإعلانات الحالية</h3>`;
           data.forEach(b=>{
@@ -1433,8 +1090,7 @@
       }
 
       function switchBroadcastType(type,btn) {
-        document.querySelectorAll('#broadcastModal .message-type-btn').forEach(b=>b.classList.remove('active'));
-        btn.classList.add('active');
+        document.querySelectorAll('#broadcastModal .message-type-btn').forEach(b=>b.classList.remove('active')); btn.classList.add('active');
         document.getElementById('broadcastTextDiv').classList.toggle('hidden',type!=='text');
         document.getElementById('broadcastVoiceDiv').classList.toggle('hidden',type!=='voice');
       }
@@ -1509,7 +1165,6 @@
         clearInterval(broadcastVoiceTimerInterval);
       }
 
-      // ========= Register =========
       document.getElementById('registerForm').onsubmit = async function(e){
         e.preventDefault();
         const name = document.getElementById('participantName').value.trim();
@@ -1528,8 +1183,7 @@
           }
           const {data:newUser,error} = await db.from('participants').insert({ name, password: pass }).select('id,name,password').single();
           if(error) throw error;
-          currentUser=newUser;
-          saveSession(newUser);
+          currentUser=newUser; saveSession(newUser);
           hideLoading(); btn.disabled=false; btn.textContent='تسجيل 🌟';
           await showParticipantPage();
         } catch(err){
@@ -1539,13 +1193,11 @@
       };
 
       function showRegisterError(msg){
-        const el=document.getElementById('registerError');
-        if(!el)return;
+        const el=document.getElementById('registerError'); if(!el)return;
         el.textContent=msg; el.classList.remove('hidden');
         setTimeout(()=>el.classList.add('hidden'),5000);
       }
 
-      // ========= Login =========
       document.getElementById('loginForm').onsubmit = async function(e) {
         e.preventDefault();
         const nameRaw = document.getElementById('loginName').value.trim();
@@ -1568,8 +1220,7 @@
           }
           hideLoading(); btn.disabled = false; btn.textContent = 'دخول 🔓';
           if (!user) { showLoginError('الاسم أو كلمة المرور خاطئة!'); return; }
-          currentUser = user;
-          saveSession(user);
+          currentUser = user; saveSession(user);
           await showParticipantPage();
         } catch (err) {
           hideLoading(); btn.disabled = false; btn.textContent = 'دخول 🔓';
@@ -1578,13 +1229,11 @@
       };
 
       function showLoginError(msg){
-        const el=document.getElementById('loginError');
-        if(!el)return;
+        const el=document.getElementById('loginError'); if(!el)return;
         el.textContent=msg; el.classList.remove('hidden');
         setTimeout(()=>el.classList.add('hidden'),5000);
       }
 
-      // ========= Admin login =========
       document.getElementById('adminLoginForm').onsubmit=function(e){
         e.preventDefault();
         const pass=document.getElementById('adminPassword').value;
@@ -1592,20 +1241,17 @@
           isAdmin=true; saveSession(); showAdminParticipantsPage();
         } else {
           const el=document.getElementById('adminError');
-          el.textContent='كلمة المرور خاطئة!';
-          el.classList.remove('hidden');
+          el.textContent='كلمة المرور خاطئة!'; el.classList.remove('hidden');
           setTimeout(()=>el.classList.add('hidden'),3000);
         }
       };
 
-      // ========= Recording =========
       function selectType(type,card){
         recordingType=type;
         document.querySelectorAll('.type-card').forEach(el=>el.classList.remove('selected'));
         card.classList.add('selected');
         cancelRecording(true);
-        if(type==='video') startVideoPreview();
-        else stopVideoPreview();
+        if(type==='video') startVideoPreview(); else stopVideoPreview();
       }
 
       async function startVideoPreview(){
@@ -1628,67 +1274,43 @@
       }
 
       function cleanupRecordingStream(){
-        if(recordingStream){
-          recordingStream.getTracks().forEach(t=>{ try{t.stop();}catch(e){} });
-          recordingStream = null;
-        }
+        if(recordingStream){ recordingStream.getTracks().forEach(t=>{ try{t.stop();}catch(e){} }); recordingStream = null; }
       }
 
       async function startRecording(){
         try {
           if (mediaRecorder && mediaRecorder.state !== 'inactive') return;
-          recordedChunks=[];
-          cleanupRecordingStream();
-
+          recordedChunks=[]; cleanupRecordingStream();
           let stream;
           if(recordingType==='video'){
             let videoTracks = [];
-            if(previewStream && previewStream.getVideoTracks().length){
-              videoTracks = previewStream.getVideoTracks();
-            } else {
-              const v = await navigator.mediaDevices.getUserMedia({video:true, audio:false});
-              videoTracks = v.getVideoTracks();
-            }
+            if(previewStream && previewStream.getVideoTracks().length){ videoTracks = previewStream.getVideoTracks(); }
+            else { const v = await navigator.mediaDevices.getUserMedia({video:true, audio:false}); videoTracks = v.getVideoTracks(); }
             const a = await navigator.mediaDevices.getUserMedia({audio:true});
             stream = new MediaStream([...videoTracks, ...a.getAudioTracks()]);
-          } else {
-            stream=await navigator.mediaDevices.getUserMedia({audio:true});
-          }
-
+          } else { stream=await navigator.mediaDevices.getUserMedia({audio:true}); }
           recordingStream = stream;
           const mt = (recordingType==='video') ? getSupportedVideoMimeType() : getSupportedMimeType();
-
           try { mediaRecorder = mt ? new MediaRecorder(stream,{mimeType:mt}) : new MediaRecorder(stream); }
           catch { mediaRecorder = new MediaRecorder(stream); }
-
           mediaRecorder.ondataavailable = (e)=>{ if(e.data && e.data.size>0) recordedChunks.push(e.data); };
           mediaRecorder.onstop = ()=>{ cleanupRecordingStream(); showPreview(); };
           mediaRecorder.start(250);
-
           document.getElementById('recordBtn').classList.add('hidden');
           document.getElementById('stopBtn').classList.remove('hidden');
           document.getElementById('timer').classList.remove('hidden');
-
           if(recordingType==='video') document.getElementById('livePreview').classList.add('recording');
-
-          recordingStartTime = Date.now();
-          clearInterval(timerInterval);
+          recordingStartTime = Date.now(); clearInterval(timerInterval);
           timerInterval=setInterval(()=>{
             const sec=Math.floor((Date.now()-recordingStartTime)/1000);
             const t=document.getElementById('timer');
             if(t) t.textContent=`${String(Math.floor(sec/60)).padStart(2,'0')}:${String(sec%60).padStart(2,'0')}`;
           },1000);
-
-        } catch(err){
-          cleanupRecordingStream();
-          alert('خطأ في التسجيل: '+err.message+'\n\nتأكد من إذن الميكروفون/الكاميرا في المتصفح.');
-        }
+        } catch(err){ cleanupRecordingStream(); alert('خطأ في التسجيل: '+err.message+'\n\nتأكد من إذن الميكروفون/الكاميرا في المتصفح.'); }
       }
 
       function stopRecording(){
-        if(mediaRecorder && mediaRecorder.state!=='inactive'){
-          try { mediaRecorder.stop(); } catch(e){}
-        }
+        if(mediaRecorder && mediaRecorder.state!=='inactive'){ try { mediaRecorder.stop(); } catch(e){} }
         clearInterval(timerInterval);
       }
 
@@ -1696,11 +1318,8 @@
         try {
           clearInterval(timerInterval); timerInterval = null;
           if(mediaRecorder && mediaRecorder.state!=='inactive'){ try{ mediaRecorder.stop(); }catch(e){} }
-          cleanupRecordingStream();
-          recordedChunks=[];
-          recordingStartTime=null;
-          const lp=document.getElementById('livePreview');
-          if(lp) lp.classList.remove('recording');
+          cleanupRecordingStream(); recordedChunks=[]; recordingStartTime=null;
+          const lp=document.getElementById('livePreview'); if(lp) lp.classList.remove('recording');
           document.getElementById('recordBtn').classList.remove('hidden');
           document.getElementById('stopBtn').classList.add('hidden');
           document.getElementById('timer').classList.add('hidden');
@@ -1712,18 +1331,10 @@
       }
 
       function showPreview(){
-        if(!recordedChunks || recordedChunks.length===0){
-          alert('لم يتم تسجيل أي بيانات. حاول مرة أخرى.');
-          cancelRecording(true);
-          return;
-        }
+        if(!recordedChunks || recordedChunks.length===0){ alert('لم يتم تسجيل أي بيانات. حاول مرة أخرى.'); cancelRecording(true); return; }
         const mt = (mediaRecorder && mediaRecorder.mimeType) ? mediaRecorder.mimeType : (recordingType==='video'?'video/webm':'audio/webm');
         const blob = new Blob(recordedChunks, {type: mt});
-        if(blob.size < 600){
-          alert('التسجيل قصير جداً أو فارغ. حاول مرة أخرى.');
-          cancelRecording(true);
-          return;
-        }
+        if(blob.size < 600){ alert('التسجيل قصير جداً أو فارغ. حاول مرة أخرى.'); cancelRecording(true); return; }
         if(previewObjectUrl){ try{ URL.revokeObjectURL(previewObjectUrl); }catch(e){} }
         previewObjectUrl = URL.createObjectURL(blob);
         const pd=document.getElementById('previewMedia');
@@ -1731,8 +1342,7 @@
           ? `<video controls src="${previewObjectUrl}" style="width:100%;border-radius:8px;background:#000;" onloadedmetadata="fixDuration(this)"></video>`
           : `<audio controls src="${previewObjectUrl}" style="width:100%;" onloadedmetadata="fixDuration(this)"></audio>`;
         document.getElementById('recordingPreview').classList.remove('hidden');
-        const lp=document.getElementById('livePreview');
-        if(lp) lp.classList.remove('recording');
+        const lp=document.getElementById('livePreview'); if(lp) lp.classList.remove('recording');
         document.getElementById('recordBtn').classList.remove('hidden');
         document.getElementById('stopBtn').classList.add('hidden');
         document.getElementById('timer').classList.add('hidden');
@@ -1740,86 +1350,52 @@
       }
 
       async function saveRecording(){
-        if(!recordedChunks || recordedChunks.length===0){
-          alert('لا توجد بيانات. يرجى التسجيل أولاً.');
-          return;
-        }
+        if(!recordedChunks || recordedChunks.length===0){ alert('لا توجد بيانات. يرجى التسجيل أولاً.'); return; }
         const mt = (mediaRecorder && mediaRecorder.mimeType) ? mediaRecorder.mimeType : (recordingType==='video'?'video/webm':'audio/webm');
         const blob = new Blob(recordedChunks, {type: mt});
         if(blob.size < 600){ alert('التسجيل فارغ أو قصير جداً! حاول مرة أخرى.'); return; }
-
         const saveBtn = document.getElementById('saveRecordingBtn');
         if (saveBtn) { saveBtn.disabled = true; saveBtn.textContent = '⬆️ جاري الرفع...'; }
         showLoading('⬆️ جاري رفع التسجيل...');
-
         try {
           const up = await uploadToStorageWithRetry(blob, `participant_${currentUser.id}`, 4);
-
           const { data: saved, error } = await db.from('recordings').insert({
-            participant_id: currentUser.id,
-            type: recordingType,
-            file_url: up.publicUrl,
-            storage_path: up.path,
-            data: null
+            participant_id: currentUser.id, type: recordingType,
+            file_url: up.publicUrl, storage_path: up.path, data: null
           }).select('id,type,created_at,file_url').single();
-
           if(error) throw error;
-
           hideLoading();
           if (saveBtn) { saveBtn.disabled = false; saveBtn.textContent = '💾 حفظ ورفع'; }
-
           alert('تم الحفظ بنجاح! ✅');
-
           recordedChunks=[];
           document.getElementById('recordingPreview').classList.add('hidden');
           document.getElementById('previewMedia').innerHTML='';
           document.getElementById('timer').textContent='00:00';
           if(previewObjectUrl){ try{ URL.revokeObjectURL(previewObjectUrl); }catch(e){} previewObjectUrl=null; }
           await loadMyRecordings();
-
         } catch(err){
           hideLoading();
           if (saveBtn) { saveBtn.disabled = false; saveBtn.textContent = '💾 حفظ ورفع'; }
           const msg = err?.message || '';
-          if(msg.includes('bucket') || msg.includes('not found')){
-            alert('❌ تأكد من إنشاء bucket باسم "recordings" في Supabase Storage وتفعيل Public أو سياسة قراءة مناسبة.');
-          } else if(msg.includes('فارغ') || msg.includes('صغير')){
-            alert('❌ ' + msg + '\nجرب تسجيل أطول قليلاً.');
-          } else {
-            alert('❌ خطأ في الحفظ:\n' + msg + '\n\nتأكد من:\n• اتصال الإنترنت\n• bucket "recordings" في Supabase Storage\n• صلاحيات الرفع مفعّلة');
-          }
+          if(msg.includes('bucket') || msg.includes('not found')){ alert('❌ تأكد من إنشاء bucket باسم "recordings" في Supabase Storage.'); }
+          else if(msg.includes('فارغ') || msg.includes('صغير')){ alert('❌ ' + msg + '\nجرب تسجيل أطول قليلاً.'); }
+          else { alert('❌ خطأ في الحفظ:\n' + msg); }
         }
       }
 
-      // ========= My recordings =========
       let _loadingRecordings = false;
       async function loadMyRecordings(){
         if (_loadingRecordings) return;
         _loadingRecordings = true;
-
         const listDiv=document.getElementById('myRecordingsList');
         if(!listDiv||!db){ _loadingRecordings=false; return; }
-
         listDiv.innerHTML='<div class="empty-state"><div class="icon">⏳</div><p>جاري التحميل...</p></div>';
-
         try {
-          const {data,error} = await db
-            .from('recordings')
-            .select('id,type,created_at,file_url,data')
-            .eq('participant_id', currentUser.id)
-            .order('created_at',{ascending:true});
-
+          const {data,error} = await db.from('recordings').select('id,type,created_at,file_url,data').eq('participant_id', currentUser.id).order('created_at',{ascending:true});
           if(error) throw error;
-
-          if(!data || data.length===0){
-            listDiv.innerHTML='<div class="empty-state"><div class="icon">🎙️</div><p>لا توجد تسجيلات بعد</p></div>';
-            _loadingRecordings=false;
-            return;
-          }
-
+          if(!data || data.length===0){ listDiv.innerHTML='<div class="empty-state"><div class="icon">🎙️</div><p>لا توجد تسجيلات بعد</p></div>'; _loadingRecordings=false; return; }
           const seen=new Set();
           const unique=data.filter(r=>{ if(seen.has(r.id)) return false; seen.add(r.id); return true; });
-
           listDiv.innerHTML = unique.map((rec,i)=>`
             <div class="recording-item">
               <div class="three-dots" onclick="showRecordingMenu(event,${rec.id})">⋮</div>
@@ -1827,7 +1403,6 @@
               <p class="recording-date">${new Date(rec.created_at).toLocaleDateString('ar-SA')}</p>
               ${playerHtml(rec.file_url||rec.data, rec.type)}
             </div>`).join('');
-
         } catch(err){
           listDiv.innerHTML=`<div class="empty-state"><div class="icon">⚠️</div><p>خطأ في التحميل<br><small style="font-size:0.75rem;">${escapeHtml(err?.message||'')}</small></p><button class="btn btn-secondary" onclick="loadMyRecordings()" style="margin-top:10px;width:auto;padding:8px 16px;">🔄 إعادة المحاولة</button></div>`;
         }
@@ -1840,21 +1415,14 @@
         const menu=document.createElement('div'); menu.className='menu-popup';
         menu.innerHTML=`<div class="menu-item danger" onclick="confirmDeleteRecording(${id})">🗑️ حذف التسجيل</div>`;
         e.target.closest('.recording-item').appendChild(menu);
-        setTimeout(()=>{
-          document.addEventListener('click',function h(ev){
-            if(!menu.contains(ev.target)){ menu.remove(); document.removeEventListener('click',h); }
-          });
-        },10);
+        setTimeout(()=>{ document.addEventListener('click',function h(ev){ if(!menu.contains(ev.target)){ menu.remove(); document.removeEventListener('click',h); } }); },10);
       }
 
       function confirmDeleteRecording(id){
         document.querySelectorAll('.confirm-dialog').forEach(d=>d.remove());
         const d=document.createElement('div'); d.className='confirm-dialog';
         d.innerHTML=`<div class="confirm-content"><h3>⚠️ تأكيد الحذف</h3><p>هل تريد حذف هذا التسجيل؟</p>
-          <div class="confirm-buttons">
-            <button class="btn btn-danger" onclick="deleteRecording(${id})">حذف</button>
-            <button class="btn btn-secondary" onclick="closeConfirmDialog()">إلغاء</button>
-          </div></div>`;
+          <div class="confirm-buttons"><button class="btn btn-danger" onclick="deleteRecording(${id})">حذف</button><button class="btn btn-secondary" onclick="closeConfirmDialog()">إلغاء</button></div></div>`;
         document.body.appendChild(d);
       }
 
@@ -1870,25 +1438,17 @@
           if (e2) throw e2;
           if (rec?.storage_path) { await db.storage.from(BUCKET).remove([rec.storage_path]); }
           hideLoading(); closeConfirmDialog();
-          await loadMyRecordings();
-          await updateUnreadBadge();
+          await loadMyRecordings(); await updateUnreadBadge();
           alert('تم الحذف ✅');
-        } catch(e){
-          hideLoading();
-          alert('فشل الحذف:\n' + (e?.message || JSON.stringify(e)));
-        }
+        } catch(e){ hideLoading(); alert('فشل الحذف:\n' + (e?.message || JSON.stringify(e))); }
       }
 
-      // ========= Messages =========
       async function updateUnreadBadge(){
         if(!currentUser||!db)return;
         try {
           const {count} = await db.from('messages').select('id',{count:'exact',head:true}).eq('participant_id',currentUser.id).eq('read',false);
           const badge=document.getElementById('unreadBadge');
-          if(badge){
-            if(count>0){ badge.textContent=count; badge.classList.remove('hidden'); }
-            else badge.classList.add('hidden');
-          }
+          if(badge){ if(count>0){ badge.textContent=count; badge.classList.remove('hidden'); } else badge.classList.add('hidden'); }
         }catch(e){}
       }
 
@@ -1907,22 +1467,13 @@
         try {
           const {data,error} = await db.from('messages')
             .select('id,message,message_type,rating,read,created_at,recording_id,voice_url,voice_data')
-            .eq('participant_id',currentUser.id)
-            .order('created_at',{ascending:false});
-
+            .eq('participant_id',currentUser.id).order('created_at',{ascending:false});
           if(error) throw error;
-          if(!data||data.length===0){
-            listDiv.innerHTML='<div class="empty-state"><div class="icon">📭</div><p>لا توجد رسائل</p></div>';
-            return;
-          }
-
+          if(!data||data.length===0){ listDiv.innerHTML='<div class="empty-state"><div class="icon">📭</div><p>لا توجد رسائل</p></div>'; return; }
           let html='';
           for(const msg of data){
             if (msg.message_type === 'certificate') {
-              // شهادة - عرض خاص
-              const certData = parseCertData(msg.message);
-              if (!certData) continue;
-              const certDataStr = escapeHtml(JSON.stringify(certData));
+              const certData = parseCertData(msg.message); if (!certData) continue;
               html += `<div class="cert-msg-card ${!msg.read?'unread':''}" onclick="showCertFromMessage(${msg.id}, JSON.parse(decodeURIComponent('${encodeURIComponent(JSON.stringify(certData))}')))">
                 <div class="cert-thumb">🎓</div>
                 <div class="cert-msg-info">
@@ -1934,7 +1485,6 @@
               </div>`;
               continue;
             }
-
             const icon=msg.message_type==='voice'?'🎤':msg.message_type==='rating'?'⭐':'✉️';
             html+=`<div class="message-item ${!msg.read?'unread':''}">
               <div class="message-header">
@@ -1942,12 +1492,10 @@
                 <span style="color:#666;font-size:0.75rem;">${new Date(msg.created_at).toLocaleDateString('ar-SA')}</span>
               </div>
               <div class="message-content">${escapeHtml(msg.message||'')}</div>`;
-
             if(msg.message_type==='voice'){
               const voiceUrl=msg.voice_url||msg.voice_data;
               html+=`<div class="message-recording"><p style="color:var(--dark-green);font-weight:600;margin-bottom:6px;">🎤 رسالة صوتية</p>${playerHtml(voiceUrl,'audio')}</div>`;
             }
-
             if(msg.message_type==='rating' && msg.rating){
               html+=`<div class="message-rating">
                 <p style="color:var(--dark-green);font-weight:700;margin-bottom:6px;">تقييمك</p>
@@ -1955,7 +1503,6 @@
                 <p style="color:var(--dark-green);font-weight:700;font-size:1.3rem;margin-top:6px;">${msg.rating} / 5</p>
               </div>`;
             }
-
             if(msg.recording_id){
               html+=`<div class="linked-recording"><p>🔗 التسجيل الذي علّقت عليه الاستاذة:</p><div id="lnk_${msg.recording_id}"><div class="player-loading"><div class="mini-spinner"></div><span>جاري التحميل...</span></div></div></div>`;
               loadLinkedRecording(msg.recording_id);
@@ -1982,7 +1529,6 @@
         return h;
       }
 
-      // ========= Admin: participants =========
       async function loadParticipants(){
         showLoading('جاري تحميل المشاركين...');
         try {
@@ -1991,27 +1537,17 @@
             db.from('recordings').select('id,participant_id,created_at')
           ]);
           hideLoading();
-
           const participants=pRes.data||[], allRecs=rRes.data||[];
           const listDiv=document.getElementById('participantsList');
-
-          if(pRes.error || participants.length===0){
-            listDiv.innerHTML='<div class="empty-state"><div class="icon">👥</div><p>لا يوجد مشاركون</p></div>';
-            updateAdminStats(0,0,0); return;
-          }
-
+          if(pRes.error || participants.length===0){ listDiv.innerHTML='<div class="empty-state"><div class="icon">👥</div><p>لا يوجد مشاركون</p></div>'; updateAdminStats(0,0,0); return; }
           let totalRec=0,newRec=0;
           window._participantsCache={};
-
           participants.forEach(p=>{ p.is_virtual = (p.password === '__virtual__');
-            p.recordings=allRecs.filter(r=>r.participant_id===p.id);
-            totalRec+=p.recordings.length;
+            p.recordings=allRecs.filter(r=>r.participant_id===p.id); totalRec+=p.recordings.length;
             p.recordings.forEach(r=>{ if(!isRecordingViewed(p.id,r.id)) newRec++; });
             window._participantsCache[p.id]=p;
           });
-
           updateAdminStats(participants.length,totalRec,newRec);
-
           listDiv.innerHTML = participants.map(p=>{
             const nc=p.recordings.filter(r=>!isRecordingViewed(p.id,r.id)).length;
             return `<div class="participant-card" data-pid="${p.id}">
@@ -2020,17 +1556,10 @@
               <h3>${escapeHtml(p.name)}${p.is_virtual?'<br><span class="virtual-badge">وهمي</span>':''}</h3>
               <p class="count">${p.recordings.length} تسجيل</p></div>`;
           }).join('');
-
           listDiv.querySelectorAll('.participant-card').forEach(card=>{
-            card.addEventListener('click',function(){
-              const p=window._participantsCache[parseInt(this.getAttribute('data-pid'))];
-              if(p) showAdminRecordingsPage(p);
-            });
+            card.addEventListener('click',function(){ const p=window._participantsCache[parseInt(this.getAttribute('data-pid'))]; if(p) showAdminRecordingsPage(p); });
           });
-        } catch(e){
-          hideLoading();
-          alert('خطأ في تحميل المشاركين: '+(e?.message||''));
-        }
+        } catch(e){ hideLoading(); alert('خطأ في تحميل المشاركين: '+(e?.message||'')); }
       }
 
       function updateAdminStats(p,r,n){
@@ -2048,31 +1577,18 @@
             db.from('recordings').select('id,type,created_at,file_url,data,storage_path').eq('participant_id',currentParticipant.id).order('created_at',{ascending:true}),
             db.from('messages').select('rating,recording_id').eq('participant_id',currentParticipant.id).eq('message_type','rating').not('rating','is',null)
           ]);
-
           const ratings=ratRes.data||[];
           let total=0; const ratedSet=new Set();
           ratings.forEach(r=>{ if(!ratedSet.has(r.recording_id)){ total+=r.rating; ratedSet.add(r.recording_id); } });
-
           const badge=document.getElementById('totalRatingBadge');
           document.getElementById('totalRatingValue').textContent=total.toFixed(1);
           document.getElementById('totalRatingMax').textContent=ratedSet.size*5;
           if(badge) badge.style.display=ratedSet.size===0?'none':'inline-flex';
-
           const recs=recRes.data||[];
           if(recRes.error) throw recRes.error;
-          if(recs.length===0){
-            listDiv.innerHTML='<div class="empty-state"><div class="icon">🎙️</div><p>لا توجد تسجيلات</p></div>';
-            return;
-          }
-
+          if(recs.length===0){ listDiv.innerHTML='<div class="empty-state"><div class="icon">🎙️</div><p>لا توجد تسجيلات</p></div>'; return; }
           const seen=new Set();
-          const unique=recs.filter(r=>{
-            if(seen.has(r.id)) return false;
-            seen.add(r.id);
-            markRecordingAsViewed(currentParticipant.id,r.id);
-            return true;
-          });
-
+          const unique=recs.filter(r=>{ if(seen.has(r.id)) return false; seen.add(r.id); markRecordingAsViewed(currentParticipant.id,r.id); return true; });
           listDiv.innerHTML = unique.map((rec,i)=>`
             <div class="recording-item">
               <div class="three-dots" onclick="showAdminRecordingMenu(event,${rec.id})">⋮</div>
@@ -2080,7 +1596,6 @@
               <p class="recording-date">${new Date(rec.created_at).toLocaleDateString('ar-SA')}</p>
               ${(rec.file_url===''&&!rec.data)?'<div style="background:#f0f9ff;padding:10px;border-radius:8px;color:#888;text-align:center;font-size:0.85rem;margin-top:8px;">🤖 تسجيل وهمي (بدون ملف)</div>':playerHtml(rec.file_url||rec.data, rec.type)}
             </div>`).join('');
-
         } catch(err){
           listDiv.innerHTML=`<div class="empty-state"><div class="icon">⚠️</div><p>خطأ في التحميل<br><small>${escapeHtml(err?.message||'')}</small></p><button class="btn btn-secondary" onclick="loadParticipantRecordingsAndRating()" style="margin-top:10px;width:auto;padding:8px 16px;">🔄 إعادة</button></div>`;
         }
@@ -2095,32 +1610,22 @@
           <div class="menu-item" onclick="openMessageModal(${id},'rating')">⭐ تقييم</div>
           <div class="menu-item danger" onclick="confirmDeleteRecordingAdmin(${id})">🗑️ حذف التسجيل</div>`;
         e.target.closest('.recording-item').appendChild(menu);
-        setTimeout(()=>{
-          document.addEventListener('click',function h(ev){
-            if(!menu.contains(ev.target)){ menu.remove(); document.removeEventListener('click',h); }
-          });
-        },10);
+        setTimeout(()=>{ document.addEventListener('click',function h(ev){ if(!menu.contains(ev.target)){ menu.remove(); document.removeEventListener('click',h); } }); },10);
       }
 
-      // ========= Admin messages / ratings =========
       async function loadAdminSentMessages(){
         const div=document.getElementById('adminSentMessages');
         if(!div||!currentParticipant||!db)return;
         try {
-          const {data}=await db.from('messages')
-            .select('id,message,message_type,rating,created_at,voice_url,voice_data')
-            .eq('participant_id',currentParticipant.id)
-            .order('created_at',{ascending:false});
-
+          const {data}=await db.from('messages').select('id,message,message_type,rating,created_at,voice_url,voice_data').eq('participant_id',currentParticipant.id).order('created_at',{ascending:false});
           if(!data||data.length===0){ div.innerHTML=''; return; }
-
           let html=`<h3 style="color:var(--dark-green);margin-bottom:10px;">📨 رسائلك المرسلة</h3>`;
           data.forEach(msg=>{
             if (msg.message_type === 'certificate') {
               const cd = parseCertData(msg.message);
               html += `<div class="admin-msg-item">
                 <button class="msg-delete-btn" onclick="deleteMessage(${msg.id})">🗑️ حذف</button>
-                <p style="color:var(--dark-green);font-weight:700;margin-bottom:4px;margin-left:55px;">🎓 شهادة شكر وتقدير — ${escapeHtml(cd?.name||'')} (${cd?.rankLabel||''} • ${cd?.stars||0}/5 ⭐)</p>
+                <p style="color:var(--dark-green);font-weight:700;margin-bottom:4px;margin-left:55px;">🎓 شهادة — ${escapeHtml(cd?.name||'')} (${cd?.rankLabel||''} • ${cd?.stars||0}/5 ⭐)</p>
                 <p style="color:#888;font-size:0.78rem;">${new Date(msg.created_at).toLocaleString('ar-SA')}</p>
               </div>`;
               return;
@@ -2144,14 +1649,9 @@
         try{
           const { error } = await db.from('messages').delete().eq('id', id);
           if (error) throw error;
-          hideLoading();
-          await loadAdminSentMessages();
-          await calculateAndDisplayTotalRating();
+          hideLoading(); await loadAdminSentMessages(); await calculateAndDisplayTotalRating();
           alert('تم الحذف ✅');
-        } catch(e){
-          hideLoading();
-          alert('خطأ في الحذف:\n' + (e?.message || JSON.stringify(e)));
-        }
+        } catch(e){ hideLoading(); alert('خطأ في الحذف:\n' + (e?.message || JSON.stringify(e))); }
       }
 
       async function calculateAndDisplayTotalRating(){
@@ -2235,8 +1735,7 @@
           document.getElementById('voiceRecordBtn').classList.add('hidden');
           document.getElementById('voiceStopBtn').classList.remove('hidden');
           document.getElementById('voiceTimer').classList.remove('hidden');
-          const s=Date.now();
-          clearInterval(adminVoiceTimer);
+          const s=Date.now(); clearInterval(adminVoiceTimer);
           adminVoiceTimer=setInterval(()=>{
             const e=Math.floor((Date.now()-s)/1000);
             const el=document.getElementById('voiceTimer');
@@ -2259,12 +1758,7 @@
         const messageType = activeBtn.textContent.includes('نصية') ? 'text' : activeBtn.textContent.includes('صوتية') ? 'voice' : 'rating';
         showLoading('جاري الإرسال...');
         try {
-          let msgData={
-            participant_id: currentParticipant.id,
-            recording_id: currentRecordingForMessage,
-            message_type: messageType,
-            read: false
-          };
+          let msgData={ participant_id: currentParticipant.id, recording_id: currentRecordingForMessage, message_type: messageType, read: false };
           if(messageType==='text'){
             const t=document.getElementById('messageText').value.trim();
             if(!t){ hideLoading(); alert('الرجاء كتابة رسالة!'); return; }
@@ -2286,18 +1780,14 @@
           if(messageType==='rating') await calculateAndDisplayTotalRating();
           await loadAdminSentMessages();
           alert('تم الإرسال بنجاح! ✅');
-        } catch(err){
-          hideLoading();
-          alert('خطأ: '+(err?.message||''));
-        }
+        } catch(err){ hideLoading(); alert('خطأ: '+(err?.message||'')); }
       }
 
       function closeMessageModal(){
         const m=document.getElementById('messageModal'); if(m)m.remove();
         adminVoiceChunks=[]; adminVoiceBlob=null;
         if(adminVoiceRecorder&&adminVoiceRecorder.state!=='inactive'){ try{adminVoiceRecorder.stop();}catch(e){} }
-        clearInterval(adminVoiceTimer);
-        selectedRating=0;
+        clearInterval(adminVoiceTimer); selectedRating=0;
       }
 
       function confirmDeleteRecordingAdmin(id){
@@ -2318,14 +1808,9 @@
           if (e2) throw e2;
           if (rec?.storage_path) { await db.storage.from(BUCKET).remove([rec.storage_path]); }
           hideLoading(); closeConfirmDialog();
-          await calculateAndDisplayTotalRating();
-          await loadAdminSentMessages();
-          await loadParticipantRecordingsAndRating();
+          await calculateAndDisplayTotalRating(); await loadAdminSentMessages(); await loadParticipantRecordingsAndRating();
           alert('تم الحذف ✅');
-        } catch(e){
-          hideLoading();
-          alert('فشل الحذف:\n' + (e?.message || JSON.stringify(e)));
-        }
+        } catch(e){ hideLoading(); alert('فشل الحذف:\n' + (e?.message || JSON.stringify(e))); }
       }
 
       function confirmDeleteAccount(){
@@ -2345,12 +1830,8 @@
           if (e3) throw e3;
           hideLoading(); closeConfirmDialog();
           alert(`تم حذف حساب ${currentParticipant.name} ✅`);
-          currentParticipant=null;
-          showAdminParticipantsPage();
-        } catch(e){
-          hideLoading();
-          alert('فشل الحذف:\n' + (e?.message || JSON.stringify(e)));
-        }
+          currentParticipant=null; showAdminParticipantsPage();
+        } catch(e){ hideLoading(); alert('فشل الحذف:\n' + (e?.message || JSON.stringify(e))); }
       }
 
       function toggleContactInfo(){
@@ -2366,8 +1847,7 @@
         try{ await navigator.clipboard.writeText(text); }
         catch{
           try{
-            const ta=document.createElement('textarea');
-            ta.value=text; ta.style.cssText='position:fixed;opacity:0';
+            const ta=document.createElement('textarea'); ta.value=text; ta.style.cssText='position:fixed;opacity:0';
             document.body.appendChild(ta); ta.select(); document.execCommand('copy'); document.body.removeChild(ta);
           }catch(e2){ alert('فشل النسخ'); return; }
         }
@@ -2375,7 +1855,6 @@
         setTimeout(()=>{btn.innerHTML=orig;btn.classList.remove('copied');},2000);
       }
 
-      // ========= Leaderboard =========
       async function showLeaderboard(){
         showLoading('جاري تحميل الترتيب...');
         try {
@@ -2389,32 +1868,34 @@
           const rMap={};
           ratings.forEach(r=>{
             if(!rMap[r.participant_id]) rMap[r.participant_id]={total:0,ratedSet:new Set()};
-            if(!rMap[r.participant_id].ratedSet.has(r.recording_id)){
-              rMap[r.participant_id].total+=r.rating;
-              rMap[r.participant_id].ratedSet.add(r.recording_id);
-            }
+            if(!rMap[r.participant_id].ratedSet.has(r.recording_id)){ rMap[r.participant_id].total+=r.rating; rMap[r.participant_id].ratedSet.add(r.recording_id); }
           });
           const ranked=participants.map(p=>{ p.is_virtual = (p.password==='__virtual__');
             const rc=allRecs.filter(r=>r.participant_id===p.id).length;
             const rm=rMap[p.id]||{total:0,ratedSet:new Set()};
             return{...p,totalRating:rm.total,ratedCount:rm.ratedSet.size,recCount:rc};
           }).sort((a,b)=>b.totalRating-a.totalRating||b.ratedCount-a.ratedCount);
-
           const rankClass=i=>i===0?'rank-1':i===1?'rank-2':i===2?'rank-3':'rank-other';
           const rankEmoji=i=>i===0?'🥇':i===1?'🥈':i===2?'🥉':(i+1);
-          const starsHtml=(r,c)=>!c?'<span style="color:#bbb;font-size:0.8rem;">لا يوجد تقييم</span>':'⭐'.repeat(Math.floor(r))+'☆'.repeat(Math.max(0,5-Math.floor(r)));
-
           const rowsHtml=ranked.length===0
             ?'<div style="text-align:center;padding:30px;color:#aaa;"><div style="font-size:3rem;">🏆</div><p>لا يوجد مشاركون</p></div>'
-            :ranked.map((p,i)=>`<div class="leaderboard-row ${rankClass(i)}">
-              <div class="rank-badge">${rankEmoji(i)}</div>
-              <div class="rank-info"><div class="rank-name">${escapeHtml(p.name)}${p.is_virtual?'&nbsp;<span class="virtual-badge">وهمي</span>':''}</div>
-              <div class="rank-details">${p.recCount} تسجيل • ${p.ratedCount} تقييم</div>
-              <div class="rank-stars">${starsHtml(p.totalRating,p.ratedCount)}</div></div>
-              <div class="rank-score"><div class="score-num">${p.totalRating>0?p.totalRating.toFixed(1):'-'}</div>
-              ${p.ratedCount>0?`<div class="score-label">من ${p.ratedCount*5}</div>`:'<div class="score-label">نقطة</div>'}</div>
-            </div>`).join('');
-
+            :ranked.map((p,i)=>{
+              const maxPts = p.ratedCount * 5;
+              const scoreStr = p.ratedCount > 0
+                ? `<span style="font-size:1.6rem;font-weight:900;color:var(--dark-green);">${p.totalRating.toFixed(1)}</span><span style="font-size:1rem;color:#888;font-weight:700;"> / ${maxPts}</span>`
+                : `<span style="font-size:1rem;color:#bbb;">—</span>`;
+              return `<div class="leaderboard-row ${rankClass(i)}">
+                <div class="rank-badge">${rankEmoji(i)}</div>
+                <div class="rank-info">
+                  <div class="rank-name">${escapeHtml(p.name)}${p.is_virtual?'&nbsp;<span class="virtual-badge">وهمي</span>':''}</div>
+                  <div class="rank-details">${p.recCount} تسجيل • ${p.ratedCount} تقييم</div>
+                </div>
+                <div class="rank-score" style="text-align:center;min-width:70px;">
+                  <div>${scoreStr}</div>
+                  <div style="font-size:0.7rem;color:#aaa;margin-top:2px;">نقطة</div>
+                </div>
+              </div>`;
+            }).join('');
           const modal=document.createElement('div'); modal.className='leaderboard-modal'; modal.id='leaderboardModal';
           modal.innerHTML=`<div class="leaderboard-content">
             <div class="leaderboard-header">
@@ -2423,24 +1904,18 @@
             </div><div class="leaderboard-body">${rowsHtml}</div></div>`;
           document.body.appendChild(modal);
           modal.addEventListener('click',e=>{ if(e.target===modal) modal.remove(); });
-        }catch(e){
-          hideLoading();
-          alert('خطأ: '+(e?.message||''));
-        }
+        }catch(e){ hideLoading(); alert('خطأ: '+(e?.message||'')); }
       }
 
-
       // =========================================================
-      // ========= نقل البيانات بين حسابين =========
+      // نقل البيانات - محدّث بالنقل التدريجي لتجنب timeout
       // =========================================================
       async function showTransferModal() {
         showLoading('جاري تحميل المشاركين...');
         const { data: participants } = await db.from('participants').select('id,name,password').order('name',{ascending:true});
         hideLoading();
         if (!participants || participants.length < 2) { alert('يجب وجود حسابين على الأقل لنقل البيانات.'); return; }
-
         const opts = participants.map(p => { const virt=(p.password==='__virtual__'); return `<option value="${p.id}">${virt ? '(وهمي) ' : ''}${p.name}</option>`; }).join('');
-
         const modal = document.createElement('div');
         modal.className = 'message-modal'; modal.id = 'transferModal';
         modal.innerHTML = `<div class="transfer-modal-content">
@@ -2470,32 +1945,46 @@
       async function executeTransfer() {
         const fromId = parseInt(document.getElementById('transferFrom').value);
         const toId   = parseInt(document.getElementById('transferTo').value);
-
         if (fromId === toId) { alert('الحساب المصدر والهدف متطابقان!'); return; }
-
         const fromName = document.querySelector('#transferFrom option:checked').text.replace('(وهمي) ','');
         const toName   = document.querySelector('#transferTo option:checked').text.replace('(وهمي) ','');
-
-        if (!confirm(`هل تريد نقل جميع بيانات "${fromName}" إلى "${toName}"؟
-هذا الإجراء لا يمكن التراجع عنه.`)) return;
+        if (!confirm('هل تريد نقل جميع بيانات "' + fromName + '" إلى "' + toName + '"?\nهذا الإجراء لا يمكن التراجع عنه.')) return;
 
         showLoading('جاري نقل البيانات...');
         try {
-          // نقل التسجيلات
-          const { error: e1 } = await db.from('recordings')
-            .update({ participant_id: toId })
-            .eq('participant_id', fromId);
-          if (e1) throw e1;
+          const BATCH = 8;
 
-          // نقل الرسائل
-          const { error: e2 } = await db.from('messages')
-            .update({ participant_id: toId })
-            .eq('participant_id', fromId);
-          if (e2) throw e2;
+          // جلب IDs التسجيلات أولاً
+          const { data: recs, error: er } = await db.from('recordings').select('id').eq('participant_id', fromId);
+          if (er) throw er;
+          const recIds = (recs || []).map(r => r.id);
+
+          // نقل التسجيلات دفعة دفعة لتجنب timeout
+          for (let i = 0; i < recIds.length; i += BATCH) {
+            const { error: e1 } = await db.from('recordings')
+              .update({ participant_id: toId })
+              .in('id', recIds.slice(i, i + BATCH));
+            if (e1) throw e1;
+            await sleep(200);
+          }
+
+          // جلب IDs الرسائل
+          const { data: msgs, error: em } = await db.from('messages').select('id').eq('participant_id', fromId);
+          if (em) throw em;
+          const msgIds = (msgs || []).map(m => m.id);
+
+          // نقل الرسائل دفعة دفعة
+          for (let i = 0; i < msgIds.length; i += BATCH) {
+            const { error: e2 } = await db.from('messages')
+              .update({ participant_id: toId })
+              .in('id', msgIds.slice(i, i + BATCH));
+            if (e2) throw e2;
+            await sleep(200);
+          }
 
           hideLoading();
           document.getElementById('transferModal').remove();
-          alert(`✅ تم نقل جميع بيانات "${fromName}" إلى "${toName}" بنجاح!`);
+          alert('✅ تم النقل بنجاح!\n' + fromName + ' ← ' + toName + '\nتسجيلات: ' + recIds.length + ' | رسائل: ' + msgIds.length);
           showAdminParticipantsPage();
         } catch(e) {
           hideLoading();
@@ -2504,7 +1993,7 @@
       }
 
       // =========================================================
-      // ========= إضافة مشارك وهمي =========
+      // مشارك وهمي - إدخال النقاط مباشرة (بدون حسابات)
       // =========================================================
       function showAddVirtualModal() {
         const modal = document.createElement('div');
@@ -2519,16 +2008,21 @@
             <input type="text" id="virtualName" placeholder="اكتب الاسم..." />
           </div>
           <div class="form-group">
-            <label>عدد النجوم (من 5)</label>
+            <label>مجموع النقاط الكلي</label>
             <div style="display:flex;gap:8px;align-items:center;">
-              <input type="number" id="virtualStars" value="4" min="0" max="5" step="0.5" style="width:100px;text-align:center;font-size:1.3rem;font-weight:700;" />
-              <span style="font-size:0.85rem;color:#666;">مثال: 4.5 = 4.5/5 نجوم في الليدر بورد</span>
+              <input type="number" id="virtualTotalScore" value="20" min="0" step="0.5" style="width:120px;text-align:center;font-size:1.3rem;font-weight:700;" />
+              <span style="font-size:0.85rem;color:#666;">اكتبيها مباشرة بدون حسابات</span>
             </div>
           </div>
           <div class="form-group">
-            <label>عدد التسجيلات الافتراضية (لحساب المجموع)</label>
-            <input type="number" id="virtualRecCount" value="3" min="1" max="20" style="width:100px;text-align:center;font-size:1.1rem;" />
-            <p style="color:#888;font-size:0.78rem;margin-top:4px;">المجموع = النجوم × عدد التسجيلات (مثال: 4.5 × 3 = 13.5 من 15)</p>
+            <label>أقصى نقطة ممكنة (من كم؟)</label>
+            <div style="display:flex;gap:8px;align-items:center;">
+              <input type="number" id="virtualMaxScore" value="25" min="5" step="5" style="width:120px;text-align:center;font-size:1.3rem;font-weight:700;" />
+              <span style="font-size:0.85rem;color:#666;">مثال: 5 تسجيلات × 5 = 25</span>
+            </div>
+          </div>
+          <div style="background:#fffce8;padding:10px;border-radius:8px;border:2px solid var(--primary-gold);text-align:center;font-size:0.9rem;color:var(--dark-green);font-weight:600;margin-bottom:8px;">
+            سيظهر بالليدر بورد: <span id="vScoreDisplay">20 من 25 نقطة</span>
           </div>
           <div class="modal-buttons">
             <button class="btn btn-primary" onclick="addVirtualParticipant()">➕ إضافة</button>
@@ -2536,15 +2030,24 @@
           </div>
         </div>`;
         document.body.appendChild(modal);
+        // تحديث مباشر للمعاينة
+        ['virtualTotalScore','virtualMaxScore'].forEach(id => {
+          document.getElementById(id).addEventListener('input', () => {
+            const s = parseFloat(document.getElementById('virtualTotalScore').value) || 0;
+            const m = parseFloat(document.getElementById('virtualMaxScore').value) || 1;
+            const el = document.getElementById('vScoreDisplay');
+            if (el) el.textContent = s + ' من ' + m + ' نقطة';
+          });
+        });
       }
 
       async function addVirtualParticipant() {
-        const name      = document.getElementById('virtualName').value.trim();
-        const stars     = parseFloat(document.getElementById('virtualStars').value) || 4;
-        const recCount  = parseInt(document.getElementById('virtualRecCount').value) || 3;
+        const name       = document.getElementById('virtualName').value.trim();
+        const totalScore = parseFloat(document.getElementById('virtualTotalScore').value) || 0;
+        const maxScore   = parseFloat(document.getElementById('virtualMaxScore').value) || 5;
 
         if (!name) { alert('الرجاء إدخال الاسم!'); return; }
-        if (stars < 0 || stars > 5) { alert('النجوم يجب أن تكون بين 0 و 5!'); return; }
+        if (maxScore < 1) { alert('أقصى نقطة يجب أن تكون 1 على الأقل!'); return; }
 
         showLoading('جاري الإضافة...');
         try {
@@ -2554,7 +2057,11 @@
             .select('id,name').single();
           if (e1) throw e1;
 
-          // إنشاء تسجيلات وهمية وتقييمات لكل واحدة
+          // نحسب عدد التسجيلات من maxScore (كل 5 = تسجيل واحد)
+          const recCount = Math.max(1, Math.round(maxScore / 5));
+          // نقسم مجموع النقاط على عدد التسجيلات، كل واحد بحد أقصى 5
+          const ratingPerRec = Math.min(totalScore / recCount, 5);
+
           for (let i = 0; i < recCount; i++) {
             const { data: rec, error: e2 } = await db.from('recordings').insert({
               participant_id: newP.id,
@@ -2564,13 +2071,12 @@
             }).select('id').single();
             if (e2) throw e2;
 
-            // تقييم لكل تسجيل
             const { error: e3 } = await db.from('messages').insert({
               participant_id: newP.id,
               recording_id: rec.id,
               message_type: 'rating',
-              rating: Math.min(stars, 5),
-              message: `تقييم وهمي: ${stars}/5`,
+              rating: ratingPerRec,
+              message: 'تقييم وهمي',
               read: true
             });
             if (e3) throw e3;
@@ -2578,8 +2084,7 @@
 
           hideLoading();
           document.getElementById('virtualModal').remove();
-          alert(`✅ تم إضافة المشارك الوهمي "${name}" بنجاح!
-النجوم: ${stars}/5 × ${recCount} تسجيل = ${(stars*recCount).toFixed(1)} نقطة`);
+          alert('✅ تم إضافة المشارك الوهمي "' + name + '" بنجاح!\nالمجموع: ' + totalScore + ' من ' + maxScore + ' نقطة');
           showAdminParticipantsPage();
         } catch(e) {
           hideLoading();
@@ -2588,7 +2093,7 @@
       }
 
       // =========================================================
-      // ========= معاينة وحفظ شهادة (للاستاذة فقط) =========
+      // معاينة وحفظ شهادة (للاستاذة فقط)
       // =========================================================
       async function showAdminCertPreview() {
         if (!currentParticipant) return;
@@ -2596,74 +2101,35 @@
         try {
           const [allParticipants, allRatings] = await Promise.all([
             db.from('participants').select('id'),
-            db.from('messages').select('participant_id,recording_id,rating')
-              .eq('message_type','rating').not('rating','is',null)
+            db.from('messages').select('participant_id,recording_id,rating').eq('message_type','rating').not('rating','is',null)
           ]);
           hideLoading();
-
           const scoreMap = {};
           (allRatings.data || []).forEach(r => {
             if (!scoreMap[r.participant_id]) scoreMap[r.participant_id] = { total: 0, seen: new Set() };
-            if (!scoreMap[r.participant_id].seen.has(r.recording_id)) {
-              scoreMap[r.participant_id].total += r.rating;
-              scoreMap[r.participant_id].seen.add(r.recording_id);
-            }
+            if (!scoreMap[r.participant_id].seen.has(r.recording_id)) { scoreMap[r.participant_id].total += r.rating; scoreMap[r.participant_id].seen.add(r.recording_id); }
           });
-
-          const sorted = (allParticipants.data || [])
-            .map(p => ({ id: p.id, total: scoreMap[p.id]?.total || 0 }))
-            .sort((a, b) => b.total - a.total);
-
+          const sorted = (allParticipants.data || []).map(p => ({ id: p.id, total: scoreMap[p.id]?.total || 0 })).sort((a, b) => b.total - a.total);
           const myRank = sorted.findIndex(p => p.id === currentParticipant.id) + 1;
           const myScore = scoreMap[currentParticipant.id]?.total || 0;
           const mySeenCount = scoreMap[currentParticipant.id]?.seen?.size || 0;
           const myOutOf = mySeenCount * 5;
           const starsOutOf5 = myOutOf > 0 ? Math.round((myScore / myOutOf) * 5 * 10) / 10 : 0;
           const rankLabel = myRank === 1 ? '🥇 المركز الأول' : myRank === 2 ? '🥈 المركز الثاني' : myRank === 3 ? '🥉 المركز الثالث' : `المركز ${myRank}`;
-
-          const defaultText = `تُمنح هذه الشهادة تقديراً لجهودكِ المتميزة في مسابقة حفظ جزء عم خلال شهر رمضان المبارك 1446 هـ.`;
-
-          const certData = {
-            _type: 'certificate',
-            name: currentParticipant.name,
-            text: defaultText,
-            rank: myRank,
-            rankLabel,
-            stars: starsOutOf5,
-            score: myScore,
-            outOf: myOutOf
-          };
-
-          // فتح شاشة الشهادة للاستاذة (بدون إرسال)
+          const certData = { _type: 'certificate', name: currentParticipant.name, text: `تُمنح هذه الشهادة تقديراً لجهودكِ المتميزة في مسابقة حفظ جزء عم خلال شهر رمضان المبارك 1446 هـ.`, rank: myRank, rankLabel, stars: starsOutOf5, score: myScore, outOf: myOutOf };
           _adminCertPreviewMode = true;
           const overlay = document.getElementById('certOverlay');
-          const envPhase = document.getElementById('certEnvelopePhase');
-          const dispPhase = document.getElementById('certDisplayPhase');
-          overlay.classList.remove('hidden');
-          envPhase.classList.add('hidden');
+          document.getElementById('certEnvelopePhase').classList.add('hidden');
           renderCertificate(certData);
-          dispPhase.classList.remove('hidden');
-          // إظهار زر حفظ إضافي للاستاذة
+          document.getElementById('certDisplayPhase').classList.remove('hidden');
+          overlay.classList.remove('hidden');
           const adminSaveArea = document.getElementById('adminCertSaveArea');
           if (adminSaveArea) adminSaveArea.style.display = 'block';
-          // تغيير زر الإغلاق ليكون مناسباً للاستاذة
-          const closeBtn = dispPhase.querySelector('.cert-btn-close');
-          if (closeBtn) {
-            closeBtn.onclick = () => {
-              overlay.classList.add('hidden');
-              if (adminSaveArea) adminSaveArea.style.display = 'none';
-              _adminCertPreviewMode = false;
-            };
-          }
-        } catch(e) {
-          hideLoading();
-          alert('خطأ: ' + (e?.message || ''));
-        }
+        } catch(e) { hideLoading(); alert('خطأ: ' + (e?.message || '')); }
       }
 
       let _adminCertPreviewMode = false;
 
-      // ========= تشغيل أولي =========
       if (window.supabase && !_appInited) initApp();
     </script>
   </body>
