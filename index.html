@@ -886,39 +886,63 @@
         dispPhase.classList.remove('hidden');
       }
 
+      // ─── تحميل الخطوط كـ base64 ومخزّنة مؤقتاً ───
+      let _fontBase64CSS = null;
+      async function buildEmbeddedFontCSS() {
+        if (_fontBase64CSS) return _fontBase64CSS;
+        try {
+          const cssUrl = 'https://fonts.googleapis.com/css2?family=Amiri:wght@400;700&family=Cairo:wght@400;600;700;900&display=block';
+          const cssResp = await fetch(cssUrl);
+          let css = await cssResp.text();
+          // استخراج روابط ملفات الخطوط من gstatic
+          const fontUrls = [];
+          const re = /url\((https:\/\/fonts\.gstatic\.com[^)]+)\)/g;
+          let m;
+          while ((m = re.exec(css)) !== null) { fontUrls.push(m[1]); }
+          // جلب كل ملف خط وتحويله لـ base64
+          for (const url of fontUrls) {
+            try {
+              const fr = await fetch(url);
+              const blob = await fr.blob();
+              const b64 = await new Promise(res => {
+                const reader = new FileReader();
+                reader.onloadend = () => res(reader.result);
+                reader.readAsDataURL(blob);
+              });
+              css = css.replace(url, b64);
+            } catch(e) {}
+          }
+          _fontBase64CSS = css;
+          return css;
+        } catch(e) {
+          console.warn('buildEmbeddedFontCSS failed:', e);
+          return '';
+        }
+      }
+
       async function downloadCertAsImage() {
         const card = document.getElementById('certCardEl');
         if (!card) return;
         if (typeof html2canvas === 'undefined') { alert('مكتبة الصور لم تُحمَّل بعد. حاول مجدداً بعد ثوانٍ.'); return; }
         showLoading('جاري تحضير الشهادة...');
         try {
-          // انتظار تحميل الخطوط كاملاً قبل الالتقاط
+          // جلب الخطوط كـ base64 قبل الالتقاط
+          const embeddedCSS = await buildEmbeddedFontCSS();
           await document.fonts.ready;
-          // تحميل الخطوط المستخدمة صراحةً لضمان ظهورها في html2canvas
-          await Promise.all([
-            document.fonts.load('700 24px "Amiri"'),
-            document.fonts.load('400 24px "Amiri"'),
-            document.fonts.load('700 16px "Cairo"'),
-            document.fonts.load('900 16px "Cairo"'),
-          ]);
-          // تأخير إضافي بسيط لضمان رسم الخطوط
-          await new Promise(r => setTimeout(r, 400));
+          await new Promise(r => setTimeout(r, 300));
           const canvas = await html2canvas(card, {
             scale: 2.5,
             useCORS: true,
             allowTaint: true,
             backgroundColor: '#fff',
             logging: false,
-            onclone: (doc) => {
-              // تطبيق الخطوط صراحةً على النسخة المستنسخة
-              const allText = doc.querySelectorAll('*');
-              allText.forEach(el => {
-                const tag = el.tagName;
-                if (['DIV','P','SPAN','H1','H2','H3'].includes(tag)) {
-                  const fs = window.getComputedStyle(el).fontFamily;
-                  el.style.fontFamily = fs;
-                }
-              });
+            onclone: (clonedDoc) => {
+              // حقن الخطوط كـ base64 في الـ clone
+              if (embeddedCSS) {
+                const st = clonedDoc.createElement('style');
+                st.textContent = embeddedCSS;
+                clonedDoc.head.insertBefore(st, clonedDoc.head.firstChild);
+              }
             }
           });
           const link = document.createElement('a');
@@ -1156,29 +1180,21 @@
         if (typeof html2canvas === 'undefined') { alert('مكتبة الصور لم تُحمَّل بعد. حاول مجدداً بعد ثوانٍ.'); return; }
         showLoading('جاري تحضير الشهادة...');
         try {
+          const embeddedCSS = await buildEmbeddedFontCSS();
           await document.fonts.ready;
-          await Promise.all([
-            document.fonts.load('700 24px "Amiri"'),
-            document.fonts.load('400 24px "Amiri"'),
-            document.fonts.load('700 16px "Cairo"'),
-            document.fonts.load('900 16px "Cairo"'),
-          ]);
-          await new Promise(r => setTimeout(r, 400));
+          await new Promise(r => setTimeout(r, 300));
           const canvas = await html2canvas(card, {
             scale: 2.5,
             useCORS: true,
             allowTaint: true,
             backgroundColor: '#fff',
             logging: false,
-            onclone: (doc) => {
-              const allText = doc.querySelectorAll('*');
-              allText.forEach(el => {
-                const tag = el.tagName;
-                if (['DIV','P','SPAN','H1','H2','H3'].includes(tag)) {
-                  const fs = window.getComputedStyle(el).fontFamily;
-                  el.style.fontFamily = fs;
-                }
-              });
+            onclone: (clonedDoc) => {
+              if (embeddedCSS) {
+                const st = clonedDoc.createElement('style');
+                st.textContent = embeddedCSS;
+                clonedDoc.head.insertBefore(st, clonedDoc.head.firstChild);
+              }
             }
           });
           const link = document.createElement('a');
