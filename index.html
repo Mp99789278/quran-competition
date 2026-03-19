@@ -6,7 +6,8 @@
     <title>مسابقة حفظ جزء عم - رمضان المبارك</title>
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link href="https://fonts.googleapis.com/css2?family=Amiri:wght@400;700&family=Cairo:wght@400;600;700;900&display=swap" rel="stylesheet" />
+    <!-- display=block لضمان تحميل الخطوط قبل الرسم -->
+    <link href="https://fonts.googleapis.com/css2?family=Amiri:wght@400;700&family=Cairo:wght@400;600;700;900&display=block" rel="stylesheet" />
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js" defer></script>
 
     <style>
@@ -889,9 +890,37 @@
         const card = document.getElementById('certCardEl');
         if (!card) return;
         if (typeof html2canvas === 'undefined') { alert('مكتبة الصور لم تُحمَّل بعد. حاول مجدداً بعد ثوانٍ.'); return; }
-        showLoading('جاري حفظ الصورة...');
+        showLoading('جاري تحضير الشهادة...');
         try {
-          const canvas = await html2canvas(card, { scale: 2, useCORS: true, backgroundColor: '#fff' });
+          // انتظار تحميل الخطوط كاملاً قبل الالتقاط
+          await document.fonts.ready;
+          // تحميل الخطوط المستخدمة صراحةً لضمان ظهورها في html2canvas
+          await Promise.all([
+            document.fonts.load('700 24px "Amiri"'),
+            document.fonts.load('400 24px "Amiri"'),
+            document.fonts.load('700 16px "Cairo"'),
+            document.fonts.load('900 16px "Cairo"'),
+          ]);
+          // تأخير إضافي بسيط لضمان رسم الخطوط
+          await new Promise(r => setTimeout(r, 400));
+          const canvas = await html2canvas(card, {
+            scale: 2.5,
+            useCORS: true,
+            allowTaint: true,
+            backgroundColor: '#fff',
+            logging: false,
+            onclone: (doc) => {
+              // تطبيق الخطوط صراحةً على النسخة المستنسخة
+              const allText = doc.querySelectorAll('*');
+              allText.forEach(el => {
+                const tag = el.tagName;
+                if (['DIV','P','SPAN','H1','H2','H3'].includes(tag)) {
+                  const fs = window.getComputedStyle(el).fontFamily;
+                  el.style.fontFamily = fs;
+                }
+              });
+            }
+          });
           const link = document.createElement('a');
           link.download = 'شهادة-شكر-وتقدير.png';
           link.href = canvas.toDataURL('image/png');
@@ -1125,9 +1154,33 @@
         const card = document.getElementById('devCertCardEl');
         if (!card) return;
         if (typeof html2canvas === 'undefined') { alert('مكتبة الصور لم تُحمَّل بعد. حاول مجدداً بعد ثوانٍ.'); return; }
-        showLoading('جاري حفظ الشهادة...');
+        showLoading('جاري تحضير الشهادة...');
         try {
-          const canvas = await html2canvas(card, { scale: 2.5, useCORS: true, backgroundColor: '#fff' });
+          await document.fonts.ready;
+          await Promise.all([
+            document.fonts.load('700 24px "Amiri"'),
+            document.fonts.load('400 24px "Amiri"'),
+            document.fonts.load('700 16px "Cairo"'),
+            document.fonts.load('900 16px "Cairo"'),
+          ]);
+          await new Promise(r => setTimeout(r, 400));
+          const canvas = await html2canvas(card, {
+            scale: 2.5,
+            useCORS: true,
+            allowTaint: true,
+            backgroundColor: '#fff',
+            logging: false,
+            onclone: (doc) => {
+              const allText = doc.querySelectorAll('*');
+              allText.forEach(el => {
+                const tag = el.tagName;
+                if (['DIV','P','SPAN','H1','H2','H3'].includes(tag)) {
+                  const fs = window.getComputedStyle(el).fontFamily;
+                  el.style.fontFamily = fs;
+                }
+              });
+            }
+          });
           const link = document.createElement('a');
           link.download = 'شهادة-شكر-للاستاذة.png';
           link.href = canvas.toDataURL('image/png');
