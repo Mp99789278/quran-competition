@@ -239,16 +239,56 @@
       .participant-select { width:100%; padding:10px; border:2px solid var(--border-light); border-radius:8px; font-family:"Cairo",sans-serif; font-size:0.95rem; background:var(--cream); }
       .cert-save-admin-btn { background:linear-gradient(135deg,#10b981,#059669); color:white; border:none; padding:10px 16px; border-radius:8px; font-family:"Cairo",sans-serif; font-weight:700; font-size:0.9rem; cursor:pointer; display:flex; align-items:center; gap:6px; }
       .cert-save-admin-btn:hover { opacity:0.88; }
+
+      /* ====== تغيير المركز يدوياً ====== */
+      .rank-override-btn { padding: 8px 4px; border: 2px solid var(--border-light); border-radius: 8px; background: white; cursor: pointer; font-size: 0.8rem; font-weight: 600; font-family: "Cairo", sans-serif; transition: all 0.2s; text-align: center; }
+      .rank-override-btn:hover { border-color: var(--primary-gold); }
+      .rank-override-btn.active { background: linear-gradient(135deg, var(--primary-gold), var(--accent-gold)); border-color: var(--primary-gold); color: var(--dark-green); }
+
+      /* ====== شهادة شكر المطور ====== */
+      #devCertOverlay {
+        position: fixed; inset: 0;
+        background: rgba(0,0,0,0.92);
+        z-index: 8500;
+        display: flex; align-items: center; justify-content: center;
+        flex-direction: column; padding: 16px;
+        overflow-y: auto;
+      }
+      #devCertDisplayPhase { width: 100%; max-width: 540px; margin: 0 auto; }
+      .dev-certificate-card { background: white; border-radius: 14px; padding: 6px; box-shadow: 0 15px 60px rgba(0,0,0,0.6); position: relative; overflow: hidden; }
+      .dev-cert-outer { border: 5px double #1a6b54; border-radius: 10px; padding: 5px; }
+      .dev-cert-inner { border: 2px solid #1a6b54; border-radius: 8px; padding: 22px 18px; background: linear-gradient(160deg, #f0fff4 0%, #e8f5e9 50%, #d4edda 100%); position: relative; text-align: center; }
+      .dev-cert-inner::before, .dev-cert-inner::after { content: '❋'; position: absolute; color: #1a6b54; font-size: 1.5rem; top: 8px; }
+      .dev-cert-inner::before { right: 10px; }
+      .dev-cert-inner::after { left: 10px; }
+      .dev-cert-top-decoration { display: flex; justify-content: center; gap: 8px; font-size: 1.3rem; margin-bottom: 6px; }
+      .dev-cert-basmala { font-family: "Amiri", serif; font-size: 1.1rem; color: #0d4d3f; margin-bottom: 6px; }
+      .dev-cert-title { font-family: "Amiri", serif; font-size: 2rem; font-weight: 700; color: #0d4d3f; margin-bottom: 4px; }
+      .dev-cert-subtitle { font-size: 0.85rem; color: #555; margin-bottom: 10px; font-weight: 600; }
+      .dev-cert-divider { height: 2px; background: linear-gradient(to right, transparent, #1a6b54, transparent); margin: 10px 0; }
+      .dev-cert-from-label { font-size: 0.85rem; color: #666; margin-bottom: 4px; }
+      .dev-cert-from-name { font-family: "Amiri", serif; font-size: 1.4rem; font-weight: 700; color: #0d4d3f; border-bottom: 2px solid #1a6b54; display: inline-block; padding: 2px 16px; margin-bottom: 8px; }
+      .dev-cert-to-label { font-size: 0.85rem; color: #666; margin-bottom: 4px; }
+      .dev-cert-name { font-family: "Amiri", serif; font-size: 1.8rem; font-weight: 700; color: #0d4d3f; padding: 6px 14px; border-bottom: 2px solid #1a6b54; display: inline-block; min-width: 60%; margin-bottom: 8px; }
+      .dev-cert-text { font-size: 0.92rem; color: #333; line-height: 1.9; margin: 10px 0; padding: 0 8px; }
+      .dev-cert-emoji-row { font-size: 1.6rem; letter-spacing: 6px; margin: 10px 0 6px; }
+      .dev-cert-footer { display: flex; justify-content: space-between; align-items: flex-end; margin-top: 14px; padding-top: 10px; border-top: 1px solid #a8d5b5; font-size: 0.8rem; color: #666; }
+      .dev-cert-sig { font-family: "Amiri", serif; font-size: 1rem; color: #0d4d3f; }
+      .dev-cert-action-btns { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 8px; margin-top: 14px; }
+
       @media print {
         body * { visibility: hidden; }
         #printCertArea, #printCertArea * { visibility: visible; }
         #printCertArea { position: fixed; inset: 0; display: flex; align-items: center; justify-content: center; background: white; }
+        #printDevCertArea, #printDevCertArea * { visibility: visible; }
+        #printDevCertArea { position: fixed; inset: 0; display: flex; align-items: center; justify-content: center; background: white; }
       }
       @media (max-width: 768px) {
         h1 { font-size: 1.3rem; } .card { padding: 12px 10px; } .btn { font-size: 0.95rem; padding: 10px; }
         .record-type-grid { grid-template-columns: 1fr; } .message-type-btns { grid-template-columns: 1fr; }
         .cert-title-ar { font-size: 1.6rem; }
         .cert-action-btns { grid-template-columns: 1fr; }
+        .dev-cert-action-btns { grid-template-columns: 1fr; }
       }
     </style>
   </head>
@@ -277,6 +317,7 @@
       </div>
     </div>
 
+    <!-- شهادة المشاركين -->
     <div id="certOverlay" class="hidden">
       <div id="certEnvelopePhase">
         <p style="color:var(--primary-gold);font-family:'Amiri',serif;font-size:1.3rem;margin-bottom:20px;text-align:center;">🎉 لديكِ شهادة جديدة!</p>
@@ -323,6 +364,48 @@
           <button onclick="downloadCertAsImage()" style="background:linear-gradient(135deg,#10b981,#059669);color:white;border:none;padding:12px 30px;border-radius:10px;font-family:Cairo,sans-serif;font-weight:700;font-size:1rem;cursor:pointer;width:100%;">
             📸 حفظ الشهادة كصورة (للاستاذة)
           </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- شهادة شكر من المطور للاستاذة -->
+    <div id="devCertOverlay" class="hidden">
+      <div id="devCertDisplayPhase">
+        <div id="printDevCertArea">
+          <div class="dev-certificate-card" id="devCertCardEl">
+            <div class="dev-cert-outer">
+              <div class="dev-cert-inner">
+                <div class="dev-cert-top-decoration">🌿 ✨ 🌿</div>
+                <div class="dev-cert-basmala">بِسْمِ اللَّهِ الرَّحْمَنِ الرَّحِيمِ</div>
+                <div class="dev-cert-title">شهادة شكر وعرفان</div>
+                <div class="dev-cert-subtitle">من فريق التطوير — بمناسبة اختتام مسابقة حفظ جزء عم 1446 هـ</div>
+                <div class="dev-cert-divider"></div>
+                <div class="dev-cert-from-label">يُقدِّم هذه الشهادة</div>
+                <div class="dev-cert-from-name">فريق التطوير 💻</div>
+                <div class="dev-cert-to-label">إلى المشرفة الفاضلة</div>
+                <div class="dev-cert-name" id="devCertNameEl">—</div>
+                <div class="dev-cert-divider"></div>
+                <div class="dev-cert-text" id="devCertTextEl">
+                  تقديراً وعرفاناً لجهودكِ المتميزة وعطائكِ الدؤوب في الإشراف على هذه المسابقة القرآنية المباركة،
+                  وحرصكِ الدائم على متابعة المشاركين وتقييمهم وتشجيعهم، وما بذلتِه من وقت وجهد في خدمة كتاب الله الكريم.
+                  فجزاكِ الله خير الجزاء، وبارك في وقتكِ وعلمكِ وعملكِ، وجعل ذلك في ميزان حسناتكِ يوم القيامة.
+                </div>
+                <div class="dev-cert-emoji-row">🌟 📖 🌙 🏆 ✨</div>
+                <div style="font-family:'Amiri',serif;font-size:1rem;color:#0d4d3f;margin:6px 0;font-style:italic;">
+                  "وَمَن يَعْمَلْ مِثْقَالَ ذَرَّةٍ خَيْرًا يَرَهُ"
+                </div>
+                <div class="dev-cert-footer">
+                  <div class="dev-cert-sig">فريق التطوير<br><span style="font-size:0.75rem;color:#aaa;">بتقدير واحترام</span></div>
+                  <div id="devCertDateEl" style="text-align:left;"></div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="dev-cert-action-btns">
+          <button class="cert-btn cert-btn-save" onclick="downloadDevCertAsImage()">📸 حفظ صورة</button>
+          <button class="cert-btn cert-btn-pdf"  onclick="downloadDevCertAsPDF()">📄 PDF</button>
+          <button class="cert-btn cert-btn-close" onclick="closeDevCertOverlay()">✕ إغلاق</button>
         </div>
       </div>
     </div>
@@ -440,11 +523,14 @@
           <div class="stat-card"><div class="icon">🎙️</div><div class="number" id="totalRecordings">0</div><div class="label">تسجيل كلي</div></div>
           <div class="stat-card"><div class="icon">🆕</div><div class="number" id="newRecordings">0</div><div class="label">جديد</div></div>
         </div>
+        <!-- أزرار الإدارة -->
         <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:8px;">
           <button class="btn btn-primary" onclick="showBroadcastModal()">📢 إعلان عام</button>
           <button class="btn btn-secondary" onclick="showLeaderboard()">🏆 الترتيب</button>
           <button class="btn btn-cert" onclick="showTransferModal()">🔄 نقل بيانات</button>
           <button class="btn" style="background:linear-gradient(135deg,#7c3aed,#6d28d9);color:white;" onclick="showAddVirtualModal()">➕ مشارك وهمي</button>
+          <!-- زر شهادة شكر للاستاذة يمتد على كامل العرض -->
+          <button class="btn" style="background:linear-gradient(135deg,#0d9488,#0f766e);color:white;grid-column:1/-1;" onclick="showDevCertModal()">🎖️ شهادة شكر للاستاذة (من المطور)</button>
         </div>
         <div id="adminBroadcastsList" style="margin-bottom:12px;"></div>
         <div id="participantsList" class="participants-grid"></div>
@@ -538,6 +624,7 @@
       let _loadingEl = null;
       let _appInited = false;
       let _currentCertMsgId = null;
+      let _adminCertPreviewMode = false;
 
       const sleep = (ms) => new Promise(r => setTimeout(r, ms));
 
@@ -815,6 +902,41 @@
 
       function downloadCertAsPDF() { window.print(); }
 
+      // =====================================================
+      // تغيير المركز يدوياً في نافذة الشهادة
+      // =====================================================
+      function getRankLabel(rank) {
+        if (rank === 1) return '🥇 المركز الأول';
+        if (rank === 2) return '🥈 المركز الثاني';
+        if (rank === 3) return '🥉 المركز الثالث';
+        return 'المركز ' + rank;
+      }
+
+      function setRankOverride(rank, autoRank) {
+        // تحديث الأزرار
+        document.querySelectorAll('.rank-override-btn').forEach(b => b.classList.remove('active'));
+        const key = (rank === 'auto') ? 'auto' : String(rank);
+        const btn = document.querySelector('.rank-override-btn[data-rank="' + key + '"]');
+        if (btn) btn.classList.add('active');
+
+        const actualRank = (rank === 'auto') ? autoRank : parseInt(rank);
+        const rankLabel = getRankLabel(actualRank);
+
+        // تحديث الحقول المخفية
+        const rIn = document.getElementById('certRankInput');
+        const rlIn = document.getElementById('certRankLabelInput');
+        if (rIn) rIn.value = actualRank;
+        if (rlIn) rlIn.value = rankLabel;
+
+        // تحديث النص التوضيحي
+        const disp = document.getElementById('certRankDisplayLabel');
+        if (disp) {
+          disp.textContent = rankLabel;
+          disp.style.color = '#0d4d3f';
+          disp.style.fontWeight = '900';
+        }
+      }
+
       async function showCertificateModal() {
         if (!currentParticipant) return;
         showLoading('جاري حساب الترتيب...');
@@ -840,7 +962,7 @@
           const mySeenCount = scoreMap[currentParticipant.id]?.seen?.size || 0;
           const myOutOf = mySeenCount * 5;
           const starsOutOf5 = myOutOf > 0 ? Math.round((myScore / myOutOf) * 5 * 10) / 10 : 0;
-          const rankLabel = myRank === 1 ? '🥇 المركز الأول' : myRank === 2 ? '🥈 المركز الثاني' : myRank === 3 ? '🥉 المركز الثالث' : `المركز ${myRank}`;
+          const autoRankLabel = getRankLabel(myRank);
           const defaultText = `تُمنح هذه الشهادة تقديراً لجهودكِ المتميزة في مسابقة حفظ جزء عم خلال شهر رمضان المبارك 1446 هـ، شاكرين لكِ إخلاصكِ وتفانيكِ، سائلين المولى أن يبارك في علمكِ وعملكِ.`;
 
           const modal = document.createElement('div');
@@ -850,13 +972,33 @@
               <h3>🎓 إرسال شهادة شكر وتقدير</h3>
               <div style="background:linear-gradient(135deg,#fffce8,#fff3cc);padding:12px;border-radius:10px;border:2px solid var(--primary-gold);margin-bottom:14px;text-align:center;">
                 <p style="color:#888;font-size:0.78rem;margin-bottom:6px;">المعلومات التالية تُحسب تلقائياً من النظام</p>
-                <div style="font-size:1.5rem;font-weight:900;color:var(--dark-green);">${rankLabel}</div>
+                <div style="font-size:1.3rem;font-weight:900;color:var(--dark-green);" id="certRankDisplayLabel">${autoRankLabel}</div>
                 <div style="font-size:1rem;color:#555;margin-top:4px;">
                   النجوم: ${'⭐'.repeat(Math.floor(starsOutOf5))}${'☆'.repeat(Math.max(0, 5-Math.floor(starsOutOf5)))}
                   <strong style="color:var(--dark-green);margin-right:6px;">${starsOutOf5} / 5</strong>
                 </div>
                 <div style="font-size:0.8rem;color:#888;margin-top:2px;">المجموع: ${myScore} من ${myOutOf} نقطة</div>
               </div>
+
+              <!-- ====== تغيير المركز يدوياً ====== -->
+              <div class="form-group">
+                <label>✏️ تغيير المركز يدوياً (اختياري)</label>
+                <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:6px;margin-bottom:8px;" id="rankOverrideBtns">
+                  <button type="button" class="rank-override-btn active" data-rank="auto" onclick="setRankOverride('auto', ${myRank})">🔄 تلقائي</button>
+                  <button type="button" class="rank-override-btn" data-rank="1" onclick="setRankOverride(1, ${myRank})">🥇 الأول</button>
+                  <button type="button" class="rank-override-btn" data-rank="2" onclick="setRankOverride(2, ${myRank})">🥈 الثاني</button>
+                  <button type="button" class="rank-override-btn" data-rank="3" onclick="setRankOverride(3, ${myRank})">🥉 الثالث</button>
+                  <button type="button" class="rank-override-btn" data-rank="4" onclick="setRankOverride(4, ${myRank})">4️⃣ الرابع</button>
+                  <button type="button" class="rank-override-btn" data-rank="5" onclick="setRankOverride(5, ${myRank})">5️⃣ الخامس</button>
+                  <button type="button" class="rank-override-btn" data-rank="6" onclick="setRankOverride(6, ${myRank})">6️⃣ السادس</button>
+                  <button type="button" class="rank-override-btn" data-rank="7" onclick="setRankOverride(7, ${myRank})">7️⃣ السابع</button>
+                </div>
+                <div style="display:flex;align-items:center;gap:8px;">
+                  <input type="number" id="customRankInput" placeholder="أو اكتب رقماً مخصصاً..." min="1" style="flex:1;padding:8px;border:2px solid var(--border-light);border-radius:8px;font-family:Cairo,sans-serif;" />
+                  <button type="button" onclick="applyCustomRank(${myRank})" style="padding:9px 14px;background:var(--dark-green);color:white;border:none;border-radius:8px;font-family:Cairo,sans-serif;font-weight:700;cursor:pointer;white-space:nowrap;">تطبيق</button>
+                </div>
+              </div>
+
               <div class="form-group">
                 <label>اسم المشارك في الشهادة</label>
                 <input type="text" id="certNameInput" value="${escapeHtml(currentParticipant.name)}" placeholder="اسم المشارك" />
@@ -866,7 +1008,7 @@
                 <textarea id="certTextInput" style="width:100%;padding:10px;border:2px solid var(--border-light);border-radius:8px;font-family:Cairo,sans-serif;font-size:0.9rem;min-height:100px;resize:vertical;">${defaultText}</textarea>
               </div>
               <input type="hidden" id="certRankInput" value="${myRank}" />
-              <input type="hidden" id="certRankLabelInput" value="${rankLabel}" />
+              <input type="hidden" id="certRankLabelInput" value="${autoRankLabel}" />
               <input type="hidden" id="certStarsInput" value="${starsOutOf5}" />
               <input type="hidden" id="certScoreInput" value="${myScore}" />
               <input type="hidden" id="certOutOfInput" value="${myOutOf}" />
@@ -880,6 +1022,20 @@
             </div>`;
           document.body.appendChild(modal);
         } catch(e) { hideLoading(); alert('خطأ في حساب الترتيب:\n' + (e?.message || '')); }
+      }
+
+      function applyCustomRank(autoRank) {
+        const val = parseInt(document.getElementById('customRankInput').value);
+        if (!val || val < 1) { alert('الرجاء إدخال رقم صحيح!'); return; }
+        // إزالة التحديد من الأزرار
+        document.querySelectorAll('.rank-override-btn').forEach(b => b.classList.remove('active'));
+        const rankLabel = getRankLabel(val);
+        const rIn = document.getElementById('certRankInput');
+        const rlIn = document.getElementById('certRankLabelInput');
+        if (rIn) rIn.value = val;
+        if (rlIn) rlIn.value = rankLabel;
+        const disp = document.getElementById('certRankDisplayLabel');
+        if (disp) { disp.textContent = rankLabel; disp.style.color = '#0d4d3f'; disp.style.fontWeight = '900'; }
       }
 
       async function sendCertificate() {
@@ -917,6 +1073,72 @@
         } catch(e) { hideLoading(); alert('خطأ في الإرسال:\n' + (e?.message || '')); }
       }
 
+      // =====================================================
+      // شهادة شكر المطور للاستاذة
+      // =====================================================
+      function showDevCertModal() {
+        const modal = document.createElement('div');
+        modal.className = 'message-modal'; modal.id = 'devCertSetupModal';
+        modal.innerHTML = `
+          <div class="message-modal-content">
+            <h3 style="color:#0d4d3f;">🎖️ شهادة شكر وعرفان للاستاذة</h3>
+            <div style="background:linear-gradient(135deg,#f0fff4,#d4edda);padding:12px;border-radius:10px;border:2px solid #1a6b54;margin-bottom:14px;">
+              <p style="color:#0d4d3f;font-size:0.9rem;font-weight:600;line-height:1.7;">
+                شهادة شكر خاصة من فريق التطوير تقديراً لجهود الأستاذة المشرفة في الإشراف على المسابقة 🌿
+              </p>
+            </div>
+            <div class="form-group">
+              <label>اسم الأستاذة في الشهادة</label>
+              <input type="text" id="devCertTeacherName" placeholder="اكتبي اسمك هنا..." style="font-size:1.1rem;" />
+            </div>
+            <div class="form-group">
+              <label>نص الشهادة (يمكن تعديله)</label>
+              <textarea id="devCertCustomText" style="width:100%;padding:10px;border:2px solid var(--border-light);border-radius:8px;font-family:Cairo,sans-serif;font-size:0.88rem;min-height:130px;resize:vertical;">تقديراً وعرفاناً لجهودكِ المتميزة وعطائكِ الدؤوب في الإشراف على هذه المسابقة القرآنية المباركة، وحرصكِ الدائم على متابعة المشاركين وتقييمهم وتشجيعهم، وما بذلتِه من وقت وجهد في خدمة كتاب الله الكريم. فجزاكِ الله خير الجزاء، وبارك في وقتكِ وعلمكِ وعملكِ، وجعل ذلك في ميزان حسناتكِ يوم القيامة.</textarea>
+            </div>
+            <div class="modal-buttons">
+              <button class="btn btn-primary" style="background:linear-gradient(135deg,#0d9488,#0f766e);" onclick="openDevCertOverlay()">🎖️ عرض الشهادة</button>
+              <button class="btn btn-secondary" onclick="document.getElementById('devCertSetupModal').remove()">إلغاء</button>
+            </div>
+          </div>`;
+        document.body.appendChild(modal);
+      }
+
+      function openDevCertOverlay() {
+        const name = (document.getElementById('devCertTeacherName').value.trim()) || 'الأستاذة الفاضلة';
+        const text = document.getElementById('devCertCustomText').value.trim() || '';
+        // إغلاق مودال الإعداد
+        const setupModal = document.getElementById('devCertSetupModal');
+        if (setupModal) setupModal.remove();
+        // ملء الشهادة
+        document.getElementById('devCertNameEl').textContent = name;
+        document.getElementById('devCertTextEl').textContent = text;
+        document.getElementById('devCertDateEl').textContent = new Date().toLocaleDateString('ar-SA', {year:'numeric',month:'long',day:'numeric'});
+        // إظهار الأوفرلاي
+        document.getElementById('devCertOverlay').classList.remove('hidden');
+      }
+
+      function closeDevCertOverlay() {
+        document.getElementById('devCertOverlay').classList.add('hidden');
+      }
+
+      async function downloadDevCertAsImage() {
+        const card = document.getElementById('devCertCardEl');
+        if (!card) return;
+        if (typeof html2canvas === 'undefined') { alert('مكتبة الصور لم تُحمَّل بعد. حاول مجدداً بعد ثوانٍ.'); return; }
+        showLoading('جاري حفظ الشهادة...');
+        try {
+          const canvas = await html2canvas(card, { scale: 2.5, useCORS: true, backgroundColor: '#fff' });
+          const link = document.createElement('a');
+          link.download = 'شهادة-شكر-للاستاذة.png';
+          link.href = canvas.toDataURL('image/png');
+          link.click();
+        } catch(e) { alert('حدث خطأ أثناء الحفظ: ' + e.message); }
+        hideLoading();
+      }
+
+      function downloadDevCertAsPDF() { window.print(); }
+
+      // =====================================================
       function hideAllPages() {
         ['homePage','registerPage','loginPage','adminLoginPage','participantPage','adminParticipantsPage','adminRecordingsPage']
           .forEach(id=>{ const el=document.getElementById(id); if(el) el.classList.add('hidden'); });
@@ -1907,9 +2129,6 @@
         }catch(e){ hideLoading(); alert('خطأ: '+(e?.message||'')); }
       }
 
-      // =========================================================
-      // نقل البيانات - محدّث بالنقل التدريجي لتجنب timeout
-      // =========================================================
       async function showTransferModal() {
         showLoading('جاري تحميل المشاركين...');
         const { data: participants } = await db.from('participants').select('id,name,password').order('name',{ascending:true});
@@ -1953,35 +2172,22 @@
         showLoading('جاري نقل البيانات...');
         try {
           const BATCH = 8;
-
-          // جلب IDs التسجيلات أولاً
           const { data: recs, error: er } = await db.from('recordings').select('id').eq('participant_id', fromId);
           if (er) throw er;
           const recIds = (recs || []).map(r => r.id);
-
-          // نقل التسجيلات دفعة دفعة لتجنب timeout
           for (let i = 0; i < recIds.length; i += BATCH) {
-            const { error: e1 } = await db.from('recordings')
-              .update({ participant_id: toId })
-              .in('id', recIds.slice(i, i + BATCH));
+            const { error: e1 } = await db.from('recordings').update({ participant_id: toId }).in('id', recIds.slice(i, i + BATCH));
             if (e1) throw e1;
             await sleep(200);
           }
-
-          // جلب IDs الرسائل
           const { data: msgs, error: em } = await db.from('messages').select('id').eq('participant_id', fromId);
           if (em) throw em;
           const msgIds = (msgs || []).map(m => m.id);
-
-          // نقل الرسائل دفعة دفعة
           for (let i = 0; i < msgIds.length; i += BATCH) {
-            const { error: e2 } = await db.from('messages')
-              .update({ participant_id: toId })
-              .in('id', msgIds.slice(i, i + BATCH));
+            const { error: e2 } = await db.from('messages').update({ participant_id: toId }).in('id', msgIds.slice(i, i + BATCH));
             if (e2) throw e2;
             await sleep(200);
           }
-
           hideLoading();
           document.getElementById('transferModal').remove();
           alert('✅ تم النقل بنجاح!\n' + fromName + ' ← ' + toName + '\nتسجيلات: ' + recIds.length + ' | رسائل: ' + msgIds.length);
@@ -1992,9 +2198,6 @@
         }
       }
 
-      // =========================================================
-      // مشارك وهمي - إدخال النقاط مباشرة (بدون حسابات)
-      // =========================================================
       function showAddVirtualModal() {
         const modal = document.createElement('div');
         modal.className = 'message-modal'; modal.id = 'virtualModal';
@@ -2030,7 +2233,6 @@
           </div>
         </div>`;
         document.body.appendChild(modal);
-        // تحديث مباشر للمعاينة
         ['virtualTotalScore','virtualMaxScore'].forEach(id => {
           document.getElementById(id).addEventListener('input', () => {
             const s = parseFloat(document.getElementById('virtualTotalScore').value) || 0;
@@ -2045,43 +2247,25 @@
         const name       = document.getElementById('virtualName').value.trim();
         const totalScore = parseFloat(document.getElementById('virtualTotalScore').value) || 0;
         const maxScore   = parseFloat(document.getElementById('virtualMaxScore').value) || 5;
-
         if (!name) { alert('الرجاء إدخال الاسم!'); return; }
         if (maxScore < 1) { alert('أقصى نقطة يجب أن تكون 1 على الأقل!'); return; }
-
         showLoading('جاري الإضافة...');
         try {
-          // إنشاء الحساب الوهمي
-          const { data: newP, error: e1 } = await db.from('participants')
-            .insert({ name, password: '__virtual__' })
-            .select('id,name').single();
+          const { data: newP, error: e1 } = await db.from('participants').insert({ name, password: '__virtual__' }).select('id,name').single();
           if (e1) throw e1;
-
-          // نحسب عدد التسجيلات من maxScore (كل 5 = تسجيل واحد)
           const recCount = Math.max(1, Math.round(maxScore / 5));
-          // نقسم مجموع النقاط على عدد التسجيلات، كل واحد بحد أقصى 5
           const ratingPerRec = Math.min(totalScore / recCount, 5);
-
           for (let i = 0; i < recCount; i++) {
             const { data: rec, error: e2 } = await db.from('recordings').insert({
-              participant_id: newP.id,
-              type: 'audio',
-              file_url: '',
-              data: null
+              participant_id: newP.id, type: 'audio', file_url: '', data: null
             }).select('id').single();
             if (e2) throw e2;
-
             const { error: e3 } = await db.from('messages').insert({
-              participant_id: newP.id,
-              recording_id: rec.id,
-              message_type: 'rating',
-              rating: ratingPerRec,
-              message: 'تقييم وهمي',
-              read: true
+              participant_id: newP.id, recording_id: rec.id, message_type: 'rating',
+              rating: ratingPerRec, message: 'تقييم وهمي', read: true
             });
             if (e3) throw e3;
           }
-
           hideLoading();
           document.getElementById('virtualModal').remove();
           alert('✅ تم إضافة المشارك الوهمي "' + name + '" بنجاح!\nالمجموع: ' + totalScore + ' من ' + maxScore + ' نقطة');
@@ -2092,9 +2276,6 @@
         }
       }
 
-      // =========================================================
-      // معاينة وحفظ شهادة (للاستاذة فقط)
-      // =========================================================
       async function showAdminCertPreview() {
         if (!currentParticipant) return;
         showLoading('جاري حساب الترتيب...');
@@ -2115,7 +2296,7 @@
           const mySeenCount = scoreMap[currentParticipant.id]?.seen?.size || 0;
           const myOutOf = mySeenCount * 5;
           const starsOutOf5 = myOutOf > 0 ? Math.round((myScore / myOutOf) * 5 * 10) / 10 : 0;
-          const rankLabel = myRank === 1 ? '🥇 المركز الأول' : myRank === 2 ? '🥈 المركز الثاني' : myRank === 3 ? '🥉 المركز الثالث' : `المركز ${myRank}`;
+          const rankLabel = getRankLabel(myRank);
           const certData = { _type: 'certificate', name: currentParticipant.name, text: `تُمنح هذه الشهادة تقديراً لجهودكِ المتميزة في مسابقة حفظ جزء عم خلال شهر رمضان المبارك 1446 هـ.`, rank: myRank, rankLabel, stars: starsOutOf5, score: myScore, outOf: myOutOf };
           _adminCertPreviewMode = true;
           const overlay = document.getElementById('certOverlay');
@@ -2127,8 +2308,6 @@
           if (adminSaveArea) adminSaveArea.style.display = 'block';
         } catch(e) { hideLoading(); alert('خطأ: ' + (e?.message || '')); }
       }
-
-      let _adminCertPreviewMode = false;
 
       if (window.supabase && !_appInited) initApp();
     </script>
