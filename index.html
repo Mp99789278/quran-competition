@@ -165,6 +165,7 @@
       .confirm-content h3 { color: var(--dark-green); font-size: 1.2rem; margin-bottom: 12px; }
       .confirm-content p { font-size: 0.95rem; margin-bottom: 20px; line-height: 1.5; }
       .confirm-buttons { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+      /* load-more button */
       .load-more-btn { width:100%; padding:10px; background:var(--cream); border:2px dashed var(--primary-gold); border-radius:10px; color:var(--dark-green); font-family:"Cairo",sans-serif; font-weight:700; font-size:0.9rem; cursor:pointer; margin-top:8px; }
       .load-more-btn:hover { background:#fff9e6; }
 
@@ -318,24 +319,6 @@
         .cert-title-ar { font-size: 1.6rem; }
         .cert-action-btns { grid-template-columns: 1fr; }
       }
-
-      /* ===== WAKE-UP PROGRESS BAR ===== */
-      #wakeupBar {
-        width: 100%;
-        max-width: 280px;
-        margin: 16px auto 0;
-        background: rgba(255,255,255,0.2);
-        border-radius: 8px;
-        height: 6px;
-        overflow: hidden;
-      }
-      #wakeupFill {
-        height: 100%;
-        background: var(--primary-gold);
-        border-radius: 8px;
-        width: 0%;
-        transition: width 0.5s ease;
-      }
     </style>
   </head>
 
@@ -346,7 +329,6 @@
         <div class="conn-spinner"></div>
         <h2>🌙 مسابقة جزء عم</h2>
         <p id="connectingMsg">جاري تحميل النظام...</p>
-        <div id="wakeupBar"><div id="wakeupFill"></div></div>
       </div>
     </div>
 
@@ -355,13 +337,13 @@
       <div class="err-box">
         <div style="font-size:3rem;margin-bottom:10px;">⚠️</div>
         <h2>تعذّر الاتصال بالخادم</h2>
-        <p>الخادم قد يكون في وضع السكون أو الاتصال بطيء. جرّب الخطوات التالية:</p>
+        <p>قد يكون الخادم في وضع السكون. جرّب الخطوات التالية:</p>
         <div class="steps">
-          <p><strong>1.</strong> اضغط "إعادة المحاولة" — قد يستغرق 15-30 ثانية للإيقاظ</p>
+          <p><strong>1.</strong> اضغط "إعادة المحاولة" أدناه</p>
           <p><strong>2.</strong> تحقق من اتصالك بالإنترنت</p>
           <p><strong>3.</strong> إذا استمرت المشكلة، افتح <strong>supabase.com</strong> وأعِد تفعيل المشروع</p>
         </div>
-        <button onclick="retryConnection()" id="retryBtn" style="width:100%;padding:14px;background:linear-gradient(135deg,#d4af37,#f0c850);border:none;border-radius:10px;font-family:Cairo,sans-serif;font-weight:700;font-size:1.05rem;cursor:pointer;color:#0d4d3f;margin-bottom:8px;">🔄 إعادة المحاولة</button>
+        <button onclick="retryConnection()" style="width:100%;padding:14px;background:linear-gradient(135deg,#d4af37,#f0c850);border:none;border-radius:10px;font-family:Cairo,sans-serif;font-weight:700;font-size:1.05rem;cursor:pointer;color:#0d4d3f;margin-bottom:8px;">🔄 إعادة المحاولة</button>
         <p style="font-size:0.8rem;color:#888;margin:0;">إذا ظهر هذا الخطأ دائماً، تواصل مع مشرف الموقع</p>
       </div>
     </div>
@@ -615,11 +597,7 @@
       const BUCKET = 'recordings';
 
       // ========= حد التحميل لكل صفحة =========
-      const PAGE_SIZE = 15;
-
-      // ========= إعدادات الاتصال - مُحسَّنة لـ Supabase Sleeping Projects =========
-      const CONNECTION_TIMEOUT_MS = 35000;   // 35 ثانية — كافية لإيقاظ Supabase
-      const MAX_RETRY_ATTEMPTS    = 3;        // عدد محاولات إعادة الاتصال
+      const PAGE_SIZE = 15; // عدد التسجيلات في كل صفحة
 
       // ========= حالة التطبيق =========
       let db = null;
@@ -639,11 +617,11 @@
       let _loadingEl = null;
       let _appInited = false;
       let _currentCertMsgId = null;
+      // pagination state
       let _myRecPage = 0;
       let _adminRecPage = 0;
       let _myRecTotal = 0;
       let _adminRecTotal = 0;
-      let _retryCount = 0;
 
       // ========= أدوات مساعدة =========
       const sleep = (ms) => new Promise(r => setTimeout(r, ms));
@@ -670,33 +648,6 @@
       }
       function hideLoading() { if (_loadingEl){ _loadingEl.remove(); _loadingEl=null; } }
 
-      // ========= شريط التقدم أثناء الاتصال =========
-      let _wakeupTimer = null;
-      function startWakeupProgress(durationMs) {
-        const fill = document.getElementById('wakeupFill');
-        if (!fill) return;
-        const bar = document.getElementById('wakeupBar');
-        if (bar) bar.style.display = 'block';
-        let elapsed = 0;
-        const interval = 300;
-        clearInterval(_wakeupTimer);
-        _wakeupTimer = setInterval(() => {
-          elapsed += interval;
-          const pct = Math.min(95, (elapsed / durationMs) * 100);
-          fill.style.width = pct + '%';
-          if (elapsed >= durationMs) clearInterval(_wakeupTimer);
-        }, interval);
-      }
-      function stopWakeupProgress() {
-        clearInterval(_wakeupTimer);
-        const fill = document.getElementById('wakeupFill');
-        if (fill) fill.style.width = '100%';
-        setTimeout(() => {
-          const bar = document.getElementById('wakeupBar');
-          if (bar) bar.style.display = 'none';
-        }, 400);
-      }
-
       function showConnectionError() {
         document.getElementById('connectingOverlay').style.display = 'none';
         document.getElementById('connectionErrorOverlay').style.display = 'flex';
@@ -704,16 +655,11 @@
 
       async function retryConnection() {
         _appInited = false;
-        _retryCount++;
         document.getElementById('connectionErrorOverlay').style.display = 'none';
         document.getElementById('connectingOverlay').style.display = 'flex';
-        const msg = document.getElementById('connectingMsg');
-        if (msg) msg.textContent = 'جاري إعادة الاتصال...';
-        const retryBtn = document.getElementById('retryBtn');
-        if (retryBtn) { retryBtn.disabled = true; retryBtn.textContent = '⏳ جاري المحاولة...'; }
-        await sleep(500);
+        document.getElementById('connectingMsg').textContent = 'جاري إعادة الاتصال...';
+        await sleep(700);
         await initApp(true);
-        if (retryBtn) { retryBtn.disabled = false; retryBtn.textContent = '🔄 إعادة المحاولة'; }
       }
 
       // ========= MIME Types =========
@@ -1156,73 +1102,25 @@
         else { el.type = 'password'; if (iconEl) iconEl.textContent = '👁️'; }
       }
 
-      // ================================================================
-      // ========= initApp — مُحسَّن لإيقاظ Supabase الساكن =========
-      // ================================================================
+      // ========= initApp =========
       async function initApp(force=false) {
         if (_appInited && !force) return;
         _appInited = true;
         if (!window.supabase) { showConnectionError(); return; }
-
         db = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY, {
           realtime: { params: { eventsPerSecond: 10 } }
         });
-
-        const msgEl = document.getElementById('connectingMsg');
-
-        // شريط التقدم
-        startWakeupProgress(CONNECTION_TIMEOUT_MS);
-
+        // نتخطى اختبار الاتصال المسبق — نكتفي بتحميل الجلسة مباشرةً
+        // أي خطأ حقيقي سيظهر عند أول استعلام فعلي
+        document.getElementById('connectingOverlay').style.display = 'none';
+        loadViewedRecordings();
         try {
-          // المرحلة 1: ping خفيف لإيقاظ Supabase (HEAD request)
-          if (msgEl) msgEl.textContent = 'جاري الاتصال... قد يستغرق 20 ثانية ⏳';
-
-          const testPromise = db.from('participants').select('id', { head: true }).limit(1);
-          const timeoutPromise = new Promise((_, rej) =>
-            setTimeout(() => rej(new Error('timeout')), CONNECTION_TIMEOUT_MS)
-          );
-
-          const { error } = await Promise.race([testPromise, timeoutPromise]);
-
-          // PGRST116 = جدول فارغ — لا يعني خطأ
-          if (error && error.code !== 'PGRST116' && error.code !== '42501') throw error;
-
-          stopWakeupProgress();
-          document.getElementById('connectingOverlay').style.display = 'none';
-          loadViewedRecordings();
           await loadCurrentSession();
-          loadGlobalBroadcasts();
-
-        } catch (e) {
-          stopWakeupProgress();
-          const msg = (e.message || '').toLowerCase();
-          const isNetworkError = msg.includes('timeout') ||
-                                 msg.includes('failed to fetch') ||
-                                 msg.includes('networkerror') ||
-                                 msg.includes('load failed') ||
-                                 msg.includes('network request failed');
-
-          if (isNetworkError) {
-            // إذا كانت أولى المحاولات — حاول مرة أخرى تلقائياً مرة واحدة
-            if (_retryCount < 1) {
-              _retryCount++;
-              _appInited = false;
-              if (msgEl) msgEl.textContent = 'إعادة محاولة الاتصال... 🔄';
-              startWakeupProgress(CONNECTION_TIMEOUT_MS);
-              await sleep(3000);
-              await initApp(true);
-            } else {
-              showConnectionError();
-            }
-          } else {
-            // خطأ غير شبكي (مثلاً جدول غير موجود) — تابع بشكل طبيعي
-            stopWakeupProgress();
-            document.getElementById('connectingOverlay').style.display = 'none';
-            loadViewedRecordings();
-            await loadCurrentSession();
-            loadGlobalBroadcasts();
-          }
+        } catch(e) {
+          // إذا فشل تحميل الجلسة بسبب شبكة → اعرض الصفحة الرئيسية فقط
+          showHomePage();
         }
+        loadGlobalBroadcasts();
       }
 
       window.addEventListener('supabase:ready', function() { initApp(); }, { once:true });
@@ -1649,7 +1547,7 @@
       }
 
       // ================================================================
-      // ========= تسجيلاتي - مع Pagination =========
+      // ========= تسجيلاتي - مع Pagination لتجنب الـ Timeout =========
       // ================================================================
       let _loadingRecordings = false;
 
@@ -1668,6 +1566,7 @@
         const to   = from + PAGE_SIZE - 1;
 
         try {
+          // بدون count:exact لتجنب الـ timeout — نحدد وجود المزيد من حجم النتيجة
           const { data, error } = await db
             .from('recordings')
             .select('id,type,created_at,file_url,data')
@@ -1685,6 +1584,7 @@
             return;
           }
 
+          // إزالة زر "تحميل المزيد" القديم إذا وُجد
           const oldBtn = listDiv.querySelector('.load-more-btn');
           if(oldBtn) oldBtn.remove();
 
@@ -1708,6 +1608,7 @@
             listDiv.appendChild(itemDiv);
           });
 
+          // إذا رجعت بيانات بحجم الصفحة الكاملة → يوجد المزيد
           if(data.length === PAGE_SIZE){
             const btn = document.createElement('button');
             btn.className = 'load-more-btn';
@@ -1872,11 +1773,12 @@
       }
 
       // ================================================================
-      // ========= Admin: participants =========
+      // ========= Admin: participants - محسّن لتجنب الـ Timeout =========
       // ================================================================
       async function loadParticipants(){
         showLoading('جاري تحميل المشاركين...');
         try {
+          // جلب المشاركين فقط — بدون أي استعلام على التسجيلات لتجنب الـ timeout
           const { data: participants, error: pErr } = await db
             .from('participants')
             .select('id,name,password')
@@ -1940,6 +1842,7 @@
         const to   = from + PAGE_SIZE - 1;
 
         try {
+          // تحميل التقييمات أولاً (مرة واحدة فقط عند page=0)
           if(!append){
             const { data: ratData } = await db
               .from('messages')
@@ -1960,6 +1863,7 @@
             if(badge) badge.style.display = ratedSet.size === 0 ? 'none' : 'inline-flex';
           }
 
+          // تحميل التسجيلات بالصفحة — بدون count:exact لتجنب الـ timeout
           const { data: recs, error: recErr } = await db
             .from('recordings')
             .select('id,type,created_at,file_url,data,storage_path')
@@ -1977,6 +1881,7 @@
             listDiv.innerHTML='';
           }
 
+          // إزالة زر "تحميل المزيد" القديم
           const oldBtn = listDiv.querySelector('.load-more-btn');
           if(oldBtn) oldBtn.remove();
 
@@ -1998,6 +1903,7 @@
               listDiv.appendChild(itemDiv);
             });
 
+            // إذا رجعت بيانات بحجم الصفحة الكاملة → يوجد المزيد
             if(recs.length === PAGE_SIZE){
               const btn = document.createElement('button');
               btn.className = 'load-more-btn';
@@ -2362,7 +2268,9 @@
         }
       }
 
-      // ========= نقل البيانات =========
+      // ================================================================
+      // ========= نقل البيانات بين حسابين =========
+      // ================================================================
       async function showTransferModal() {
         showLoading('جاري تحميل المشاركين...');
         const { data: participants } = await db.from('participants').select('id,name,password').order('name',{ascending:true}).limit(300);
@@ -2404,6 +2312,7 @@
         if (!confirm(`هل تريد نقل جميع بيانات "${fromName}" إلى "${toName}"؟\nهذا الإجراء لا يمكن التراجع عنه.`)) return;
         showLoading('جاري نقل البيانات...');
         try {
+          // نقل التسجيلات دفعة دفعة لتجنب الـ timeout
           let offset = 0;
           const batchSize = 50;
           while(true){
@@ -2418,6 +2327,7 @@
             if(batch.length < batchSize) break;
           }
 
+          // نقل الرسائل دفعة دفعة
           offset = 0;
           while(true){
             const { data: batch, error: fetchErr } = await db
@@ -2441,7 +2351,9 @@
         }
       }
 
-      // ========= مشارك وهمي =========
+      // ================================================================
+      // ========= إضافة مشارك وهمي =========
+      // ================================================================
       function showAddVirtualModal() {
         const modal = document.createElement('div');
         modal.className = 'message-modal'; modal.id = 'virtualModal';
@@ -2458,6 +2370,10 @@
             <label>المجموع الكلي للنقاط</label>
             <input type="number" id="virtualTotalScore" value="0" min="0" step="0.5"
               style="font-size:1.5rem;font-weight:900;text-align:center;color:var(--dark-green);" />
+            <p style="color:#888;font-size:0.8rem;margin-top:6px;">
+              أدخلي المجموع الكلي مباشرة — مثال: 155 أو 47.5<br>
+              سيُحفظ كتسجيل وهمي واحد بهذا المجموع في الترتيب
+            </p>
           </div>
           <div class="modal-buttons">
             <button class="btn btn-primary" onclick="addVirtualParticipant()">➕ إضافة</button>
@@ -2470,17 +2386,24 @@
       async function addVirtualParticipant() {
         const name       = document.getElementById('virtualName').value.trim();
         const totalScore = parseFloat(document.getElementById('virtualTotalScore').value);
+
         if (!name) { alert('الرجاء إدخال الاسم!'); return; }
         if (isNaN(totalScore) || totalScore < 0) { alert('الرجاء إدخال مجموع صحيح!'); return; }
+
         showLoading('جاري الإضافة...');
         try {
+          // إنشاء الحساب الوهمي
           const { data: newP, error: e1 } = await db.from('participants')
             .insert({ name, password: '__virtual__' }).select('id,name').single();
           if (e1) throw e1;
+
+          // تسجيل وهمي واحد
           const { data: rec, error: e2 } = await db.from('recordings').insert({
             participant_id: newP.id, type: 'audio', file_url: '', data: null
           }).select('id').single();
           if (e2) throw e2;
+
+          // تقييم بالمجموع الكلي مباشرة
           const { error: e3 } = await db.from('messages').insert({
             participant_id: newP.id,
             recording_id: rec.id,
@@ -2490,6 +2413,7 @@
             read: true
           });
           if (e3) throw e3;
+
           hideLoading();
           document.getElementById('virtualModal').remove();
           alert(`✅ تم إضافة "${name}" بنجاح!\nالمجموع الكلي: ${totalScore} نقطة`);
@@ -2500,7 +2424,9 @@
         }
       }
 
-      // ========= معاينة شهادة للاستاذة =========
+      // ================================================================
+      // ========= معاينة وحفظ شهادة (للاستاذة فقط) =========
+      // ================================================================
       async function showAdminCertPreview() {
         if (!currentParticipant) return;
         showLoading('جاري حساب الترتيب...');
