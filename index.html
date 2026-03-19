@@ -1575,11 +1575,12 @@
         const to   = from + PAGE_SIZE - 1;
 
         try {
-          const { data, error, count } = await db
+          // بدون count:exact لتجنب الـ timeout — نحدد وجود المزيد من حجم النتيجة
+          const { data, error } = await db
             .from('recordings')
-            .select('id,type,created_at,file_url,data', { count: 'exact' })
+            .select('id,type,created_at,file_url,data')
             .eq('participant_id', currentUser.id)
-            .order('created_at', {ascending: true})
+            .order('id', {ascending: true})
             .range(from, to);
 
           if(error) throw error;
@@ -1591,8 +1592,6 @@
             _loadingRecordings=false;
             return;
           }
-
-          _myRecTotal = count || 0;
 
           // إزالة زر "تحميل المزيد" القديم إذا وُجد
           const oldBtn = listDiv.querySelector('.load-more-btn');
@@ -1618,12 +1617,11 @@
             listDiv.appendChild(itemDiv);
           });
 
-          // زر "تحميل المزيد" إذا كان هناك المزيد
-          const loaded = from + data.length;
-          if(loaded < _myRecTotal){
+          // إذا رجعت بيانات بحجم الصفحة الكاملة → يوجد المزيد
+          if(data.length === PAGE_SIZE){
             const btn = document.createElement('button');
             btn.className = 'load-more-btn';
-            btn.textContent = `⬇️ تحميل المزيد (${_myRecTotal - loaded} متبقي)`;
+            btn.textContent = `⬇️ تحميل المزيد`;
             btn.onclick = () => { _myRecPage++; loadMyRecordings(true); };
             listDiv.appendChild(btn);
           }
@@ -1897,17 +1895,15 @@
             if(badge) badge.style.display = ratedSet.size === 0 ? 'none' : 'inline-flex';
           }
 
-          // تحميل التسجيلات بالصفحة
-          const { data: recs, error: recErr, count } = await db
+          // تحميل التسجيلات بالصفحة — بدون count:exact لتجنب الـ timeout
+          const { data: recs, error: recErr } = await db
             .from('recordings')
-            .select('id,type,created_at,file_url,data,storage_path', { count: 'exact' })
+            .select('id,type,created_at,file_url,data,storage_path')
             .eq('participant_id', currentParticipant.id)
-            .order('created_at', {ascending: true})
+            .order('id', {ascending: true})
             .range(from, to);
 
           if(recErr) throw recErr;
-
-          _adminRecTotal = count || 0;
 
           if(!append){
             if(!recs || recs.length===0){
@@ -1939,12 +1935,11 @@
               listDiv.appendChild(itemDiv);
             });
 
-            // زر "تحميل المزيد"
-            const loaded = from + recs.length;
-            if(loaded < _adminRecTotal){
+            // إذا رجعت بيانات بحجم الصفحة الكاملة → يوجد المزيد
+            if(recs.length === PAGE_SIZE){
               const btn = document.createElement('button');
               btn.className = 'load-more-btn';
-              btn.textContent = `⬇️ تحميل المزيد (${_adminRecTotal - loaded} متبقي)`;
+              btn.textContent = `⬇️ تحميل المزيد`;
               btn.onclick = () => { _adminRecPage++; loadParticipantRecordingsAndRating(true); };
               listDiv.appendChild(btn);
             }
@@ -2406,16 +2401,13 @@
             <input type="text" id="virtualName" placeholder="اكتب الاسم..." />
           </div>
           <div class="form-group">
-            <label>عدد النجوم (من 5)</label>
-            <div style="display:flex;gap:8px;align-items:center;">
-              <input type="number" id="virtualStars" value="4" min="0" max="5" step="0.5" style="width:100px;text-align:center;font-size:1.3rem;font-weight:700;" />
-              <span style="font-size:0.85rem;color:#666;">مثال: 4.5 = 4.5/5 نجوم</span>
-            </div>
-          </div>
-          <div class="form-group">
-            <label>عدد التسجيلات الافتراضية</label>
-            <input type="number" id="virtualRecCount" value="3" min="1" max="20" style="width:100px;text-align:center;font-size:1.1rem;" />
-            <p style="color:#888;font-size:0.78rem;margin-top:4px;">المجموع = النجوم × عدد التسجيلات</p>
+            <label>المجموع الكلي للنقاط</label>
+            <input type="number" id="virtualTotalScore" value="0" min="0" step="0.5"
+              style="font-size:1.5rem;font-weight:900;text-align:center;color:var(--dark-green);" />
+            <p style="color:#888;font-size:0.8rem;margin-top:6px;">
+              أدخلي المجموع الكلي مباشرة — مثال: 155 أو 47.5<br>
+              سيُحفظ كتسجيل وهمي واحد بهذا المجموع في الترتيب
+            </p>
           </div>
           <div class="modal-buttons">
             <button class="btn btn-primary" onclick="addVirtualParticipant()">➕ إضافة</button>
@@ -2426,31 +2418,39 @@
       }
 
       async function addVirtualParticipant() {
-        const name      = document.getElementById('virtualName').value.trim();
-        const stars     = parseFloat(document.getElementById('virtualStars').value) || 4;
-        const recCount  = parseInt(document.getElementById('virtualRecCount').value) || 3;
+        const name       = document.getElementById('virtualName').value.trim();
+        const totalScore = parseFloat(document.getElementById('virtualTotalScore').value);
+
         if (!name) { alert('الرجاء إدخال الاسم!'); return; }
-        if (stars < 0 || stars > 5) { alert('النجوم يجب أن تكون بين 0 و 5!'); return; }
+        if (isNaN(totalScore) || totalScore < 0) { alert('الرجاء إدخال مجموع صحيح!'); return; }
+
         showLoading('جاري الإضافة...');
         try {
+          // إنشاء الحساب الوهمي
           const { data: newP, error: e1 } = await db.from('participants')
             .insert({ name, password: '__virtual__' }).select('id,name').single();
           if (e1) throw e1;
-          for (let i = 0; i < recCount; i++) {
-            const { data: rec, error: e2 } = await db.from('recordings').insert({
-              participant_id: newP.id, type: 'audio', file_url: '', data: null
-            }).select('id').single();
-            if (e2) throw e2;
-            const { error: e3 } = await db.from('messages').insert({
-              participant_id: newP.id, recording_id: rec.id,
-              message_type: 'rating', rating: Math.min(stars, 5),
-              message: `تقييم وهمي: ${stars}/5`, read: true
-            });
-            if (e3) throw e3;
-          }
+
+          // تسجيل وهمي واحد
+          const { data: rec, error: e2 } = await db.from('recordings').insert({
+            participant_id: newP.id, type: 'audio', file_url: '', data: null
+          }).select('id').single();
+          if (e2) throw e2;
+
+          // تقييم بالمجموع الكلي مباشرة
+          const { error: e3 } = await db.from('messages').insert({
+            participant_id: newP.id,
+            recording_id: rec.id,
+            message_type: 'rating',
+            rating: totalScore,
+            message: `مجموع وهمي: ${totalScore} نقطة`,
+            read: true
+          });
+          if (e3) throw e3;
+
           hideLoading();
           document.getElementById('virtualModal').remove();
-          alert(`✅ تم إضافة المشارك الوهمي "${name}" بنجاح!\nالنجوم: ${stars}/5 × ${recCount} تسجيل = ${(stars*recCount).toFixed(1)} نقطة`);
+          alert(`✅ تم إضافة "${name}" بنجاح!\nالمجموع الكلي: ${totalScore} نقطة`);
           showAdminParticipantsPage();
         } catch(e) {
           hideLoading();
